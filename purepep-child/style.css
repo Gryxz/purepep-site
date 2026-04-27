@@ -1,0 +1,18 @@
+/*
+Theme Name:        PurePep
+Theme URI:         https://purepep.shop
+Description:       PurePep storefront child theme — research-use-only peptide e-commerce. Locked Ink/Bone/Blush/Surface palette, Inter Black 900 display, IBM Plex Mono utility, 1.5 px hairline borders, 2 px max radius, no shadows, no gradients.
+Author:            PurePep
+Author URI:        https://purepep.shop
+Template:          twentytwentyfive
+Version:           0.1.0
+Requires at least: 6.5
+Tested up to:      6.7
+Requires PHP:      8.0
+License:           Proprietary
+License URI:       https://purepep.shop/license
+Text Domain:       purepep
+Tags:              ecommerce, woocommerce, full-site-editing, block-styles
+*/
+
+/* All token + component CSS lives in assets/css/. This file exists for the WP child-theme header only. */
