@@ -1,0 +1,41 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Color usage</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 0; }
+  .frame { display: grid; grid-template-columns: 1fr 1fr; min-height: 240px; }
+  .panel { padding: 28px 28px; display: flex; flex-direction: column; justify-content: space-between; }
+  .panel.cream { background: #F5EBD8; color: #1F1F1F; border-right: 1px solid rgba(107,107,107,0.15); }
+  .panel.dark { background: #1F1F1F; color: #F5EBD8; }
+  .eb { font-family: 'Inter'; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #6B6B6B; }
+  .panel.dark .eb { color: rgba(245,235,216,0.55); }
+  h2 { font-family: 'Fraunces'; font-weight: 500; font-size: 26px; margin: 8px 0 6px; letter-spacing: -0.01em; }
+  .panel.dark h2 { color: #F5EBD8; }
+  .body { font-family: 'Inter'; font-size: 13px; line-height: 1.55; color: #6B6B6B; }
+  .panel.dark .body { color: rgba(245,235,216,0.7); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 4px; font-family: 'Inter'; font-size: 13px; font-weight: 500; }
+  .btn.primary { background: #1F1F1F; color: #F5EBD8; }
+  .btn.copper { background: #C75D3A; color: #F5EBD8; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .blush-pill { background: #F2D7D7; color: #1F1F1F; font-family: 'Inter'; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 10px; border-radius: 9999px; }
+</style></head>
+<body>
+  <div class="frame">
+    <div class="panel cream">
+      <div>
+        <div class="eb">Default canvas</div>
+        <h2>Eggshell + Carbon</h2>
+        <div class="body">Cream paper with serif type. The default surface for every page in the system.</div>
+      </div>
+      <div class="row"><span class="blush-pill">In stock</span><span class="btn primary">Add to cart</span></div>
+    </div>
+    <div class="panel dark">
+      <div>
+        <div class="eb">Inverted surface</div>
+        <h2>Carbon hold</h2>
+        <div class="body">Reserved for the footer, the cart drawer header, and one hero accent panel per page.</div>
+      </div>
+      <div class="row"><span class="btn copper">Reserve a vial</span></div>
+    </div>
+  </div>
+</body></html>

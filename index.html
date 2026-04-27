@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PurePep — Design system handoff</title>
+<link rel="icon" type="image/png" sizes="32x32" href="design-system/assets/favicon-32.png"/>
+<link rel="icon" type="image/svg+xml" href="design-system/assets/glyph-amber-favicon.svg"/>
+<link rel="apple-touch-icon" sizes="180x180" href="design-system/assets/favicon-180.png"/>
+<link rel="stylesheet" href="design-system/colors_and_type.css"/>
+<style>
+  .ribbon {
+    background: var(--pp-ink); color: var(--pp-bone);
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+    letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+    padding: 12px 24px; text-align: center;
+  }
+  .ribbon span + span::before {
+    content: '·'; padding: 0 12px; color: var(--pp-bone);
+  }
+  .header {
+    border-bottom: var(--bw) solid var(--pp-ink);
+    padding: 24px;
+  }
+  .header-inner {
+    max-width: var(--max-content); margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .header img { height: 36px; display: block; }
+  .header .meta { color: var(--pp-ink-muted); }
+  main { max-width: var(--max-content); margin: 0 auto; padding: 64px 24px 96px; }
+  .lede {
+    max-width: 720px; margin-bottom: 64px;
+  }
+  .lede h1 {
+    font-size: clamp(40px, 5.5vw, 64px);
+    letter-spacing: -0.02em; line-height: 1.05;
+    margin-bottom: 24px;
+  }
+  .lede p { font-size: var(--t-body-l); line-height: var(--lh-normal); color: var(--pp-ink); }
+  .lede p + p { margin-top: 16px; }
+  .section { margin-top: 80px; }
+  .section-head {
+    display: flex; align-items: baseline; gap: 16px;
+    border-top: var(--bw-rule) solid var(--pp-ink);
+    padding-top: 24px; margin-bottom: 32px;
+  }
+  .section-head h2 { font-size: var(--t-h2); letter-spacing: -0.015em; line-height: 1.1; }
+  .section-head .count { margin-left: auto; }
+  .grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+    border-top: var(--bw) solid var(--pp-ink);
+    border-left: var(--bw) solid var(--pp-ink);
+  }
+  @media (max-width: 960px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    border-right: var(--bw) solid var(--pp-ink);
+    border-bottom: var(--bw) solid var(--pp-ink);
+    padding: 24px;
+    display: flex; flex-direction: column; gap: 12px;
+    background: var(--pp-bone);
+    text-decoration: none; color: var(--pp-ink);
+    transition: background var(--dur-fast) var(--ease);
+  }
+  .card:hover { background: var(--pp-bone-soft); color: var(--pp-ink); }
+  .card .label {
+    font-family: var(--font-mono); font-size: var(--t-eyebrow);
+    text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+    color: var(--pp-ink-muted);
+  }
+  .card .title { font-size: var(--t-h3); letter-spacing: -0.01em; line-height: 1.2; }
+  .card .desc { font-size: var(--t-body-s); color: var(--pp-ink); line-height: var(--lh-normal); }
+  .card .arrow {
+    margin-top: auto; padding-top: 16px;
+    font-family: var(--font-mono); font-size: var(--t-eyebrow);
+    text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+  }
+  footer {
+    border-top: var(--bw) solid var(--pp-ink);
+    padding: 32px 24px; margin-top: 80px;
+    font-family: var(--font-mono); font-size: var(--t-eyebrow);
+    text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+    color: var(--pp-ink-muted); text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="ribbon">
+  <span>For research use only</span><span>21+ qualified researchers</span><span>All sales final</span>
+</div>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="./" aria-label="PurePep"><img src="design-system/assets/lockup-horizontal.svg" alt="PurePep"/></a>
+    <div class="pp-eyebrow meta">Design system handoff · v1</div>
+  </div>
+</header>
+
+<main>
+  <section class="lede">
+    <div class="pp-eyebrow" style="margin-bottom: 24px;">PurePep · brand + storefront source</div>
+    <h1>Research-grade peptides. Verified per lot.</h1>
+    <p>This repository carries the canonical PurePep brand source: locked palette and type tokens, finalized logo lockups, the RETA vial label, design-system preview cards, and the storefront UI kit (eight prototype pages plus shared React components).</p>
+    <p>The prototypes are the visual contract. The forthcoming WordPress child theme and <code>wp-sync</code> CLI in this repo will port these surfaces to <a href="https://purepep.shop">purepep.shop</a> while preserving the locked palette, hairline borders, generous whitespace, and one-CTA discipline. Start with the <a href="design-system/README.md">brand README</a> for content + visual rules.</p>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Storefront prototypes</h2>
+      <span class="pp-eyebrow count">8 surfaces</span>
+    </div>
+    <div class="grid">
+      <a class="card" href="design-system/ui_kits/storefront/home.html">
+        <span class="label">Home · /</span>
+        <span class="title">Homepage</span>
+        <span class="desc">Hero, value-prop strip, featured rail, blush testimonial band, why-PurePep grid.</span>
+        <span class="arrow">View →</span>
+      </a>
+      <a class="card" href="design-system/ui_kits/storefront/home-stat.html">
+        <span class="label">Home · A/B variant</span>
+        <span class="title">Homepage — stat headline</span>
+        <span class="desc">Stat-led hero variant for A/B comparison against the editorial headline.</span>
+        <span class="arrow">View →</span>
+      </a>
+      <a class="card" href="design-system/ui_kits/storefront/catalog.html">
+        <span class="label">Catalog · /catalog</span>
+        <span class="title">Catalog grid</span>
+        <span class="desc">Filterable grid of cream-label product cards, blush editorial callout band.</span>
+        <span class="arrow">View →</span>
+      </a>
+      <a class="card" href="design-system/ui_kits/storefront/index.html">
+        <span class="label">PDP · flagship</span>
+        <span class="title">RETA · 10 mg</span>
+        <span class="desc">Product detail page: gallery, buy box, tiered pricing, COA panel, sticky buy bar.</span>
+        <span class="arrow">View →</span>
+      </a>
+      <a class="card" href="design-system/ui_kits/storefront/checkout.html">
+        <span class="label">Checkout · /checkout</span>
+        <span class="title">Single-page checkout</span>
+        <span class="desc">Contact, shipping, payment with persistent order summary and policy rail.</span>
+        <span class="arrow">View →</span>
+      </a>
+      <a class="card" href="design-system/ui_kits/storefront/age-gate.html">
+        <span class="label">Gate · /age-gate</span>
+        <span class="title">21+ qualified researcher gate</span>
+        <span class="desc">Sitewide blocking modal on first visit; 30-day localStorage persistence.</span>
+        <span class="arrow">View →</span>
+      </a>
+      <a class="card" href="design-system/ui_kits/storefront/affiliates.html">
+        <span class="label">Affiliates · /affiliates</span>
+        <span class="title">Affiliate program</span>
+        <span class="desc">Hero, three-step explainer, tier table, payout block, FAQ, application form.</span>
+        <span class="arrow">View →</span>
+      </a>
+      <a class="card" href="design-system/ui_kits/storefront/affiliates-dashboard.html">
+        <span class="label">Affiliates · /dashboard</span>
+        <span class="title">Affiliate dashboard</span>
+        <span class="desc">KPI grid, referral code block, asset library, payout history.</span>
+        <span class="arrow">View →</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Design system previews</h2>
+      <span class="pp-eyebrow count">16 cards</span>
+    </div>
+    <div class="grid">
+      <a class="card" href="design-system/preview/colors-palette.html"><span class="label">Color</span><span class="title">Palette</span><span class="desc">Locked five-color system: Ink, Bone, Soft Blush, Surface, plus amber-favicon-only.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/colors-usage.html"><span class="label">Color</span><span class="title">Usage rules</span><span class="desc">Where each token is allowed, where it is not, and the discipline that makes it work.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/components-accents.html"><span class="label">Color</span><span class="title">Semantic accents</span><span class="desc">Emerald positive, Alert negative; pills, error helpers, lot-released stamps.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/type-display.html"><span class="label">Type</span><span class="title">Display ramp</span><span class="desc">Inter Black 900 display sizes, tracking, and hierarchy for editorial headlines.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/type-body.html"><span class="label">Type</span><span class="title">Body + utility</span><span class="desc">Inter body, IBM Plex Mono utility, eyebrow, caption, and code conventions.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/spacing-scale.html"><span class="label">Foundations</span><span class="title">Spacing scale</span><span class="desc">8 px base unit with a 4 px half-step. Section, card, and inline padding rules.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/radii-shadows.html"><span class="label">Foundations</span><span class="title">Radii + shadows</span><span class="desc">Brutalist radii (0 / 2 px). No drop shadows; no glassmorphism.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/components-buttons.html"><span class="label">Components</span><span class="title">Buttons</span><span class="desc">Primary ink, secondary outline, text-link, disabled and focus states.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/components-forms.html"><span class="label">Components</span><span class="title">Forms</span><span class="desc">Inputs, labels, helper, error, checkbox, radio. 44 px input height floor.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/components-tags.html"><span class="label">Components</span><span class="title">Tags + pills</span><span class="desc">Stock pills, eyebrow tags, mono chips, and the lot-stamp dashed treatment.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/components-product-card.html"><span class="label">Components</span><span class="title">Product card</span><span class="desc">Cream-label card pattern reused across PDP, home rail, and catalog grid.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/components-compliance.html"><span class="label">Components</span><span class="title">Compliance blocks</span><span class="desc">RUO ribbon, no-refund callouts, 21+ gating treatments. All copy verbatim.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/brand-logos.html"><span class="label">Brand</span><span class="title">Logos + lockups</span><span class="desc">Horizontal lockup, glyph mark, light variant, clearspace, and minimum sizes.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/brand-iconography.html"><span class="label">Brand</span><span class="title">Iconography</span><span class="desc">Lucide as the chosen system. 1.5 px stroke, 24 px grid, currentColor only.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/brand-vial-label.html"><span class="label">Brand</span><span class="title">Vial label</span><span class="desc">RETA artwork: lot, dose, RUO disclaimer, and storage block.</span><span class="arrow">View →</span></a>
+      <a class="card" href="design-system/preview/brand-voice.html"><span class="label">Brand</span><span class="title">Voice + copy</span><span class="desc">Lab-supply-catalog tone. Sentence case, no emoji, no exclamation marks.</span><span class="arrow">View →</span></a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Reference</h2>
+      <span class="pp-eyebrow count">3 documents</span>
+    </div>
+    <div class="grid">
+      <a class="card" href="design-system/README.md"><span class="label">Doc · root</span><span class="title">Brand README</span><span class="desc">Content fundamentals, visual foundations, iconography, and compliance copy block.</span><span class="arrow">Read →</span></a>
+      <a class="card" href="design-system/ui_kits/storefront/README.md"><span class="label">Doc · UI kit</span><span class="title">Storefront UI kit notes</span><span class="desc">Page inventory, component file map, and notes on the storefront kit.</span><span class="arrow">Read →</span></a>
+      <a class="card" href="design-system/assets/purepep-logo-final-reference.html"><span class="label">Doc · brand</span><span class="title">Logo reference sheet</span><span class="desc">Final lockup specimen with construction, clearspace, and color-mode usage.</span><span class="arrow">View →</span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>For research use only · Not for human consumption</div>
+</footer>
+
+</body>
+</html>

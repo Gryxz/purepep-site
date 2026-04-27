@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>RETA · 10 mg — PurePep</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32.png"/>
+<link rel="icon" type="image/svg+xml" href="../../assets/glyph-amber-favicon.svg"/>
+<link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon-180.png"/>
+<link rel="stylesheet" href="../../colors_and_type.css"/>
+<style>
+  .pdp-grid { display: grid; grid-template-columns: 7fr 5fr; gap: 64px; }
+  @media (max-width: 1024px) { .pdp-grid { grid-template-columns: 1fr; gap: 48px; } }
+  @media (max-width: 960px) {
+    .related-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .trust-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="Primitives.jsx"></script>
+<script type="text/babel" src="Header.jsx"></script>
+<script type="text/babel" src="Footer.jsx"></script>
+<script type="text/babel" src="ProductGallery.jsx"></script>
+<script type="text/babel" src="BuyBox.jsx"></script>
+<script type="text/babel" src="COAPanel.jsx"></script>
+<script type="text/babel" src="ComplianceBlock.jsx"></script>
+<script type="text/babel" src="CartDrawer.jsx"></script>
+<script type="text/babel" src="ResearcherAccess.jsx"></script>
+<script type="text/babel" src="StickyBuyBar.jsx"></script>
+<script type="text/babel" src="RelatedRail.jsx"></script>
+
+<script type="text/babel">
+const { useState } = React;
+
+function Breadcrumb() {
+  const parts = ['Catalog', 'Incretin mimetics', 'RETA · 10 mg'];
+  return (
+    <div style={{
+      maxWidth: 1280, margin: '0 auto', padding: '24px 24px 8px',
+    }}>
+      <nav style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        {parts.map((p, i) => (
+          <React.Fragment key={p}>
+            {i > 0 && <span style={{
+              fontFamily: "'IBM Plex Mono', monospace", fontSize: 11,
+              color: PP.inkMuted, letterSpacing: '0.14em',
+            }}>/</span>}
+            <a href="#" style={{
+              fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 500,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              color: i === parts.length - 1 ? PP.ink : PP.inkMuted,
+              textDecoration: 'none',
+            }}>{p}</a>
+          </React.Fragment>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+function App() {
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([
+    { id: 'reta-10', compound: 'RETA', dose: '10 mg', cas: '2381089-83-2', qty: 1, price: 189.00 },
+  ]);
+  const addToCart = (qty) => {
+    setCartItems(prev => {
+      const i = prev.findIndex(x => x.id === 'reta-10');
+      if (i >= 0) { const next = [...prev]; next[i] = { ...next[i], qty: next[i].qty + qty }; return next; }
+      return [...prev, { id: 'reta-10', compound: 'RETA', dose: '10 mg', cas: '2381089-83-2', qty, price: 189.00 }];
+    });
+    setCartOpen(true);
+  };
+
+  return (
+    <>
+      <Header cartCount={cartItems.reduce((s, i) => s + i.qty, 0)} onOpenCart={() => setCartOpen(true)}/>
+
+      <Breadcrumb/>
+
+      <main style={{ maxWidth: 1280, margin: '0 auto', padding: '24px 24px 80px' }}>
+        <div className="pdp-grid">
+          <div><ProductGallery coaVerified={true}/></div>
+          <div data-sticky-trigger><BuyBox onAddToCart={addToCart}/></div>
+        </div>
+      </main>
+
+      <TrustStrip/>
+
+      <BlushBand
+        quote="Every lot. Every assay. On record — before it leaves the building."
+        attribution="PurePep quality standard · 2026"
+      />
+
+      <section style={{ maxWidth: 1280, margin: '0 auto', padding: '80px 24px' }}>
+        <COAPanel/>
+      </section>
+
+      <ResearcherAccessBlock/>
+
+      <RelatedRail/>
+
+      <Footer/>
+
+      <RewardsPill/>
+      <StickyBuyBar compound="RETA" dose="10 mg" price="$189.00" onAddToCart={() => addToCart(1)}/>
+
+      <CartDrawer
+        open={cartOpen}
+        onClose={() => setCartOpen(false)}
+        items={cartItems}
+        onQty={(id, q) => setCartItems(prev => prev.map(x => x.id === id ? { ...x, qty: q } : x))}
+        onRemove={(id) => setCartItems(prev => prev.filter(x => x.id !== id))}
+      />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

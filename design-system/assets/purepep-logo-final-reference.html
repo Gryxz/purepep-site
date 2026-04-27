@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PurePep · Logo System · τ · v1.0 FINAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1F1F1F;
+    --bone: #FAF7F0;
+    --blush: #F2D7D7;
+    --surface: #F1EDE3;
+    --amber: #DC9814;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bone); color: var(--ink); font-family: 'Inter', sans-serif; font-weight: 400; -webkit-font-smoothing: antialiased; line-height: 1.5; }
+
+  .mast {
+    border-bottom: 1.5px solid var(--ink);
+    padding: 48px 40px 32px;
+  }
+  .mast-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: end;
+  }
+  .mast h1 {
+    font-weight: 900;
+    font-size: clamp(32px, 5vw, 64px);
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+  }
+  .mast .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 16px;
+    opacity: 0.7;
+  }
+  .mast .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: right;
+    line-height: 1.7;
+  }
+
+  section { border-bottom: 1.5px solid var(--ink); padding: 48px 40px; }
+  section h2 {
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  section .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    display: block;
+    margin-bottom: 8px;
+    opacity: 0.55;
+  }
+  section p { font-size: 14px; max-width: 760px; margin-bottom: 12px; }
+
+  /* Hero glyph */
+  .hero {
+    padding: 80px 40px;
+    background: var(--bone);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .hero .wm {
+    font-weight: 900;
+    font-size: clamp(48px, 10vw, 120px);
+    letter-spacing: -0.02em;
+    line-height: 0.9;
+  }
+
+  /* Variant grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .cell {
+    border: 1.5px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .cell .caption {
+    border-top: 1.5px solid var(--ink);
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    background: var(--bone);
+  }
+  .cell .stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    min-height: 180px;
+  }
+
+  .span-8 { grid-column: span 8; }
+  .span-6 { grid-column: span 6; }
+  .span-4 { grid-column: span 4; }
+  .span-3 { grid-column: span 3; }
+  .span-5 { grid-column: span 5; }
+  .span-12 { grid-column: span 12; }
+
+  .bg-bone { background: var(--bone); }
+  .bg-ink { background: var(--ink); }
+  .bg-blush { background: var(--blush); }
+  .bg-amber { background: var(--amber); }
+  .bg-surface { background: var(--surface); }
+  .bg-white { background: #FFFFFF; }
+
+  .wm {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .wm-reversed { color: var(--bone); }
+  .wm-black { color: #000; }
+
+  .lockup-h { display: inline-flex; align-items: center; gap: 18px; }
+  .lockup-h.sm { gap: 12px; }
+  .lockup-v { display: inline-flex; flex-direction: column; align-items: center; gap: 16px; }
+
+  /* Favicon row */
+  .fav-row { display: flex; align-items: flex-end; gap: 32px; }
+  .fav-box { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .fav-box .sz {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.55;
+  }
+
+  /* Vial */
+  .vial {
+    width: 96px; height: 96px;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bone);
+    position: relative;
+  }
+  .vial::before {
+    content: ''; position: absolute; inset: 7px;
+    border: 1px dashed var(--ink); border-radius: 50%; opacity: 0.35;
+  }
+
+  /* Specs table */
+  .specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-top: 16px;
+  }
+  .spec {
+    border: 1.5px solid var(--ink);
+    padding: 20px;
+  }
+  .spec h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 10px;
+    opacity: 0.6;
+  }
+  .spec dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; font-size: 13px; }
+  .spec dt { font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.6; }
+  .spec dd { font-weight: 500; }
+  .spec .swatch-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+  }
+  .spec .swatch {
+    width: 22px; height: 22px; border: 1px solid var(--ink);
+  }
+
+  /* Color bar */
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    border: 1.5px solid var(--ink);
+  }
+  .palette .chip {
+    aspect-ratio: 3/2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 12px;
+    border-right: 1.5px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+  }
+  .palette .chip:last-child { border-right: none; }
+  .palette .chip.dark { color: var(--bone); }
+  .palette .chip .name { display: block; font-weight: 700; font-size: 11px; }
+  .palette .chip .hex { opacity: 0.8; }
+
+  .foot {
+    padding: 40px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 900px) {
+    .mast, section, .hero, .foot { padding-left: 20px; padding-right: 20px; }
+    .mast-grid, .foot { grid-template-columns: 1fr; }
+    .mast .meta, .foot > div:last-child { text-align: left; }
+    .grid { grid-template-columns: repeat(4, 1fr); }
+    .span-8, .span-6, .span-5, .span-4, .span-3 { grid-column: span 4; }
+    .span-12 { grid-column: span 4; }
+    .palette { grid-template-columns: repeat(2, 1fr); }
+    .palette .chip { border-right: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink); }
+  }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-grid">
+    <div>
+      <h1>PUREPEP / LOGO SYSTEM<br>τ · v1.0 FINAL</h1>
+      <div class="sub">Production logo · For Research Use Only — Not for Human Consumption</div>
+    </div>
+    <div class="meta">
+      Variant locked 2026-04-23<br>
+      Body: P-Chunky (Taiga-approved)<br>
+      Linkage: τ · 2u bars at y=22, y=29<br>
+      Survived ρ vs τ deployment-scale vote
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <svg width="280" height="336" viewBox="0 0 60 72">
+    <rect x="4" y="4" width="22" height="64" fill="#1F1F1F"/>
+    <rect x="26" y="22" width="8" height="2" fill="#1F1F1F"/>
+    <rect x="26" y="29" width="8" height="2" fill="#1F1F1F"/>
+    <rect x="34" y="4" width="22" height="36" fill="#1F1F1F"/>
+  </svg>
+  <span class="wm">PurePep</span>
+</div>
+
+<!-- SPECS -->
+<section>
+  <span class="tag">01 · Specifications</span>
+  <h2>Geometry, palette, typography</h2>
+
+  <div class="specs">
+    <div class="spec">
+      <h3>Glyph geometry</h3>
+      <dl>
+        <dt>Stem</dt><dd>4, 4, 22×64</dd>
+        <dt>Top bar</dt><dd>26, 22, 8×2</dd>
+        <dt>Btm bar</dt><dd>26, 29, 8×2</dd>
+        <dt>Bowl</dt><dd>34, 4, 22×36</dd>
+        <dt>viewBox</dt><dd>0 0 60 72</dd>
+      </dl>
+    </div>
+    <div class="spec">
+      <h3>Typography</h3>
+      <dl>
+        <dt>Family</dt><dd>Inter Black</dd>
+        <dt>Weight</dt><dd>900</dd>
+        <dt>Tracking</dt><dd>-0.02em</dd>
+        <dt>Render</dt><dd>Paths (no font dep)</dd>
+      </dl>
+    </div>
+    <div class="spec">
+      <h3>Clear space</h3>
+      <dl>
+        <dt>Min margin</dt><dd>0.5 × glyph height</dd>
+        <dt>Glyph H</dt><dd>72u</dd>
+        <dt>Clear</dt><dd>36u all sides</dd>
+      </dl>
+    </div>
+    <div class="spec">
+      <h3>Minimum sizes</h3>
+      <dl>
+        <dt>Horizontal</dt><dd>24px glyph H</dd>
+        <dt>Stacked</dt><dd>40px glyph H</dd>
+        <dt>Glyph only</dt><dd>16px</dd>
+        <dt>Vial cap</dt><dd>8mm ø</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h2 style="margin-top:48px;">Palette</h2>
+  <div class="palette">
+    <div class="chip" style="background:#1F1F1F;color:#FAF7F0;"><span><span class="name">INK</span><span class="hex">#1F1F1F</span></span></div>
+    <div class="chip" style="background:#FAF7F0;"><span><span class="name">BONE</span><span class="hex">#FAF7F0</span></span></div>
+    <div class="chip" style="background:#F2D7D7;"><span><span class="name">BLUSH</span><span class="hex">#F2D7D7</span></span></div>
+    <div class="chip" style="background:#F1EDE3;"><span><span class="name">SURFACE</span><span class="hex">#F1EDE3</span></span></div>
+    <div class="chip" style="background:#DC9814;"><span><span class="name">AMBER</span><span class="hex">#DC9814</span></span></div>
+  </div>
+  <p style="margin-top:14px;"><strong>Amber is favicon-only.</strong> It does not appear in lockups, UI, or merchandise. Its sole job is browser-tab legibility.</p>
+</section>
+
+<!-- LOCKUPS -->
+<section>
+  <span class="tag">02 · Lockup variants</span>
+  <h2>All 10 deliverables per original brief</h2>
+
+  <div class="grid">
+
+    <!-- 1. PRIMARY HORIZONTAL -->
+    <div class="cell span-8">
+      <div class="stage bg-bone">
+        <div class="lockup-h">
+          <svg width="80" height="96" viewBox="0 0 60 72">
+            <rect x="4" y="4" width="22" height="64" fill="#1F1F1F"/>
+            <rect x="26" y="22" width="8" height="2" fill="#1F1F1F"/>
+            <rect x="26" y="29" width="8" height="2" fill="#1F1F1F"/>
+            <rect x="34" y="4" width="22" height="36" fill="#1F1F1F"/>
+          </svg>
+          <span class="wm" style="font-size: 72px;">PurePep</span>
+        </div>
+      </div>
+      <div class="caption"><span>01 · Primary horizontal</span><span>Ink / Bone</span></div>
+    </div>
+
+    <!-- 2. STACKED -->
+    <div class="cell span-4">
+      <div class="stage bg-bone">
+        <div class="lockup-v">
+          <svg width="64" height="76" viewBox="0 0 60 72">
+            <rect x="4" y="4" width="22" height="64" fill="#1F1F1F"/>
+            <rect x="26" y="22" width="8" height="2" fill="#1F1F1F"/>
+            <rect x="26" y="29" width="8" height="2" fill="#1F1F1F"/>
+            <rect x="34" y="4" width="22" height="36" fill="#1F1F1F"/>
+          </svg>
+          <span class="wm" style="font-size: 34px;">PurePep</span>
+        </div>
+      </div>
+      <div class="caption"><span>02 · Stacked</span><span>Ink / Bone</span></div>
+    </div>
+
+    <!-- 3. WORDMARK ONLY -->
+    <div class="cell span-6">
+      <div class="stage bg-bone">
+        <span class="wm" style="font-size: 72px;">PurePep</span>
+      </div>
+      <div class="caption"><span>03 · Wordmark only</span><span>Ink / Bone</span></div>
+    </div>
+
+    <!-- 4. GLYPH ONLY -->
+    <div class="cell span-3">
+      <div class="stage bg-bone">
+        <svg width="140" height="168" viewBox="0 0 60 72">
+          <rect x="4" y="4" width="22" height="64" fill="#1F1F1F"/>
+          <rect x="26" y="22" width="8" height="2" fill="#1F1F1F"/>
+          <rect x="26" y="29" width="8" height="2" fill="#1F1F1F"/>
+          <rect x="34" y="4" width="22" height="36" fill="#1F1F1F"/>
+        </svg>
+      </div>
+      <div class="caption"><span>04 · Glyph only</span><span>Ink / Bone</span></div>
+    </div>
+
+    <!-- 7. AMBER FAVICON (placed here for grid balance) -->
+    <div class="cell span-3">
+      <div class="stage" style="background:#DC9814; padding:0;">
+        <svg width="100%" height="100%" viewBox="0 0 72 72" preserveAspectRatio="xMidYMid meet" style="display:block;">
+          <rect width="72" height="72" fill="#DC9814"/>
+          <g transform="translate(11 6) scale(0.833)" fill="#1F1F1F">
+            <rect x="4" y="4" width="22" height="64"/>
+            <rect x="26" y="22" width="8" height="2"/>
+            <rect x="26" y="29" width="8" height="2"/>
+            <rect x="34" y="4" width="22" height="36"/>
+          </g>
+        </svg>
+      </div>
+      <div class="caption"><span>07 · Amber favicon</span><span>Ink / Amber</span></div>
+    </div>
+
+    <!-- 5. REVERSED -->
+    <div class="cell span-8">
+      <div class="stage bg-ink">
+        <div class="lockup-h">
+          <svg width="80" height="96" viewBox="0 0 60 72">
+            <rect x="4" y="4" width="22" height="64" fill="#FAF7F0"/>
+            <rect x="26" y="22" width="8" height="2" fill="#FAF7F0"/>
+            <rect x="26" y="29" width="8" height="2" fill="#FAF7F0"/>
+            <rect x="34" y="4" width="22" height="36" fill="#FAF7F0"/>
+          </svg>
+          <span class="wm wm-reversed" style="font-size: 72px;">PurePep</span>
+        </div>
+      </div>
+      <div class="caption"><span>05 · Reversed</span><span>Bone / Ink</span></div>
+    </div>
+
+    <!-- 6. BLUSH -->
+    <div class="cell span-4">
+      <div class="stage bg-blush">
+        <div class="lockup-h sm">
+          <svg width="52" height="62" viewBox="0 0 60 72">
+            <rect x="4" y="4" width="22" height="64" fill="#1F1F1F"/>
+            <rect x="26" y="22" width="8" height="2" fill="#1F1F1F"/>
+            <rect x="26" y="29" width="8" height="2" fill="#1F1F1F"/>
+            <rect x="34" y="4" width="22" height="36" fill="#1F1F1F"/>
+          </svg>
+          <span class="wm" style="font-size: 44px;">PurePep</span>
+        </div>
+      </div>
+      <div class="caption"><span>06 · Blush hero</span><span>Ink / Blush</span></div>
+    </div>
+
+    <!-- 8. FAVICON REDUCTION -->
+    <div class="cell span-5">
+      <div class="stage bg-bone">
+        <div class="fav-row">
+          <div class="fav-box">
+            <svg style="width:13px;height:16px;" viewBox="0 0 60 72" shape-rendering="crispEdges">
+              <rect x="4" y="4" width="22" height="64" fill="#1F1F1F"/>
+              <rect x="26" y="22" width="8" height="2" fill="#1F1F1F"/>
+              <rect x="26" y="29" width="8" height="2" fill="#1F1F1F"/>
+              <rect x="34" y="4" width="22" height="36" fill="#1F1F1F"/>
+            </svg>
+            <span class="sz">16</span>
+          </div>
+          <div class="fav-box">
+            <svg style="width:27px;height:32px;" viewBox="0 0 60 72" shape-rendering="crispEdges">
+              <rect x="4" y="4" width="22" height="64" fill="#1F1F1F"/>
+              <rect x="26" y="22" width="8" height="2" fill="#1F1F1F"/>
+              <rect x="26" y="29" width="8" height="2" fill="#1F1F1F"/>
+              <rect x="34" y="4" width="22" height="36" fill="#1F1F1F"/>
+            </svg>
+            <span class="sz">32</span>
+          </div>
+          <div class="fav-box">
+            <svg style="width:40px;height:48px;" viewBox="0 0 60 72" shape-rendering="crispEdges">
+              <rect x="4" y="4" width="22" height="64" fill="#1F1F1F"/>
+              <rect x="26" y="22" width="8" height="2" fill="#1F1F1F"/>
+              <rect x="26" y="29" width="8" height="2" fill="#1F1F1F"/>
+              <rect x="34" y="4" width="22" height="36" fill="#1F1F1F"/>
+            </svg>
+            <span class="sz">48</span>
+          </div>
+        </div>
+      </div>
+      <div class="caption"><span>08 · Favicon reduction</span><span>16 / 32 / 48 px</span></div>
+    </div>
+
+    <!-- 9. VIAL CAP -->
+    <div class="cell span-3">
+      <div class="stage bg-bone">
+        <div class="vial">
+          <svg width="38" height="46" viewBox="0 0 60 72">
+            <rect x="4" y="4" width="22" height="64" fill="#1F1F1F"/>
+            <rect x="26" y="22" width="8" height="2" fill="#1F1F1F"/>
+            <rect x="26" y="29" width="8" height="2" fill="#1F1F1F"/>
+            <rect x="34" y="4" width="22" height="36" fill="#1F1F1F"/>
+          </svg>
+        </div>
+      </div>
+      <div class="caption"><span>09 · Vial cap</span><span>~12mm</span></div>
+    </div>
+
+    <!-- 10. LAB DOC -->
+    <div class="cell span-4">
+      <div class="stage bg-white">
+        <div class="lockup-h sm">
+          <svg width="44" height="52" viewBox="0 0 60 72">
+            <rect x="4" y="4" width="22" height="64" fill="#000"/>
+            <rect x="26" y="22" width="8" height="2" fill="#000"/>
+            <rect x="26" y="29" width="8" height="2" fill="#000"/>
+            <rect x="34" y="4" width="22" height="36" fill="#000"/>
+          </svg>
+          <span class="wm wm-black" style="font-size: 34px;">PurePep</span>
+        </div>
+      </div>
+      <div class="caption"><span>10 · Lab doc / COA</span><span>Black / White</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- HANDOFF -->
+<section style="background: var(--surface);">
+  <span class="tag">03 · Handoff</span>
+  <h2>Files + integration</h2>
+
+  <p><strong>SVG source files</strong> in <code>/logo/svg/</code> — all wordmarks converted to paths, no font file required at render time.</p>
+  <p><strong>PNG rasters</strong> in <code>/logo/png/</code> — lockups at 2048px longest edge, favicon pack at 16/32/48/180/512.</p>
+  <p><strong>README</strong> in <code>/logo/README.md</code> — full variant map, WP integration snippet, clear-space rules, known trade-offs, Phase 1.5 TODO.</p>
+
+  <h2 style="margin-top:32px;">Phase 1.5 TODO (not blockers)</h2>
+  <p>• Custom-drawn wordmark letterforms (currently Inter Black paths, production-viable but not maximally distinctive)<br>
+  • Stationery templates (business card, letterhead)<br>
+  • Vial cap art file for silkscreen vendor (when Phase 2 begins)<br>
+  • Cap Height-aligned lockup variants if needed for specific layout contexts</p>
+</section>
+
+<footer class="foot">
+  <div>
+    PurePep · Logo system · τ · v1.0 FINAL<br>
+    For Research Use Only — Not for Human Consumption
+  </div>
+  <div>
+    Next per Taiga execution order: vial design (Phase 2)
+  </div>
+</footer>
+
+</body>
+</html>

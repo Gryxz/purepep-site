@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Product card</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .card { background: #F5EBD8; border: 1px solid rgba(107,107,107,0.15); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+  .img { background: #F2D7D7; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; position: relative; }
+  .img.alt { background: #EFE3CC; }
+  .vial { width: 60px; height: 130px; }
+  .pill { position: absolute; top: 12px; left: 12px; background: #F5EBD8; color: #1F1F1F; font-family: 'Inter'; font-size: 9.5px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 9px; border-radius: 9999px; }
+  .body { padding: 16px 18px 18px; }
+  .eb { font-family: 'Inter'; font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B6B6B; }
+  h3 { font-family: 'Fraunces'; font-weight: 500; font-size: 22px; margin: 6px 0 4px; color: #1F1F1F; letter-spacing: -0.01em; }
+  .meta { font-family: 'Inter'; font-size: 12px; color: #6B6B6B; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 14px; }
+  .price { font-family: 'Fraunces'; font-size: 20px; color: #1F1F1F; }
+  .lot { font-family: 'JetBrains Mono'; font-size: 10px; color: #6B6B6B; }
+</style></head>
+<body>
+  <div class="card">
+    <div class="img">
+      <span class="pill">In stock</span>
+      <svg class="vial" viewBox="0 0 60 130"><rect x="22" y="2" width="16" height="8" fill="#1F1F1F" rx="1"/><rect x="20" y="10" width="20" height="6" fill="#6B6B6B"/><rect x="14" y="16" width="32" height="100" rx="3" fill="#F5EBD8" stroke="#1F1F1F"/><rect x="18" y="55" width="24" height="34" fill="#F5EBD8" stroke="#1F1F1F" stroke-width="0.5"/><text x="30" y="72" text-anchor="middle" font-family="Fraunces" font-size="9" fill="#1F1F1F">RETA</text><text x="30" y="82" text-anchor="middle" font-family="Inter" font-size="6" fill="#6B6B6B">10 mg</text></svg>
+    </div>
+    <div class="body">
+      <div class="eb">Retatrutide</div>
+      <h3>RETA · 10 mg</h3>
+      <div class="meta">Lyophilized · single vial</div>
+      <div class="row"><div class="price">$189.00</div><div class="lot">SKU PP-RT-010</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="img alt">
+      <span class="pill">Pre-order</span>
+      <svg class="vial" viewBox="0 0 60 130"><rect x="22" y="2" width="16" height="8" fill="#1F1F1F" rx="1"/><rect x="20" y="10" width="20" height="6" fill="#6B6B6B"/><rect x="14" y="16" width="32" height="100" rx="3" fill="#F5EBD8" stroke="#1F1F1F"/><rect x="18" y="55" width="24" height="34" fill="#F2D7D7" stroke="#1F1F1F" stroke-width="0.5"/><text x="30" y="72" text-anchor="middle" font-family="Fraunces" font-size="9" fill="#1F1F1F">SEMA</text><text x="30" y="82" text-anchor="middle" font-family="Inter" font-size="6" fill="#6B6B6B">5 mg</text></svg>
+    </div>
+    <div class="body">
+      <div class="eb">Semaglutide</div>
+      <h3>SEMA · 5 mg</h3>
+      <div class="meta">Lyophilized · single vial</div>
+      <div class="row"><div class="price">$129.00</div><div class="lot">SKU PP-SM-005</div></div>
+    </div>
+  </div>
+</body></html>

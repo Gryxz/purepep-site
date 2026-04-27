@@ -1,0 +1,26 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Voice & tone</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 24px 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .col { display: flex; flex-direction: column; gap: 10px; }
+  .head { font-family: 'Inter'; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B6B6B; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 9999px; }
+  .good .dot { background: #1F1F1F; }
+  .bad .dot { background: #C75D3A; }
+  .quote { font-family: 'Fraunces'; font-weight: 500; font-size: 17px; color: #1F1F1F; line-height: 1.35; letter-spacing: -0.005em; padding: 14px 16px; border-left: 1px solid #1F1F1F; background: #F5EBD8; }
+  .bad .quote { border-left-color: #C75D3A; opacity: 0.92; }
+  .note { font-family: 'Inter'; font-size: 12px; color: #6B6B6B; }
+</style></head>
+<body>
+  <div class="col good">
+    <div class="head"><span class="dot"></span> Write like this</div>
+    <div class="quote">Lyophilized retatrutide, 10 mg per vial. Triplicate HPLC analysis on every lot.</div>
+    <div class="note">Declarative. Specific. Sentence case. No claims.</div>
+  </div>
+  <div class="col bad">
+    <div class="head"><span class="dot"></span> Never write like this</div>
+    <div class="quote">🔥 Unlock your research potential with our INCREDIBLE new RETA vials!</div>
+    <div class="note">Emoji. All-caps marketing. Hype verb. Therapeutic implication.</div>
+  </div>
+</body></html>

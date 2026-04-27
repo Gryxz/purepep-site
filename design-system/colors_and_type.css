@@ -1,0 +1,159 @@
+/* ===========================================================================
+   PurePep Design System — Phase 2 tokens
+   Locked palette: Ink / Bone / Soft Blush / Surface. Amber = favicon ONLY.
+   =========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* ---------- Palette (locked from brand guide) ---------- */
+  --pp-ink:         #1F1F1F;
+  --pp-ink-muted:   #6E6E6E;
+  --pp-bone:        #FAF7F0;
+  --pp-bone-soft:   #F5F1E6;   /* hover / subtle fill */
+  --pp-surface:     #F1EDE3;   /* secondary band bg */
+  --pp-blush:       #F2D7D7;   /* hero / testimonial band — single use per page */
+  --pp-line:        #E4DFCF;   /* hairline for very subtle dividers only */
+
+  --pp-success:     #1F1F1F;   /* Legacy: pass states stay Ink on Bone where neutral. */
+  --pp-white:       #FFFFFF;
+
+  /* ---------- Semantic accents (NEW — type + 1.5px border only, never hero fill) ---------- */
+  --pp-emerald:       #0F5132;   /* positive · in-stock · verified · success */
+  --pp-emerald-soft:  #E8F0EB;   /* optional 8% tint for emerald pill bg */
+  --pp-alert:         #C83E4D;   /* negative · out-of-stock · caution · destructive */
+  --pp-alert-soft:    #F7E4E6;   /* optional tint for alert pill bg */
+
+  /* ---------- Semantic aliases ---------- */
+  --pp-bg:          var(--pp-bone);
+  --pp-text:        var(--pp-ink);
+  --pp-text-muted:  var(--pp-ink-muted);
+  --pp-border:      var(--pp-ink);
+
+  /* ---------- Typography ---------- */
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Type scale */
+  --t-display-xl: 112px;
+  --t-display-l:  80px;
+  --t-display-m:  64px;
+  --t-h1:         48px;
+  --t-h2:         32px;
+  --t-h3:         22px;
+  --t-body-l:     18px;
+  --t-body:       16px;
+  --t-body-s:     14px;
+  --t-caption:    13px;
+  --t-eyebrow:    11px;
+  --t-mono:       13px;
+
+  --lh-tight:   1.02;
+  --lh-snug:    1.15;
+  --lh-normal:  1.55;
+  --lh-relaxed: 1.65;
+
+  --tracking-display: -0.02em;
+  --tracking-heading: -0.01em;
+  --tracking-eyebrow: 0.16em;
+
+  /* ---------- Spacing ---------- */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px;
+  --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px; --s-10: 128px;
+
+  /* ---------- Radii (brutalist — 0 / 2 only) ---------- */
+  --r-none: 0px;
+  --r-sm:   2px;
+
+  /* ---------- Borders ---------- */
+  --bw:     1.5px;
+  --bw-rule: 4px;
+
+  /* ---------- Motion ---------- */
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --dur-fast: 160ms; --dur-base: 240ms; --dur-slow: 400ms;
+
+  --max-content: 1280px;
+  --gutter: 24px;
+
+  /* ---------- Scrim ---------- */
+  --scrim: rgb(31 31 31 / 0.40);
+}
+
+/* ===========================================================================
+   Base
+   =========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { background: var(--pp-bg); }
+
+body {
+  margin: 0;
+  color: var(--pp-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern', 'liga', 'calt', 'ss01';
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  color: var(--pp-text);
+  margin: 0;
+  letter-spacing: var(--tracking-display);
+  line-height: var(--lh-tight);
+  text-wrap: balance;
+}
+h1 { font-size: var(--t-h1); }
+h2 { font-size: var(--t-h2); }
+h3 { font-size: var(--t-h3); letter-spacing: var(--tracking-heading); line-height: var(--lh-snug); }
+
+p { margin: 0; color: var(--pp-text); text-wrap: pretty; }
+
+a {
+  color: var(--pp-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color var(--dur-fast) var(--ease);
+}
+a:hover { color: var(--pp-ink-muted); }
+
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--pp-ink); outline-offset: 2px; }
+
+::selection { background: var(--pp-ink); color: var(--pp-bone); }
+
+button { font-family: inherit; }
+
+/* ===========================================================================
+   Utility classes
+   =========================================================================== */
+
+.pp-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--pp-ink-muted);
+  line-height: var(--lh-snug);
+}
+.pp-eyebrow--ink { color: var(--pp-ink); }
+.pp-eyebrow--bone { color: var(--pp-bone); }
+
+.pp-hairline { border: 0; border-top: var(--bw) solid var(--pp-ink); margin: 0; }
+.pp-hairline--soft { border-top-color: var(--pp-line); }
+
+.pp-rule { height: var(--bw-rule); background: var(--pp-ink); border: 0; margin: 0; }
+
+.pp-frame       { border: var(--bw) solid var(--pp-ink); background: var(--pp-bone); }
+.pp-frame-soft  { border: var(--bw) solid var(--pp-ink); background: var(--pp-surface); }
+
+/* Keyframes retained for any marquee usage */
+@keyframes pp-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }

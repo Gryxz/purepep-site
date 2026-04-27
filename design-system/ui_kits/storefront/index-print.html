@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PurePep — RETA · 10 mg (Print)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  html, body { background: #FFFFFF; margin: 0; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* Disable sticky and animations so print lays out cleanly */
+  header[style*="sticky"] { position: static !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+
+  /* Breadcrumb boxed bar */
+  .breadcrumb-bar {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 14px;
+    border: 1.5px solid #1F1F1F;
+    background: #F1EDE3;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: #777777;
+    white-space: nowrap;
+  }
+  .breadcrumb-bar > * { white-space: nowrap; }
+  .breadcrumb-bar a { color: inherit; text-decoration: none; }
+  .breadcrumb-bar .sep { color: #E4DFCF; }
+  .breadcrumb-bar .current { color: #1F1F1F; }
+
+  .section-rule { height: 4px; background: #1F1F1F; border: 0; margin: 0; }
+
+  /* RUO feature strip — static in print */
+  .brutal-banner {
+    height: 56px;
+    background: #1F1F1F;
+    border-top: 1.5px solid #1F1F1F;
+    border-bottom: 1.5px solid #1F1F1F;
+    overflow: hidden; position: relative;
+    display: flex; align-items: center;
+  }
+  .banner-track {
+    display: flex; gap: 36px;
+    white-space: nowrap;
+    padding-left: 24px;
+  }
+  .banner-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: #FFFFFF;
+    display: inline-flex; align-items: center; gap: 36px;
+    flex-shrink: 0;
+  }
+  .banner-dot {
+    display: inline-block; width: 6px; height: 6px;
+    background: #DC9814;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Page-break rules */
+  .pp-page { break-after: page; page-break-after: always; }
+  .pp-page:last-child { break-after: auto; page-break-after: auto; }
+  .pp-avoid-break { break-inside: avoid; page-break-inside: avoid; }
+
+  @page {
+    size: Letter portrait;
+    margin: 12mm;
+  }
+
+  @media print {
+    html, body { background: #FFFFFF !important; }
+    /* Hide interactive drawer etc. */
+    [data-print-hide] { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="Primitives.jsx"></script>
+<script type="text/babel" src="Header.jsx"></script>
+<script type="text/babel" src="Footer.jsx"></script>
+<script type="text/babel" src="ProductGallery.jsx"></script>
+<script type="text/babel" src="BuyBox.jsx"></script>
+<script type="text/babel" src="ComplianceBlock.jsx"></script>
+<script type="text/babel" src="COAPanel.jsx"></script>
+<script type="text/babel" src="RelatedRail.jsx"></script>
+<script type="text/babel" src="CartDrawer.jsx"></script>
+
+<script type="text/babel">
+const { useState } = React;
+
+function BrutalBanner() {
+  const items = ['For research use only', 'Lot RT-2604-A11', 'COA included', 'Ships 2–8°C'];
+  const track = [...items, ...items, ...items];
+  return (
+    <div className="brutal-banner pp-avoid-break">
+      <div className="banner-track">
+        {track.map((t, i) => (
+          <span key={i} className="banner-item">
+            {t}
+            <span className="banner-dot"/>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PrintApp() {
+  return (
+    <div data-screen-label="RETA Product Detail Page (Print)">
+      {/* PAGE 1: header, breadcrumb, hero, buybox, RUO strip */}
+      <div className="pp-page">
+        <Header cartCount={0} onOpenCart={() => {}}/>
+        <main style={{ maxWidth: 1280, margin: '0 auto', padding: '24px 24px 0' }}>
+          <div style={{ marginBottom: 24 }}>
+            <div className="breadcrumb-bar">
+              <a href="#">Catalog</a>
+              <span className="sep">/</span>
+              <a href="#">Incretin mimetics</a>
+              <span className="sep">/</span>
+              <span className="current">RETA · 10 mg</span>
+            </div>
+          </div>
+          <section className="pp-avoid-break" style={{ display: 'grid', gridTemplateColumns: '1.05fr 1fr', gap: 48, marginBottom: 32 }}>
+            <ProductGallery/>
+            <BuyBox onAddToCart={() => {}}/>
+          </section>
+        </main>
+        <BrutalBanner/>
+      </div>
+
+      {/* PAGE 2: compliance row + COA */}
+      <div className="pp-page">
+        <main style={{ maxWidth: 1280, margin: '0 auto', padding: '36px 24px 0' }}>
+          <section className="pp-avoid-break" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 36 }}>
+            <ComplianceBlock
+              icon="shield"
+              tone="alert"
+              eyebrow="Research use only"
+              title="Not for human consumption."
+              body="Sales restricted to qualified researchers, 21 and over. PurePep does not provide medical, dosage, or therapeutic guidance. The buyer assumes all responsibility for use, handling, and disposal."
+            />
+            <ComplianceBlock
+              icon="alert"
+              tone="alert"
+              eyebrow="All sales final"
+              title="No refunds, no exchanges, no returns."
+              body="Review the certificate of analysis before purchase. Damaged-on-arrival claims must be filed within 24 hours of delivery with photographic evidence."
+            />
+          </section>
+          <hr className="section-rule" style={{ marginBottom: 32 }}/>
+          <section className="pp-avoid-break" style={{ marginBottom: 0 }}>
+            <COAPanel/>
+          </section>
+        </main>
+      </div>
+
+      {/* PAGE 3: related rail + footer */}
+      <div>
+        <main style={{ maxWidth: 1280, margin: '0 auto', padding: '36px 24px 48px' }}>
+          <section className="pp-avoid-break">
+            <RelatedRail/>
+          </section>
+        </main>
+        <Footer/>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<PrintApp/>);
+
+// Auto-print once fonts + Babel + React have rendered.
+(async function autoPrint() {
+  try {
+    if (document.fonts && document.fonts.ready) { await document.fonts.ready; }
+  } catch (e) {}
+  // Wait for React tree to mount (root has children) and a little extra settling.
+  const start = Date.now();
+  while (Date.now() - start < 4000) {
+    const root = document.getElementById('root');
+    if (root && root.children.length > 0 && root.querySelector('footer')) break;
+    await new Promise(r => setTimeout(r, 100));
+  }
+  await new Promise(r => setTimeout(r, 500));
+  window.print();
+})();
+</script>
+</body>
+</html>

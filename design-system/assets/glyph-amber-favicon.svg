@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
+  <title>PurePep amber favicon (tau)</title>
+  <rect width="72" height="72" fill="#DC9814"></rect>
+  <g transform="translate(11 6) scale(0.833)" fill="#1F1F1F">
+    <rect x="4" y="4" width="22" height="64"></rect>
+    <rect x="26" y="22" width="8" height="2"></rect>
+    <rect x="26" y="29" width="8" height="2"></rect>
+    <rect x="34" y="4" width="22" height="36"></rect>
+  </g>
+</svg>

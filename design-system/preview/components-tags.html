@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Tags & badges</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 32px; display: flex; flex-direction: column; gap: 18px; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 9999px; font-family: 'Inter'; font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; }
+  .pill.blush { background: #F2D7D7; color: #1F1F1F; }
+  .pill.dark  { background: #1F1F1F; color: #F5EBD8; }
+  .pill.outline { background: transparent; color: #1F1F1F; border: 1px solid #1F1F1F; }
+  .pill .dot { width: 6px; height: 6px; border-radius: 9999px; background: #1F1F1F; }
+  .tag { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 2px; font-family: 'JetBrains Mono'; font-size: 10px; color: #1F1F1F; border: 1px solid rgba(107,107,107,0.3); }
+  .label { font-family: 'Inter'; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B6B6B; min-width: 110px; }
+  .line { display: flex; align-items: center; gap: 16px; }
+</style></head>
+<body>
+  <div class="line"><div class="label">Status</div><div class="row">
+    <span class="pill blush"><span class="dot" style="background:#1F1F1F"></span> In stock</span>
+    <span class="pill blush">RUO</span>
+    <span class="pill outline">Lab tested</span>
+    <span class="pill dark">21+ only</span>
+  </div></div>
+  <div class="line"><div class="label">Mono tags</div><div class="row">
+    <span class="tag">RT-2604-A11</span>
+    <span class="tag">EXP 2027-04</span>
+    <span class="tag">99.7% PURITY</span>
+    <span class="tag">2–8 °C</span>
+  </div></div>
+</body></html>
