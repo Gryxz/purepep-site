@@ -11,6 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/inc/tokens.php';
+require_once __DIR__ . '/inc/setup-pages.php';
 
 /**
  * Enqueue the parent theme stylesheet, then the PurePep token sheet, then the
