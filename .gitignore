@@ -12,3 +12,4 @@ dist
 coverage
 .husky/_
 next-env.d.ts
+*.tsbuildinfo
