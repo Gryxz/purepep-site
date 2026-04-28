@@ -35,12 +35,23 @@ If you have access to the live storefront (`purepep.shop`), product photography,
 | File / folder | What's in it |
 |---|---|
 | `README.md` | This file. Brand context, content + visual foundations, iconography. |
-| `colors_and_type.css` | CSS custom properties — color palette, type ramp, spacing, radii, shadows. Import this in any new design. |
+| `tokens.json` | **Canonical machine-readable tokens.** Color, type, spacing, radii, motion, blur, compliance copy, constraints. Source of truth for downstream consumers. |
+| `tokens.ts` | TypeScript module mirror of `tokens.json` for Next.js / TS consumers. Hand-authored to stay in sync. |
+| `colors_and_type.css` | CSS custom properties + utility classes (`.pp-eyebrow`, `.pp-hairline`, `.pp-rule`, `.pp-frame`). Import directly in CSS-only consumers (the WP child theme; static HTML prototypes). |
 | `fonts/` | Webfont references (Google Fonts CDN — see Type section). |
 | `assets/` | Logos (wordmark + mark), vial label artwork, brand patterns. |
 | `preview/` | Design system cards rendered for the Design System tab (one card per token cluster). |
 | `ui_kits/storefront/` | The PurePep storefront UI kit — JSX components and an interactive `index.html` showing the RETA product detail page. |
 | `SKILL.md` | Agent Skills entry point — makes this folder portable to Claude Code. |
+
+### Token consumption — pick the format your stack speaks
+
+- **TypeScript / Next.js / build tooling:** `import tokens from '../design-system/tokens'`. Typed, autocompletes, locked to the spec.
+- **JSON pipelines / Style Dictionary / language-agnostic codegen:** `tokens.json`. Includes `_doc` fields and role descriptions per token.
+- **CSS-first projects (WP child theme, static HTML):** `colors_and_type.css`. Provides `:root` custom properties + utility classes ready to use.
+- **PHP / WordPress:** `purepep-child/inc/tokens.php` mirrors a subset for PHP-side code paths (also kept in sync by hand).
+
+When tokens change in `colors_and_type.css`, also update `tokens.json`, `tokens.ts`, and `purepep-child/inc/tokens.php` in the same commit. A `scripts/check-tokens-sync.ts` will eventually fail CI on drift.
 
 ---
 
