@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { compliance } from "@design/tokens";
+import { Header } from "@/components/storefront/Header";
+import { Footer } from "@/components/storefront/Footer";
+import { CartDrawer } from "@/components/storefront/CartDrawer";
 import "./globals.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://purepep.shop";
@@ -31,7 +34,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-bone text-ink antialiased">{children}</body>
+      <body className="bg-bone text-ink antialiased">
+        <Header />
+        <main>{children}</main>
+        <Footer />
+        <CartDrawer />
+      </body>
     </html>
   );
 }
