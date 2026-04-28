@@ -20,7 +20,7 @@
  * utilities like bg-bone, text-ink, border-ink, font-mono, etc. resolve
  * to the locked palette.
  *
- * Amber (#DC9814) is intentionally absent — it is favicon-only.
+ * Amber is intentionally absent from this map — it is favicon-only per brand bible.
  */
 @theme {
   --color-ink:          var(--pp-ink);
