@@ -9,10 +9,11 @@ function UtilityStrip() {
   const items = ["For research use only", "21+ qualified researchers", "All sales final"];
   return (
     <div className="border-b border-ink bg-bone">
-      <div className="layout-content flex items-center justify-center gap-5 py-[9px] whitespace-nowrap">
+      {/* Desktop: all three items */}
+      <div className="layout-content hidden items-center justify-center gap-5 py-[9px] md:flex">
         {items.map((t, i) => (
           <React.Fragment key={t}>
-            <span className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-ink">
+            <span className="whitespace-nowrap font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-ink">
               {t}
             </span>
             {i < items.length - 1 && (
@@ -20,6 +21,12 @@ function UtilityStrip() {
             )}
           </React.Fragment>
         ))}
+      </div>
+      {/* Mobile: condensed single line */}
+      <div className="flex items-center justify-center py-[7px] md:hidden">
+        <span className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-ink">
+          Research use only · 21+ qualified researchers
+        </span>
       </div>
     </div>
   );
@@ -104,8 +111,19 @@ function NavAffiliatesDropdown({ active = false }: { active?: boolean }) {
   );
 }
 
+const MOBILE_NAV_LINKS = [
+  { label: "Catalog", href: "/shop" },
+  { label: "RETA", href: "/shop/reta" },
+  { label: "Quality", href: "#" },
+  { label: "Documentation", href: "#" },
+  { label: "Affiliates", href: "/affiliates" },
+  { label: "Affiliate dashboard", href: "/affiliates/dashboard" },
+  { label: "Account", href: "#" },
+];
+
 export function Header({ minimal = false }: { minimal?: boolean }) {
   const { totalItems, openCart } = useCartStore();
+  const [menuOpen, setMenuOpen] = useState(false);
   const count = totalItems();
 
   return (
@@ -113,16 +131,19 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
       <UtilityStrip />
       <div
         className={clsx(
-          "layout-content grid items-center gap-8 border-b border-ink py-5",
-          minimal ? "grid-cols-[1fr_auto]" : "grid-cols-[220px_1fr_auto]",
+          "layout-content grid items-center border-b border-ink py-4 md:py-5",
+          minimal
+            ? "grid-cols-[1fr_auto] gap-4"
+            : "grid-cols-[auto_1fr_auto] gap-4 md:grid-cols-[220px_1fr_auto] md:gap-8",
         )}
       >
         <Link href="/" className="inline-block no-underline">
-          <Lockup className="h-9 w-auto" />
+          <Lockup className="h-8 w-auto md:h-9" />
         </Link>
 
         {!minimal && (
-          <nav className="flex items-center justify-center gap-9">
+          /* Desktop nav — hidden on mobile */
+          <nav className="hidden items-center justify-center gap-9 md:flex">
             <NavLink href="/shop">Catalog</NavLink>
             <NavLink href="/shop/reta">RETA</NavLink>
             <NavLink>Quality</NavLink>
@@ -135,35 +156,101 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
         {minimal ? (
           <Eyebrow className="text-ink">Secure checkout</Eyebrow>
         ) : (
-          <div className="flex items-center gap-[18px]">
+          <div className="flex items-center gap-2 md:gap-[18px]">
+            {/* Search — desktop only */}
             <button
               type="button"
               aria-label="Search"
-              className="inline-flex cursor-pointer items-center justify-center border-none bg-transparent p-1.5 text-ink"
+              className="hidden cursor-pointer items-center justify-center border-none bg-transparent p-1.5 text-ink md:inline-flex"
             >
               <Icon name="search" size={18} />
             </button>
+            {/* Account — desktop only */}
             <button
               type="button"
               aria-label="Account"
-              className="inline-flex cursor-pointer items-center justify-center border-none bg-transparent p-1.5 text-ink"
+              className="hidden cursor-pointer items-center justify-center border-none bg-transparent p-1.5 text-ink md:inline-flex"
             >
               <Icon name="user" size={18} />
             </button>
+            {/* Cart */}
             <button
               type="button"
               onClick={openCart}
               aria-label="Open cart"
-              className="relative inline-flex cursor-pointer items-center gap-2 border border-ink bg-transparent px-3 py-2 text-ink"
+              className="relative inline-flex h-11 cursor-pointer items-center gap-2 border border-ink bg-transparent px-3 py-2 text-ink"
             >
               <Icon name="cart" size={16} />
               <span className="font-mono text-[11px] font-semibold tracking-[0.12em]">
                 {String(count).padStart(2, "0")}
               </span>
             </button>
+            {/* Hamburger — mobile only */}
+            <button
+              type="button"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((o) => !o)}
+              className="inline-flex h-11 w-11 cursor-pointer items-center justify-center border-none bg-transparent text-ink md:hidden"
+            >
+              <Icon name={menuOpen ? "close" : "menu"} size={22} />
+            </button>
           </div>
         )}
       </div>
+
+      {/* Mobile full-screen nav overlay */}
+      {menuOpen && !minimal && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-bone md:hidden">
+          {/* Top bar */}
+          <div className="flex items-center justify-between border-b border-ink px-4 py-4">
+            <Link href="/" onClick={() => setMenuOpen(false)} className="inline-block no-underline">
+              <Lockup className="h-8 w-auto" />
+            </Link>
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={() => setMenuOpen(false)}
+              className="inline-flex h-11 w-11 cursor-pointer items-center justify-center border-none bg-transparent text-ink"
+            >
+              <Icon name="close" size={22} />
+            </button>
+          </div>
+
+          {/* Nav links */}
+          <nav className="flex flex-1 flex-col overflow-y-auto">
+            {MOBILE_NAV_LINKS.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href as never}
+                onClick={() => setMenuOpen(false)}
+                className="flex min-h-[56px] items-center border-b border-line px-4 font-sans text-[17px] font-medium text-ink no-underline"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Bottom actions */}
+          <div className="border-t border-ink px-4 pb-8 pt-4">
+            <button
+              type="button"
+              onClick={() => { openCart(); setMenuOpen(false); }}
+              className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone"
+            >
+              <Icon name="cart" size={16} />
+              Cart · {String(count).padStart(2, "0")}
+            </button>
+            <Link
+              href="/researcher-access"
+              onClick={() => setMenuOpen(false)}
+              className="mt-3 flex h-11 w-full items-center justify-center border border-ink bg-transparent font-mono text-[11px] uppercase tracking-[0.14em] text-ink no-underline"
+            >
+              Researcher access →
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
