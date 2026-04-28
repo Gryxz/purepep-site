@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useCartStore } from "@/lib/cart-store";
 import {
   Eyebrow,
@@ -92,6 +92,19 @@ export function BuyBox({ product }: { product: Product }) {
       : 0,
   );
   const { addItem, openCart } = useCartStore();
+  const ctaRef = useRef<HTMLButtonElement>(null);
+  const [showSticky, setShowSticky] = useState(false);
+
+  useEffect(() => {
+    const el = ctaRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setShowSticky(!(entry?.isIntersecting ?? true)),
+      { rootMargin: "0px" },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const tier = TIERS[tierIdx] ?? TIERS[0]!;
   const variant = product.variants[variantIdx] ?? product.dose;
@@ -116,7 +129,7 @@ export function BuyBox({ product }: { product: Product }) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 md:gap-6">
       {/* title block */}
       <div>
         <div className="flex flex-wrap items-center gap-2.5">
@@ -127,24 +140,25 @@ export function BuyBox({ product }: { product: Product }) {
           <SemanticPill stock={product.stock} lowCount={product.lowCount} />
         </div>
         <h1
-          className="mt-3.5 font-display font-black leading-[1] tracking-[-0.035em] text-ink"
-          style={{ fontSize: "clamp(44px, 5.5vw, 64px)" }}
+          className="mt-3 font-display font-black leading-[1] tracking-[-0.035em] text-ink md:mt-3.5"
+          style={{ fontSize: "clamp(32px, 8vw, 64px)" }}
         >
           {product.compound}{" "}
           <span className="text-ink">· {variant}</span>
         </h1>
-        <p className="mt-5 max-w-[520px] font-sans text-[15.5px] leading-[1.65] text-ink">
+        {/* Description — hidden on mobile to keep CTA above fold */}
+        <p className="mt-4 hidden max-w-[520px] font-sans text-[15.5px] leading-[1.65] text-ink md:block md:mt-5">
           {product.description}
         </p>
-        <p className="mt-4.5 font-sans text-[14px] font-semibold leading-[1.55] text-ink">
+        <p className="mt-3 font-sans text-[13px] font-semibold leading-[1.55] text-ink md:text-[14px] md:mt-4.5">
           {product.disclaimer}
         </p>
       </div>
 
       <Hairline />
 
-      {/* spec table */}
-      <div>
+      {/* spec table — desktop only; mobile has COAPanel spec tab */}
+      <div className="hidden md:block">
         <div className="mb-1">
           <Eyebrow>Specification</Eyebrow>
         </div>
@@ -167,7 +181,7 @@ export function BuyBox({ product }: { product: Product }) {
         <SpecRow label="Storage" value={product.storage} last />
       </div>
 
-      <Hairline />
+      <Hairline className="hidden md:block" />
 
       {/* tier pricing */}
       <div>
@@ -184,7 +198,7 @@ export function BuyBox({ product }: { product: Product }) {
                 type="button"
                 onClick={() => setTierIdx(i)}
                 className={clsx(
-                  "relative -mb-px grid w-full cursor-pointer items-center gap-4 border border-ink bg-bone px-[18px] py-4 text-left rounded-[2px] transition-colors",
+                  "relative -mb-px grid w-full cursor-pointer items-center gap-3 border border-ink bg-bone px-[14px] py-3 text-left rounded-[2px] transition-colors md:gap-4 md:px-[18px] md:py-4",
                   active && "z-10 bg-surface",
                 )}
                 style={{ gridTemplateColumns: "auto 1fr auto auto" }}
@@ -196,7 +210,7 @@ export function BuyBox({ product }: { product: Product }) {
                 </span>
                 <span
                   className={clsx(
-                    "font-sans text-[15px] text-ink",
+                    "font-sans text-[14px] text-ink md:text-[15px]",
                     active ? "font-bold" : "font-medium",
                   )}
                 >
@@ -207,7 +221,7 @@ export function BuyBox({ product }: { product: Product }) {
                     {t.tag}
                   </span>
                 )}
-                <span className="font-display text-[16px] font-black tabular-nums text-ink">
+                <span className="font-display text-[15px] font-black tabular-nums text-ink md:text-[16px]">
                   ${eachPrice.toFixed(2)}
                   {t.qty > 1 && (
                     <span className="ml-1.5 text-[13px] font-medium text-ink-muted">
@@ -222,7 +236,7 @@ export function BuyBox({ product }: { product: Product }) {
       </div>
 
       {/* variant + qty */}
-      <div className="flex flex-wrap items-end gap-7">
+      <div className="flex flex-wrap items-end gap-5 md:gap-7">
         <div>
           <div className="mb-2.5">
             <Eyebrow>Dose</Eyebrow>
@@ -234,7 +248,7 @@ export function BuyBox({ product }: { product: Product }) {
                 type="button"
                 onClick={() => setVariantIdx(i)}
                 className={clsx(
-                  "min-w-[80px] cursor-pointer rounded-[2px] border border-ink px-5 py-2.5 font-sans text-[13px] font-semibold tracking-[0.02em] transition-colors",
+                  "min-w-[72px] cursor-pointer rounded-[2px] border border-ink px-4 py-2.5 font-sans text-[13px] font-semibold tracking-[0.02em] transition-colors md:min-w-[80px] md:px-5",
                   variantIdx === i ? "bg-ink text-bone" : "bg-bone text-ink",
                 )}
               >
@@ -263,6 +277,7 @@ export function BuyBox({ product }: { product: Product }) {
 
       {/* CTA */}
       <button
+        ref={ctaRef}
         type="button"
         onClick={handleAddToCart}
         disabled={isOut}
@@ -280,6 +295,36 @@ export function BuyBox({ product }: { product: Product }) {
       </button>
 
       <TrustStripInline />
+
+      {/* Sticky buy bar — mobile only, appears when main CTA scrolls out of view */}
+      {showSticky && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-ink bg-bone px-4 pb-safe pt-3 pb-4 md:hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="truncate font-display text-[15px] font-black leading-tight tracking-[-0.01em] text-ink">
+                {product.compound} · {variant}
+              </p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
+                ${totalPrice.toFixed(2)} · {tier.label}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              disabled={isOut}
+              className={clsx(
+                "flex h-12 shrink-0 cursor-pointer items-center gap-2 rounded-[2px] border px-5 font-sans text-[13px] font-bold uppercase tracking-[0.04em] transition-colors",
+                isOut
+                  ? "border-line bg-line text-ink-muted cursor-not-allowed"
+                  : "border-ink bg-ink text-bone",
+              )}
+            >
+              <Icon name="cart" size={15} />
+              Add
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
