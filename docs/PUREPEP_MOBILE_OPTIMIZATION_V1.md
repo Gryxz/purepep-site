@@ -47,7 +47,7 @@ Mobile-first optimization brief for the PurePep Next.js storefront.
 
 ### S4 — Cart + Checkout + Age Gate
 - Cart: order summary moves below items on mobile
-- Checkout: single-column form, sticky bottom “Place order” bar
+- Checkout: single-column form, sticky bottom "Place order" bar
 - Age gate: full-screen centered, no changes needed beyond gutter
 
 ### S5 — Affiliates + Researcher Access + perf hygiene
