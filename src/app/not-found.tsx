@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <main className="mx-auto max-w-[1280px] px-6 py-24">
+    <main className="layout-content py-24">
       <p className="font-mono text-eyebrow uppercase tracking-[0.16em] text-ink-muted">
         404 — Not found
       </p>

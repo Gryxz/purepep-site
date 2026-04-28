@@ -34,7 +34,7 @@
   --color-emerald-soft: var(--pp-emerald-soft);
   --color-alert:        var(--pp-alert);
   --color-alert-soft:   var(--pp-alert-soft);
-  --color-white:        #FFFFFF;
+  --color-white:        var(--pp-white);
 
   --font-sans:    var(--font-sans);
   --font-display: var(--font-display);
@@ -80,4 +80,18 @@
 
   /* Backdrop blur — locked allowlist (sticky header + modal scrim only). */
   --backdrop-blur-header: 12px;
+}
+
+/**
+ * Canonical content container — tokens.layout.maxContent (1280 px) with the
+ * tokens.layout.gutter (24 px) horizontal padding. Use this class instead of
+ * arbitrary Tailwind width values, which the token fence rejects.
+ */
+@layer components {
+  .layout-content {
+    width: 100%;
+    max-width: var(--max-content);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
 }

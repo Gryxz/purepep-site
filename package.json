@@ -11,12 +11,12 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "lint": "next lint && stylelint \"src/**/*.{css,tsx}\" && tsx scripts/check-tokens-fence.ts",
-    "lint:fix": "next lint --fix && stylelint \"src/**/*.{css,tsx}\" --fix",
+    "lint": "next lint && stylelint \"src/**/*.css\" && tsx scripts/check-tokens-fence.ts",
+    "lint:fix": "next lint --fix && stylelint \"src/**/*.css\" --fix",
     "format": "prettier --write .",
     "fence": "tsx scripts/check-tokens-fence.ts",
     "test": "vitest run",
-    "prepare": "husky || true"
+    "prepare": "husky"
   },
   "dependencies": {
     "next": "^15.1.6",
@@ -44,7 +44,13 @@
     "typescript": "^5.7.3"
   },
   "lint-staged": {
-    "*.{ts,tsx}": ["prettier --write", "eslint --fix"],
-    "*.css": ["prettier --write", "stylelint --fix"]
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.css": [
+      "prettier --write",
+      "stylelint --fix"
+    ]
   }
 }

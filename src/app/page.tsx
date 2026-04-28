@@ -3,7 +3,7 @@ import { compliance } from "@design/tokens";
 
 export default function Home() {
   return (
-    <main className="mx-auto max-w-[1280px] px-6 py-24">
+    <main className="layout-content py-24">
       <p className="font-mono text-eyebrow uppercase tracking-[0.16em] text-ink-muted">
         Storefront — foundation
       </p>
