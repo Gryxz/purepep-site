@@ -92,6 +92,12 @@
     width: 100%;
     max-width: var(--max-content);
     margin-inline: auto;
-    padding-inline: var(--gutter);
+    padding-inline: 16px;
+  }
+
+  @media (min-width: 640px) {
+    .layout-content {
+      padding-inline: var(--gutter);
+    }
   }
 }
