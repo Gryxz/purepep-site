@@ -1,0 +1,40 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "ignoreFiles": ["purepep-site/**", "node_modules/**", ".next/**"],
+  "rules": {
+    "color-no-hex": [true, { "severity": "error" }],
+    "declaration-property-value-disallowed-list": {
+      "/^box-shadow$/": ["/.+/"],
+      "/^background-image$/": ["/gradient/"]
+    },
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "tailwind",
+          "theme",
+          "apply",
+          "variants",
+          "responsive",
+          "screen",
+          "layer",
+          "config",
+          "plugin",
+          "source",
+          "utility",
+          "custom-variant"
+        ]
+      }
+    ],
+    "no-descending-specificity": null,
+    "selector-class-pattern": null
+  },
+  "overrides": [
+    {
+      "files": ["src/components/Header.tsx", "src/components/Modal.tsx", "src/app/globals.css"],
+      "rules": {
+        "declaration-property-value-disallowed-list": null
+      }
+    }
+  ]
+}

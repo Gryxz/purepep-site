@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/**
+ * PurePep design tokens — single source of truth lives in
+ * purepep-site/design-system/colors_and_type.css.
+ *
+ * The submodule import below brings in :root CSS variables (--pp-*) plus
+ * the canonical base resets and utility classes (.pp-eyebrow, .pp-hairline,
+ * .pp-rule, .pp-frame). Do not duplicate those values here.
+ */
+@import "../../purepep-site/design-system/colors_and_type.css";
+
+/**
+ * Map the canonical --pp-* variables to Tailwind v4 theme tokens so
+ * utilities like bg-bone, text-ink, border-ink, font-mono, etc. resolve
+ * to the locked palette.
+ *
+ * Amber (#DC9814) is intentionally absent — it is favicon-only.
+ */
+@theme {
+  --color-ink:          var(--pp-ink);
+  --color-ink-muted:    var(--pp-ink-muted);
+  --color-bone:         var(--pp-bone);
+  --color-bone-soft:    var(--pp-bone-soft);
+  --color-surface:      var(--pp-surface);
+  --color-blush:        var(--pp-blush);
+  --color-line:         var(--pp-line);
+  --color-emerald:      var(--pp-emerald);
+  --color-emerald-soft: var(--pp-emerald-soft);
+  --color-alert:        var(--pp-alert);
+  --color-alert-soft:   var(--pp-alert-soft);
+  --color-white:        #FFFFFF;
+
+  --font-sans:    var(--font-sans);
+  --font-display: var(--font-display);
+  --font-mono:    var(--font-mono);
+
+  --text-display-xl: var(--t-display-xl);
+  --text-display-l:  var(--t-display-l);
+  --text-display-m:  var(--t-display-m);
+  --text-h1:         var(--t-h1);
+  --text-h2:         var(--t-h2);
+  --text-h3:         var(--t-h3);
+  --text-body-l:     var(--t-body-l);
+  --text-body:       var(--t-body);
+  --text-body-s:     var(--t-body-s);
+  --text-caption:    var(--t-caption);
+  --text-eyebrow:    var(--t-eyebrow);
+  --text-mono:       var(--t-mono);
+
+  --tracking-display: var(--tracking-display);
+  --tracking-heading: var(--tracking-heading);
+  --tracking-eyebrow: var(--tracking-eyebrow);
+
+  --leading-tight:   var(--lh-tight);
+  --leading-snug:    var(--lh-snug);
+  --leading-normal:  var(--lh-normal);
+  --leading-relaxed: var(--lh-relaxed);
+
+  --spacing-1:  var(--s-1);
+  --spacing-2:  var(--s-2);
+  --spacing-3:  var(--s-3);
+  --spacing-4:  var(--s-4);
+  --spacing-5:  var(--s-5);
+  --spacing-6:  var(--s-6);
+  --spacing-7:  var(--s-7);
+  --spacing-8:  var(--s-8);
+  --spacing-9:  var(--s-9);
+  --spacing-10: var(--s-10);
+
+  --radius-none: var(--r-none);
+  --radius-sm:   var(--r-sm);
+
+  --ease-pp: var(--ease);
+
+  /* Backdrop blur — locked allowlist (sticky header + modal scrim only). */
+  --backdrop-blur-header: 12px;
+}

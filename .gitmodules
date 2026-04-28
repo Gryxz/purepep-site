@@ -1,0 +1,3 @@
+[submodule "purepep-site"]
+	path = purepep-site
+	url = file:///home/user/purepep-site
