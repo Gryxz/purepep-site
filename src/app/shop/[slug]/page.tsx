@@ -1,0 +1,142 @@
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { getProduct, getProductSlugs, getRelated } from "@/data/products";
+import { BuyBox } from "@/components/storefront/BuyBox";
+import { COAPanel } from "@/components/storefront/COAPanel";
+import { LabelCard, Eyebrow, Hairline } from "@/components/storefront/primitives";
+import { ComplianceBlock } from "@/components/ComplianceBlock";
+import type { Metadata } from "next";
+
+export function generateStaticParams() {
+  return getProductSlugs().map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const product = getProduct(slug);
+  if (!product) return {};
+  return {
+    title: `${product.compound} · ${product.name} ${product.dose}`,
+    description: product.description.slice(0, 155),
+  };
+}
+
+export default async function PDPPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const product = getProduct(slug);
+  if (!product) notFound();
+
+  const related = getRelated(slug, 4);
+
+  return (
+    <>
+      {/* Breadcrumb */}
+      <nav className="border-b border-ink bg-bone" aria-label="Breadcrumb">
+        <div className="layout-content py-3">
+          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
+            <Link href="/" className="text-ink-muted no-underline hover:text-ink">Home</Link>
+            {" / "}
+            <Link href="/shop" className="text-ink-muted no-underline hover:text-ink">Catalog</Link>
+            {" / "}
+            <span className="text-ink">{product.compound}</span>
+          </span>
+        </div>
+      </nav>
+
+      {/* Hero: 2-col grid */}
+      <section className="border-b border-ink bg-bone">
+        <div
+          className="layout-content grid gap-[72px] py-[72px]"
+          style={{ gridTemplateColumns: "1fr 1fr" }}
+        >
+          {/* Left: vial visual */}
+          <div className="flex flex-col items-center justify-center border border-ink bg-surface py-16">
+            <div className="flex items-end justify-center px-12 pt-4 pb-0">
+              <svg
+                viewBox="0 0 80 120"
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-[200px] w-auto text-ink"
+                aria-hidden="true"
+              >
+                <rect x="20" y="20" width="40" height="80" rx="2" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                <rect x="22" y="10" width="36" height="14" rx="1" fill="currentColor" />
+                <rect x="20" y="44" width="40" height="30" fill="currentColor" fillOpacity="0.08" />
+                <text
+                  x="40"
+                  y="63"
+                  textAnchor="middle"
+                  fontFamily="'IBM Plex Mono', monospace"
+                  fontSize="9"
+                  fontWeight="700"
+                  fill="currentColor"
+                  letterSpacing="0.12em"
+                >
+                  {product.compound}
+                </text>
+              </svg>
+            </div>
+            <div className="mt-6 border-t border-ink w-full px-8 pt-5">
+              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted text-center">
+                {product.sku} · Lot {product.lot}
+              </p>
+            </div>
+          </div>
+
+          {/* Right: BuyBox */}
+          <BuyBox product={product} />
+        </div>
+      </section>
+
+      {/* COA Panel */}
+      <section className="border-b border-ink bg-bone">
+        <div className="layout-content py-10">
+          <COAPanel product={product} />
+        </div>
+      </section>
+
+      {/* Compliance */}
+      <section className="border-b border-ink bg-surface">
+        <div className="layout-content py-10">
+          <ComplianceBlock />
+        </div>
+      </section>
+
+      {/* Related products rail */}
+      {related.length > 0 && (
+        <section className="bg-bone">
+          <div className="layout-content py-16">
+            <div className="mb-8">
+              <Eyebrow>Related compounds</Eyebrow>
+              <h2 className="mt-3 font-display text-[28px] font-black leading-tight tracking-[-0.02em] text-ink">
+                Also in catalog
+              </h2>
+            </div>
+            <Hairline className="mb-8" />
+            <div className="grid grid-cols-4 gap-5">
+              {related.map((p) => (
+                <LabelCard
+                  key={p.slug}
+                  compound={p.compound}
+                  name={p.name}
+                  cas={p.cas}
+                  price={p.priceLabel}
+                  stock={p.stock}
+                  lowCount={p.lowCount}
+                  href={`/shop/${p.slug}`}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+    </>
+  );
+}
