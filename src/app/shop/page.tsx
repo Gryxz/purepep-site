@@ -22,15 +22,15 @@ function CatalogHeader({
 }) {
   return (
     <section className="border-b border-ink bg-bone">
-      <div className="layout-content pb-10 pt-14">
+      <div className="layout-content pb-8 pt-10 md:pb-10 md:pt-14">
         <Eyebrow>All compounds · lab-tested · lot-traceable</Eyebrow>
         <h1
-          className="mt-4.5 font-display font-black leading-[1] tracking-[-0.035em] text-ink"
-          style={{ fontSize: "clamp(48px, 6vw, 88px)" }}
+          className="mt-4 font-display font-black leading-[1] tracking-[-0.035em] text-ink md:mt-4.5"
+          style={{ fontSize: "clamp(40px, 6vw, 88px)" }}
         >
           Catalog
         </h1>
-        <div className="mt-9 flex flex-wrap gap-2.5">
+        <div className="mt-6 flex flex-wrap gap-2 md:mt-9 md:gap-2.5">
           {FILTERS.map((f) => (
             <Chip key={f} active={filter === f} onClick={() => setFilter(f)}>
               {f}
@@ -48,8 +48,8 @@ function CatalogGrid({ filter }: { filter: string }) {
 
   return (
     <section className="bg-bone">
-      <div className="layout-content py-14 pb-24">
-        <div className="grid grid-cols-3 gap-7">
+      <div className="layout-content py-10 pb-16 md:py-14 md:pb-24">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-7">
           {items.map((p) => (
             <a
               key={p.slug}
@@ -73,17 +73,17 @@ function CatalogGrid({ filter }: { filter: string }) {
 
               {/* below-card info */}
               <div
-                className="mt-4.5 grid items-baseline gap-4"
+                className="mt-4 grid items-baseline gap-4"
                 style={{ gridTemplateColumns: "1fr auto" }}
               >
                 <div className="min-w-0">
-                  <p className="font-display text-[17px] font-black leading-tight tracking-[-0.01em] text-ink">
+                  <p className="font-display text-[16px] font-black leading-tight tracking-[-0.01em] text-ink md:text-[17px]">
                     {p.name}
                   </p>
-                  <MonoLine className="mt-1 text-[10.5px] text-ink-muted uppercase tracking-[0.14em]">
+                  <MonoLine className="mt-1 text-[10px] text-ink-muted uppercase tracking-[0.14em]">
                     {p.compound} · {p.dose} · CAS {p.cas}
                   </MonoLine>
-                  <div className="mt-2.5">
+                  <div className="mt-2">
                     <SemanticPill stock={p.stock} lowCount={p.lowCount} />
                   </div>
                 </div>

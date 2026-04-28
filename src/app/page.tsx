@@ -6,25 +6,22 @@ function Hero() {
   const reta = PRODUCTS.find((p) => p.slug === "reta")!;
   return (
     <section className="border-b border-ink bg-bone">
-      <div
-        className="layout-content grid items-center gap-[72px] py-[88px] pb-24"
-        style={{ gridTemplateColumns: "1.15fr 1fr" }}
-      >
+      <div className="layout-content grid grid-cols-1 items-center gap-10 py-12 pb-14 md:grid-cols-[1.15fr_1fr] md:gap-[72px] md:py-[88px] md:pb-24">
         <div>
           <Eyebrow>Research-grade peptides · verified per lot</Eyebrow>
           <h1
-            className="my-7 font-display font-black tracking-[-0.035em] leading-[0.98] text-ink"
-            style={{ fontSize: "clamp(54px, 7vw, 96px)", textWrap: "balance" } as React.CSSProperties}
+            className="my-6 font-display font-black tracking-[-0.035em] leading-[0.98] text-ink md:my-7"
+            style={{ fontSize: "clamp(42px, 7vw, 96px)", textWrap: "balance" } as React.CSSProperties}
           >
             Research-grade peptides.
             <br />
             Verified per lot.
           </h1>
-          <p className="mb-9 max-w-[520px] font-sans text-[18px] leading-relaxed text-ink">
+          <p className="mb-7 max-w-[520px] font-sans text-[16px] leading-relaxed text-ink md:mb-9 md:text-[18px]">
             Triplicate HPLC assay, lot-matched certificate of analysis, cold-chain delivery.
             Documentation on file for every vial that leaves the building.
           </p>
-          <div className="flex flex-wrap items-center gap-6">
+          <div className="flex flex-wrap items-center gap-5 md:gap-6">
             <Button variant="primary">
               <Link href="/shop" className="text-bone no-underline">
                 View catalog →
@@ -37,7 +34,7 @@ function Hero() {
               Read our quality standard
             </a>
           </div>
-          <TrustStrip className="mt-10" />
+          <TrustStrip className="mt-8 md:mt-10" />
         </div>
 
         <div>
@@ -77,30 +74,32 @@ const VALUE_PROPS = [
 function ValueProps() {
   return (
     <section className="border-b border-ink bg-surface" id="quality">
-      <div className="layout-content py-24">
-        <div className="mb-16 max-w-[640px]">
+      <div className="layout-content py-14 md:py-24">
+        <div className="mb-10 max-w-[640px] md:mb-16">
           <Eyebrow>What we ship with every vial</Eyebrow>
           <h2
-            className="mt-4.5 font-display font-black tracking-[-0.03em] leading-[1] text-ink"
-            style={{ fontSize: "clamp(36px, 4vw, 56px)" }}
+            className="mt-4 font-display font-black tracking-[-0.03em] leading-[1] text-ink md:mt-4.5"
+            style={{ fontSize: "clamp(32px, 4vw, 56px)" }}
           >
             A quality standard you can pull up in a document.
           </h2>
         </div>
-        <div className="grid grid-cols-3">
+        <div className="grid grid-cols-1 overflow-hidden border border-ink md:grid-cols-3">
           {VALUE_PROPS.map((item, i) => (
             <div
               key={item.num}
-              className="border-y border-r border-ink bg-bone px-9 py-10"
-              style={{ borderLeft: i === 0 ? "1.5px solid var(--pp-ink)" : "none" }}
+              className={[
+                "bg-bone px-7 py-9 md:px-9 md:py-10",
+                i < VALUE_PROPS.length - 1 ? "border-b border-ink md:border-b-0 md:border-r" : "",
+              ].join(" ")}
             >
-              <div className="mb-8 font-display text-[72px] font-black leading-[1] tracking-[-0.04em] text-ink">
+              <div className="mb-6 font-display text-[56px] font-black leading-[1] tracking-[-0.04em] text-ink md:mb-8 md:text-[72px]">
                 {item.num}
               </div>
-              <h3 className="mb-3.5 font-display text-[22px] font-black leading-[1.15] tracking-[-0.02em] text-ink">
+              <h3 className="mb-3 font-display text-[20px] font-black leading-[1.15] tracking-[-0.02em] text-ink md:mb-3.5 md:text-[22px]">
                 {item.title}
               </h3>
-              <p className="font-sans text-[14.5px] leading-relaxed text-ink">{item.body}</p>
+              <p className="font-sans text-[14px] leading-relaxed text-ink md:text-[14.5px]">{item.body}</p>
             </div>
           ))}
         </div>
@@ -115,13 +114,13 @@ function FeaturedRail() {
   );
   return (
     <section className="bg-bone">
-      <div className="layout-content py-24">
-        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+      <div className="layout-content py-14 md:py-24">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
           <div>
             <Eyebrow>Featured catalog</Eyebrow>
             <h2
-              className="mt-3.5 font-display font-black leading-[1] tracking-[-0.025em] text-ink"
-              style={{ fontSize: "clamp(32px, 3.4vw, 44px)" }}
+              className="mt-3 font-display font-black leading-[1] tracking-[-0.025em] text-ink md:mt-3.5"
+              style={{ fontSize: "clamp(28px, 3.4vw, 44px)" }}
             >
               In stock now
             </h2>
@@ -133,7 +132,7 @@ function FeaturedRail() {
             View full catalog →
           </Link>
         </div>
-        <div className="grid grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
           {featured.map((p) => (
             <LabelCard
               key={p.slug}
@@ -162,27 +161,36 @@ const WHY_CELLS = [
 function WhyGrid() {
   return (
     <section className="border-y border-ink bg-bone">
-      <div className="layout-content py-20">
-        <div className="mb-12 text-center">
+      <div className="layout-content py-14 md:py-20">
+        <div className="mb-10 text-center md:mb-12">
           <Eyebrow>Why PurePep</Eyebrow>
           <h2
             className="mt-4 font-display font-black leading-[1] tracking-[-0.025em] text-ink"
-            style={{ fontSize: "clamp(28px, 3vw, 40px)" }}
+            style={{ fontSize: "clamp(26px, 3vw, 40px)" }}
           >
             A documented standard.
           </h2>
         </div>
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-2 overflow-hidden border border-ink md:grid-cols-4">
           {WHY_CELLS.map((c, i) => (
             <div
               key={c.label}
-              className="px-7 py-11 text-center"
-              style={{ borderLeft: i === 0 ? "none" : "1.5px solid var(--pp-ink)" }}
+              className={[
+                "px-5 py-8 text-center md:px-7 md:py-11",
+                // Right divider: col 0 of each 2-col row (items 0 and 2)
+                i % 2 === 0 ? "border-r border-ink" : "",
+                // Bottom divider: top row (items 0 and 1)
+                i < 2 ? "border-b border-ink md:border-b-0" : "",
+                // Desktop left divider override: items 1,2,3 get left divider instead
+                i > 0 ? "md:border-l-[1.5px]" : "",
+                // Desktop: remove mobile right divider on even items
+                i % 2 === 0 ? "md:border-r-0" : "",
+              ].filter(Boolean).join(" ")}
             >
-              <div className="mb-4.5 font-display text-[56px] font-black leading-[1] tracking-[-0.035em] text-ink">
+              <div className="mb-3.5 font-display text-[44px] font-black leading-[1] tracking-[-0.035em] text-ink md:mb-4.5 md:text-[56px]">
                 {c.stat}
               </div>
-              <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-ink">
+              <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-ink md:text-[11px]">
                 {c.label}
               </div>
             </div>
@@ -203,7 +211,7 @@ export default function HomePage() {
       <BlushBand>
         <blockquote className="mx-auto max-w-2xl text-center">
           <Eyebrow className="justify-center">Researcher testimonial</Eyebrow>
-          <p className="mt-6 font-display text-[28px] font-black leading-tight tracking-[-0.02em] text-ink">
+          <p className="mt-6 font-display text-[22px] font-black leading-tight tracking-[-0.02em] text-ink md:text-[28px]">
             &ldquo;The COA arrived before the vial. That&apos;s the level of documentation we expect for serious work.&rdquo;
           </p>
           <footer className="mt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">

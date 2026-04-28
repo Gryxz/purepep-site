@@ -51,19 +51,16 @@ export default async function PDPPage({
         </div>
       </nav>
 
-      {/* Hero: 2-col grid */}
+      {/* Hero: responsive grid — BuyBox first on mobile, image first on desktop */}
       <section className="border-b border-ink bg-bone">
-        <div
-          className="layout-content grid gap-[72px] py-[72px]"
-          style={{ gridTemplateColumns: "1fr 1fr" }}
-        >
-          {/* Left: vial visual */}
-          <div className="flex flex-col items-center justify-center border border-ink bg-surface py-16">
+        <div className="layout-content grid grid-cols-1 gap-8 py-8 md:grid-cols-2 md:gap-[72px] md:py-[72px]">
+          {/* Vial visual — order-2 on mobile, order-1 on desktop */}
+          <div className="order-2 flex flex-col items-center justify-center border border-ink bg-surface py-10 md:order-1 md:py-16">
             <div className="flex items-end justify-center px-12 pt-4 pb-0">
               <svg
                 viewBox="0 0 80 120"
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-[200px] w-auto text-ink"
+                className="h-[160px] w-auto text-ink md:h-[200px]"
                 aria-hidden="true"
               >
                 <rect x="20" y="20" width="40" height="80" rx="2" fill="none" stroke="currentColor" strokeWidth="1.5" />
@@ -90,8 +87,10 @@ export default async function PDPPage({
             </div>
           </div>
 
-          {/* Right: BuyBox */}
-          <BuyBox product={product} />
+          {/* BuyBox — order-1 on mobile, order-2 on desktop */}
+          <div className="order-1 md:order-2">
+            <BuyBox product={product} />
+          </div>
         </div>
       </section>
 
@@ -120,7 +119,7 @@ export default async function PDPPage({
               </h2>
             </div>
             <Hairline className="mb-8" />
-            <div className="grid grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
               {related.map((p) => (
                 <LabelCard
                   key={p.slug}
