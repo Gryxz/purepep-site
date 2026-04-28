@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
-import { Eyebrow, VialRender, SemanticPill, Icon, Hairline } from "@/components/storefront/primitives";
+import { Eyebrow, VialRender, Icon, Hairline } from "@/components/storefront/primitives";
 import { ComplianceBlock } from "@/components/ComplianceBlock";
 
 export default function CartPage() {
@@ -10,11 +10,11 @@ export default function CartPage() {
   return (
     <>
       <section className="border-b border-ink bg-bone">
-        <div className="layout-content py-12">
+        <div className="layout-content py-10 md:py-12">
           <Eyebrow>Your cart</Eyebrow>
           <h1
-            className="mt-3.5 font-display font-black leading-[1] tracking-[-0.035em] text-ink"
-            style={{ fontSize: "clamp(40px, 5vw, 64px)" }}
+            className="mt-3 font-display font-black leading-[1] tracking-[-0.035em] text-ink md:mt-3.5"
+            style={{ fontSize: "clamp(36px, 5vw, 64px)" }}
           >
             Cart
           </h1>
@@ -22,9 +22,9 @@ export default function CartPage() {
       </section>
 
       <section className="bg-bone">
-        <div className="layout-content py-12 pb-24">
+        <div className="layout-content py-8 pb-16 md:py-12 md:pb-24">
           {items.length === 0 ? (
-            <div className="py-20 text-center">
+            <div className="py-16 text-center md:py-20">
               <p className="font-display text-[22px] font-black text-ink">Your cart is empty</p>
               <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
                 Add a vial from the catalog
@@ -37,73 +37,75 @@ export default function CartPage() {
               </Link>
             </div>
           ) : (
-            <div
-              className="grid items-start gap-14"
-              style={{ gridTemplateColumns: "1.4fr 1fr" }}
-            >
-              {/* items list */}
+            <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-[1.4fr_1fr] md:gap-14">
+              {/* Items list */}
               <div className="border border-ink bg-bone">
                 {items.map((item, i) => (
                   <div
                     key={item.slug + item.dose}
-                    className="grid items-center gap-5 px-6 py-5"
-                    style={{
-                      gridTemplateColumns: "80px 1fr auto auto",
-                      borderBottom: i < items.length - 1 ? "1px solid var(--pp-line)" : "none",
-                    }}
+                    className="px-4 py-4 md:px-6 md:py-5"
+                    style={{ borderBottom: i < items.length - 1 ? "1px solid var(--pp-line)" : "none" }}
                   >
-                    <div className="flex h-20 w-20 items-center justify-center border border-ink bg-bone">
-                      <VialRender compound={item.compound} className="h-[60px] w-auto" />
-                    </div>
-                    <div>
-                      <p className="font-display text-[17px] font-black tracking-[-0.01em] text-ink">
-                        {item.compound} · {item.dose}
-                      </p>
-                      <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-muted">
-                        {item.name}
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => removeItem(item.slug)}
-                        className="mt-2.5 cursor-pointer border-none bg-transparent font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted underline"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                    {/* qty stepper */}
+                    {/* Mobile: flex layout; Desktop: grid via inline style */}
                     <div
-                      className="inline-flex items-center rounded-[2px] border border-ink"
-                      style={{ height: 36 }}
+                      className="flex flex-wrap items-start gap-4 md:grid md:items-center md:gap-5"
+                      style={{ gridTemplateColumns: "80px 1fr auto auto" }}
                     >
-                      <button
-                        type="button"
-                        aria-label="Decrease"
-                        onClick={() => updateQty(item.slug, item.qty - 1)}
-                        className="inline-flex h-full w-9 cursor-pointer items-center justify-center border-none bg-transparent text-ink"
-                      >
-                        −
-                      </button>
-                      <span className="inline-flex min-w-[34px] items-center justify-center self-stretch border-x border-ink font-mono text-[13px] font-semibold text-ink">
-                        {item.qty}
-                      </span>
-                      <button
-                        type="button"
-                        aria-label="Increase"
-                        onClick={() => updateQty(item.slug, item.qty + 1)}
-                        className="inline-flex h-full w-9 cursor-pointer items-center justify-center border-none bg-transparent text-ink"
-                      >
-                        +
-                      </button>
+                      <div className="flex h-[60px] w-[60px] shrink-0 items-center justify-center border border-ink bg-bone md:h-20 md:w-20">
+                        <VialRender compound={item.compound} className="h-[44px] w-auto md:h-[60px]" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-display text-[16px] font-black tracking-[-0.01em] text-ink md:text-[17px]">
+                          {item.compound} · {item.dose}
+                        </p>
+                        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+                          {item.name}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => removeItem(item.slug)}
+                          className="mt-2 cursor-pointer border-none bg-transparent font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted underline"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      {/* Qty + price row (flex on mobile, separate grid cells on desktop) */}
+                      <div className="flex w-full items-center justify-between gap-4 md:contents">
+                        <div
+                          className="inline-flex items-center rounded-[2px] border border-ink"
+                          style={{ height: 36 }}
+                        >
+                          <button
+                            type="button"
+                            aria-label="Decrease"
+                            onClick={() => updateQty(item.slug, item.qty - 1)}
+                            className="inline-flex h-full w-9 cursor-pointer items-center justify-center border-none bg-transparent text-ink"
+                          >
+                            −
+                          </button>
+                          <span className="inline-flex min-w-[34px] items-center justify-center self-stretch border-x border-ink font-mono text-[13px] font-semibold text-ink">
+                            {item.qty}
+                          </span>
+                          <button
+                            type="button"
+                            aria-label="Increase"
+                            onClick={() => updateQty(item.slug, item.qty + 1)}
+                            className="inline-flex h-full w-9 cursor-pointer items-center justify-center border-none bg-transparent text-ink"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <p className="font-display text-[17px] font-black tabular-nums text-ink">
+                          ${(item.qty * item.price).toFixed(2)}
+                        </p>
+                      </div>
                     </div>
-                    <p className="font-display text-[17px] font-black tabular-nums text-ink">
-                      ${(item.qty * item.price).toFixed(2)}
-                    </p>
                   </div>
                 ))}
               </div>
 
-              {/* order summary */}
-              <div className="sticky top-6 border border-ink bg-bone p-6">
+              {/* Order summary */}
+              <div className="border border-ink bg-bone p-5 md:sticky md:top-6 md:p-6">
                 <Eyebrow>Order summary</Eyebrow>
 
                 <Hairline className="my-4" />
@@ -129,7 +131,7 @@ export default function CartPage() {
                   <span className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-ink-muted">
                     Total
                   </span>
-                  <span className="font-display text-[32px] font-black tabular-nums tracking-[-0.02em] text-ink">
+                  <span className="font-display text-[28px] font-black tabular-nums tracking-[-0.02em] text-ink md:text-[32px]">
                     ${(subtotal() + 18 + subtotal() * 0.0625).toFixed(2)}
                   </span>
                 </div>

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useCartStore } from "@/lib/cart-store";
 import {
   Eyebrow,
@@ -10,8 +10,6 @@ import {
   Hairline,
   Icon,
 } from "@/components/storefront/primitives";
-import { Header } from "@/components/storefront/Header";
-import { Footer } from "@/components/storefront/Footer";
 
 function Input({
   label,
@@ -60,6 +58,19 @@ export default function CheckoutPage() {
   const [ack, setAck] = useState(false);
   const [promo, setPromo] = useState("");
   const [placed, setPlaced] = useState(false);
+  const placeRef = useRef<HTMLButtonElement>(null);
+  const [showStickyBar, setShowStickyBar] = useState(false);
+
+  useEffect(() => {
+    const el = placeRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setShowStickyBar(!(entry?.isIntersecting ?? true)),
+      { rootMargin: "0px" },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [placed]);
 
   const shipping = 18.0;
   const tax = Math.round(subtotal() * 0.0625 * 100) / 100;
@@ -73,9 +84,8 @@ export default function CheckoutPage() {
 
   return (
     <>
-      {/* Override layout.tsx header with minimal variant */}
       <section className="border-b border-ink bg-bone">
-        <div className="layout-content py-12 pb-16">
+        <div className="layout-content py-10 pb-12 md:py-12 md:pb-16">
           <Eyebrow>Checkout · Step 1 of 2</Eyebrow>
           {placed ? (
             <div className="mt-6">
@@ -87,7 +97,7 @@ export default function CheckoutPage() {
               </div>
               <h1
                 className="mt-6 font-display font-black leading-[1] tracking-[-0.035em] text-ink"
-                style={{ fontSize: "clamp(40px, 5vw, 64px)" }}
+                style={{ fontSize: "clamp(36px, 5vw, 64px)" }}
               >
                 Thank you.
               </h1>
@@ -98,8 +108,8 @@ export default function CheckoutPage() {
             </div>
           ) : (
             <h1
-              className="mt-3.5 font-display font-black leading-[1] tracking-[-0.035em] text-ink"
-              style={{ fontSize: "clamp(40px, 5vw, 64px)" }}
+              className="mt-3 font-display font-black leading-[1] tracking-[-0.035em] text-ink md:mt-3.5"
+              style={{ fontSize: "clamp(36px, 5vw, 64px)" }}
             >
               Your order
             </h1>
@@ -109,12 +119,9 @@ export default function CheckoutPage() {
 
       {!placed && (
         <section className="bg-bone">
-          <div
-            className="layout-content grid items-start gap-14 py-12 pb-24"
-            style={{ gridTemplateColumns: "1.4fr 1fr" }}
-          >
+          <div className="layout-content grid grid-cols-1 items-start gap-10 py-8 pb-24 md:grid-cols-[1.4fr_1fr] md:gap-14 md:py-12">
             {/* LEFT: form */}
-            <div className="flex flex-col gap-10">
+            <div className="flex flex-col gap-8 md:gap-10">
               {/* cart items */}
               <div>
                 <div className="mb-3.5">
@@ -129,55 +136,56 @@ export default function CheckoutPage() {
                   {items.map((item, i) => (
                     <div
                       key={item.slug + item.dose}
-                      className="grid items-center gap-5 px-6 py-5"
+                      className="flex flex-wrap items-center gap-4 px-4 py-4 md:grid md:gap-5 md:px-6 md:py-5"
                       style={{
                         gridTemplateColumns: "80px 1fr auto auto",
-                        borderBottom:
-                          i < items.length - 1 ? "1px solid var(--pp-line)" : "none",
+                        borderBottom: i < items.length - 1 ? "1px solid var(--pp-line)" : "none",
                       }}
                     >
-                      <div className="flex h-20 w-20 items-center justify-center border border-ink bg-bone">
-                        <VialRender compound={item.compound} className="h-[60px] w-auto" />
+                      <div className="flex h-[56px] w-[56px] shrink-0 items-center justify-center border border-ink bg-bone md:h-20 md:w-20">
+                        <VialRender compound={item.compound} className="h-[40px] w-auto md:h-[60px]" />
                       </div>
-                      <div>
-                        <p className="font-display text-[17px] font-black tracking-[-0.01em] text-ink">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-display text-[15px] font-black tracking-[-0.01em] text-ink md:text-[17px]">
                           {item.compound} · {item.dose}
                         </p>
                         <button
                           type="button"
                           onClick={() => removeItem(item.slug)}
-                          className="mt-2.5 cursor-pointer border-none bg-transparent font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted underline"
+                          className="mt-1.5 cursor-pointer border-none bg-transparent font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted underline"
                         >
                           Remove
                         </button>
                       </div>
-                      <div
-                        className="inline-flex items-center rounded-[2px] border border-ink"
-                        style={{ height: 36 }}
-                      >
-                        <button
-                          type="button"
-                          aria-label="Decrease"
-                          onClick={() => updateQty(item.slug, item.qty - 1)}
-                          className="inline-flex h-full w-9 cursor-pointer items-center justify-center border-none bg-transparent text-ink"
+                      <div className="flex w-full items-center justify-between gap-3 md:contents">
+                        <div
+                          className="inline-flex items-center rounded-[2px] border border-ink"
+                          style={{ height: 36 }}
                         >
-                          −
-                        </button>
-                        <span className="inline-flex min-w-[34px] items-center justify-center self-stretch border-x border-ink font-mono text-[13px] font-semibold text-ink">
-                          {item.qty}
-                        </span>
-                        <button
-                          type="button"
-                          aria-label="Increase"
-                          onClick={() => updateQty(item.slug, item.qty + 1)}
-                          className="inline-flex h-full w-9 cursor-pointer items-center justify-center border-none bg-transparent text-ink"
-                        >
-                          +
-                        </button>
+                          <button
+                            type="button"
+                            aria-label="Decrease"
+                            onClick={() => updateQty(item.slug, item.qty - 1)}
+                            className="inline-flex h-full w-9 cursor-pointer items-center justify-center border-none bg-transparent text-ink"
+                          >
+                            −
+                          </button>
+                          <span className="inline-flex min-w-[34px] items-center justify-center self-stretch border-x border-ink font-mono text-[13px] font-semibold text-ink">
+                            {item.qty}
+                          </span>
+                          <button
+                            type="button"
+                            aria-label="Increase"
+                            onClick={() => updateQty(item.slug, item.qty + 1)}
+                            className="inline-flex h-full w-9 cursor-pointer items-center justify-center border-none bg-transparent text-ink"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <p className="font-display text-[17px] font-black tabular-nums text-ink">
+                          ${(item.qty * item.price).toFixed(2)}
+                        </p>
                       </div>
-                      <p className="font-display text-[17px] font-black tabular-nums text-ink">
-                        ${(item.qty * item.price).toFixed(2)}
-                      </p>
                     </div>
                   ))}
                 </div>
@@ -241,21 +249,31 @@ export default function CheckoutPage() {
               </div>
 
               {/* acknowledgement */}
-              <Checkbox
-                id="ack"
-                checked={ack}
-                onChange={setAck}
-              >
+              <Checkbox id="ack" checked={ack} onChange={setAck}>
                 I confirm I am 21 or older, a qualified researcher, and purchasing for
                 legitimate research purposes only. I understand all sales are final with
                 no refunds, no exchanges, and no returns.
               </Checkbox>
 
               <TrustStrip />
+
+              {/* Mobile: inline place order button (also tracked for sticky bar) */}
+              <div className="md:hidden">
+                <button
+                  ref={placeRef}
+                  type="button"
+                  onClick={handlePlace}
+                  disabled={!ack || items.length === 0}
+                  className="flex h-14 w-full cursor-pointer items-center justify-center gap-2.5 border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone transition-colors hover:bg-ink/90 disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted"
+                >
+                  <Icon name="check" size={17} />
+                  Place order · ${total.toFixed(2)}
+                </button>
+              </div>
             </div>
 
-            {/* RIGHT: sticky summary */}
-            <div className="sticky top-6 border border-ink bg-bone p-6">
+            {/* RIGHT: sticky summary (desktop) */}
+            <div className="border border-ink bg-bone p-5 md:sticky md:top-6 md:p-6">
               <Eyebrow>Order summary</Eyebrow>
 
               <Hairline className="my-4" />
@@ -296,7 +314,7 @@ export default function CheckoutPage() {
                 <span className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-ink-muted">
                   Total
                 </span>
-                <span className="font-display text-[32px] font-black tabular-nums tracking-[-0.02em] text-ink">
+                <span className="font-display text-[28px] font-black tabular-nums tracking-[-0.02em] text-ink md:text-[32px]">
                   ${total.toFixed(2)}
                 </span>
               </div>
@@ -305,17 +323,38 @@ export default function CheckoutPage() {
                 All sales final · No refunds
               </p>
 
+              {/* Desktop: place order button in sidebar */}
               <button
                 type="button"
                 onClick={handlePlace}
                 disabled={!ack || items.length === 0}
-                className="mt-5 flex h-14 w-full cursor-pointer items-center justify-center gap-2.5 border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone transition-colors hover:bg-ink/90 disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted"
+                className="mt-5 hidden h-14 w-full cursor-pointer items-center justify-center gap-2.5 border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone transition-colors hover:bg-ink/90 disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted md:flex"
               >
                 <Icon name="check" size={17} />
                 Place order
               </button>
             </div>
           </div>
+
+          {/* Mobile sticky bottom bar — appears when inline CTA scrolls out of view */}
+          {showStickyBar && (
+            <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-ink bg-bone px-4 pb-4 pt-3 md:hidden">
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
+                  Total · ${total.toFixed(2)}
+                </span>
+                <button
+                  type="button"
+                  onClick={handlePlace}
+                  disabled={!ack || items.length === 0}
+                  className="flex h-12 cursor-pointer items-center gap-2 rounded-[2px] border border-ink bg-ink px-5 font-sans text-[13px] font-bold uppercase tracking-[0.04em] text-bone disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted"
+                >
+                  <Icon name="check" size={15} />
+                  Place order
+                </button>
+              </div>
+            </div>
+          )}
         </section>
       )}
     </>
