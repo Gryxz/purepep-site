@@ -1,3 +1,8 @@
+/* Hoisted to satisfy CSS spec — every @import must precede non-@import rules.
+   The same URL is also imported transitively by colors_and_type.css; the
+   browser dedupes. Replace with next/font/google self-hosted once the
+   submodule's colors_and_type.css drops its inline @import. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
 /**
