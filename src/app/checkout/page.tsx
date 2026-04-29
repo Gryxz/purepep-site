@@ -42,7 +42,7 @@ function Input({
         value={value ?? ""}
         onChange={(e) => onChange?.(e.target.value)}
         aria-invalid={!!error}
-        className="h-12 rounded-[2px] border border-ink bg-bone px-3.5 font-sans text-[15px] text-ink outline-none focus:outline-none aria-[invalid=true]:border-alert"
+        className="h-12 rounded-md border border-ink bg-bone px-3.5 font-sans text-[15px] text-ink outline-none focus:outline-none aria-[invalid=true]:border-alert"
       />
       {error && (
         <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-alert">
@@ -84,7 +84,7 @@ export default function CheckoutPage() {
 
   return (
     <>
-      <section className="border-b border-ink bg-bone">
+      <section className="bg-bone">
         <div className="layout-content py-10 pb-12 md:py-12 md:pb-16">
           <Eyebrow>Checkout · Step 1 of 2</Eyebrow>
           {placed ? (
