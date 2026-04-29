@@ -38,7 +38,7 @@ export default function AffiliatesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="border-b border-ink bg-bone">
+      <section className="bg-bone">
         <div className="layout-content py-16 pb-18 md:py-24 md:pb-[104px]">
           <div className="max-w-[860px]">
             <Eyebrow>PurePep affiliate program</Eyebrow>
@@ -54,7 +54,7 @@ export default function AffiliatesPage() {
             <div className="flex flex-wrap items-center gap-5 md:gap-7">
               <a
                 href="#apply"
-                className="inline-flex h-12 items-center justify-center border border-ink bg-ink px-6 font-mono text-[13px] uppercase tracking-[0.12em] text-bone no-underline hover:bg-ink/90"
+                className="inline-flex h-12 items-center justify-center rounded-md border border-ink bg-ink px-6 font-mono text-[13px] uppercase tracking-[0.12em] text-bone no-underline hover:bg-ink/90"
               >
                 Apply now →
               </a>
@@ -70,7 +70,7 @@ export default function AffiliatesPage() {
       </section>
 
       {/* Steps */}
-      <section className="border-b border-ink bg-surface">
+      <section className="bg-surface">
         <div className="layout-content py-16 md:py-24">
           <div className="mb-10 max-w-[640px] md:mb-14">
             <Eyebrow>How it works</Eyebrow>
@@ -81,7 +81,7 @@ export default function AffiliatesPage() {
               Three steps. No gimmicks.
             </h2>
           </div>
-          <div className="grid grid-cols-1 overflow-hidden border border-ink md:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-3">
             {[
               { n: "01", t: "Share", b: "Get your unique referral link. Drop it in forums, videos, newsletters, or DMs." },
               { n: "02", t: "Convert", b: "Your audience orders. Cookie tracks for a rolling window." },
@@ -91,7 +91,7 @@ export default function AffiliatesPage() {
                 key={s.n}
                 className={[
                   "bg-bone px-7 py-8 md:px-9 md:py-10",
-                  i < 2 ? "border-b border-ink md:border-b-0 md:border-r" : "",
+                  i < 2 ? "border-b border-b-line md:border-b-0 md:border-r md:border-r-line" : "",
                 ].join(" ")}
               >
                 <div className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-muted md:mb-6">
@@ -108,7 +108,7 @@ export default function AffiliatesPage() {
       </section>
 
       {/* Tier table */}
-      <section className="border-b border-ink bg-bone">
+      <section className="bg-bone">
         <div className="layout-content py-14 md:py-[88px]" style={{ maxWidth: 1080 }}>
           <div className="mb-8 md:mb-9">
             <Eyebrow>Commission structure</Eyebrow>
@@ -154,7 +154,7 @@ export default function AffiliatesPage() {
       </section>
 
       {/* FAQ */}
-      <section className="border-b border-ink bg-surface">
+      <section className="bg-surface">
         <div className="layout-content py-14 md:py-20">
           <div className="mb-8 md:mb-10">
             <Eyebrow>FAQ</Eyebrow>
@@ -231,7 +231,7 @@ export default function AffiliatesPage() {
                   onChange={(e) => setFormName(e.target.value)}
                   placeholder="Your name"
                   required
-                  className="h-12 rounded-[2px] border border-ink bg-bone px-3.5 font-sans text-[15px] text-ink outline-none"
+                  className="h-12 rounded-md border border-ink bg-bone px-3.5 font-sans text-[15px] text-ink outline-none"
                 />
               </label>
               <label className="flex flex-col gap-2">
@@ -244,7 +244,7 @@ export default function AffiliatesPage() {
                   onChange={(e) => setFormEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="h-12 rounded-[2px] border border-ink bg-bone px-3.5 font-sans text-[15px] text-ink outline-none"
+                  className="h-12 rounded-md border border-ink bg-bone px-3.5 font-sans text-[15px] text-ink outline-none"
                 />
               </label>
               <label className="flex flex-col gap-2">
@@ -254,12 +254,12 @@ export default function AffiliatesPage() {
                 <textarea
                   rows={3}
                   placeholder="Newsletter, YouTube channel, academic forum…"
-                  className="rounded-[2px] border border-ink bg-bone px-3.5 py-3 font-sans text-[15px] text-ink outline-none"
+                  className="rounded-md border border-ink bg-bone px-3.5 py-3 font-sans text-[15px] text-ink outline-none"
                 />
               </label>
               <button
                 type="submit"
-                className="h-14 cursor-pointer rounded-[2px] border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone hover:bg-ink/90"
+                className="h-14 cursor-pointer rounded-md border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone hover:bg-ink/90"
               >
                 Submit application →
               </button>
