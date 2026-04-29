@@ -494,3 +494,79 @@ export function BlushBand({ children, className }: { children: React.ReactNode; 
     </section>
   );
 }
+
+// ---------------------------------------------------------------------------
+// StatBlock — 4-cell quality signal band. Mobile: 2×2, desktop: 4×1.
+// Numerals: Inter Black display, captions: IBM Plex Mono 11 px.
+// Cells separated by 1 px hairlines via var(--pp-line).
+// No outer border, no shadow — marketing band per v2 amendment.
+// ---------------------------------------------------------------------------
+export interface StatItem {
+  value: string;
+  caption: string;
+}
+
+export function StatBlock({
+  stats,
+  eyebrow,
+}: {
+  stats: StatItem[];
+  eyebrow?: string;
+}) {
+  const total = stats.length;
+  return (
+    <div className="bg-bone py-16 md:py-24">
+      <div className="layout-content">
+        {eyebrow && (
+          <p className="mb-8 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-muted">
+            {eyebrow}
+          </p>
+        )}
+        {/*
+          Hairline strategy:
+          Mobile (2-col): right border on left-col cells (even index), bottom border on top-row cells.
+          Desktop (4-col): right border on all cells except last; no bottom borders.
+          We use a CSS custom-property trick: define the borders via inline vars on the wrapper,
+          then each cell uses data attributes so we can override with md: variant classes.
+        */}
+        <div className="grid grid-cols-2 md:grid-cols-4">
+          {stats.map((stat, i) => {
+            // Mobile: even index = left col (has right border); odd = right col (no right border)
+            // Mobile: first half of stats has bottom border; second half does not
+            const mobileIsRightCol = i % 2 === 1;
+            const mobileIsLastRow = i >= total - 2;
+            // Desktop: last item has no right border; all items have no bottom border
+            const desktopIsLastCol = i === total - 1;
+
+            return (
+              <div
+                key={i}
+                className={clsx(
+                  "px-6 py-8 md:px-8 md:py-10",
+                  // Mobile right border
+                  !mobileIsRightCol && "border-r border-r-line",
+                  // Mobile bottom border
+                  !mobileIsLastRow && "border-b border-b-line",
+                  // Desktop: override right border — last col removes it, others keep it
+                  desktopIsLastCol ? "md:border-r-0" : "md:border-r md:border-r-line",
+                  // Desktop: remove bottom border entirely
+                  "md:border-b-0",
+                )}
+              >
+                <p
+                  className="font-display font-black tracking-[-0.02em] text-ink"
+                  style={{ fontSize: "clamp(40px, 4.5vw, 64px)", lineHeight: 1.02 }}
+                >
+                  {stat.value}
+                </p>
+                <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.16em] text-ink">
+                  {stat.caption}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
