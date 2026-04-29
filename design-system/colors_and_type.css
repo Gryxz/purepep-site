@@ -116,7 +116,7 @@ h3 { font-size: var(--t-h3); letter-spacing: var(--tracking-heading); line-heigh
 p { margin: 0; color: var(--pp-text); text-wrap: pretty; }
 
 a {
-  color: var(--pp-ink);
+  color: inherit;
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
