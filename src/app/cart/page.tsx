@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { Eyebrow, VialRender, Icon, Hairline } from "@/components/storefront/primitives";
+import { CartUpsellSlot } from "@/components/storefront/CartUpsellSlot";
 import { ComplianceBlock } from "@/components/ComplianceBlock";
 
 export default function CartPage() {
@@ -31,15 +32,16 @@ export default function CartPage() {
               </p>
               <Link
                 href="/shop"
-                className="mt-8 inline-flex items-center border border-ink bg-ink px-6 py-3 font-mono text-[13px] uppercase tracking-[0.12em] text-bone no-underline hover:bg-ink/90"
+                className="mt-8 inline-flex items-center rounded-md border border-ink bg-ink px-6 py-3 font-mono text-[13px] uppercase tracking-[0.12em] text-bone no-underline hover:bg-ink/90"
               >
                 Browse catalog →
               </Link>
             </div>
           ) : (
             <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-[1.4fr_1fr] md:gap-14">
-              {/* Items list */}
-              <div className="border border-ink bg-bone">
+              {/* Items list + upsell column */}
+              <div className="flex flex-col gap-6">
+                <div className="border border-ink bg-bone">
                 {items.map((item, i) => (
                   <div
                     key={item.slug + item.dose}
@@ -102,6 +104,8 @@ export default function CartPage() {
                     </div>
                   </div>
                 ))}
+                </div>
+                <CartUpsellSlot enabled={false} />
               </div>
 
               {/* Order summary */}
@@ -136,13 +140,9 @@ export default function CartPage() {
                   </span>
                 </div>
 
-                <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
-                  All sales final · No refunds
-                </p>
-
                 <Link
                   href="/checkout"
-                  className="mt-5 flex h-14 w-full items-center justify-center gap-2.5 border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone no-underline hover:bg-ink/90"
+                  className="mt-5 flex h-14 w-full items-center justify-center gap-2.5 rounded-md border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone no-underline hover:bg-ink/90"
                 >
                   <Icon name="arrowRight" size={16} />
                   Proceed to checkout
@@ -150,7 +150,7 @@ export default function CartPage() {
 
                 <Link
                   href="/shop"
-                  className="mt-3 flex h-10 w-full items-center justify-center border border-ink bg-bone font-mono text-[11px] uppercase tracking-[0.12em] text-ink no-underline hover:bg-surface"
+                  className="mt-3 flex h-10 w-full items-center justify-center rounded-md border border-ink bg-bone font-mono text-[11px] uppercase tracking-[0.12em] text-ink no-underline hover:bg-surface"
                 >
                   Continue shopping
                 </Link>
