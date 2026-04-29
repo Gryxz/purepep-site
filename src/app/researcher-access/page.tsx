@@ -10,15 +10,15 @@ export default function ResearcherAccessPage() {
     <>
       {/* Hero */}
       <section className="border-b border-ink bg-bone">
-        <div className="layout-content py-12 md:py-16">
+        <div className="layout-content py-8 md:py-12">
           <Eyebrow>Researcher access</Eyebrow>
           <h1
             className="mt-4 font-display font-black leading-[1] tracking-[-0.035em] text-ink"
-            style={{ fontSize: "clamp(36px, 5vw, 72px)" }}
+            style={{ fontSize: "clamp(32px, 5vw, 56px)" }}
           >
             Research access
           </h1>
-          <p className="mt-4 max-w-[560px] font-sans text-[16px] leading-relaxed text-ink-muted md:mt-5 md:text-[18px]">
+          <p className="mt-3 max-w-[560px] font-sans text-[15px] leading-relaxed text-ink-muted md:mt-5 md:text-[18px]">
             Early lot announcements, 10% on your first order, and COA archive access.
             One email per lot release — no spam.
           </p>
