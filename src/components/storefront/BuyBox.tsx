@@ -146,12 +146,9 @@ export function BuyBox({ product }: { product: Product }) {
           {product.compound}{" "}
           <span className="text-ink">· {variant}</span>
         </h1>
-        {/* Description — hidden on mobile to keep CTA above fold */}
+        {/* Description — desktop only; mobile keeps CTA above fold */}
         <p className="mt-4 hidden max-w-[520px] font-sans text-[15.5px] leading-[1.65] text-ink md:block md:mt-5">
           {product.description}
-        </p>
-        <p className="mt-3 font-sans text-[13px] font-semibold leading-[1.55] text-ink md:text-[14px] md:mt-4.5">
-          {product.disclaimer}
         </p>
       </div>
 
@@ -183,9 +180,17 @@ export function BuyBox({ product }: { product: Product }) {
 
       <Hairline className="hidden md:block" />
 
-      {/* tier pricing */}
-      <div>
-        <div className="mb-3">
+      {/* tier pricing — desktop: always open; mobile: collapsed by default, open when a bundle is active */}
+      <details className="group md:open" open={tierIdx > 0 || undefined}>
+        <summary className="flex cursor-pointer list-none items-center justify-between border border-ink bg-bone px-[14px] py-3 md:hidden [&::-webkit-details-marker]:hidden">
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            {tierIdx > 0 ? TIERS[tierIdx]!.label : "↓ Save 10–20% with bundles"}
+          </span>
+          <span className="font-display text-[15px] font-black tabular-nums text-ink">
+            ${unitPrice.toFixed(2)}
+          </span>
+        </summary>
+        <div className="hidden md:mb-3 md:block">
           <Eyebrow>Buy more, save more</Eyebrow>
         </div>
         <div className="flex flex-col">
@@ -233,7 +238,7 @@ export function BuyBox({ product }: { product: Product }) {
             );
           })}
         </div>
-      </div>
+      </details>
 
       {/* variant + qty */}
       <div className="flex flex-wrap items-end gap-5 md:gap-7">
