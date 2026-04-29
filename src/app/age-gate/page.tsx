@@ -9,8 +9,8 @@ export default function AgeGatePage() {
   const ready = age && researcher;
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-bone px-4 py-10 sm:px-6 sm:py-12">
-      <div className="w-full max-w-[520px]">
+    <main className="flex min-h-screen flex-col bg-bone px-4 py-10 sm:px-6 sm:py-12 md:items-center md:justify-center">
+      <div className="w-full max-w-[520px] md:mx-auto">
         {/* lockup */}
         <div className="mb-11 flex justify-center">
           <Lockup className="h-12 w-auto" />
