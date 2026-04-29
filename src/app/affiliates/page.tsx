@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { Eyebrow, Button, Hairline } from "@/components/storefront/primitives";
+import { Eyebrow } from "@/components/storefront/primitives";
 
 const TIER_ROWS = [
   { tier: "Base", revenue: "$0 – $999", rate: "TBD%", bonus: "—" },
@@ -39,22 +39,22 @@ export default function AffiliatesPage() {
     <>
       {/* Hero */}
       <section className="border-b border-ink bg-bone">
-        <div className="layout-content py-24 pb-[104px]">
+        <div className="layout-content py-16 pb-18 md:py-24 md:pb-[104px]">
           <div className="max-w-[860px]">
             <Eyebrow>PurePep affiliate program</Eyebrow>
             <h1
-              className="my-7 font-display font-black leading-[0.98] tracking-[-0.035em] text-ink"
-              style={{ fontSize: "clamp(48px, 6.4vw, 92px)", textWrap: "balance" } as React.CSSProperties}
+              className="my-6 font-display font-black leading-[0.98] tracking-[-0.035em] text-ink md:my-7"
+              style={{ fontSize: "clamp(40px, 6.4vw, 92px)", textWrap: "balance" } as React.CSSProperties}
             >
               Earn commission on every verified researcher you refer.
             </h1>
-            <p className="mb-10 max-w-[620px] font-sans text-[19px] leading-relaxed text-ink">
+            <p className="mb-8 max-w-[620px] font-sans text-[16px] leading-relaxed text-ink md:mb-10 md:text-[19px]">
               Lot-matched COA means your audience trusts the product. That trust converts.
             </p>
-            <div className="flex flex-wrap items-center gap-7">
+            <div className="flex flex-wrap items-center gap-5 md:gap-7">
               <a
                 href="#apply"
-                className="inline-flex items-center justify-center border border-ink bg-ink px-6 py-3 font-mono text-[13px] uppercase tracking-[0.12em] text-bone no-underline hover:bg-ink/90"
+                className="inline-flex h-12 items-center justify-center border border-ink bg-ink px-6 font-mono text-[13px] uppercase tracking-[0.12em] text-bone no-underline hover:bg-ink/90"
               >
                 Apply now →
               </a>
@@ -71,17 +71,17 @@ export default function AffiliatesPage() {
 
       {/* Steps */}
       <section className="border-b border-ink bg-surface">
-        <div className="layout-content py-24">
-          <div className="mb-14 max-w-[640px]">
+        <div className="layout-content py-16 md:py-24">
+          <div className="mb-10 max-w-[640px] md:mb-14">
             <Eyebrow>How it works</Eyebrow>
             <h2
-              className="mt-4.5 font-display font-black leading-[1] tracking-[-0.03em] text-ink"
-              style={{ fontSize: "clamp(32px, 3.8vw, 52px)" }}
+              className="mt-4 font-display font-black leading-[1] tracking-[-0.03em] text-ink md:mt-4.5"
+              style={{ fontSize: "clamp(28px, 3.8vw, 52px)" }}
             >
               Three steps. No gimmicks.
             </h2>
           </div>
-          <div className="grid grid-cols-3">
+          <div className="grid grid-cols-1 overflow-hidden border border-ink md:grid-cols-3">
             {[
               { n: "01", t: "Share", b: "Get your unique referral link. Drop it in forums, videos, newsletters, or DMs." },
               { n: "02", t: "Convert", b: "Your audience orders. Cookie tracks for a rolling window." },
@@ -89,16 +89,18 @@ export default function AffiliatesPage() {
             ].map((s, i) => (
               <div
                 key={s.n}
-                className="border-y border-r border-ink bg-bone px-9 py-10"
-                style={{ borderLeft: i === 0 ? "1.5px solid var(--pp-ink)" : "none" }}
+                className={[
+                  "bg-bone px-7 py-8 md:px-9 md:py-10",
+                  i < 2 ? "border-b border-ink md:border-b-0 md:border-r" : "",
+                ].join(" ")}
               >
-                <div className="mb-6 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-muted">
+                <div className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-muted md:mb-6">
                   {s.n} · {s.t.toUpperCase()}
                 </div>
-                <h3 className="mb-3.5 font-display text-[28px] font-black leading-[1.1] tracking-[-0.025em] text-ink">
+                <h3 className="mb-3 font-display text-[24px] font-black leading-[1.1] tracking-[-0.025em] text-ink md:mb-3.5 md:text-[28px]">
                   {s.t}
                 </h3>
-                <p className="font-sans text-[15px] leading-relaxed text-ink">{s.b}</p>
+                <p className="font-sans text-[14.5px] leading-relaxed text-ink">{s.b}</p>
               </div>
             ))}
           </div>
@@ -107,56 +109,58 @@ export default function AffiliatesPage() {
 
       {/* Tier table */}
       <section className="border-b border-ink bg-bone">
-        <div className="layout-content py-[88px]" style={{ maxWidth: 1080 }}>
-          <div className="mb-9">
+        <div className="layout-content py-14 md:py-[88px]" style={{ maxWidth: 1080 }}>
+          <div className="mb-8 md:mb-9">
             <Eyebrow>Commission structure</Eyebrow>
             <h2
               className="mt-4 font-display font-black leading-[1] tracking-[-0.025em] text-ink"
-              style={{ fontSize: "clamp(30px, 3.4vw, 44px)" }}
+              style={{ fontSize: "clamp(26px, 3.4vw, 44px)" }}
             >
               Tiers evaluated monthly.
             </h2>
           </div>
-          <div className="border border-ink bg-bone">
-            {/* header */}
-            <div
-              className="grid border-b border-ink bg-surface px-5 py-3.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.18em] text-ink"
-              style={{ gridTemplateColumns: "1.2fr 1.8fr 1fr 1fr" }}
-            >
-              {["Tier", "Monthly referred revenue", "Commission", "Bonus"].map((h) => (
-                <span key={h}>{h}</span>
+          <div className="overflow-x-auto">
+            <div className="min-w-[480px] border border-ink bg-bone">
+              {/* header */}
+              <div
+                className="grid border-b border-ink bg-surface px-5 py-3.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.18em] text-ink"
+                style={{ gridTemplateColumns: "1.2fr 1.8fr 1fr 1fr" }}
+              >
+                {["Tier", "Monthly referred revenue", "Commission", "Bonus"].map((h) => (
+                  <span key={h}>{h}</span>
+                ))}
+              </div>
+              {TIER_ROWS.map((r, i) => (
+                <div
+                  key={r.tier}
+                  className="grid items-center px-5 py-[18px]"
+                  style={{
+                    gridTemplateColumns: "1.2fr 1.8fr 1fr 1fr",
+                    background: i % 2 === 0 ? "var(--pp-bone)" : "var(--pp-bone-soft)",
+                    borderBottom: i < TIER_ROWS.length - 1 ? "1px solid var(--pp-line)" : "none",
+                  }}
+                >
+                  <span className="font-display text-[16px] font-black tracking-[-0.01em] text-ink">
+                    {r.tier}
+                  </span>
+                  <span className="font-mono text-[13px] tabular-nums text-ink">{r.revenue}</span>
+                  <span className="font-mono text-[13px] font-semibold text-ink">{r.rate}</span>
+                  <span className="font-mono text-[12px] text-ink-muted">{r.bonus}</span>
+                </div>
               ))}
             </div>
-            {TIER_ROWS.map((r, i) => (
-              <div
-                key={r.tier}
-                className="grid items-center px-5 py-[18px]"
-                style={{
-                  gridTemplateColumns: "1.2fr 1.8fr 1fr 1fr",
-                  background: i % 2 === 0 ? "var(--pp-bone)" : "var(--pp-bone-soft)",
-                  borderBottom: i < TIER_ROWS.length - 1 ? "1px solid var(--pp-line)" : "none",
-                }}
-              >
-                <span className="font-display text-[16px] font-black tracking-[-0.01em] text-ink">
-                  {r.tier}
-                </span>
-                <span className="font-mono text-[13px] tabular-nums text-ink">{r.revenue}</span>
-                <span className="font-mono text-[13px] font-semibold text-ink">{r.rate}</span>
-                <span className="font-mono text-[12px] text-ink-muted">{r.bonus}</span>
-              </div>
-            ))}
           </div>
         </div>
       </section>
 
       {/* FAQ */}
       <section className="border-b border-ink bg-surface">
-        <div className="layout-content py-20">
-          <div className="mb-10">
+        <div className="layout-content py-14 md:py-20">
+          <div className="mb-8 md:mb-10">
             <Eyebrow>FAQ</Eyebrow>
             <h2
               className="mt-4 font-display font-black leading-[1] tracking-[-0.025em] text-ink"
-              style={{ fontSize: "clamp(28px, 3vw, 40px)" }}
+              style={{ fontSize: "clamp(24px, 3vw, 40px)" }}
             >
               Common questions.
             </h2>
@@ -170,9 +174,9 @@ export default function AffiliatesPage() {
                 <button
                   type="button"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="flex w-full cursor-pointer items-center justify-between px-6 py-5 text-left"
+                  className="flex w-full cursor-pointer items-center justify-between px-5 py-4 text-left md:px-6 md:py-5"
                 >
-                  <span className="font-sans text-[16px] font-bold tracking-[-0.01em] text-ink">
+                  <span className="font-sans text-[15px] font-bold tracking-[-0.01em] text-ink md:text-[16px]">
                     {item.q}
                   </span>
                   <span className="ml-4 shrink-0 font-mono text-[14px] text-ink-muted">
@@ -180,7 +184,7 @@ export default function AffiliatesPage() {
                   </span>
                 </button>
                 {openFaq === i && (
-                  <div className="border-t border-line px-6 pb-5 pt-4 font-sans text-[14.5px] leading-relaxed text-ink">
+                  <div className="border-t border-line px-5 pb-4 pt-4 font-sans text-[14px] leading-relaxed text-ink md:px-6 md:pb-5 md:text-[14.5px]">
                     {item.a}
                   </div>
                 )}
@@ -192,12 +196,12 @@ export default function AffiliatesPage() {
 
       {/* Apply form */}
       <section className="bg-bone" id="apply" data-apply-anchor>
-        <div className="layout-content py-20">
-          <div className="mb-10 max-w-[560px]">
+        <div className="layout-content py-14 md:py-20">
+          <div className="mb-8 max-w-[560px] md:mb-10">
             <Eyebrow>Apply</Eyebrow>
             <h2
               className="mt-4 font-display font-black leading-[1] tracking-[-0.025em] text-ink"
-              style={{ fontSize: "clamp(28px, 3vw, 40px)" }}
+              style={{ fontSize: "clamp(24px, 3vw, 40px)" }}
             >
               Join the program.
             </h2>
