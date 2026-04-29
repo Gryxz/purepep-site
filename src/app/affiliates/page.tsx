@@ -4,10 +4,10 @@ import Link from "next/link";
 import { Eyebrow } from "@/components/storefront/primitives";
 
 const TIER_ROWS = [
-  { tier: "Base", revenue: "$0 – $999", rate: "TBD%", bonus: "—" },
-  { tier: "Silver", revenue: "$1,000 – $4,999", rate: "TBD%", bonus: "TBD" },
-  { tier: "Gold", revenue: "$5,000 – $19,999", rate: "TBD%", bonus: "TBD" },
-  { tier: "Platinum", revenue: "$20,000+", rate: "TBD%", bonus: "TBD" },
+  { tier: "Base", revenue: "$0 – $999", rate: "8%", bonus: "—" },
+  { tier: "Silver", revenue: "$1,000 – $4,999", rate: "12%", bonus: "Priority support" },
+  { tier: "Gold", revenue: "$5,000 – $19,999", rate: "16%", bonus: "Quarterly review" },
+  { tier: "Platinum", revenue: "$20,000+", rate: "20%", bonus: "Dedicated rep" },
 ];
 
 const FAQ_ITEMS = [
