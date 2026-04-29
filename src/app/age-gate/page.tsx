@@ -54,7 +54,7 @@ export default function AgeGatePage() {
         <Link
           href="/"
           aria-disabled={!ready}
-          className="mb-5 flex h-14 w-full items-center justify-center rounded-[2px] border border-ink font-sans text-[14px] font-bold uppercase tracking-[0.06em] no-underline transition-colors aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:border-line aria-disabled:bg-line aria-disabled:text-ink-muted bg-ink text-bone hover:bg-ink/90"
+          className="mb-5 flex h-14 w-full items-center justify-center rounded-md border border-ink font-sans text-[14px] font-bold uppercase tracking-[0.06em] no-underline transition-colors aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:border-line aria-disabled:bg-line aria-disabled:text-ink-muted bg-ink text-bone hover:bg-ink/90"
           style={!ready ? { background: "var(--pp-line)", color: "var(--pp-ink-muted)", borderColor: "var(--pp-ink)" } : {}}
         >
           Enter site
