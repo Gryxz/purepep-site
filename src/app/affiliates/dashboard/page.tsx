@@ -32,7 +32,7 @@ export default function AffiliateDashboardPage() {
   return (
     <>
       {/* Hero */}
-      <section className="border-b border-ink bg-bone">
+      <section className="bg-bone">
         <div className="layout-content py-10 pb-10 md:py-12 md:pb-11">
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div>
@@ -66,17 +66,19 @@ export default function AffiliateDashboardPage() {
       </section>
 
       {/* KPI grid — 2×2 on mobile, 4-col on desktop */}
-      <section className="border-b border-ink bg-surface">
+      <section className="bg-surface">
         <div className="layout-content py-10 md:py-12">
-          <div className="grid grid-cols-2 overflow-hidden border border-ink bg-bone md:grid-cols-4">
+          <div className="grid grid-cols-2 bg-bone md:grid-cols-4">
             {STAT_CARDS.map((c, i) => (
               <div
                 key={c.label}
                 className={[
                   "px-5 py-6 md:px-7 md:py-8",
-                  i % 2 === 0 ? "border-r border-ink" : "",
-                  i < 2 ? "border-b border-ink md:border-b-0" : "",
-                  i > 0 ? "md:border-l-[1.5px]" : "",
+                  // Mobile: right divider for col 0 (items 0,2); bottom divider for top row (items 0,1)
+                  i % 2 === 0 ? "border-r border-r-line" : "",
+                  i < 2 ? "border-b border-b-line md:border-b-0" : "",
+                  // Desktop: left divider for items 1,2,3; remove mobile right divider
+                  i > 0 ? "md:border-l md:border-l-line" : "",
                   i % 2 === 0 ? "md:border-r-0" : "",
                 ].filter(Boolean).join(" ")}
               >
@@ -99,7 +101,7 @@ export default function AffiliateDashboardPage() {
       </section>
 
       {/* Referral code */}
-      <section className="border-b border-ink bg-bone">
+      <section className="bg-bone">
         <div className="layout-content py-10 md:py-12">
           <Eyebrow>Your referral link</Eyebrow>
           <div className="mt-4 flex max-w-[600px] items-center gap-0">
@@ -121,7 +123,7 @@ export default function AffiliateDashboardPage() {
       </section>
 
       {/* Asset library */}
-      <section className="border-b border-ink bg-surface">
+      <section className="bg-surface">
         <div className="layout-content py-10 md:py-12">
           <Eyebrow>Asset library</Eyebrow>
           <div className="-mb-px mt-5 flex gap-5 overflow-x-auto border-b border-ink md:mt-6 md:gap-8">
