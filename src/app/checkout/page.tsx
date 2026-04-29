@@ -242,7 +242,7 @@ export default function CheckoutPage() {
                 />
                 <button
                   type="button"
-                  className="border border-ink bg-bone px-5 font-mono text-[11px] uppercase tracking-[0.12em] text-ink hover:bg-surface"
+                  className="h-11 border border-ink bg-bone px-5 font-mono text-[11px] uppercase tracking-[0.12em] text-ink hover:bg-surface"
                 >
                   Apply
                 </button>
