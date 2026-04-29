@@ -46,7 +46,7 @@ export default async function PDPPage({
   return (
     <>
       {/* Breadcrumb */}
-      <nav className="border-b border-ink bg-bone" aria-label="Breadcrumb">
+      <nav className="bg-bone" aria-label="Breadcrumb">
         <div className="layout-content py-2 md:py-3">
           <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
             <Link href="/" className="text-ink-muted no-underline hover:text-ink">Home</Link>
@@ -59,7 +59,7 @@ export default async function PDPPage({
       </nav>
 
       {/* Hero: responsive grid — BuyBox first on mobile, image first on desktop */}
-      <section className="border-b border-ink bg-bone">
+      <section className="bg-bone">
         <div className="layout-content grid grid-cols-1 gap-8 py-8 md:grid-cols-2 md:gap-[72px] md:py-[72px]">
           {/* Vial visual — order-2 on mobile, order-1 on desktop */}
           <div className="order-2 flex flex-col items-center justify-center bg-surface p-12 md:order-1 md:p-16">
@@ -108,14 +108,14 @@ export default async function PDPPage({
       />
 
       {/* COA Panel */}
-      <section className="border-b border-ink bg-bone">
+      <section className="bg-bone">
         <div className="layout-content py-10">
           <COAPanel product={product} />
         </div>
       </section>
 
       {/* Compliance */}
-      <section className="border-b border-ink bg-surface">
+      <section className="bg-surface">
         <div className="layout-content py-10">
           <ComplianceBlock />
         </div>
