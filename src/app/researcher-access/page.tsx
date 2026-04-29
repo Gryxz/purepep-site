@@ -8,35 +8,34 @@ export default function ResearcherAccessPage() {
 
   return (
     <>
+      {/* Hero */}
       <section className="border-b border-ink bg-bone">
-        <div className="layout-content py-16">
+        <div className="layout-content py-12 md:py-16">
           <Eyebrow>Researcher access</Eyebrow>
           <h1
             className="mt-4 font-display font-black leading-[1] tracking-[-0.035em] text-ink"
-            style={{ fontSize: "clamp(40px, 5vw, 72px)" }}
+            style={{ fontSize: "clamp(36px, 5vw, 72px)" }}
           >
             Research access
           </h1>
-          <p className="mt-5 max-w-[560px] font-sans text-[18px] leading-relaxed text-ink-muted">
+          <p className="mt-4 max-w-[560px] font-sans text-[16px] leading-relaxed text-ink-muted md:mt-5 md:text-[18px]">
             Early lot announcements, 10% on your first order, and COA archive access.
             One email per lot release — no spam.
           </p>
         </div>
       </section>
 
+      {/* Signup block */}
       <section className="border-b border-ink bg-bone">
-        <div className="layout-content py-16">
-          <div
-            className="grid items-end gap-12 border border-ink bg-bone px-12 py-12"
-            style={{ gridTemplateColumns: "1fr auto" }}
-          >
+        <div className="layout-content py-10 md:py-16">
+          <div className="grid grid-cols-1 items-end gap-8 border border-ink bg-bone px-6 py-8 md:grid-cols-[1fr_auto] md:gap-12 md:px-12 md:py-12">
             <div>
               <div className="mb-4">
                 <Eyebrow>Researcher access</Eyebrow>
               </div>
               <h2
                 className="font-display font-black leading-[1.05] tracking-[-0.025em] text-ink"
-                style={{ fontSize: "clamp(28px, 3.4vw, 44px)" }}
+                style={{ fontSize: "clamp(24px, 3.4vw, 44px)" }}
               >
                 10% on your first order. New lot announcements. COA archive access.
               </h2>
@@ -50,7 +49,7 @@ export default function ResearcherAccessPage() {
                 e.preventDefault();
                 setSubmitted(true);
               }}
-              className="flex min-w-[340px] max-w-[420px] flex-col gap-2.5"
+              className="flex w-full flex-col gap-2.5 md:min-w-[340px] md:max-w-[420px]"
             >
               <label className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.16em] text-ink">
                 Email address
@@ -76,17 +75,17 @@ export default function ResearcherAccessPage() {
 
       {/* Benefits grid */}
       <section className="bg-surface">
-        <div className="layout-content py-20">
-          <div className="mb-10 max-w-[560px]">
+        <div className="layout-content py-14 md:py-20">
+          <div className="mb-8 max-w-[560px] md:mb-10">
             <Eyebrow>What you get</Eyebrow>
             <h2
               className="mt-4 font-display font-black leading-[1] tracking-[-0.025em] text-ink"
-              style={{ fontSize: "clamp(28px, 3vw, 40px)" }}
+              style={{ fontSize: "clamp(24px, 3vw, 40px)" }}
             >
               Research-tier access.
             </h2>
           </div>
-          <div className="grid grid-cols-3 gap-0">
+          <div className="grid grid-cols-1 overflow-hidden border border-ink md:grid-cols-3">
             {[
               {
                 n: "01",
@@ -106,13 +105,15 @@ export default function ResearcherAccessPage() {
             ].map((item, i) => (
               <div
                 key={item.n}
-                className="border-y border-r border-ink bg-bone px-9 py-10"
-                style={{ borderLeft: i === 0 ? "1.5px solid var(--pp-ink)" : "none" }}
+                className={[
+                  "bg-bone px-7 py-8 md:px-9 md:py-10",
+                  i < 2 ? "border-b border-ink md:border-b-0 md:border-r" : "",
+                ].join(" ")}
               >
-                <div className="mb-6 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-muted">
+                <div className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-muted md:mb-6">
                   {item.n} · {item.t.toUpperCase()}
                 </div>
-                <h3 className="mb-3.5 font-display text-[22px] font-black leading-[1.15] tracking-[-0.02em] text-ink">
+                <h3 className="mb-3 font-display text-[20px] font-black leading-[1.15] tracking-[-0.02em] text-ink md:mb-3.5 md:text-[22px]">
                   {item.t}
                 </h3>
                 <p className="font-sans text-[14.5px] leading-relaxed text-ink">{item.b}</p>
