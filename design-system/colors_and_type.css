@@ -3,8 +3,6 @@
    Locked palette: Ink / Bone / Soft Blush / Surface. Amber = favicon ONLY.
    =========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
-
 :root {
   /* ---------- Palette (locked from brand guide) ---------- */
   --pp-ink:         #1F1F1F;
@@ -31,9 +29,9 @@
   --pp-border:      var(--pp-ink);
 
   /* ---------- Typography ---------- */
-  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-sans:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono:    'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-display: var(--font-inter, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  --font-sans:    var(--font-inter, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  --font-mono:    var(--font-ibm-plex-mono, 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace);
 
   /* Type scale */
   --t-display-xl: 112px;
