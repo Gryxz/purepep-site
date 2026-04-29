@@ -10,7 +10,7 @@ export default function CartPage() {
 
   return (
     <>
-      <section className="border-b border-ink bg-bone">
+      <section className="bg-bone">
         <div className="layout-content py-10 md:py-12">
           <Eyebrow>Your cart</Eyebrow>
           <h1
@@ -160,7 +160,7 @@ export default function CartPage() {
         </div>
       </section>
 
-      <section className="border-t border-ink bg-surface">
+      <section className="bg-surface">
         <div className="layout-content py-10">
           <ComplianceBlock />
         </div>
