@@ -60,7 +60,7 @@ export default function AffiliatesPage() {
               </a>
               <Link
                 href="/affiliates/dashboard"
-                className="font-sans text-[14px] font-semibold tracking-[-0.005em] text-ink underline underline-offset-4 no-underline"
+                className="inline-flex min-h-[44px] items-center font-sans text-[14px] font-semibold tracking-[-0.005em] text-ink underline underline-offset-4"
               >
                 Already an affiliate? Access dashboard →
               </Link>
