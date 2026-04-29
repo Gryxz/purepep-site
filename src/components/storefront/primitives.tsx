@@ -430,10 +430,10 @@ export function LabelCard({
   return (
     <a
       href={href}
-      className="group flex flex-col border border-ink bg-bone transition-colors hover:bg-surface"
+      className="group flex flex-col rounded-md overflow-hidden bg-bone transition-colors hover:bg-surface"
     >
-      {/* vial area */}
-      <div className="flex items-end justify-center border-b border-ink bg-surface px-6 pt-8 pb-0">
+      {/* vial area — bg-surface tint provides visual separation, no border */}
+      <div className="flex items-end justify-center bg-surface px-6 pt-8 pb-0">
         <VialRender compound={compound} className="h-[88px] w-auto" />
       </div>
       {/* info */}
@@ -492,5 +492,67 @@ export function BlushBand({ children, className }: { children: React.ReactNode; 
     <section className={clsx("bg-blush py-24", className)}>
       <div className="layout-content">{children}</div>
     </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// StatBlock — 4-cell quality signal band. Mobile: 2×2, desktop: 4×1.
+// Numerals: Inter Black display, captions: IBM Plex Mono 11 px.
+// Cells separated by 1 px hairlines via var(--pp-line).
+// No outer border, no shadow — marketing band per v2 amendment.
+// ---------------------------------------------------------------------------
+export interface StatItem {
+  value: string;
+  caption: string;
+}
+
+export function StatBlock({
+  stats,
+  eyebrow,
+}: {
+  stats: StatItem[];
+  eyebrow?: string;
+}) {
+  const total = stats.length;
+  return (
+    <div className="bg-bone py-16 md:py-24">
+      <div className="layout-content">
+        {eyebrow && (
+          <p className="mb-8 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-muted">
+            {eyebrow}
+          </p>
+        )}
+        <div className="grid grid-cols-2 md:grid-cols-4">
+          {stats.map((stat, i) => {
+            const mobileIsRightCol = i % 2 === 1;
+            const mobileIsLastRow = i >= total - 2;
+            const desktopIsLastCol = i === total - 1;
+
+            return (
+              <div
+                key={i}
+                className={clsx(
+                  "px-6 py-8 md:px-8 md:py-10",
+                  !mobileIsRightCol && "border-r border-r-line",
+                  !mobileIsLastRow && "border-b border-b-line",
+                  desktopIsLastCol ? "md:border-r-0" : "md:border-r md:border-r-line",
+                  "md:border-b-0",
+                )}
+              >
+                <p
+                  className="font-display font-black tracking-[-0.02em] text-ink"
+                  style={{ fontSize: "clamp(40px, 4.5vw, 64px)", lineHeight: 1.02 }}
+                >
+                  {stat.value}
+                </p>
+                <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.16em] text-ink">
+                  {stat.caption}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
   );
 }

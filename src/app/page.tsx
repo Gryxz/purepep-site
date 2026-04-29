@@ -5,48 +5,63 @@ import { PRODUCTS } from "@/data/products";
 function Hero() {
   const reta = PRODUCTS.find((p) => p.slug === "reta")!;
   return (
-    <section className="border-b border-ink bg-bone">
-      <div className="layout-content grid grid-cols-1 items-center gap-10 py-12 pb-14 md:grid-cols-[1.15fr_1fr] md:gap-[72px] md:py-[88px] md:pb-24">
-        <div>
-          <Eyebrow>Research-grade peptides · verified per lot</Eyebrow>
-          <h1
-            className="my-6 font-display font-black tracking-[-0.035em] leading-[0.98] text-ink md:my-7"
-            style={{ fontSize: "clamp(42px, 7vw, 96px)", textWrap: "balance" } as React.CSSProperties}
-          >
-            Research-grade peptides.
-            <br />
-            Verified per lot.
-          </h1>
-          <p className="mb-7 max-w-[520px] font-sans text-[16px] leading-relaxed text-ink md:mb-9 md:text-[18px]">
-            Triplicate HPLC assay, lot-matched certificate of analysis, cold-chain delivery.
-            Documentation on file for every vial that leaves the building.
-          </p>
-          <div className="flex flex-wrap items-center gap-5 md:gap-6">
-            <Button variant="primary">
-              <Link href="/shop" className="text-bone no-underline">
-                View catalog →
-              </Link>
-            </Button>
-            <a
-              href="#quality"
-              className="font-sans text-[14px] font-semibold tracking-[-0.005em] text-ink underline underline-offset-4"
+    <section className="bg-bone">
+      <div className="layout-content py-12 pb-14 md:py-[88px] md:pb-24">
+        <div className="md:grid md:grid-cols-[1.15fr_1fr] md:items-center md:gap-[72px]">
+          {/* Text column */}
+          <div>
+            <Eyebrow>Research-grade peptides · verified per lot</Eyebrow>
+            <h1
+              className="my-6 font-display font-black tracking-[-0.035em] leading-[0.98] text-ink md:my-7"
+              style={{ fontSize: "clamp(42px, 7vw, 96px)", textWrap: "balance" } as React.CSSProperties}
             >
-              Read our quality standard
-            </a>
+              Research-grade peptides.
+              <br />
+              Verified per lot.
+            </h1>
+            {/* Mobile: card slides between h1 and body — hidden on desktop */}
+            <div className="mb-6 mt-2 md:hidden">
+              <LabelCard
+                compound={reta.compound}
+                name={reta.name}
+                cas={reta.cas}
+                price={reta.priceLabel}
+                stock={reta.stock}
+                lowCount={reta.lowCount}
+                href={`/shop/${reta.slug}`}
+              />
+            </div>
+            <p className="mb-7 max-w-[520px] font-sans text-[16px] leading-relaxed text-ink md:mb-9 md:text-[18px]">
+              Triplicate HPLC assay, lot-matched certificate of analysis, cold-chain delivery.
+              Documentation on file for every vial that leaves the building.
+            </p>
+            <div className="flex flex-wrap items-center gap-5 md:gap-6">
+              <Button variant="primary">
+                <Link href="/shop" className="text-bone no-underline">
+                  View catalog →
+                </Link>
+              </Button>
+              <a
+                href="#quality"
+                className="font-sans text-[14px] font-semibold tracking-[-0.005em] text-ink underline underline-offset-4"
+              >
+                Read our quality standard
+              </a>
+            </div>
+            <TrustStrip className="mt-8 md:mt-10" />
           </div>
-          <TrustStrip className="mt-8 md:mt-10" />
-        </div>
-
-        <div>
-          <LabelCard
-            compound={reta.compound}
-            name={reta.name}
-            cas={reta.cas}
-            price={reta.priceLabel}
-            stock={reta.stock}
-            lowCount={reta.lowCount}
-            href={`/shop/${reta.slug}`}
-          />
+          {/* Desktop: card in right column — hidden on mobile */}
+          <div className="hidden md:block">
+            <LabelCard
+              compound={reta.compound}
+              name={reta.name}
+              cas={reta.cas}
+              price={reta.priceLabel}
+              stock={reta.stock}
+              lowCount={reta.lowCount}
+              href={`/shop/${reta.slug}`}
+            />
+          </div>
         </div>
       </div>
     </section>
@@ -73,7 +88,7 @@ const VALUE_PROPS = [
 
 function ValueProps() {
   return (
-    <section className="border-b border-ink bg-surface" id="quality">
+    <section className="bg-surface" id="quality">
       <div className="layout-content py-14 md:py-24">
         <div className="mb-10 max-w-[640px] md:mb-16">
           <Eyebrow>What we ship with every vial</Eyebrow>
@@ -84,13 +99,13 @@ function ValueProps() {
             A quality standard you can pull up in a document.
           </h2>
         </div>
-        <div className="grid grid-cols-1 overflow-hidden border border-ink md:grid-cols-3">
+        <div className="grid grid-cols-1 md:grid-cols-3">
           {VALUE_PROPS.map((item, i) => (
             <div
               key={item.num}
               className={[
                 "bg-bone px-7 py-9 md:px-9 md:py-10",
-                i < VALUE_PROPS.length - 1 ? "border-b border-ink md:border-b-0 md:border-r" : "",
+                i < VALUE_PROPS.length - 1 ? "border-b border-b-line md:border-b-0 md:border-r md:border-r-line" : "",
               ].join(" ")}
             >
               <div className="mb-6 font-display text-[56px] font-black leading-[1] tracking-[-0.04em] text-ink md:mb-8 md:text-[72px]">
@@ -160,7 +175,7 @@ const WHY_CELLS = [
 
 function WhyGrid() {
   return (
-    <section className="border-y border-ink bg-bone">
+    <section className="bg-bone">
       <div className="layout-content py-14 md:py-20">
         <div className="mb-10 text-center md:mb-12">
           <Eyebrow>Why PurePep</Eyebrow>
@@ -171,19 +186,15 @@ function WhyGrid() {
             A documented standard.
           </h2>
         </div>
-        <div className="grid grid-cols-2 overflow-hidden border border-ink md:grid-cols-4">
+        <div className="grid grid-cols-2 md:grid-cols-4">
           {WHY_CELLS.map((c, i) => (
             <div
               key={c.label}
               className={[
                 "px-5 py-8 text-center md:px-7 md:py-11",
-                // Right divider: col 0 of each 2-col row (items 0 and 2)
-                i % 2 === 0 ? "border-r border-ink" : "",
-                // Bottom divider: top row (items 0 and 1)
-                i < 2 ? "border-b border-ink md:border-b-0" : "",
-                // Desktop left divider override: items 1,2,3 get left divider instead
-                i > 0 ? "md:border-l-[1.5px]" : "",
-                // Desktop: remove mobile right divider on even items
+                i % 2 === 0 ? "border-r border-r-line" : "",
+                i < 2 ? "border-b border-b-line md:border-b-0" : "",
+                i > 0 ? "md:border-l md:border-l-line" : "",
                 i % 2 === 0 ? "md:border-r-0" : "",
               ].filter(Boolean).join(" ")}
             >
