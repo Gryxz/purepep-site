@@ -40,7 +40,7 @@ export default async function PDPPage({
     <>
       {/* Breadcrumb */}
       <nav className="border-b border-ink bg-bone" aria-label="Breadcrumb">
-        <div className="layout-content py-3">
+        <div className="layout-content py-2 md:py-3">
           <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
             <Link href="/" className="text-ink-muted no-underline hover:text-ink">Home</Link>
             {" / "}
@@ -55,7 +55,7 @@ export default async function PDPPage({
       <section className="border-b border-ink bg-bone">
         <div className="layout-content grid grid-cols-1 gap-8 py-8 md:grid-cols-2 md:gap-[72px] md:py-[72px]">
           {/* Vial visual — order-2 on mobile, order-1 on desktop */}
-          <div className="order-2 flex flex-col items-center justify-center border border-ink bg-surface py-10 md:order-1 md:py-16">
+          <div className="order-2 flex flex-col items-center justify-center border border-ink bg-surface py-6 md:order-1 md:py-16">
             <div className="flex items-end justify-center px-12 pt-4 pb-0">
               <svg
                 viewBox="0 0 80 120"
