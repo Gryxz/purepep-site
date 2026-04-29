@@ -112,7 +112,7 @@ body.pp-locked { overflow: hidden; }
 .pp-cart {
 	display: inline-flex; align-items: center; gap: 8px;
 	padding: 8px 12px; background: transparent;
-	border: var(--bw) solid var(--pp-ink); border-radius: var(--r-sm);
+	border: var(--bw) solid var(--pp-ink); border-radius: var(--r-md);
 	color: var(--pp-ink); text-decoration: none;
 	font-family: var(--font-mono); font-size: var(--t-eyebrow); font-weight: 600;
 	letter-spacing: 0.12em;
@@ -165,7 +165,7 @@ body.pp-locked { overflow: hidden; }
 .pp-age-gate-cta {
 	width: 100%; height: 56px;
 	background: var(--pp-line); color: var(--pp-ink-muted);
-	border: var(--bw) solid var(--pp-ink); border-radius: var(--r-sm);
+	border: var(--bw) solid var(--pp-ink); border-radius: var(--r-md);
 	font-family: var(--font-sans); font-weight: 700; font-size: 14px;
 	letter-spacing: 0.06em; text-transform: uppercase;
 	cursor: not-allowed; margin-bottom: 20px;
@@ -270,7 +270,7 @@ $pp_lockup_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" a
 </header>
 
 <style>
-.pp-hero { background: var(--pp-bone); border-bottom: var(--bw) solid var(--pp-ink); }
+.pp-hero { background: var(--pp-bone); }
 .pp-hero-inner {
 	max-width: var(--max-content); margin: 0 auto;
 	padding: 88px var(--s-5) var(--s-9);
@@ -290,7 +290,7 @@ $pp_lockup_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" a
 .pp-btn {
 	display: inline-flex; align-items: center; gap: 8px;
 	background: var(--pp-ink); color: var(--pp-bone);
-	border: var(--bw) solid var(--pp-ink); border-radius: var(--r-sm);
+	border: var(--bw) solid var(--pp-ink); border-radius: var(--r-md);
 	padding: 16px 28px;
 	font-family: var(--font-sans); font-weight: 600; font-size: 15px;
 	letter-spacing: 0.02em; text-decoration: none; cursor: pointer;
@@ -306,7 +306,7 @@ $pp_lockup_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" a
 
 .pp-hero-card {
 	border: var(--bw) solid var(--pp-ink); background: var(--pp-bone);
-	border-radius: var(--r-sm);
+	border-radius: var(--r-md);
 	aspect-ratio: 1 / 1; padding: 28px;
 	display: flex; flex-direction: column; justify-content: space-between;
 	position: relative; overflow: hidden;
@@ -330,7 +330,7 @@ $pp_lockup_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" a
 }
 
 .pp-filters {
-	background: var(--pp-bone); border-bottom: var(--bw) solid var(--pp-ink);
+	background: var(--pp-bone);
 }
 .pp-filters-inner {
 	max-width: var(--max-content); margin: 0 auto;
@@ -422,8 +422,9 @@ $pp_lockup_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" a
 	display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-5);
 }
 .pp-product-card {
-	border: var(--bw) solid var(--pp-ink); background: var(--pp-bone);
-	border-radius: var(--r-sm);
+	background: var(--pp-bone);
+	border-radius: var(--r-md);
+	overflow: hidden;
 	display: flex; flex-direction: column;
 	transition: background var(--dur-fast) var(--ease);
 }
@@ -434,7 +435,6 @@ $pp_lockup_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" a
 }
 .pp-product-img {
 	aspect-ratio: 1 / 1; background: var(--pp-surface);
-	border: var(--bw) solid var(--pp-ink); border-radius: 0;
 	display: grid; place-items: center; overflow: hidden;
 	margin-bottom: var(--s-3);
 }
@@ -471,8 +471,6 @@ $pp_lockup_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" a
 
 .pp-trust {
 	background: var(--pp-surface);
-	border-top: var(--bw) solid var(--pp-ink);
-	border-bottom: var(--bw) solid var(--pp-ink);
 }
 .pp-trust-inner {
 	max-width: var(--max-content); margin: 0 auto;
@@ -481,7 +479,7 @@ $pp_lockup_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" a
 }
 .pp-trust-cell {
 	padding: var(--s-6) var(--s-5);
-	border-left: var(--bw) solid var(--pp-ink);
+	border-left: 1px solid var(--pp-line);
 	text-align: center;
 }
 .pp-trust-cell:first-child { border-left: 0; }
@@ -532,13 +530,13 @@ $pp_lockup_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" a
 	.pp-product-grid { grid-template-columns: repeat(2, 1fr); }
 	.pp-trust-inner { grid-template-columns: repeat(2, 1fr); }
 	.pp-trust-cell:nth-child(3) { border-left: 0; }
-	.pp-trust-cell:nth-child(n+3) { border-top: var(--bw) solid var(--pp-ink); }
+	.pp-trust-cell:nth-child(n+3) { border-top: 1px solid var(--pp-line); }
 	.pp-footer-cols { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) {
 	.pp-product-grid { grid-template-columns: 1fr; }
 	.pp-trust-inner { grid-template-columns: 1fr; }
-	.pp-trust-cell { border-left: 0; border-top: var(--bw) solid var(--pp-ink); }
+	.pp-trust-cell { border-left: 0; border-top: 1px solid var(--pp-line); }
 	.pp-trust-cell:first-child { border-top: 0; }
 	.pp-footer-cols { grid-template-columns: 1fr; gap: var(--s-5); }
 }

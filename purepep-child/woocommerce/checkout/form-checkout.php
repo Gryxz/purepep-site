@@ -97,7 +97,7 @@ body.pp-locked { overflow: hidden; }
 .pp-age-gate input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; margin: 2px 0 0; border: var(--bw) solid var(--pp-ink); background: var(--pp-bone); cursor: pointer; display: grid; place-content: center; }
 .pp-age-gate input[type="checkbox"]:checked { background: var(--pp-ink); }
 .pp-age-gate input[type="checkbox"]:checked::after { content: ''; width: 10px; height: 6px; border-left: 2px solid var(--pp-bone); border-bottom: 2px solid var(--pp-bone); transform: rotate(-45deg) translate(1px, -1px); }
-.pp-age-gate-cta { width: 100%; height: 56px; background: var(--pp-line); color: var(--pp-ink-muted); border: var(--bw) solid var(--pp-ink); border-radius: var(--r-sm); font-family: var(--font-sans); font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; cursor: not-allowed; margin-bottom: 20px; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
+.pp-age-gate-cta { width: 100%; height: 56px; background: var(--pp-line); color: var(--pp-ink-muted); border: var(--bw) solid var(--pp-ink); border-radius: var(--r-md); font-family: var(--font-sans); font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; cursor: not-allowed; margin-bottom: 20px; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
 .pp-age-gate-cta:not([disabled]) { background: var(--pp-ink); color: var(--pp-bone); cursor: pointer; }
 .pp-age-gate-leave { display: block; text-align: center; margin-bottom: 48px; font-family: var(--font-sans); font-size: 14px; font-weight: 500; color: var(--pp-ink); text-decoration: underline; text-underline-offset: 4px; }
 .pp-age-gate-disclaimer { text-align: center; font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--pp-ink-muted); line-height: 1.8; }
@@ -151,7 +151,7 @@ body.pp-locked { overflow: hidden; }
 .pp-checkout-grid { display: grid; grid-template-columns: 7fr 5fr; gap: var(--s-7); align-items: start; }
 @media (max-width: 1024px) { .pp-checkout-grid { grid-template-columns: 1fr; } }
 
-.pp-checkout-card { border: var(--bw) solid var(--pp-ink); background: var(--pp-bone); border-radius: var(--r-sm); padding: var(--s-6); display: flex; flex-direction: column; gap: var(--s-4); }
+.pp-checkout-card { border: var(--bw) solid var(--pp-ink); background: var(--pp-bone); border-radius: var(--r-md); padding: var(--s-6); display: flex; flex-direction: column; gap: var(--s-4); }
 .pp-checkout-card + .pp-checkout-card { margin-top: var(--s-5); }
 .pp-checkout-card-head { display: flex; align-items: baseline; gap: var(--s-3); padding-bottom: var(--s-4); border-bottom: var(--bw) solid var(--pp-line); }
 .pp-checkout-card-head .pp-step { font-family: var(--font-sans); font-weight: 900; font-size: 28px; letter-spacing: -0.02em; color: var(--pp-ink); }
@@ -317,14 +317,14 @@ body.pp-locked { overflow: hidden; }
 .pp-ack-row input[type="checkbox"]:checked::after { content: ''; width: 10px; height: 6px; border-left: 2px solid var(--pp-bone); border-bottom: 2px solid var(--pp-bone); transform: rotate(-45deg) translate(1px, -1px); }
 .pp-ack-finalrow { display: block; margin-top: 8px; padding-left: 30px; font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--pp-ink-muted); }
 
-.pp-place-order-btn { width: calc(100% - 32px); margin: var(--s-4) 16px var(--s-4); height: 56px; background: var(--pp-ink); color: var(--pp-bone); border: var(--bw) solid var(--pp-ink); border-radius: var(--r-sm); font-family: var(--font-sans); font-weight: 700; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background var(--dur-fast) var(--ease); }
+.pp-place-order-btn { width: calc(100% - 32px); margin: var(--s-4) 16px var(--s-4); height: 56px; background: var(--pp-ink); color: var(--pp-bone); border: var(--bw) solid var(--pp-ink); border-radius: var(--r-md); font-family: var(--font-sans); font-weight: 700; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background var(--dur-fast) var(--ease); }
 .pp-place-order-btn:hover { background: #000; }
 .pp-place-order-btn[disabled] { background: var(--pp-line); color: var(--pp-ink-muted); cursor: not-allowed; }
 
 .pp-secure-badges { display: flex; gap: var(--s-3); justify-content: center; flex-wrap: wrap; padding: 0 var(--s-4) var(--s-4); }
 .pp-secure-badge { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--pp-ink-muted); }
 
-.pp-no-refund { padding: var(--s-4); border: var(--bw) solid var(--pp-alert); background: var(--pp-alert-soft); border-radius: var(--r-sm); margin-top: var(--s-5); }
+.pp-no-refund { padding: var(--s-4); border: var(--bw) solid var(--pp-alert); background: var(--pp-alert-soft); border-radius: var(--r-md); margin-top: var(--s-5); }
 .pp-no-refund p { font-family: var(--font-sans); font-size: 13px; line-height: 1.55; color: var(--pp-ink); margin-top: 8px; }
 
 .pp-empty-checkout { padding: var(--s-9) var(--s-5); text-align: center; font-family: var(--font-sans); font-size: 16px; color: var(--pp-ink); }
