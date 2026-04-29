@@ -21,7 +21,7 @@ function CatalogHeader({
   setFilter: (f: "All" | Category) => void;
 }) {
   return (
-    <section className="border-b border-ink bg-bone">
+    <section className="bg-bone">
       <div className="layout-content pb-8 pt-10 md:pb-10 md:pt-14">
         <Eyebrow>All compounds · lab-tested · lot-traceable</Eyebrow>
         <h1
@@ -57,9 +57,9 @@ function CatalogGrid({ filter }: { filter: string }) {
               className="no-underline"
               style={{ opacity: p.stock === "out" ? 0.85 : 1 }}
             >
-              {/* vial card */}
-              <div className="flex flex-col border border-ink bg-bone hover:bg-surface transition-colors">
-                <div className="flex items-end justify-center border-b border-ink bg-surface px-6 pt-8 pb-0">
+              {/* vial card — bg-surface tint separates vial / info, no border per v2 */}
+              <div className="flex flex-col rounded-md overflow-hidden bg-bone hover:bg-surface transition-colors">
+                <div className="flex items-end justify-center bg-surface px-6 pt-8 pb-0">
                   <VialRender compound={p.compound} className="h-[88px] w-auto" />
                 </div>
                 <div className="flex flex-1 flex-col gap-1 p-4">
