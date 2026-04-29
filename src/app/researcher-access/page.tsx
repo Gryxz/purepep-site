@@ -9,7 +9,7 @@ export default function ResearcherAccessPage() {
   return (
     <>
       {/* Hero */}
-      <section className="border-b border-ink bg-bone">
+      <section className="bg-bone">
         <div className="layout-content py-8 md:py-12">
           <Eyebrow>Researcher access</Eyebrow>
           <h1
@@ -26,7 +26,7 @@ export default function ResearcherAccessPage() {
       </section>
 
       {/* Signup block */}
-      <section className="border-b border-ink bg-bone">
+      <section className="bg-bone">
         <div className="layout-content py-10 md:py-16">
           <div className="grid grid-cols-1 items-end gap-8 border border-ink bg-bone px-6 py-8 md:grid-cols-[1fr_auto] md:gap-12 md:px-12 md:py-12">
             <div>
@@ -60,11 +60,11 @@ export default function ResearcherAccessPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@lab.edu"
                 required
-                className="h-[52px] rounded-[2px] border border-ink bg-bone px-4 font-sans text-[15px] text-ink outline-none"
+                className="h-[52px] rounded-md border border-ink bg-bone px-4 font-sans text-[15px] text-ink outline-none"
               />
               <button
                 type="submit"
-                className="h-[52px] rounded-[2px] border border-ink bg-ink font-sans text-[13px] font-bold uppercase tracking-[0.04em] text-bone cursor-pointer hover:bg-ink/90"
+                className="h-[52px] rounded-md border border-ink bg-ink font-sans text-[13px] font-bold uppercase tracking-[0.04em] text-bone cursor-pointer hover:bg-ink/90"
               >
                 {submitted ? "Request received →" : "Request access →"}
               </button>
@@ -85,7 +85,7 @@ export default function ResearcherAccessPage() {
               Research-tier access.
             </h2>
           </div>
-          <div className="grid grid-cols-1 overflow-hidden border border-ink md:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-3">
             {[
               {
                 n: "01",
@@ -107,7 +107,7 @@ export default function ResearcherAccessPage() {
                 key={item.n}
                 className={[
                   "bg-bone px-7 py-8 md:px-9 md:py-10",
-                  i < 2 ? "border-b border-ink md:border-b-0 md:border-r" : "",
+                  i < 2 ? "border-b border-b-line md:border-b-0 md:border-r md:border-r-line" : "",
                 ].join(" ")}
               >
                 <div className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-muted md:mb-6">
