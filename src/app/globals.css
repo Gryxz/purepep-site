@@ -70,6 +70,9 @@
 
   --radius-none: var(--r-none);
   --radius-sm:   var(--r-sm);
+  --radius-md:   var(--r-md);
+
+  --shadow-product: var(--pp-shadow-product);
 
   --ease-pp: var(--ease);
 
