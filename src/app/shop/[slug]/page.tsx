@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getProduct, getProductSlugs, getRelated } from "@/data/products";
 import { BuyBox } from "@/components/storefront/BuyBox";
 import { COAPanel } from "@/components/storefront/COAPanel";
-import { LabelCard, Eyebrow, Hairline } from "@/components/storefront/primitives";
+import { LabelCard, Eyebrow, Hairline, StatBlock } from "@/components/storefront/primitives";
 import { ComplianceBlock } from "@/components/ComplianceBlock";
 import type { Metadata } from "next";
 
@@ -24,6 +24,13 @@ export async function generateMetadata({
     description: product.description.slice(0, 155),
   };
 }
+
+const PDP_STATS = [
+  { value: "≥ 99.5%", caption: "HPLC purity per lot" },
+  { value: "Per-lot", caption: "COA on every vial" },
+  { value: "2 day", caption: "Cold-chain shipping" },
+  { value: "US", caption: "Synthesized" },
+];
 
 export default async function PDPPage({
   params,
@@ -55,8 +62,9 @@ export default async function PDPPage({
       <section className="border-b border-ink bg-bone">
         <div className="layout-content grid grid-cols-1 gap-8 py-8 md:grid-cols-2 md:gap-[72px] md:py-[72px]">
           {/* Vial visual — order-2 on mobile, order-1 on desktop */}
-          <div className="order-2 flex flex-col items-center justify-center border border-ink bg-surface py-6 md:order-1 md:py-16">
-            <div className="flex items-end justify-center px-12 pt-4 pb-0">
+          <div className="order-2 flex flex-col items-center justify-center bg-surface p-12 md:order-1 md:p-16">
+            {/* shadow-product applied only to the SVG wrapper — traces vial shape, not rect surface */}
+            <div className="flex items-end justify-center shadow-product">
               <svg
                 viewBox="0 0 80 120"
                 xmlns="http://www.w3.org/2000/svg"
@@ -80,11 +88,10 @@ export default async function PDPPage({
                 </text>
               </svg>
             </div>
-            <div className="mt-6 border-t border-ink w-full px-8 pt-5">
-              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted text-center">
-                {product.sku} · Lot {product.lot}
-              </p>
-            </div>
+            {/* SKU/Lot caption — clean monoline beneath vial, no top border rule */}
+            <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted text-center">
+              {product.sku} · Lot {product.lot}
+            </p>
           </div>
 
           {/* BuyBox — order-1 on mobile, order-2 on desktop */}
@@ -93,6 +100,12 @@ export default async function PDPPage({
           </div>
         </div>
       </section>
+
+      {/* StatBlock — quality signal band between hero and COA panel */}
+      <StatBlock
+        eyebrow="Tested · verified · traceable"
+        stats={PDP_STATS}
+      />
 
       {/* COA Panel */}
       <section className="border-b border-ink bg-bone">
