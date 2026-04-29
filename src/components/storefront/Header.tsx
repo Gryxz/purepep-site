@@ -134,7 +134,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
           "layout-content grid items-center border-b border-ink py-4 md:py-5",
           minimal
             ? "grid-cols-[1fr_auto] gap-4"
-            : "grid-cols-[auto_1fr_auto] gap-4 md:grid-cols-[220px_1fr_auto] md:gap-8",
+            : "grid-cols-[auto_minmax(0,1fr)_auto] gap-4 md:grid-cols-[auto_minmax(0,1fr)_auto] md:gap-8",
         )}
       >
         <Link href="/" className="inline-block no-underline">
@@ -143,7 +143,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
 
         {!minimal && (
           /* Desktop nav — hidden on mobile */
-          <nav className="hidden items-center justify-center gap-9 md:flex">
+          <nav className="hidden items-center justify-center gap-7 md:flex">
             <NavLink href="/shop">Catalog</NavLink>
             <NavLink href="/shop/reta">RETA</NavLink>
             <NavLink>Quality</NavLink>
@@ -181,7 +181,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
               className="relative inline-flex h-11 cursor-pointer items-center gap-2 border border-ink bg-transparent px-3 py-2 text-ink"
             >
               <Icon name="cart" size={16} />
-              <span className="font-mono text-[11px] font-semibold tracking-[0.12em]">
+              <span className="hidden font-mono text-[11px] font-semibold tracking-[0.12em] min-[360px]:inline">
                 {String(count).padStart(2, "0")}
               </span>
             </button>
