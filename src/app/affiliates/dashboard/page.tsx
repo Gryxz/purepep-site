@@ -74,10 +74,8 @@ export default function AffiliateDashboardPage() {
                 key={c.label}
                 className={[
                   "px-5 py-6 md:px-7 md:py-8",
-                  // Mobile: right divider for col 0 (items 0,2); bottom divider for top row (items 0,1)
                   i % 2 === 0 ? "border-r border-ink" : "",
                   i < 2 ? "border-b border-ink md:border-b-0" : "",
-                  // Desktop: left divider for items 1,2,3; remove mobile right divider
                   i > 0 ? "md:border-l-[1.5px]" : "",
                   i % 2 === 0 ? "md:border-r-0" : "",
                 ].filter(Boolean).join(" ")}
@@ -113,7 +111,7 @@ export default function AffiliateDashboardPage() {
               onClick={copyLink}
               className="h-12 shrink-0 cursor-pointer border border-ink bg-ink px-4 font-mono text-[11px] uppercase tracking-[0.12em] text-bone hover:bg-ink/90 md:px-5"
             >
-              {copied ? "Copied!" : "Copy"}
+              {copied ? "Copied" : "Copy"}
             </button>
           </div>
           <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
