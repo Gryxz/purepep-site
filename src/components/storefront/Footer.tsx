@@ -1,0 +1,133 @@
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { Lockup } from "./primitives";
+import { clsx } from "@/lib/clsx";
+
+function FootCol({ title, items }: { title: string; items: { label: string; href?: string }[] }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="border-b border-bone/20 md:border-none">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="flex w-full cursor-pointer items-center justify-between py-3.5 md:cursor-default md:py-0 md:pointer-events-none"
+      >
+        <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-bone/55">
+          {title}
+        </div>
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+          aria-hidden="true"
+          className="text-bone/40 transition-transform duration-200 md:hidden"
+          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+        >
+          <path d="M3 5.5l4 4 4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      <ul
+        className={clsx(
+          "list-none gap-2 p-0 m-0 pb-4 md:pb-0 md:mt-3.5",
+          open ? "grid" : "hidden",
+          "md:grid",
+        )}
+      >
+        {items.map((item) => (
+          <li key={item.label}>
+            {item.href ? (
+              <Link href={item.href as never} className="font-sans text-[13.5px] text-bone no-underline hover:text-bone/80">
+                {item.label}
+              </Link>
+            ) : (
+              <span className="font-sans text-[13.5px] text-bone/75">{item.label}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export function Footer({ minimal = false }: { minimal?: boolean }) {
+  if (minimal) {
+    return (
+      <footer className="bg-ink py-5 text-center font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-bone">
+        © 2026 PurePep · For research use only · Not for human consumption
+      </footer>
+    );
+  }
+
+  return (
+    <footer className="bg-ink text-bone">
+      <div className="layout-content pb-10 pt-12 md:pt-[72px]">
+        {/* Logo + tagline — always shown */}
+        <div className="mb-6 md:hidden">
+          <Lockup className="h-9 w-auto text-bone" />
+          <p className="mt-3 font-sans text-[13.5px] leading-relaxed text-bone/75">
+            Research-grade peptides. Triplicate HPLC per lot. Cold-chain shipped.
+          </p>
+        </div>
+
+        {/* Desktop: 5-col grid | Mobile: stacked accordion */}
+        <div className="grid grid-cols-1 md:grid-cols-[1.4fr_repeat(4,_1fr)] md:gap-12">
+          {/* Logo col — desktop only */}
+          <div className="hidden md:block">
+            <Lockup className="h-10 w-auto text-bone" />
+            <p className="mt-4.5 max-w-[280px] font-sans text-[13.5px] leading-relaxed text-bone/75">
+              Research-grade peptides. Triplicate HPLC per lot. Cold-chain shipped. Documentation on file.
+            </p>
+          </div>
+
+          <FootCol
+            title="Catalog"
+            items={[
+              { label: "RETA · Retatrutide", href: "/shop/reta" },
+              { label: "SEMA · Semaglutide", href: "/shop/sema" },
+              { label: "TIRZ · Tirzepatide", href: "/shop/tirz" },
+              { label: "View all", href: "/shop" },
+            ]}
+          />
+          <FootCol
+            title="Quality"
+            items={[
+              { label: "Certificates of analysis" },
+              { label: "Lab partners" },
+              { label: "Cold-chain shipping" },
+              { label: "Lot traceability" },
+            ]}
+          />
+          <FootCol
+            title="Account"
+            items={[
+              { label: "Sign in" },
+              { label: "Researcher verification", href: "/researcher-access" },
+              { label: "Order history" },
+              { label: "Re-order" },
+            ]}
+          />
+          <FootCol
+            title="Policies"
+            items={[
+              { label: "No-refund policy" },
+              { label: "Terms of sale" },
+              { label: "Privacy" },
+              { label: "Contact" },
+            ]}
+          />
+        </div>
+
+        <div className="my-8 h-px bg-bone/20 md:my-12" />
+
+        <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[10.5px] uppercase tracking-[0.14em] text-bone/55">
+          <span>For research use only · Not for human consumption · 21+ qualified researchers</span>
+          <span>© 2026 PurePep</span>
+        </div>
+      </div>
+    </footer>
+  );
+}

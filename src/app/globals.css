@@ -1,8 +1,3 @@
-/* Hoisted to satisfy CSS spec — every @import must precede non-@import rules.
-   The same URL is also imported transitively by colors_and_type.css; the
-   browser dedupes. Replace with next/font/google self-hosted once the
-   submodule's colors_and_type.css drops its inline @import. */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
 /**
@@ -20,7 +15,7 @@
  * utilities like bg-bone, text-ink, border-ink, font-mono, etc. resolve
  * to the locked palette.
  *
- * Amber (#DC9814) is intentionally absent — it is favicon-only.
+ * Amber is intentionally absent from this map — it is favicon-only per brand bible.
  */
 @theme {
   --color-ink:          var(--pp-ink);
@@ -87,11 +82,26 @@
  * tokens.layout.gutter (24 px) horizontal padding. Use this class instead of
  * arbitrary Tailwind width values, which the token fence rejects.
  */
+@layer base {
+  html, body {
+    overflow-x: hidden;
+  }
+  body {
+    min-width: 320px;
+  }
+}
+
 @layer components {
   .layout-content {
     width: 100%;
     max-width: var(--max-content);
     margin-inline: auto;
-    padding-inline: var(--gutter);
+    padding-inline: 16px;
+  }
+
+  @media (min-width: 640px) {
+    .layout-content {
+      padding-inline: var(--gutter);
+    }
   }
 }
