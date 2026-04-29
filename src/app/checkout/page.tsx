@@ -121,7 +121,7 @@ export default function CheckoutPage() {
         <section className="bg-bone">
           <div className="layout-content grid grid-cols-1 items-start gap-10 py-8 pb-24 md:grid-cols-[1.4fr_1fr] md:gap-14 md:py-12">
             {/* LEFT: form */}
-            <div className="flex flex-col gap-8 md:gap-10">
+            <div className="flex flex-col gap-10 md:gap-12">
               {/* cart items */}
               <div>
                 <div className="mb-3.5">
@@ -193,10 +193,10 @@ export default function CheckoutPage() {
 
               {/* contact */}
               <div>
-                <div className="mb-5">
+                <div className="mb-6">
                   <Eyebrow>Contact</Eyebrow>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-5">
                   <Input label="First name" placeholder="Jane" />
                   <Input label="Last name" placeholder="Smith" />
                   <Input label="Email" type="email" placeholder="jane@example.com" colSpan={2} />
@@ -206,10 +206,10 @@ export default function CheckoutPage() {
 
               {/* shipping */}
               <div>
-                <div className="mb-5">
+                <div className="mb-6">
                   <Eyebrow>Shipping address</Eyebrow>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-5">
                   <Input label="Address" placeholder="123 Research Blvd" colSpan={2} />
                   <Input label="City" placeholder="Boston" />
                   <Input label="State" placeholder="MA" />
@@ -220,10 +220,10 @@ export default function CheckoutPage() {
 
               {/* payment */}
               <div>
-                <div className="mb-5">
+                <div className="mb-6">
                   <Eyebrow>Payment</Eyebrow>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-5">
                   <Input label="Card number" placeholder="•••• •••• •••• ••••" colSpan={2} />
                   <Input label="Expiry" placeholder="MM / YY" />
                   <Input label="CVC" placeholder="•••" />
@@ -238,11 +238,11 @@ export default function CheckoutPage() {
                   placeholder="Promo code"
                   value={promo}
                   onChange={(e) => setPromo(e.target.value)}
-                  className="h-11 flex-1 rounded-[2px] border border-ink bg-bone px-3.5 font-mono text-[12px] text-ink outline-none"
+                  className="h-11 flex-1 rounded-md border border-ink bg-bone px-3.5 font-mono text-[12px] text-ink outline-none"
                 />
                 <button
                   type="button"
-                  className="h-11 border border-ink bg-bone px-5 font-mono text-[11px] uppercase tracking-[0.12em] text-ink hover:bg-surface"
+                  className="h-11 rounded-md border border-ink bg-bone px-5 font-mono text-[11px] uppercase tracking-[0.12em] text-ink hover:bg-surface"
                 >
                   Apply
                 </button>
@@ -264,7 +264,7 @@ export default function CheckoutPage() {
                   type="button"
                   onClick={handlePlace}
                   disabled={!ack || items.length === 0}
-                  className="flex h-14 w-full cursor-pointer items-center justify-center gap-2.5 border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone transition-colors hover:bg-ink/90 disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted"
+                  className="flex h-14 w-full cursor-pointer items-center justify-center gap-2.5 rounded-md border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone transition-colors hover:bg-ink/90 disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted"
                 >
                   <Icon name="check" size={17} />
                   Place order · ${total.toFixed(2)}
@@ -328,7 +328,7 @@ export default function CheckoutPage() {
                 type="button"
                 onClick={handlePlace}
                 disabled={!ack || items.length === 0}
-                className="mt-5 hidden h-14 w-full cursor-pointer items-center justify-center gap-2.5 border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone transition-colors hover:bg-ink/90 disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted md:flex"
+                className="mt-5 hidden h-14 w-full cursor-pointer items-center justify-center gap-2.5 rounded-md border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone transition-colors hover:bg-ink/90 disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted md:flex"
               >
                 <Icon name="check" size={17} />
                 Place order
@@ -347,7 +347,7 @@ export default function CheckoutPage() {
                   type="button"
                   onClick={handlePlace}
                   disabled={!ack || items.length === 0}
-                  className="flex h-12 cursor-pointer items-center gap-2 rounded-[2px] border border-ink bg-ink px-5 font-sans text-[13px] font-bold uppercase tracking-[0.04em] text-bone disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted"
+                  className="flex h-12 cursor-pointer items-center gap-2 rounded-md border border-ink bg-ink px-5 font-sans text-[13px] font-bold uppercase tracking-[0.04em] text-bone disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted"
                 >
                   <Icon name="check" size={15} />
                   Place order
