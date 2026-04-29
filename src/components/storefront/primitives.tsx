@@ -430,10 +430,10 @@ export function LabelCard({
   return (
     <a
       href={href}
-      className="group flex flex-col border border-ink bg-bone transition-colors hover:bg-surface"
+      className="group flex flex-col rounded-md overflow-hidden bg-bone transition-colors hover:bg-surface"
     >
-      {/* vial area */}
-      <div className="flex items-end justify-center border-b border-ink bg-surface px-6 pt-8 pb-0">
+      {/* vial area — bg-surface tint provides visual separation, no border */}
+      <div className="flex items-end justify-center bg-surface px-6 pt-8 pb-0">
         <VialRender compound={compound} className="h-[88px] w-auto" />
       </div>
       {/* info */}
@@ -522,20 +522,10 @@ export function StatBlock({
             {eyebrow}
           </p>
         )}
-        {/*
-          Hairline strategy:
-          Mobile (2-col): right border on left-col cells (even index), bottom border on top-row cells.
-          Desktop (4-col): right border on all cells except last; no bottom borders.
-          We use a CSS custom-property trick: define the borders via inline vars on the wrapper,
-          then each cell uses data attributes so we can override with md: variant classes.
-        */}
         <div className="grid grid-cols-2 md:grid-cols-4">
           {stats.map((stat, i) => {
-            // Mobile: even index = left col (has right border); odd = right col (no right border)
-            // Mobile: first half of stats has bottom border; second half does not
             const mobileIsRightCol = i % 2 === 1;
             const mobileIsLastRow = i >= total - 2;
-            // Desktop: last item has no right border; all items have no bottom border
             const desktopIsLastCol = i === total - 1;
 
             return (
@@ -543,13 +533,9 @@ export function StatBlock({
                 key={i}
                 className={clsx(
                   "px-6 py-8 md:px-8 md:py-10",
-                  // Mobile right border
                   !mobileIsRightCol && "border-r border-r-line",
-                  // Mobile bottom border
                   !mobileIsLastRow && "border-b border-b-line",
-                  // Desktop: override right border — last col removes it, others keep it
                   desktopIsLastCol ? "md:border-r-0" : "md:border-r md:border-r-line",
-                  // Desktop: remove bottom border entirely
                   "md:border-b-0",
                 )}
               >
