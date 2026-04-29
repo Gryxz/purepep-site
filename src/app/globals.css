@@ -87,6 +87,15 @@
  * tokens.layout.gutter (24 px) horizontal padding. Use this class instead of
  * arbitrary Tailwind width values, which the token fence rejects.
  */
+@layer base {
+  html, body {
+    overflow-x: hidden;
+  }
+  body {
+    min-width: 320px;
+  }
+}
+
 @layer components {
   .layout-content {
     width: 100%;
