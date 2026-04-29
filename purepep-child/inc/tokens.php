@@ -72,9 +72,10 @@ final class Tokens {
 	const S_9  = '96px';
 	const S_10 = '128px';
 
-	/* ---------- Radii (brutalist — 0 / 2 only) ---------- */
+	/* ---------- Radii (brutalist — 0 / 2 / 8 only) ---------- */
 	const R_NONE = '0px';
 	const R_SM   = '2px';
+	const R_MD   = '8px';
 
 	/* ---------- Borders ---------- */
 	const BW      = '1.5px';
@@ -89,6 +90,9 @@ final class Tokens {
 	/* ---------- Layout ---------- */
 	const MAX_CONTENT = '1280px';
 	const GUTTER      = '24px';
+
+	/* ---------- Elevation (v2 amendment — product photography only) ---------- */
+	const SHADOW_PRODUCT = '0 18px 32px -12px rgb(31 31 31 / 0.18), 0 4px 10px -4px rgb(31 31 31 / 0.10)';
 
 	/* ---------- Scrim ---------- */
 	const SCRIM = 'rgb(31 31 31 / 0.40)';
@@ -157,6 +161,7 @@ final class Tokens {
 
 			'r-none' => self::R_NONE,
 			'r-sm'   => self::R_SM,
+			'r-md'   => self::R_MD,
 
 			'bw'      => self::BW,
 			'bw-rule' => self::BW_RULE,
@@ -168,6 +173,8 @@ final class Tokens {
 
 			'max-content' => self::MAX_CONTENT,
 			'gutter'      => self::GUTTER,
+
+			'pp-shadow-product' => self::SHADOW_PRODUCT,
 
 			'scrim' => self::SCRIM,
 		];
