@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { Icon, VialRender, CheckGlyph } from "./primitives";
+import { CartUpsellSlot } from "./CartUpsellSlot";
 
 export function CartDrawer() {
   const { items, isOpen, closeCart, updateQty, removeItem, subtotal } = useCartStore();
@@ -114,6 +115,8 @@ export function CartDrawer() {
 
         {/* footer */}
         <div className="border-t border-ink bg-bone-soft px-6 pb-7 pt-5">
+          <CartUpsellSlot enabled={false} />
+
           {items.length > 0 && (
             <div className="mb-3.5 flex items-center gap-2">
               <CheckGlyph pass={true} />
@@ -123,7 +126,7 @@ export function CartDrawer() {
             </div>
           )}
 
-          <div className="mb-1 flex items-baseline justify-between">
+          <div className="mb-5 flex items-baseline justify-between">
             <span className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-ink-muted">
               Subtotal
             </span>
@@ -131,14 +134,11 @@ export function CartDrawer() {
               ${subtotal().toFixed(2)}
             </span>
           </div>
-          <p className="mb-4.5 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-ink-muted">
-            All sales final · Taxes + shipping at checkout
-          </p>
 
           <Link
             href={"/checkout" as never}
             onClick={closeCart}
-            className="flex h-[52px] w-full cursor-pointer items-center justify-center rounded-[2px] border border-ink bg-ink font-sans text-[13px] font-bold uppercase tracking-[0.04em] text-bone no-underline transition-colors aria-disabled:pointer-events-none aria-disabled:opacity-40 hover:bg-ink/90"
+            className="flex h-[52px] w-full cursor-pointer items-center justify-center rounded-md border border-ink bg-ink font-sans text-[13px] font-bold uppercase tracking-[0.04em] text-bone no-underline transition-colors aria-disabled:pointer-events-none aria-disabled:opacity-40 hover:bg-ink/90"
             aria-disabled={items.length === 0}
           >
             Proceed to checkout
