@@ -123,6 +123,7 @@ export function BuyBox({ product }: { product: Product }) {
         dose: variant,
         price: unitPrice,
         priceLabel: `$${unitPrice.toFixed(2)}`,
+        wcId: product.wcId,
       });
     }
     openCart();

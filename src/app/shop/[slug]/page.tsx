@@ -1,14 +1,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getProduct, getProductSlugs, getRelated } from "@/data/products";
+import { getAllSlugs, getProductBySlug, getRelatedProducts } from "@/lib/wc-api";
 import { BuyBox } from "@/components/storefront/BuyBox";
 import { COAPanel } from "@/components/storefront/COAPanel";
 import { LabelCard, Eyebrow, Hairline, StatBlock } from "@/components/storefront/primitives";
 import { ComplianceBlock } from "@/components/ComplianceBlock";
 import type { Metadata } from "next";
 
-export function generateStaticParams() {
-  return getProductSlugs().map((slug) => ({ slug }));
+export async function generateStaticParams() {
+  const slugs = await getAllSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -17,7 +18,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProductBySlug(slug);
   if (!product) return {};
   return {
     title: `${product.compound} · ${product.name} ${product.dose}`,
@@ -38,10 +39,10 @@ export default async function PDPPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const related = getRelated(slug, 4);
+  const related = await getRelatedProducts(slug, 4);
 
   return (
     <>
