@@ -183,7 +183,7 @@ export function BuyBox({ product }: { product: Product }) {
 
       {/* tier pricing — desktop: always open; mobile: collapsed by default, open when a bundle is active */}
       <details className="group md:open" open={tierIdx > 0 || undefined}>
-        <summary className="flex cursor-pointer list-none items-center justify-between border border-ink bg-bone px-[14px] py-3 md:hidden [&::-webkit-details-marker]:hidden">
+        <summary className="flex cursor-pointer list-none items-center justify-between rounded-md border border-line bg-surface px-[14px] py-3 md:hidden [&::-webkit-details-marker]:hidden">
           <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
             {tierIdx > 0 ? TIERS[tierIdx]!.label : "↓ Save 10–20% with bundles"}
           </span>
@@ -211,7 +211,7 @@ export function BuyBox({ product }: { product: Product }) {
                   // Hairline divider between rows (not before the first)
                   !isFirst && "border-t border-t-line",
                   active
-                    ? "z-10 bg-surface ring-[1.5px] ring-ink"
+                    ? "z-10 bg-surface ring-1 ring-ink/60"
                     : "bg-transparent hover:bg-bone-soft",
                 )}
                 style={{ gridTemplateColumns: "auto 1fr auto auto" }}
@@ -236,7 +236,7 @@ export function BuyBox({ product }: { product: Product }) {
                   {t.label}
                 </span>
                 {t.tag && (
-                  <span className="border border-ink px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ink">
+                  <span className="rounded-md bg-surface border border-line px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
                     {t.tag}
                   </span>
                 )}
@@ -268,7 +268,7 @@ export function BuyBox({ product }: { product: Product }) {
                 type="button"
                 onClick={() => setVariantIdx(i)}
                 className={clsx(
-                  "min-w-[72px] cursor-pointer rounded-[2px] border border-ink px-4 py-2.5 font-sans text-[13px] font-semibold tracking-[0.02em] transition-colors md:min-w-[80px] md:px-5",
+                  "min-w-[72px] cursor-pointer rounded-md border border-ink px-4 py-2.5 font-sans text-[13px] font-semibold tracking-[0.02em] transition-colors md:min-w-[80px] md:px-5",
                   variantIdx === i ? "bg-ink text-bone" : "bg-bone text-ink",
                 )}
               >
