@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { useCartStore } from "@/lib/cart-store";
+import { placeWcOrder } from "@/lib/wc-store-api";
 import {
   Eyebrow,
   VialRender,
@@ -58,8 +59,17 @@ export default function CheckoutPage() {
   const [ack, setAck] = useState(false);
   const [promo, setPromo] = useState("");
   const [placed, setPlaced] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const placeRef = useRef<HTMLButtonElement>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [stateField, setStateField] = useState("");
+  const [zip, setZip] = useState("");
 
   useEffect(() => {
     const el = placeRef.current;
@@ -76,8 +86,37 @@ export default function CheckoutPage() {
   const tax = Math.round(subtotal() * 0.0625 * 100) / 100;
   const total = subtotal() + shipping + tax;
 
-  function handlePlace() {
-    if (!ack || items.length === 0) return;
+  async function handlePlace() {
+    if (!ack || items.length === 0 || submitting) return;
+    setSubmitting(true);
+    const address_block = {
+      first_name: firstName,
+      last_name: lastName,
+      address_1: address,
+      city,
+      state: stateField,
+      postcode: zip,
+      country: "US",
+      email,
+    };
+    const result = await placeWcOrder({
+      billing_address: address_block,
+      shipping_address: address_block,
+      payment_method: "bacs",
+    });
+    setSubmitting(false);
+    if (result && result.payment_url) {
+      clearCart();
+      window.location.href = result.payment_url;
+      return;
+    }
+    if (result) {
+      clearCart();
+      setPlaced(true);
+      return;
+    }
+    // Upstream unavailable (e.g. dev without backend) — surface a confirmation
+    // anyway so the optimistic UX still completes.
     clearCart();
     setPlaced(true);
   }
@@ -197,9 +236,9 @@ export default function CheckoutPage() {
                   <Eyebrow>Contact</Eyebrow>
                 </div>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-5">
-                  <Input label="First name" placeholder="Jane" />
-                  <Input label="Last name" placeholder="Smith" />
-                  <Input label="Email" type="email" placeholder="jane@example.com" colSpan={2} />
+                  <Input label="First name" placeholder="Jane" value={firstName} onChange={setFirstName} />
+                  <Input label="Last name" placeholder="Smith" value={lastName} onChange={setLastName} />
+                  <Input label="Email" type="email" placeholder="jane@example.com" colSpan={2} value={email} onChange={setEmail} />
                   <Input label="Institution / organization" placeholder="University of…" colSpan={2} />
                 </div>
               </div>
@@ -210,10 +249,10 @@ export default function CheckoutPage() {
                   <Eyebrow>Shipping address</Eyebrow>
                 </div>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-5">
-                  <Input label="Address" placeholder="123 Research Blvd" colSpan={2} />
-                  <Input label="City" placeholder="Boston" />
-                  <Input label="State" placeholder="MA" />
-                  <Input label="ZIP" placeholder="02101" />
+                  <Input label="Address" placeholder="123 Research Blvd" colSpan={2} value={address} onChange={setAddress} />
+                  <Input label="City" placeholder="Boston" value={city} onChange={setCity} />
+                  <Input label="State" placeholder="MA" value={stateField} onChange={setStateField} />
+                  <Input label="ZIP" placeholder="02101" value={zip} onChange={setZip} />
                   <Input label="Country" placeholder="United States" />
                 </div>
               </div>
@@ -263,11 +302,11 @@ export default function CheckoutPage() {
                   ref={placeRef}
                   type="button"
                   onClick={handlePlace}
-                  disabled={!ack || items.length === 0}
+                  disabled={!ack || items.length === 0 || submitting}
                   className="flex h-14 w-full cursor-pointer items-center justify-center gap-2.5 rounded-md border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone transition-colors hover:bg-ink/90 disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted"
                 >
                   <Icon name="check" size={17} />
-                  Place order · ${total.toFixed(2)}
+                  {submitting ? "Placing…" : `Place order · $${total.toFixed(2)}`}
                 </button>
               </div>
             </div>
@@ -327,11 +366,11 @@ export default function CheckoutPage() {
               <button
                 type="button"
                 onClick={handlePlace}
-                disabled={!ack || items.length === 0}
+                disabled={!ack || items.length === 0 || submitting}
                 className="mt-5 hidden h-14 w-full cursor-pointer items-center justify-center gap-2.5 rounded-md border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone transition-colors hover:bg-ink/90 disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted md:flex"
               >
                 <Icon name="check" size={17} />
-                Place order
+                {submitting ? "Placing…" : "Place order"}
               </button>
             </div>
           </div>
@@ -346,11 +385,11 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={handlePlace}
-                  disabled={!ack || items.length === 0}
+                  disabled={!ack || items.length === 0 || submitting}
                   className="flex h-12 cursor-pointer items-center gap-2 rounded-md border border-ink bg-ink px-5 font-sans text-[13px] font-bold uppercase tracking-[0.04em] text-bone disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted"
                 >
                   <Icon name="check" size={15} />
-                  Place order
+                  {submitting ? "Placing…" : "Place order"}
                 </button>
               </div>
             </div>

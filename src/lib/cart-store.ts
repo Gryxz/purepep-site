@@ -1,6 +1,7 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { addToWcCart } from "@/lib/wc-store-api";
 
 export interface CartItem {
   slug: string;
@@ -10,6 +11,10 @@ export interface CartItem {
   price: number;
   priceLabel: string;
   qty: number;
+  /** WooCommerce product ID — used to mirror the item into the WC cart. */
+  wcId?: number;
+  /** WC cart line key returned from /cart/add-item — needed for update/remove. */
+  wcItemKey?: string;
 }
 
 interface CartState {
@@ -45,6 +50,22 @@ export const useCartStore = create<CartState>()(
           }
           return { items: [...s.items, { ...incoming, qty: 1 }] };
         });
+
+        // Mirror into WC cart in the background. Zustand stays the source of
+        // truth — we update wcItemKey opportunistically so later mutations can
+        // reach the right line, but we never block the UI on the upstream.
+        if (typeof incoming.wcId === "number" && incoming.wcId > 0) {
+          void addToWcCart(incoming.wcId, 1).then((line) => {
+            if (!line || !line.key) return;
+            set((s) => ({
+              items: s.items.map((i) =>
+                i.slug === incoming.slug && i.dose === incoming.dose && !i.wcItemKey
+                  ? { ...i, wcItemKey: line.key }
+                  : i,
+              ),
+            }));
+          });
+        }
       },
 
       removeItem: (slug) => {
