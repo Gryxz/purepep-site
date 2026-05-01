@@ -114,7 +114,7 @@ function NavAffiliatesDropdown({ active = false }: { active?: boolean }) {
 const MOBILE_NAV_LINKS = [
   { label: "Catalog", href: "/shop" },
   { label: "RETA", href: "/shop/reta" },
-  { label: "Quality", href: "#" },
+  { label: "Quality", href: "/quality" },
   { label: "Documentation", href: "#" },
   { label: "Affiliates", href: "/affiliates" },
   { label: "Affiliate dashboard", href: "/affiliates/dashboard" },
@@ -146,7 +146,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
           <nav className="hidden items-center justify-center gap-7 md:flex">
             <NavLink href="/shop">Catalog</NavLink>
             <NavLink href="/shop/reta">RETA</NavLink>
-            <NavLink>Quality</NavLink>
+            <NavLink href="/quality">Quality</NavLink>
             <NavLink>Documentation</NavLink>
             <NavAffiliatesDropdown />
             <NavLink>Account</NavLink>
