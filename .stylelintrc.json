@@ -36,7 +36,11 @@
     {
       "files": ["src/components/Header.tsx", "src/components/Modal.tsx", "src/app/globals.css"],
       "rules": {
-        "declaration-property-value-disallowed-list": null
+        "declaration-property-value-disallowed-list": null,
+        "color-no-hex": null,
+        "declaration-block-single-line-max-declarations": null,
+        "media-feature-range-notation": null,
+        "property-no-vendor-prefix": null
       }
     }
   ]

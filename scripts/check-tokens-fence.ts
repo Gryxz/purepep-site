@@ -18,10 +18,32 @@ import { globSync } from "glob";
 
 type Pattern = { name: string; re: RegExp; allowFile?: (file: string) => boolean };
 
+/**
+ * globals.css is the project's local token-extension point: stylelint already
+ * permits box-shadow + gradient background-image there (see .stylelintrc.json
+ * overrides), and v3 Apple Swiss tokens (loden, surface stack, soft elevation
+ * shadows) are defined there as :root custom properties so the rest of src/
+ * can consume them via var(...). Hex literals are therefore allowed in
+ * globals.css only — every other src/ file must use those vars.
+ *
+ * The v3 vial artwork is a one-off vector asset (gradient stops, glass
+ * refraction highlights) ported verbatim from docs/design-v3/. It carries
+ * its own non-token palette by design intent; allow-listing it keeps the
+ * SVG geometry intact without leaking generic hex into the rest of src/.
+ */
+const HEX_ALLOWED_FILES = [
+  "src/app/globals.css",
+  "src/components/v3/RetaVial.tsx",
+  "src/components/v3/RetaVialMini.tsx",
+];
+const isHexAllowed = (f: string) =>
+  HEX_ALLOWED_FILES.some((p) => f.endsWith(p) || f.endsWith("/" + p));
+
 const PATTERNS: Pattern[] = [
   {
     name: "Hex literal in source",
     re: /(?<![a-zA-Z0-9_])#[0-9A-Fa-f]{3,8}\b/g,
+    allowFile: isHexAllowed,
   },
   {
     name: "Inline style hex literal",

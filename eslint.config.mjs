@@ -41,6 +41,16 @@ const config = [
       ],
     },
   },
+  // v3 vial vector artwork — ported verbatim from docs/design-v3/. The
+  // gradient stops, glass refraction highlights, and crimp-cap shading
+  // are non-token by design intent. Keep the ESLint hex ban off only here;
+  // every other src/ file still goes through the brand fence.
+  {
+    files: ["src/components/v3/RetaVial.tsx", "src/components/v3/RetaVialMini.tsx"],
+    rules: {
+      "no-restricted-syntax": "off",
+    },
+  },
 ];
 
 export default config;
