@@ -56,6 +56,10 @@ const PATTERNS: Pattern[] = [
   {
     name: "Hand-typed compliance string (use compliance.* from @design/tokens)",
     re: /(For research use only\. Not for human consumption\.|Sales restricted to qualified researchers, 21 and over\.|All sales final\. No refunds, no exchanges, no returns\.)/g,
+    // The compliance strings necessarily live verbatim in the canonical
+    // tokens module that the rest of src/ imports — that's the whole
+    // point of importing them. Exempt the source file itself.
+    allowFile: (f) => f.endsWith("src/design-system/tokens.ts") || f.endsWith("/design-system/tokens.ts"),
   },
 ];
 

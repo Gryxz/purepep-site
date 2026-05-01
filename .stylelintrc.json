@@ -40,7 +40,8 @@
         "color-no-hex": null,
         "declaration-block-single-line-max-declarations": null,
         "media-feature-range-notation": null,
-        "property-no-vendor-prefix": null
+        "property-no-vendor-prefix": null,
+        "no-duplicate-selectors": null
       }
     }
   ]
