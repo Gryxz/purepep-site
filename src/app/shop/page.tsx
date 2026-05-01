@@ -1,7 +1,7 @@
 import { getAllProducts } from "@/lib/wc-api";
-import { CatalogClient } from "./CatalogClient";
+import { CatalogPage } from "@/components/v3/CatalogPage";
 
 export default async function ShopPage() {
   const products = await getAllProducts();
-  return <CatalogClient products={products} />;
+  return <CatalogPage products={products} />;
 }
