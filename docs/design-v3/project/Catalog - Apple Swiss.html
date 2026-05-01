@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Catalog — PurePep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --canvas: #FAF7F0;
+    --surface-1: #F5F1EA;
+    --surface-2: #F1EDE3;
+    --surface-3: #EFEAE0;
+    --surface-4: #E9E3D7;
+
+    --ink: #1F1F1F;
+    --ink-muted: #6A6A6A;
+
+    --accent: #3D4232;
+    --accent-ink: #FAF7F0;
+
+    --hair: rgba(31, 31, 31, 0.08);
+    --hair-strong: rgba(31, 31, 31, 0.14);
+
+    --amber: #B8821C; /* system stock-state only */
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+  /* ───── Compliance bar ───── */
+  .compliance { background: var(--surface-1); border-bottom: 1px solid var(--hair); }
+  .compliance-inner {
+    display: flex; justify-content: center; gap: 28px;
+    padding: 10px 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(31,31,31,0.65);
+  }
+  .compliance-inner .dot { opacity: 0.45; }
+
+  /* ───── Header ───── */
+  header.site {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250, 247, 240, 0.85);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid var(--hair);
+  }
+  .header-inner {
+    display: grid; grid-template-columns: auto 1fr auto;
+    align-items: center; gap: 32px;
+    padding: 18px 32px;
+    max-width: 1280px; margin: 0 auto;
+  }
+  .wordmark {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900; font-size: 24px;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    display: inline-flex; align-items: center; gap: 8px;
+    line-height: 1;
+  }
+  .wordmark svg.mark { display: block; height: 30px; width: auto; }
+  nav.primary { display: flex; justify-content: center; gap: 36px; }
+  nav.primary a {
+    color: var(--ink); opacity: 0.72;
+    font-size: 14px; font-weight: 500;
+    letter-spacing: -0.005em;
+    transition: opacity 200ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+  nav.primary a:hover { opacity: 1; }
+  nav.primary a.active { opacity: 1; font-weight: 600; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .icon-btn {
+    width: 38px; height: 38px; border-radius: 9999px;
+    background: transparent; border: none;
+    color: var(--ink); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 180ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+  .icon-btn:hover { background: rgba(31,31,31,0.06); }
+  .cart-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 38px; padding: 0 16px 0 14px;
+    border-radius: 9999px;
+    background: var(--accent); color: var(--accent-ink);
+    font-size: 13px; font-weight: 600;
+    border: none; cursor: pointer;
+    transition: transform 180ms, background 180ms;
+  }
+  .cart-pill:hover { background: #2F3328; transform: translateY(-1px); }
+  .cart-pill .count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: 0.06em;
+  }
+
+  /* ───── Page intro ───── */
+  .intro { padding: 64px 0 40px; max-width: 720px; }
+  .intro .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(31,31,31,0.6);
+    margin: 0 0 18px;
+  }
+  .intro h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(48px, 6vw, 72px);
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .intro p {
+    margin: 20px 0 0;
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(31,31,31,0.7);
+    max-width: 620px;
+  }
+
+  /* ───── Filter / sort bar ───── */
+  .filterbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; flex-wrap: wrap;
+    padding: 24px 0 16px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    border: 1px solid var(--hair-strong);
+    background: var(--canvas);
+    color: var(--ink);
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.10em; text-transform: uppercase;
+    cursor: pointer;
+    transition: background 180ms, color 180ms, border-color 180ms;
+  }
+  .chip:hover { border-color: var(--ink); }
+  .chip.active {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: var(--accent);
+  }
+  .sort-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--hair-strong);
+    background: transparent;
+    padding: 8px 14px 8px 16px;
+    border-radius: 9999px;
+    color: var(--ink); cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.10em; text-transform: uppercase;
+    transition: border-color 180ms;
+  }
+  .sort-btn:hover { border-color: var(--ink); }
+  .filterbar-divider {
+    height: 1px; background: var(--hair); border: none; margin: 0 0 32px;
+  }
+
+  /* ───── Section eyebrows ───── */
+  .section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; flex-wrap: wrap;
+    margin: 0 0 24px;
+  }
+  .section-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(31,31,31,0.6);
+    margin: 0;
+  }
+  .section-aside {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(31,31,31,0.45);
+  }
+
+  /* ───── Featured carousel ───── */
+  .featured { position: relative; padding: 0 0 56px; }
+  .featured-stage {
+    position: relative;
+    background: var(--surface-2);
+    border-radius: 28px;
+    box-shadow: inset 0 0 0 1px rgba(31,31,31,0.06);
+    overflow: hidden;
+  }
+  .featured-track {
+    display: flex;
+    width: 100%;
+    transition: transform 420ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+  .featured-slide {
+    flex: 0 0 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 520px;
+  }
+  @media (max-width: 900px) {
+    .featured-slide { grid-template-columns: 1fr; min-height: 0; }
+  }
+  .featured-photo {
+    position: relative;
+    aspect-ratio: 4 / 3.4;
+    background: linear-gradient(168deg, var(--surface-1) 0%, var(--surface-3) 55%, var(--surface-4) 100%);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    border-right: 1px solid rgba(31,31,31,0.05);
+  }
+  @media (max-width: 900px) { .featured-photo { border-right: none; border-bottom: 1px solid rgba(31,31,31,0.05); } }
+  .featured-photo::before {
+    content: ""; position: absolute;
+    top: -15%; left: -15%; width: 60%; height: 60%;
+    background: radial-gradient(closest-side, rgba(255,251,242,0.6), rgba(255,251,242,0));
+    pointer-events: none;
+  }
+  .featured-photo .vial-shadow {
+    position: absolute; left: 50%; bottom: 18%;
+    width: 56%; height: 22px; transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(31,31,31,0.34), rgba(31,31,31,0) 70%);
+    filter: blur(3px);
+  }
+  .featured-photo .vial-svg {
+    height: 84%; max-width: 70%;
+    filter: drop-shadow(0 18px 28px rgba(31,31,31,0.20));
+  }
+  .featured-info {
+    padding: 48px;
+    display: flex; flex-direction: column;
+    gap: 24px;
+  }
+  @media (max-width: 900px) { .featured-info { padding: 32px; } }
+  .featured-info .meta-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .featured-info h2 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .featured-info .lede {
+    margin: 0;
+    font-size: 18px; line-height: 1.55;
+    color: rgba(31,31,31,0.7);
+    max-width: 46ch;
+  }
+  .featured-spec {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(31,31,31,0.08);
+  }
+  .featured-spec .lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(31,31,31,0.5);
+    margin-bottom: 6px;
+  }
+  .featured-spec .val {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 20px;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+    font-variant-numeric: tabular-nums;
+  }
+  .featured-cta-row { margin-top: auto; padding-top: 8px; }
+  .featured-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: var(--accent-ink);
+    border: none; cursor: pointer;
+    padding: 14px 22px 14px 26px;
+    border-radius: 9999px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: -0.005em;
+    transition: background 180ms, transform 180ms;
+  }
+  .featured-cta:hover { background: #2F3328; transform: translateY(-1px); }
+
+  /* Carousel arrow buttons */
+  .arrow-btn {
+    width: 56px; height: 56px;
+    border-radius: 9999px;
+    background: var(--canvas);
+    border: 1.5px solid rgba(31,31,31,0.12);
+    color: var(--ink);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: border-color 180ms, background 180ms;
+  }
+  .arrow-btn:hover { border-color: rgba(31,31,31,0.24); }
+  .arrow-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .arrow-btn.sm { width: 40px; height: 40px; }
+
+  .featured-arrow {
+    position: absolute; top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+  }
+  .featured-arrow.prev { left: 16px; }
+  .featured-arrow.next { right: 16px; }
+  @media (max-width: 900px) {
+    .featured-arrow.prev { left: 8px; }
+    .featured-arrow.next { right: 8px; }
+  }
+
+  .featured-pagination {
+    margin-top: 24px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+  }
+  .pag-bars { display: flex; gap: 6px; }
+  .pag-bar {
+    width: 32px; height: 2px;
+    background: rgba(31,31,31,0.15);
+    border: none; padding: 0;
+    cursor: pointer;
+    transition: background 200ms;
+  }
+  .pag-bar.active { background: var(--accent); }
+  .pag-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(31,31,31,0.55);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ───── Horizontal rail ───── */
+  .rail-section { padding: 24px 0 56px; }
+  .rail-head { margin-bottom: 20px; }
+  .rail-arrows { display: inline-flex; gap: 8px; }
+  .rail-viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    margin: 0 -32px; padding: 4px 32px 8px;
+  }
+  .rail-viewport::-webkit-scrollbar { display: none; }
+  .rail-track {
+    display: flex;
+    gap: 24px;
+  }
+  .rail-track .tile {
+    flex: 0 0 calc((100% - 48px) / 3);
+    scroll-snap-align: start;
+  }
+  @media (max-width: 1024px) {
+    .rail-track .tile { flex: 0 0 calc((100% - 24px) / 2.2); }
+  }
+  @media (max-width: 640px) {
+    .rail-track .tile { flex: 0 0 82%; }
+  }
+  .rail-progress-track {
+    margin-top: 24px;
+    height: 2px;
+    background: rgba(31,31,31,0.15);
+    position: relative;
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+  .rail-progress-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 33%;
+    background: var(--accent);
+    transition: width 200ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+
+  /* tile (compact rail variant uses these) */
+  .tile {
+    background: var(--surface-2);
+    border-radius: 24px;
+    box-shadow: inset 0 0 0 1px rgba(31,31,31,0.06);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: box-shadow 200ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+  .tile:hover { box-shadow: inset 0 0 0 1px rgba(31,31,31,0.14); }
+  .tile:hover .photo::after { opacity: 1; }
+  .tile:hover .view-pill { background: #2F3328; }
+
+  .photo {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(168deg, var(--surface-1) 0%, var(--surface-3) 55%, var(--surface-4) 100%);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(31,31,31,0.05);
+  }
+  .photo::before {
+    content: ""; position: absolute;
+    top: -20%; left: -20%; width: 70%; height: 70%;
+    background: radial-gradient(closest-side, rgba(255,251,242,0.55), rgba(255,251,242,0));
+    pointer-events: none;
+  }
+  .photo::after {
+    content: ""; position: absolute; inset: 0;
+    background: rgba(31,31,31,0.025);
+    opacity: 0;
+    transition: opacity 200ms cubic-bezier(0.2, 0.6, 0.2, 1);
+    pointer-events: none;
+  }
+  .vial-shadow {
+    position: absolute; left: 50%; bottom: 14%;
+    width: 60%; height: 14px; transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(31,31,31,0.28), rgba(31,31,31,0) 70%);
+    filter: blur(2px);
+  }
+  .photo .vial-svg {
+    position: relative; z-index: 1;
+    width: auto;
+    height: 82%;
+    max-width: 62%;
+    filter: drop-shadow(0 12px 18px rgba(31,31,31,0.16));
+  }
+  .vial-svg { position: relative; z-index: 1; }
+
+  /* tile content */
+  .tile-content { padding: 22px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .meta-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .sku-line {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .sku-line .sku { color: var(--accent); }
+  .sku-line .sep { color: rgba(31,31,31,0.35); }
+  .sku-line .generic { color: rgba(31,31,31,0.6); }
+
+  .stock {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--hair-strong);
+    border-radius: 9999px;
+    padding: 3px 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.10em; text-transform: uppercase;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .stock .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .stock.in .dot { background: var(--accent); box-shadow: 0 0 0 3px rgba(61,66,50,0.16); }
+  .stock.low .dot { background: var(--amber); box-shadow: 0 0 0 3px rgba(184,130,28,0.18); }
+  .stock.wait { color: var(--ink); }
+
+  .name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 20px;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .sub {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(31,31,31,0.7);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .mini-spec {
+    margin-top: 4px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(31,31,31,0.08);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  .mini-spec .lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(31,31,31,0.5);
+    margin-bottom: 4px;
+  }
+  .mini-spec .val {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+
+  .action-row {
+    margin-top: auto;
+    padding-top: 14px;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
+  }
+  .price {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .price-from {
+    margin-top: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(31,31,31,0.5);
+  }
+  .view-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: none; cursor: pointer;
+    padding: 10px 16px 10px 18px;
+    border-radius: 9999px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: -0.005em;
+    transition: background 180ms;
+  }
+  .view-pill svg { display: block; }
+
+  /* ───── Footnote ───── */
+  .footnote-divider {
+    height: 1px; background: var(--accent); opacity: 0.35;
+    border: none; margin: 16px 0 24px;
+  }
+  .footnote {
+    padding: 0 0 80px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(31,31,31,0.5);
+  }
+</style>
+</head>
+<body data-screen-label="01 Catalog">
+
+<!-- Compliance bar -->
+<div class="compliance">
+  <div class="compliance-inner">
+    <span>For research use only</span>
+    <span class="dot">·</span>
+    <span>21+ qualified researchers</span>
+    <span class="dot">·</span>
+    <span>All sales final</span>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="site">
+  <div class="header-inner">
+    <a class="wordmark" href="#" aria-label="PurePep home">
+      <svg class="mark" viewBox="0 0 60 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="4"  y="4"  width="22" height="64" fill="#1F1F1F"/>
+        <rect x="34" y="4"  width="22" height="36" fill="#1F1F1F"/>
+        <rect x="26" y="22" width="8"  height="2"  fill="#1F1F1F"/>
+        <rect x="26" y="29" width="8"  height="2"  fill="#1F1F1F"/>
+      </svg>
+      PurePep
+    </a>
+    <nav class="primary">
+      <a href="#" class="active">Catalog</a>
+      <a href="#">RETA</a>
+      <a href="#">Quality</a>
+      <a href="#">Documentation</a>
+      <a href="#">Affiliates</a>
+    </nav>
+    <div class="header-right">
+      <button class="icon-btn" aria-label="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+      </button>
+      <button class="cart-pill" aria-label="Cart">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l-1.4 10.5a2 2 0 0 1-2 1.5H8.4a2 2 0 0 1-2-1.5L5 7Z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>
+        Cart <span class="count">02</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- Intro -->
+  <section class="intro">
+    <div class="eyebrow">Catalog</div>
+    <h1>Research-grade peptides.</h1>
+    <p>Lyophilized, lot-tested, shipped with a matched Certificate of Analysis. No marketing math — just specifications.</p>
+  </section>
+
+  <!-- Filter / sort -->
+  <div class="filterbar">
+    <div class="chips" role="tablist">
+      <button class="chip active">All</button>
+      <button class="chip">GLP-1</button>
+      <button class="chip">Growth</button>
+      <button class="chip">Repair</button>
+      <button class="chip">Cosmetic</button>
+      <button class="chip">Research blends</button>
+    </div>
+    <button class="sort-btn">
+      Sort · Featured
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+  </div>
+  <hr class="filterbar-divider"/>
+
+  <!-- Featured carousel -->
+  <section class="featured" aria-label="Featured peptides">
+    <div class="section-head">
+      <p class="section-eyebrow">Featured</p>
+    </div>
+    <div class="featured-stage" id="featured-stage">
+      <button class="arrow-btn featured-arrow prev" id="feat-prev" aria-label="Previous featured product">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>
+      </button>
+      <button class="arrow-btn featured-arrow next" id="feat-next" aria-label="Next featured product">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+      <div class="featured-track" id="featured-track"></div>
+    </div>
+    <div class="featured-pagination">
+      <div class="pag-bars" id="pag-bars"></div>
+      <span class="pag-count" id="pag-count">01 / 03</span>
+    </div>
+  </section>
+
+  <!-- All peptides — horizontal rail -->
+  <section class="rail-section" aria-label="All peptides">
+    <div class="section-head rail-head">
+      <p class="section-eyebrow">All peptides</p>
+      <div style="display:inline-flex; align-items:center; gap:20px;">
+        <span class="section-aside">← Scroll horizontally · 09 products</span>
+        <div class="rail-arrows">
+          <button class="arrow-btn sm" id="rail-prev" aria-label="Scroll rail left">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>
+          </button>
+          <button class="arrow-btn sm" id="rail-next" aria-label="Scroll rail right">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="rail-viewport" id="rail-viewport">
+      <div class="rail-track" id="rail-track"></div>
+    </div>
+    <div class="rail-progress-track">
+      <div class="rail-progress-fill" id="rail-progress"></div>
+    </div>
+  </section>
+
+  <hr class="footnote-divider"/>
+  <div class="footnote">All products sold for laboratory research use only · Not for human or animal consumption</div>
+
+</main>
+
+<!-- Reusable vial SVG defs (single set, shared) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="glass" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#F8F4EA"/>
+      <stop offset="18%" stop-color="#FFFDF6"/>
+      <stop offset="50%" stop-color="#EDE6D2"/>
+      <stop offset="82%" stop-color="#C9BFA3"/>
+      <stop offset="100%" stop-color="#A89E83"/>
+    </linearGradient>
+    <linearGradient id="powder" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#FAF6EB"/>
+      <stop offset="100%" stop-color="#E5DDC8"/>
+    </linearGradient>
+    <linearGradient id="cap" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#2A2D38"/>
+      <stop offset="40%" stop-color="#5A5E6E"/>
+      <stop offset="55%" stop-color="#7C8092"/>
+      <stop offset="70%" stop-color="#3E4252"/>
+      <stop offset="100%" stop-color="#191B23"/>
+    </linearGradient>
+    <linearGradient id="stopper" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#1A1C24"/>
+      <stop offset="50%" stop-color="#2C2F3A"/>
+      <stop offset="100%" stop-color="#0F1116"/>
+    </linearGradient>
+    <linearGradient id="label" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#F2EBD9"/>
+      <stop offset="100%" stop-color="#E5DCC4"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<script>
+  // Product data
+  const products = [
+    { sku: 'RETA',  generic: 'Retatrutide',          name: 'Reta',       sub: 'Triple GLP-1 / GIP / glucagon agonist. The current frontier for metabolic research.', purity: '≥99.5%', mass: '10 mg', price: 189, stock: 'in',   labelDose: '10 mg · lyophilized' },
+    { sku: 'TIRZ',  generic: 'Tirzepatide',          name: 'Tirz',       sub: 'Dual GLP-1 / GIP agonist. Reference standard for incretin work.',                  purity: '≥99.5%', mass: '10 mg', price: 169, stock: 'in',   labelDose: '10 mg · lyophilized' },
+    { sku: 'SEMA',  generic: 'Semaglutide',          name: 'Sema',       sub: 'Long-acting GLP-1 analogue. Established baseline for comparative studies.',         purity: '≥99.5%', mass: '5 mg',  price: 129, stock: 'in',   labelDose: '5 mg · lyophilized'  },
+    { sku: 'BPC',   generic: 'BPC-157',              name: 'BPC-157',    sub: 'Pentadecapeptide isolated from gastric juice. For repair and tissue research.',     purity: '≥99.0%', mass: '5 mg',  price: 59,  stock: 'in',   labelDose: '5 mg · lyophilized'  },
+    { sku: 'TB500', generic: 'Thymosin-β4 fragment', name: 'TB-500',     sub: 'Synthetic fragment of thymosin-β4. Common research companion to BPC-157.',          purity: '≥99.0%', mass: '5 mg',  price: 69,  stock: 'in',   labelDose: '5 mg · lyophilized'  },
+    { sku: 'GHK',   generic: 'GHK-Cu',               name: 'GHK-Cu',     sub: 'Copper tripeptide. Cosmetic and dermal-research reference standard.',                purity: '≥99.0%', mass: '50 mg', price: 39,  stock: 'low',  labelDose: '50 mg · lyophilized', powderHeight: 0.7 },
+    { sku: 'CJC',   generic: 'CJC-1295 no DAC',      name: 'CJC-1295',   sub: 'Modified GHRH analogue, no DAC. Pulsatile GH-axis research.',                       purity: '≥99.0%', mass: '5 mg',  price: 49,  stock: 'in',   labelDose: '5 mg · lyophilized'  },
+    { sku: 'IPAM',  generic: 'Ipamorelin',           name: 'Ipamorelin', sub: 'Selective GH secretagogue. Frequently paired with CJC-1295 in research protocols.', purity: '≥99.0%', mass: '5 mg',  price: 45,  stock: 'in',   labelDose: '5 mg · lyophilized'  },
+    { sku: 'MOTS',  generic: 'MOTS-c',               name: 'MOTS-c',     sub: 'Mitochondrial-derived peptide. Emerging metabolic-research target.',                purity: '≥99.0%', mass: '10 mg', price: 79,  stock: 'wait', labelDose: '10 mg · lyophilized' },
+  ];
+
+  // Fixed-width SKU rendering on the label: scale to fit
+  function skuFontSize(sku) {
+    if (sku.length <= 3) return 36;
+    if (sku.length <= 4) return 32;
+    if (sku.length <= 5) return 26;
+    return 22;
+  }
+
+  // Build a small vial SVG (shares gradient ids defined in <defs> above)
+  function vialSvg(p) {
+    const fs = skuFontSize(p.sku);
+    // Powder fill height variation (default 0.55 of body)
+    const ph = p.powderHeight ?? 0.55;
+    // body 120..500 = 380 tall
+    const powderTop = 500 - (380 * ph);
+    return `
+<svg class="vial-svg" viewBox="0 0 220 540" xmlns="http://www.w3.org/2000/svg" aria-label="${p.sku} vial">
+  <!-- body -->
+  <rect x="40" y="120" width="140" height="380" rx="14" fill="url(#glass)"/>
+  <!-- powder -->
+  <rect x="50" y="${powderTop}" width="120" height="${500 - powderTop - 10}" rx="6" fill="url(#powder)" opacity="0.95"/>
+  <path d="M50 ${powderTop+2} Q 80 ${powderTop-6} 110 ${powderTop} T 170 ${powderTop+2} L 170 ${powderTop+10} L 50 ${powderTop+10} Z" fill="#D4CAB0" opacity="0.6"/>
+  <!-- glass highlights -->
+  <rect x="48" y="130" width="6" height="360" rx="3" fill="#FFFDF6" opacity="0.9"/>
+  <rect x="172" y="130" width="3" height="360" rx="1.5" fill="#86795A" opacity="0.5"/>
+  <!-- neck -->
+  <path d="M40 120 L 56 100 L 164 100 L 180 120 Z" fill="url(#glass)"/>
+  <rect x="40" y="118" width="140" height="3" fill="#9C9176" opacity="0.5"/>
+  <!-- stopper -->
+  <rect x="56" y="76" width="108" height="28" rx="2" fill="url(#stopper)"/>
+  <rect x="58" y="78" width="104" height="2" fill="#3D414F" opacity="0.7"/>
+  <!-- crimp cap -->
+  <rect x="50" y="40" width="120" height="44" rx="3" fill="url(#cap)"/>
+  <ellipse cx="110" cy="40" rx="60" ry="6" fill="#3A3D49"/>
+  <ellipse cx="110" cy="40" rx="60" ry="3" fill="#5C6072"/>
+  <rect x="56" y="46" width="6" height="36" fill="#9094A7" opacity="0.85"/>
+  <rect x="68" y="46" width="2" height="36" fill="#C9CCDA" opacity="0.7"/>
+  <rect x="50" y="78" width="120" height="2" fill="#0E1016" opacity="0.7"/>
+  <rect x="50" y="82" width="120" height="2" fill="#0E1016" opacity="0.7"/>
+  <circle cx="110" cy="40" r="14" fill="#3D4232"/>
+  <circle cx="110" cy="40" r="11" fill="none" stroke="#5A5F4B" stroke-width="0.5"/>
+  <!-- label -->
+  <rect x="44" y="195" width="132" height="220" rx="3" fill="url(#label)"/>
+  <rect x="48" y="199" width="124" height="212" rx="2" fill="none" stroke="#B5A989" stroke-width="0.5" opacity="0.7"/>
+  <!-- τ logo + wordmark -->
+  <g transform="translate(56,210)">
+    <g transform="translate(0,0) scale(0.18)">
+      <rect x="4"  y="4"  width="22" height="64" fill="#1F1F1F"/>
+      <rect x="34" y="4"  width="22" height="36" fill="#1F1F1F"/>
+      <rect x="26" y="22" width="8"  height="2"  fill="#1F1F1F"/>
+      <rect x="26" y="29" width="8"  height="2"  fill="#1F1F1F"/>
+    </g>
+    <text x="16" y="11" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="900" font-size="11" letter-spacing="-0.5">PurePep</text>
+  </g>
+  <line x1="56" y1="234" x2="164" y2="234" stroke="#1F1F1F" stroke-width="0.4" opacity="0.3"/>
+  <!-- big SKU -->
+  <text x="56" y="282" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="900" font-size="${fs}" letter-spacing="-1.5">${p.sku}</text>
+  <!-- dose -->
+  <text x="56" y="306" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="500" font-size="11" letter-spacing="-0.2">${p.labelDose}</text>
+  <line x1="56" y1="326" x2="164" y2="326" stroke="#1F1F1F" stroke-width="0.4" opacity="0.2"/>
+  <!-- mini spec -->
+  <text x="56" y="344" fill="#7A7A7A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="6.5" letter-spacing="1">LOT</text>
+  <text x="56" y="358" fill="#1F1F1F" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="9">${p.sku}-2604-A</text>
+  <text x="120" y="344" fill="#7A7A7A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="6.5" letter-spacing="1">EXP</text>
+  <text x="120" y="358" fill="#1F1F1F" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="9">2027-04</text>
+  <text x="56" y="378" fill="#7A7A7A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="6.5" letter-spacing="1">STORAGE</text>
+  <text x="56" y="392" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="500" font-size="9">2–8 °C · protect from light</text>
+  <line x1="56" y1="400" x2="164" y2="400" stroke="#1F1F1F" stroke-width="0.3" opacity="0.2"/>
+  <text x="56" y="409" fill="#7A7A7A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="5.5" letter-spacing="1">FOR RESEARCH USE ONLY</text>
+</svg>`;
+  }
+
+  function stockPill(stock) {
+    if (stock === 'in')   return `<span class="stock in"><span class="dot"></span>In stock</span>`;
+    if (stock === 'low')  return `<span class="stock low"><span class="dot"></span>Low stock</span>`;
+    return `<span class="stock wait">Waitlist</span>`;
+  }
+
+  function tile(p) {
+    return `
+<article class="tile">
+  <div class="photo">
+    ${vialSvg(p)}
+    <div class="vial-shadow"></div>
+  </div>
+  <div class="tile-content">
+    <div class="meta-row">
+      <span class="sku-line">
+        <span class="sku">${p.sku}</span>
+        <span class="sep">·</span>
+        <span class="generic">${p.generic}</span>
+      </span>
+      ${stockPill(p.stock)}
+    </div>
+    <h3 class="name">${p.name}</h3>
+    <p class="sub">${p.sub}</p>
+    <div class="mini-spec">
+      <div>
+        <div class="lbl">Purity</div>
+        <div class="val">${p.purity}</div>
+      </div>
+      <div>
+        <div class="lbl">Net mass</div>
+        <div class="val">${p.mass}</div>
+      </div>
+    </div>
+    <div class="action-row">
+      <div>
+        <div class="price">$${p.price}</div>
+        <div class="price-from">From · 1 vial</div>
+      </div>
+      <button class="view-pill">
+        View
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+</article>`;
+  }
+
+  function featuredSlide(p) {
+    return `
+<div class="featured-slide">
+  <div class="featured-photo">
+    ${vialSvg(p)}
+    <div class="vial-shadow"></div>
+  </div>
+  <div class="featured-info">
+    <div class="meta-row">
+      <span class="sku-line">
+        <span class="sku">${p.sku}</span>
+        <span class="sep">·</span>
+        <span class="generic">${p.generic}</span>
+      </span>
+      ${stockPill(p.stock)}
+    </div>
+    <h2>${p.name} · ${p.mass}</h2>
+    <p class="lede">${p.sub}</p>
+    <div class="featured-spec">
+      <div>
+        <div class="lbl">Purity</div>
+        <div class="val">${p.purity}</div>
+      </div>
+      <div>
+        <div class="lbl">Net mass</div>
+        <div class="val">${p.mass}</div>
+      </div>
+      <div>
+        <div class="lbl">From</div>
+        <div class="val">$${p.price}</div>
+      </div>
+    </div>
+    <div class="featured-cta-row">
+      <button class="featured-cta">
+        View product
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+</div>`;
+  }
+
+  // ─── Render featured carousel (first 3 products) ───
+  const featured = products.slice(0, 3);
+  const track = document.getElementById('featured-track');
+  track.innerHTML = featured.map(featuredSlide).join('');
+
+  // pagination bars
+  const pagBars = document.getElementById('pag-bars');
+  const pagCount = document.getElementById('pag-count');
+  pagBars.innerHTML = featured.map((_, i) =>
+    `<button class="pag-bar${i === 0 ? ' active' : ''}" data-idx="${i}" aria-label="Go to slide ${i+1}"></button>`
+  ).join('');
+
+  let activeIdx = 0;
+  function goTo(i) {
+    activeIdx = (i + featured.length) % featured.length;
+    track.style.transform = `translateX(-${activeIdx * 100}%)`;
+    pagBars.querySelectorAll('.pag-bar').forEach((b, idx) => {
+      b.classList.toggle('active', idx === activeIdx);
+    });
+    pagCount.textContent = `${String(activeIdx + 1).padStart(2,'0')} / ${String(featured.length).padStart(2,'0')}`;
+  }
+  document.getElementById('feat-prev').addEventListener('click', () => goTo(activeIdx - 1));
+  document.getElementById('feat-next').addEventListener('click', () => goTo(activeIdx + 1));
+  pagBars.querySelectorAll('.pag-bar').forEach(b => {
+    b.addEventListener('click', () => goTo(Number(b.dataset.idx)));
+  });
+
+  // ─── Render rail (all 9 products) ───
+  document.getElementById('rail-track').innerHTML = products.map(tile).join('');
+
+  // rail scroll progress + arrow buttons
+  const railVp = document.getElementById('rail-viewport');
+  const railFill = document.getElementById('rail-progress');
+  function updateProgress() {
+    const max = railVp.scrollWidth - railVp.clientWidth;
+    const pct = max > 0 ? (railVp.scrollLeft / max) : 0;
+    const windowPct = railVp.clientWidth / railVp.scrollWidth; // ≈ 0.33 with 3 visible
+    const fillPct = Math.max(windowPct * 100, 18); // floor so the indicator is always legible
+    railFill.style.width = fillPct + '%';
+    railFill.style.left = (pct * (100 - fillPct)) + '%';
+  }
+  railVp.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  function railStep() {
+    // step = one tile width + gap
+    const tileEl = railVp.querySelector('.tile');
+    if (!tileEl) return railVp.clientWidth;
+    return tileEl.getBoundingClientRect().width + 24;
+  }
+  document.getElementById('rail-prev').addEventListener('click', () => {
+    railVp.scrollBy({ left: -railStep(), behavior: 'smooth' });
+  });
+  document.getElementById('rail-next').addEventListener('click', () => {
+    railVp.scrollBy({ left:  railStep(), behavior: 'smooth' });
+  });
+
+  // chip toggle (visual only)
+  document.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
