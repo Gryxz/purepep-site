@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { clsx } from "@/lib/clsx";
 import type { Product, Category } from "@/data/products";

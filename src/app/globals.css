@@ -2991,3 +2991,13 @@
   .v3co-grid + .v3co-help-strip,
   .v3co-help-strip { padding-bottom: 120px; }
 }
+
+.v3co-totals-row .applied-pill {
+  display: inline-flex; align-items: center;
+  height: 20px; padding: 0 8px;
+  border-radius: 9999px;
+  background: var(--v3-accent); color: var(--v3-accent-ink);
+  font-family: var(--font-mono);
+  font-size: 9.5px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+}
