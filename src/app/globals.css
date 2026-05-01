@@ -1,4 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
+
+@config "../../tailwind.config.ts";
 
 /**
  * PurePep design tokens — inlined from
@@ -8,9 +11,8 @@
  * (.pp-eyebrow / .pp-hairline / .pp-rule / .pp-frame) live here, kept
  * in sync with the submodule by hand.
  *
- * Locked palette: Ink / Bone / Soft Blush / Surface. Amber is favicon-only.
+ * Locked palette: Ink / Bone / Loden / Soft Blush / Surface stack. Amber is favicon-only.
  */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 
 :root {
   /* Palette */
@@ -163,25 +165,38 @@ button { font-family: inherit; }
 @keyframes pp-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /**
- * Map the canonical --pp-* variables to Tailwind v4 theme tokens so
- * utilities like bg-bone, text-ink, border-ink, font-mono, etc. resolve
- * to the locked palette.
+ * Map brand palette to Tailwind v4 theme tokens.  Literal hex values (not
+ * var() references) so the JIT scanner can resolve them and grep(1) on the
+ * bundle confirms they landed (e.g. grep FAF7F0 out/).
  *
- * Amber is intentionally absent from this map — it is favicon-only per brand bible.
+ * Amber is intentionally absent — favicon-only per brand bible.
  */
 @theme {
-  --color-ink:          var(--pp-ink);
-  --color-ink-muted:    var(--pp-ink-muted);
-  --color-bone:         var(--pp-bone);
-  --color-bone-soft:    var(--pp-bone-soft);
-  --color-surface:      var(--pp-surface);
-  --color-blush:        var(--pp-blush);
-  --color-line:         var(--pp-line);
-  --color-emerald:      var(--pp-emerald);
-  --color-emerald-soft: var(--pp-emerald-soft);
-  --color-alert:        var(--pp-alert);
-  --color-alert-soft:   var(--pp-alert-soft);
-  --color-white:        var(--pp-white);
+  /* Core palette */
+  --color-ink:          #1F1F1F;
+  --color-ink-muted:    #6E6E6E;
+  --color-ink-60:       rgb(31 31 31 / 60%);
+  --color-ink-40:       rgb(31 31 31 / 40%);
+  --color-ink-20:       rgb(31 31 31 / 20%);
+  --color-bone:         #FAF7F0;
+  --color-bone-soft:    #F5F1E6;
+
+  /* Cream surface stack (bone → progressively warmer tints) */
+  --color-surface:      #F1EDE3;
+  --color-surface-2:    #F5F1EA;
+  --color-surface-3:    #EFEAE0;
+  --color-surface-4:    #E9E3D7;
+
+  /* Loden accent — interactive states only */
+  --color-loden:        #3D4232;
+  --color-loden-hover:  #2F3328;
+  --color-blush:        #F2D7D7;
+  --color-line:         #E4DFCF;
+  --color-emerald:      #0F5132;
+  --color-emerald-soft: #E8F0EB;
+  --color-alert:        #C83E4D;
+  --color-alert-soft:   #F7E4E6;
+  --color-white:        #FFFFFF;
 
   --font-sans:    var(--font-sans);
   --font-display: var(--font-display);
@@ -231,6 +246,13 @@ button { font-family: inherit; }
   /* Backdrop blur — locked allowlist (sticky header + modal scrim only). */
   --backdrop-blur-header: 12px;
 }
+
+/* Safelist — force critical brand utilities into the bundle even when the JIT
+   scanner doesn't find a complete string match in content files. */
+@source inline("{bg,text,border,fill,stroke}-{bone,loden,ink,surface,white}");
+@source inline("{bg,text,border}-{bone-soft,ink-muted,ink-60,ink-40,ink-20}");
+@source inline("bg-surface-{2,3,4}");
+@source inline("{bg,text,border}-loden-hover");
 
 /**
  * Canonical content container — tokens.layout.maxContent (1280 px) with the
