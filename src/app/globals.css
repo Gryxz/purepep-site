@@ -126,13 +126,26 @@ h3 { font-size: var(--t-h3); letter-spacing: var(--tracking-heading); line-heigh
 p { margin: 0; color: var(--pp-text); text-wrap: pretty; }
 
 a {
-  color: inherit;
+  color: var(--pp-ink);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
   transition: color var(--dur-fast) var(--ease);
 }
 a:hover { color: var(--pp-ink-muted); }
+
+/* Footer nav links — always bone, never underlined, regardless of cascade.
+   Specificity 0,1,1 (one element + one element) beats the bare `a {}`
+   above (0,0,1) and any Tailwind utility class on the anchor (0,1,0).
+   Bulletproof against the previous "no-underline-falls-through" race. */
+footer a {
+  color: var(--pp-bone);
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: rgb(250 247 240 / 70%);
+}
 
 :focus { outline: none; }
 :focus-visible { outline: 2px solid var(--pp-ink); outline-offset: 2px; }
