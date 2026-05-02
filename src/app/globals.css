@@ -1256,23 +1256,45 @@ button { font-family: inherit; }
 }
 .v3-pill:hover .arrow { transform: translateX(4px); }
 
-.v3-pill-primary {
+/* Primary loden pill — bone label on loden, weight 600, no opacity tricks.
+   Selector duplicated as `a.v3-pill-primary` so the global `a {}` and
+   `a:hover { color: var(--pp-ink-muted) }` rules can't darken the label
+   on hover.  Color is the locked bone token, not a translucent of ink. */
+.v3-pill-primary,
+a.v3-pill-primary,
+.v3-pill-primary:hover,
+a.v3-pill-primary:hover {
   background: var(--v3-accent);
   color: var(--v3-accent-ink);
+  font-weight: 600;
   box-shadow: var(--v3-shadow-cta);
+  text-decoration: none;
 }
 
-.v3-pill-primary:hover {
+.v3-pill-primary:hover,
+a.v3-pill-primary:hover {
   background: var(--v3-accent-hover);
   transform: translateY(-1px);
 }
 
-.v3-pill-ghost {
+/* Ghost pill — explicit 1 px ink/15 stroke + surface-2 hover wash so the
+   button reads on the bone canvas instead of dissolving into it. */
+.v3-pill-ghost,
+a.v3-pill-ghost,
+.v3-pill-ghost:hover,
+a.v3-pill-ghost:hover {
   background: transparent;
   color: var(--v3-ink);
-  border: 1px solid var(--v3-hair-strong);
+  border: 1px solid rgb(31 31 31 / 15%);
+  text-decoration: none;
 }
-.v3-pill-ghost:hover { border-color: var(--v3-ink); }
+
+.v3-pill-ghost:hover,
+a.v3-pill-ghost:hover {
+  background: var(--v3-surface-2);
+  border-color: rgb(31 31 31 / 15%);
+}
+
 .v3-pill-sm { height: 44px; padding: 0 20px; font-size: 13.5px; }
 
 /* ── Section utilities ─────────────────────────────── */

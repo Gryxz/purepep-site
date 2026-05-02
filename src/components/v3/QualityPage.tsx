@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { clsx } from "@/lib/clsx";
+import { plural } from "@/lib/text";
 
 /**
  * v3 Apple Swiss Quality page.
@@ -61,7 +62,7 @@ const COA_CELLS: [string, string][] = [
   ["Status", "Released"],
 ];
 
-export function QualityPage() {
+export function QualityPage({ productCount = 0 }: { productCount?: number }) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   return (
@@ -345,7 +346,7 @@ export function QualityPage() {
               Download sample COA <span className="arrow">↓</span>
             </a>
             <Link href="/shop" className="v3-pill v3-pill-ghost">
-              Browse 09 peptides <span className="arrow">→</span>
+              Browse {plural(productCount, "peptide")} <span className="arrow">→</span>
             </Link>
           </div>
           <div className="v3-closing-stamp">

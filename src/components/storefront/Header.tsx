@@ -111,9 +111,14 @@ function NavAffiliatesDropdown({ active = false }: { active?: boolean }) {
   );
 }
 
+// TODO: when the WC product slug is renamed from `purepep-reta-test` to
+// `reta` in WP admin, switch this href back to `/shop/reta`.  Header is
+// hard-pinned to the live WC slug to avoid a 404 today.
+const RETA_HREF = "/shop/purepep-reta-test";
+
 const MOBILE_NAV_LINKS = [
   { label: "Catalog", href: "/shop" },
-  { label: "RETA", href: "/shop/reta" },
+  { label: "RETA", href: RETA_HREF },
   { label: "Quality", href: "/quality" },
   { label: "Documentation", href: "#" },
   { label: "Affiliates", href: "/affiliates" },
@@ -145,7 +150,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
           /* Desktop nav — hidden on mobile */
           <nav className="hidden items-center justify-center gap-7 md:flex">
             <NavLink href="/shop">Catalog</NavLink>
-            <NavLink href="/shop/reta">RETA</NavLink>
+            <NavLink href={RETA_HREF}>RETA</NavLink>
             <NavLink href="/quality">Quality</NavLink>
             <NavLink>Documentation</NavLink>
             <NavAffiliatesDropdown />

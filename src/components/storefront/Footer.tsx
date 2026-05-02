@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Lockup } from "./primitives";
 import { clsx } from "@/lib/clsx";
+import type { Product } from "@/data/products";
 
 function FootCol({ title, items }: { title: string; items: { label: string; href?: string }[] }) {
   const [open, setOpen] = useState(false);
@@ -53,7 +54,19 @@ function FootCol({ title, items }: { title: string; items: { label: string; href
   );
 }
 
-export function Footer({ minimal = false }: { minimal?: boolean }) {
+export function Footer({
+  minimal = false,
+  products = [],
+}: {
+  minimal?: boolean;
+  /**
+   * Live WC catalogue passed in from the server-side layout.  Used to
+   * populate the Catalog column with whatever products actually exist
+   * (capped at 4); falls back to a single "View all" entry when empty
+   * so a missing/failed WC fetch never leaves the column with 404 links.
+   */
+  products?: Product[];
+}) {
   if (minimal) {
     return (
       <footer className="bg-ink py-5 text-center font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-bone">
@@ -61,6 +74,14 @@ export function Footer({ minimal = false }: { minimal?: boolean }) {
       </footer>
     );
   }
+
+  const catalogItems: { label: string; href?: string }[] = [
+    ...products.slice(0, 4).map((p) => ({
+      label: `${p.compound} · ${p.name}`,
+      href: `/shop/${p.slug}`,
+    })),
+    { label: "View all", href: "/shop" },
+  ];
 
   return (
     <footer className="bg-ink text-bone">
@@ -83,15 +104,7 @@ export function Footer({ minimal = false }: { minimal?: boolean }) {
             </p>
           </div>
 
-          <FootCol
-            title="Catalog"
-            items={[
-              { label: "RETA · Retatrutide", href: "/shop/reta" },
-              { label: "SEMA · Semaglutide", href: "/shop/sema" },
-              { label: "TIRZ · Tirzepatide", href: "/shop/tirz" },
-              { label: "View all", href: "/shop" },
-            ]}
-          />
+          <FootCol title="Catalog" items={catalogItems} />
           <FootCol
             title="Quality"
             items={[

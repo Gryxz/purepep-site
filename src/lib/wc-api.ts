@@ -367,17 +367,37 @@ function toProduct(wc: WcProduct, variations?: WcVariation[]): Product {
 // Public API — falls back to STATIC_PRODUCTS on any failure
 // ---------------------------------------------------------------------------
 
+// Build-time guard so the diff log only fires once per build instead of
+// per-call (RSCs call getAllProducts from many surfaces).
+let staticDiffLogged = false;
+
+function logStaticSlugDiff(wcSlugs: Iterable<string>): void {
+  if (staticDiffLogged) return;
+  staticDiffLogged = true;
+  const wcSet = new Set(wcSlugs);
+  const missing = STATIC_PRODUCTS.filter((p) => !wcSet.has(p.slug)).map((p) => p.slug);
+  if (missing.length === 0) return;
+  // Stays informational — the build does not fail; missing entries simply
+  // don't get a /shop/[slug] page generated.
+  console.warn(
+    `[wc-api] Static seed slugs without a WooCommerce product: ${missing.join(", ")}. ` +
+      `Add these in WP admin (or remove them from src/data/products.static.ts) to make /shop/[slug] generate them.`,
+  );
+}
+
 export async function getAllProducts(): Promise<Product[]> {
   const wc = await fetchWcProducts();
   if (!wc || wc.length === 0) return STATIC_PRODUCTS;
   try {
-    return await Promise.all(
+    const products = await Promise.all(
       wc.map(async (p) => {
         const variations =
           p.type === "variable" ? (await fetchWcVariations(p.id)) ?? undefined : undefined;
         return toProduct(p, variations);
       }),
     );
+    if (hasCreds()) logStaticSlugDiff(wc.map((p) => p.slug));
+    return products;
   } catch {
     return STATIC_PRODUCTS;
   }
@@ -397,9 +417,19 @@ export async function getProductBySlug(slug: string): Promise<Product | undefine
   return STATIC_PRODUCTS.find((p) => p.slug === slug);
 }
 
+/**
+ * Slug list driving generateStaticParams on /shop/[slug].
+ *
+ * When WC is reachable (creds set + upstream OK) we use ONLY the WC slugs
+ * — even an empty result — so the static export never generates a page
+ * for a slug that has no live product data.  STATIC_PRODUCTS is reserved
+ * for the no-creds fallback path (CI builds, dev without env), where the
+ * static fixture is the only data we have.
+ */
 export async function getAllSlugs(): Promise<string[]> {
   const wc = await fetchWcProducts();
-  if (!wc || wc.length === 0) return STATIC_PRODUCTS.map((p) => p.slug);
+  if (!wc) return STATIC_PRODUCTS.map((p) => p.slug);
+  if (hasCreds()) logStaticSlugDiff(wc.map((p) => p.slug));
   return wc.map((p) => p.slug);
 }
 

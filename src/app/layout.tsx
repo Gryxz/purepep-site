@@ -6,6 +6,7 @@ import { Header } from "@/components/storefront/Header";
 import { Footer } from "@/components/storefront/Footer";
 import { CartDrawer } from "@/components/storefront/CartDrawer";
 import PostHogProvider from "@/components/PostHogProvider";
+import { getAllProducts } from "@/lib/wc-api";
 import "./globals.css";
 
 const inter = Inter({
@@ -48,7 +49,12 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.ico" },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Fetched once per build (output: "export") and deduped by React's
+  // request cache when other server components hit the same URL.  Used to
+  // populate the Footer catalogue column with live WC products instead
+  // of hard-coded slugs that 404 when the upstream renames a SKU.
+  const products = await getAllProducts();
   return (
     <html lang="en" className={`${inter.variable} ${ibmPlexMono.variable}`}>
       <body className="bg-bone text-ink antialiased">
@@ -59,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <PostHogProvider>
             <Header />
             <main>{children}</main>
-            <Footer />
+            <Footer products={products} />
             <CartDrawer />
           </PostHogProvider>
         </Suspense>

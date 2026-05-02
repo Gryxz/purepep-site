@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { clsx } from "@/lib/clsx";
+import { plural } from "@/lib/text";
 import type { Product } from "@/data/products";
 import { RetaVial } from "./RetaVial";
 
@@ -206,13 +207,13 @@ export function HomePage({ products }: { products: Product[] }) {
             <div>
               <p className="v3-section-eyebrow">Catalog</p>
               <h2 className="v3-section-headline">
-                {products.length} compounds.
+                {plural(products.length, "compound")}.
                 <br />
                 One standard.
               </h2>
             </div>
             <Link href="/shop" className="v3-pill v3-pill-primary v3-pill-sm">
-              See all {String(products.length).padStart(2, "0")} peptides <span className="arrow">→</span>
+              See all {plural(products.length, "peptide")} <span className="arrow">→</span>
             </Link>
           </div>
 
@@ -375,7 +376,7 @@ export function HomePage({ products }: { products: Product[] }) {
           <p className="v3-closing-eyebrow">Ready when you are</p>
           <h2 className="v3-closing-headline">Open the catalog.</h2>
           <Link href="/shop" className="v3-pill v3-pill-primary">
-            Browse {String(products.length).padStart(2, "0")} peptides <span className="arrow">→</span>
+            Browse {plural(products.length, "peptide")} <span className="arrow">→</span>
           </Link>
           <div className="v3-closing-stamp">
             For research use only · Not for human consumption · Sales final
