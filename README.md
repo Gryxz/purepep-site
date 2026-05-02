@@ -64,3 +64,32 @@ All three run in CI on every PR.
 See `docs/STOREFRONT_KICKOFF_V3.md` in the `purepep-site` repo for the full
 page map and delivery batches. Batch 1 (this commit) ships the foundation
 plus a Batch 4 RETA PDP hero spike at `/shop/reta`.
+
+## Deploy
+
+Static export → Cloudways storefront app via SSH / Shell-In-A-Box:
+
+```bash
+# 1. Build the static site.
+rm -rf .next out
+pnpm install --frozen-lockfile
+pnpm build
+
+# 2. Sync to public_html.
+#
+# IMPORTANT: --exclude='index.txt' is required.  Next.js App Router emits
+# a per-route `index.txt` next to each `index.html` as the RSC payload
+# used by <Link>-based client navigation.  nginx on Cloudways will happily
+# serve `/foo/index.txt` as raw text when the URL is requested directly
+# (search-engine indexing, paste into address bar, browser pre-fetch),
+# leaking the React serialization payload as a public-facing page.
+# Excluding them from rsync keeps the static HTML the only thing nginx
+# can hand back; the client router falls back to a hard navigation on
+# the rare cold-transition case, which is acceptable.
+rsync -av --delete --exclude='index.txt' \
+  out/ /home/master/applications/<storefront-app-id>/public_html/
+
+# 3. Smoke test.
+curl -I https://purepep.shop/
+curl -I https://purepep.shop/documentation/
+```

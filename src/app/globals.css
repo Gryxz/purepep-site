@@ -147,6 +147,14 @@ footer a:hover {
   color: rgb(250 247 240 / 70%);
 }
 
+/* Header nav links — strip the underline that bleeds in from the bare `a {}`
+   element rule above.  Same specificity trick as `footer a` (0,1,1 beats
+   0,0,1).  Color stays inheriting from whatever utility class the link
+   carries (text-ink / text-bone / etc.) — only the underline is reset. */
+header a {
+  text-decoration: none;
+}
+
 :focus { outline: none; }
 :focus-visible { outline: 2px solid var(--pp-ink); outline-offset: 2px; }
 
@@ -3505,4 +3513,71 @@ a.v3-pill-ghost:hover {
 @keyframes v3co-skel-pulse {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.5; }
+}
+
+/* ── DOCUMENTATION ─────────────────────────────────── */
+
+.v3doc-table {
+  margin-top: 48px;
+  border-top: 1px solid var(--v3-hair-strong);
+}
+
+.v3doc-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr auto;
+  gap: 24px;
+  align-items: baseline;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--v3-hair);
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  color: var(--v3-ink);
+}
+
+@media (max-width: 768px) {
+  .v3doc-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+  }
+}
+
+.v3doc-row.v3doc-row-head {
+  padding: 14px 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--v3-ink-60);
+}
+
+.v3doc-row .compound {
+  font-weight: 600;
+}
+
+.v3doc-row .lot {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--v3-ink-70);
+}
+
+.v3doc-row .released {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--v3-ink-70);
+}
+
+.v3doc-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--v3-accent);
+  white-space: nowrap;
+}
+
+.v3doc-link:hover {
+  color: var(--v3-accent-hover);
 }

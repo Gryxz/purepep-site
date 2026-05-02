@@ -120,7 +120,7 @@ const MOBILE_NAV_LINKS = [
   { label: "Catalog", href: "/shop" },
   { label: "RETA", href: RETA_HREF },
   { label: "Quality", href: "/quality" },
-  { label: "Documentation", href: "#" },
+  { label: "Documentation", href: "/documentation" },
   { label: "Affiliates", href: "/affiliates" },
   { label: "Affiliate dashboard", href: "/affiliates/dashboard" },
   { label: "Account", href: "#" },
@@ -152,7 +152,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
             <NavLink href="/shop">Catalog</NavLink>
             <NavLink href={RETA_HREF}>RETA</NavLink>
             <NavLink href="/quality">Quality</NavLink>
-            <NavLink>Documentation</NavLink>
+            <NavLink href="/documentation">Documentation</NavLink>
             <NavAffiliatesDropdown />
             <NavLink>Account</NavLink>
           </nav>
