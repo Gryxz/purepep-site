@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React, { useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
 import { Lockup, Icon, Eyebrow } from "./primitives";
@@ -141,9 +142,9 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
             : "grid-cols-[auto_minmax(0,1fr)_auto] gap-4 md:grid-cols-[auto_minmax(0,1fr)_auto] md:gap-8",
         )}
       >
-        <a href="/" className="inline-block no-underline">
+        <Link href="/" className="inline-block no-underline">
           <Lockup className="h-8 w-auto md:h-9" />
-        </a>
+        </Link>
 
         {!minimal && (
           /* Desktop nav — hidden on mobile */
@@ -208,9 +209,9 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
         <div className="fixed inset-0 z-50 flex flex-col bg-bone md:hidden">
           {/* Top bar */}
           <div className="flex items-center justify-between border-b border-ink px-4 py-4">
-            <a href="/" onClick={() => setMenuOpen(false)} className="inline-block no-underline">
+            <Link href="/" onClick={() => setMenuOpen(false)} className="inline-block no-underline">
               <Lockup className="h-8 w-auto" />
-            </a>
+            </Link>
             <button
               type="button"
               aria-label="Close menu"
