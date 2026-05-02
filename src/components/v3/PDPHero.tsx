@@ -113,10 +113,18 @@ export function PDPHero({ product }: { product: Product }) {
   const tier = TIERS[tierIdx]!;
   const variant = product.variants[doseIdx] ?? product.dose;
 
-  const unitPrice = product.price * (1 - tier.discount);
+  // Variable products: per-dose price + per-dose WC variation id come from
+  // variantMap. Falls back to the parent price/id when the upstream isn't a
+  // variable product (or when the storefront is rendering from the static
+  // fixture, which doesn't carry variationMap at all).
+  const variantEntry = product.variantMap?.[variant];
+  const basePrice = variantEntry?.price ?? product.price;
+  const effectiveWcId = variantEntry?.wcId ?? product.wcId;
+
+  const unitPrice = basePrice * (1 - tier.discount);
   const tierTotal = unitPrice * tier.qty;
   const orderTotal = tierTotal * qty;
-  const tierFullTotal = product.price * tier.qty;
+  const tierFullTotal = basePrice * tier.qty;
 
   const isOut = product.stock === "out";
 
@@ -172,7 +180,7 @@ export function PDPHero({ product }: { product: Product }) {
         dose: variant,
         price: unitPrice,
         priceLabel: formatPrice(unitPrice),
-        wcId: product.wcId,
+        wcId: effectiveWcId,
       });
     }
     openCart();
@@ -270,7 +278,7 @@ export function PDPHero({ product }: { product: Product }) {
             {/* Tier toggle */}
             <div className="v3pdp-tier-row" role="radiogroup" aria-label="Quantity tier">
               {TIERS.map((t, i) => {
-                const tierUnit = product.price * (1 - t.discount);
+                const tierUnit = basePrice * (1 - t.discount);
                 const tierSum = tierUnit * t.qty;
                 const active = tierIdx === i;
                 return (

@@ -44,11 +44,13 @@ export interface WcAddress {
   first_name?: string;
   last_name?: string;
   address_1?: string;
+  address_2?: string;
   city?: string;
   state?: string;
   postcode?: string;
   country?: string;
   email?: string;
+  phone?: string;
 }
 
 export interface WcCheckoutPayload {
@@ -72,10 +74,16 @@ function readNonceFromHeaders(headers: Headers): string | null {
   return headers.get("Nonce") ?? headers.get("X-WC-Store-API-Nonce");
 }
 
+/**
+ * Fetch a fresh nonce.  The WC Store API returns the nonce in the `Nonce`
+ * response header on every successful GET (there is no dedicated endpoint).
+ * Hitting `/cart` is the canonical bootstrap call — it both establishes the
+ * session cookie and returns the nonce we cache for subsequent mutations.
+ */
 export async function getNonce(): Promise<string | null> {
   if (cachedNonce) return cachedNonce;
   try {
-    const res = await fetch(`${STORE_URL}/cart/nonce`, {
+    const res = await fetch(`${STORE_URL}/cart`, {
       method: "GET",
       credentials: "include",
       headers: { Accept: "application/json" },
@@ -85,14 +93,6 @@ export async function getNonce(): Promise<string | null> {
     if (fromHeader) {
       cachedNonce = fromHeader;
       return fromHeader;
-    }
-    const body: unknown = await res.json().catch(() => null);
-    if (body && typeof body === "object" && "nonce" in body) {
-      const n = (body as { nonce: unknown }).nonce;
-      if (typeof n === "string" && n.length > 0) {
-        cachedNonce = n;
-        return n;
-      }
     }
     return null;
   } catch {

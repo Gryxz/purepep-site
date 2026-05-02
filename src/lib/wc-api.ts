@@ -68,6 +68,7 @@ interface WcProduct {
   id: number;
   slug: string;
   name: string;
+  type?: string;
   sku?: string;
   price?: string;
   regular_price?: string;
@@ -79,6 +80,13 @@ interface WcProduct {
   categories?: WcCategory[];
   attributes?: WcAttribute[];
   meta_data?: WcMeta[];
+}
+
+/** WC product variation — only the fields we actually consume. */
+interface WcVariation {
+  id: number;
+  price?: string;
+  attributes?: Array<{ name?: string; option?: string }>;
 }
 
 // ---------------------------------------------------------------------------
@@ -129,6 +137,33 @@ async function fetchWcProductBySlug(slug: string): Promise<WcProduct | null> {
   }
 }
 
+/**
+ * Fetch the variations for a WC variable product. Returns null on missing
+ * creds or upstream failure; the caller treats the variable product as a
+ * simple one when this is null (parent price + parent id everywhere).
+ */
+async function fetchWcVariations(productId: number): Promise<WcVariation[] | null> {
+  if (!hasCreds()) return null;
+  try {
+    const res = await fetch(
+      `${WC_BASE_URL}/products/${productId}/variations?per_page=100`,
+      {
+        headers: {
+          Authorization: authHeader(),
+          Accept: "application/json",
+        },
+        next: { revalidate: REVALIDATE_SECONDS },
+      },
+    );
+    if (!res.ok) return null;
+    const data: unknown = await res.json();
+    if (!Array.isArray(data)) return null;
+    return data as WcVariation[];
+  } catch {
+    return null;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Mapping helpers
 // ---------------------------------------------------------------------------
@@ -143,11 +178,50 @@ const KNOWN_CATEGORIES: Category[] = [
 
 function pickCategory(wc: WcProduct): Category {
   const names = (wc.categories ?? []).map((c) => (c.name ?? "").trim());
+
+  // 1. Exact match against our canonical category names.
   for (const known of KNOWN_CATEGORIES) {
     if (names.some((n) => n.toLowerCase() === known.toLowerCase())) {
       return known;
     }
   }
+
+  // 2. Heuristic match — WC stores tend to use generic categories like
+  //    "Peptides" / "Uncategorized" with the actual classification embedded
+  //    in the slug or in the product name. Walk both for known compound
+  //    families and bucket accordingly.
+  const catLower = names.map((n) => n.toLowerCase());
+  const matchesAny = (haystack: string[], needles: string[]): boolean =>
+    haystack.some((h) => needles.some((n) => h.includes(n)));
+
+  if (matchesAny(catLower, ["glp", "incretin", "semaglutide", "reta", "tirz"])) {
+    return "Incretin mimetics";
+  }
+  if (matchesAny(catLower, ["gh ", "growth", "secretagogue", "ipamorelin"])) {
+    return "GH secretagogues";
+  }
+  if (matchesAny(catLower, ["heal", "repair", "bpc", "tb-500", "thymosin"])) {
+    return "Healing";
+  }
+  if (matchesAny(catLower, ["cogni", "nootropic", "selank", "semax"])) {
+    return "Cognition";
+  }
+
+  // 3. Fall back to product-name detection.
+  const nameLower = wc.name.toLowerCase();
+  if (matchesAny([nameLower], ["reta", "sema", "tirz", "survo", "cagri"])) {
+    return "Incretin mimetics";
+  }
+  if (matchesAny([nameLower], ["ipamorelin", "ghrp", "sermorelin"])) {
+    return "GH secretagogues";
+  }
+  if (matchesAny([nameLower], ["bpc", "tb-500", "thymosin"])) {
+    return "Healing";
+  }
+  if (matchesAny([nameLower], ["selank", "semax", "noopept"])) {
+    return "Cognition";
+  }
+
   return "Metabolic";
 }
 
@@ -161,9 +235,12 @@ function pickMeta(meta: WcMeta[] | undefined, key: string): string | undefined {
 }
 
 function pickVariants(wc: WcProduct): string[] {
-  const dose = (wc.attributes ?? []).find((a) =>
-    (a.name ?? "").toLowerCase().includes("dose"),
-  );
+  // WC convention varies: the storefront design used "Dose" but the live
+  // store uses "Size". Match either.
+  const dose = (wc.attributes ?? []).find((a) => {
+    const n = (a.name ?? "").toLowerCase();
+    return n.includes("dose") || n.includes("size");
+  });
   if (!dose) return [];
   const opts = dose.options;
   if (Array.isArray(opts)) {
@@ -205,14 +282,27 @@ function priceNumber(wc: WcProduct): number {
   return Number.isFinite(n) ? n : 0;
 }
 
-function toProduct(wc: WcProduct): Product {
+function toProduct(wc: WcProduct, variations?: WcVariation[]): Product {
   const variants = pickVariants(wc);
-  const dose = variants[0] ?? "";
   const { stock, lowCount } = pickStockState(wc);
   const price = priceNumber(wc);
   const description = stripHtml(wc.description ?? wc.short_description ?? "");
 
-  const compound = pickMeta(wc.meta_data, "_pp_compound") ?? wc.name.toUpperCase();
+  // Compound derivation:
+  //   1. Explicit `_pp_compound` meta wins.
+  //   2. Otherwise strip the marketing prefix ("PurePep ") and the
+  //      build-time placeholder suffix (" - PLACEHOLDER", em-dash variants)
+  //      so "PurePep Reta - PLACEHOLDER" becomes "RETA".
+  //   3. Fall back to the raw upper-cased name if cleanup leaves nothing.
+  const cleanedName = wc.name
+    .replace(/^PurePep\s+/i, "")
+    .replace(/\s*[-–—]\s*PLACEHOLDER\s*$/i, "")
+    .toUpperCase()
+    .trim();
+  const compound =
+    pickMeta(wc.meta_data, "_pp_compound") ??
+    (cleanedName.length > 0 ? cleanedName : wc.name.toUpperCase());
+
   const cas = pickMeta(wc.meta_data, "_pp_cas") ?? "";
   const lot = pickMeta(wc.meta_data, "_pp_lot") ?? "";
   const storage = pickMeta(wc.meta_data, "_pp_storage") ?? "2–8 °C, protect from light";
@@ -220,6 +310,35 @@ function toProduct(wc: WcProduct): Product {
   const disclaimer =
     pickMeta(wc.meta_data, "_pp_disclaimer") ??
     "This is a lyophilized powder vial intended for research use — this is not a capsule or oral supplement.";
+
+  // Variable products: build a dose → {wcId, price} map from the variation
+  // list. The cheapest variation drives the default dose so the configurator
+  // mounts on the lowest tier (matches WC catalog price display).
+  let variantMap: Record<string, { wcId: number; price: number }> | undefined;
+  if (variations && variations.length > 0) {
+    variantMap = {};
+    for (const v of variations) {
+      const sizeAttr = (v.attributes ?? []).find((a) => {
+        const n = (a.name ?? "").toLowerCase();
+        return n.includes("size") || n.includes("dose");
+      });
+      const doseKey = sizeAttr?.option ?? "";
+      if (doseKey && typeof v.id === "number" && v.id > 0) {
+        const p = Number.parseFloat(v.price ?? "0");
+        variantMap[doseKey] = {
+          wcId: v.id,
+          price: Number.isFinite(p) ? p : 0,
+        };
+      }
+    }
+    if (Object.keys(variantMap).length === 0) {
+      variantMap = undefined;
+    }
+  }
+
+  // Default dose: prefer the first variant entry that exists in variantMap;
+  // otherwise the first variant; otherwise empty.
+  const dose = variants[0] ?? "";
 
   return {
     slug: wc.slug,
@@ -240,6 +359,7 @@ function toProduct(wc: WcProduct): Product {
     purity,
     sku: wc.sku ?? "",
     wcId: wc.id,
+    variantMap,
   };
 }
 
@@ -251,7 +371,13 @@ export async function getAllProducts(): Promise<Product[]> {
   const wc = await fetchWcProducts();
   if (!wc || wc.length === 0) return STATIC_PRODUCTS;
   try {
-    return wc.map(toProduct);
+    return await Promise.all(
+      wc.map(async (p) => {
+        const variations =
+          p.type === "variable" ? (await fetchWcVariations(p.id)) ?? undefined : undefined;
+        return toProduct(p, variations);
+      }),
+    );
   } catch {
     return STATIC_PRODUCTS;
   }
@@ -261,7 +387,9 @@ export async function getProductBySlug(slug: string): Promise<Product | undefine
   const wc = await fetchWcProductBySlug(slug);
   if (wc) {
     try {
-      return toProduct(wc);
+      const variations =
+        wc.type === "variable" ? (await fetchWcVariations(wc.id)) ?? undefined : undefined;
+      return toProduct(wc, variations);
     } catch {
       // fall through to static
     }

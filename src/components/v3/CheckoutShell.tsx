@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { clsx } from "@/lib/clsx";
 import { useCartStore } from "@/lib/cart-store";
+import { placeWcOrder, type WcOrderResult } from "@/lib/wc-store-api";
 import { RetaVialMini } from "./RetaVialMini";
 
 /**
@@ -39,11 +40,49 @@ const PAYMENT_METHODS = [
   { id: "crypto", name: "Crypto",        sub: "BTC · USDC" },
 ];
 
+/** WC payment_method gateway slug for each tile. `bacs` (bank transfer) is
+    the only built-in WC gateway guaranteed to be enabled, so we route Card
+    and Crypto through it as well — the storefront posts an order, the staff
+    follow up with a payment link. Once Stripe / Coinbase are wired into the
+    WC store this map is the single place to update. */
+const PAYMENT_GATEWAY: Record<string, string> = {
+  card:   "bacs",
+  bank:   "bacs",
+  crypto: "bacs",
+};
+
+const COUNTRY_OPTIONS: Array<{ code: string; label: string }> = [
+  { code: "US", label: "United States" },
+  { code: "GB", label: "United Kingdom" },
+  { code: "DE", label: "Germany" },
+  { code: "FR", label: "France" },
+  { code: "SE", label: "Sweden" },
+  { code: "JP", label: "Japan" },
+];
+
 export function CheckoutShell({ mode }: { mode: "cart" | "checkout" }) {
-  const { items, updateQty, removeItem, subtotal, totalItems } = useCartStore();
+  const { items, updateQty, removeItem, subtotal, totalItems, clearCart } = useCartStore();
   const [shipping, setShipping] = useState("standard");
   const [payment, setPayment] = useState("card");
   const [mobileExpanded, setMobileExpanded] = useState(false);
+
+  // Delivery form — controlled inputs whose values are forwarded to the WC
+  // Store API /checkout payload when the user clicks Place order.
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [address1, setAddress1] = useState("");
+  const [address2, setAddress2] = useState("");
+  const [city, setCity] = useState("");
+  const [stateField, setStateField] = useState("");
+  const [postcode, setPostcode] = useState("");
+  const [country, setCountry] = useState("US");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+
+  // Order placement state.
+  const [submitting, setSubmitting] = useState(false);
+  const [orderResult, setOrderResult] = useState<WcOrderResult | null>(null);
+  const [orderError, setOrderError] = useState<string | null>(null);
 
   const itemsTotal = subtotal();
   const totalVials = totalItems();
@@ -53,6 +92,45 @@ export function CheckoutShell({ mode }: { mode: "cart" | "checkout" }) {
   const grandTotal = Math.max(0, itemsTotal + (mode === "checkout" ? shipPrice : 0) - promoApplied);
 
   const empty = items.length === 0;
+
+  async function handlePlaceOrder() {
+    if (submitting || empty) return;
+    setSubmitting(true);
+    setOrderError(null);
+
+    const address = {
+      first_name: firstName,
+      last_name: lastName,
+      address_1: address1,
+      address_2: address2,
+      city,
+      state: stateField,
+      postcode,
+      country,
+      email,
+    };
+    const billing = { ...address, phone };
+
+    const result = await placeWcOrder({
+      billing_address: billing,
+      shipping_address: address,
+      payment_method: PAYMENT_GATEWAY[payment] ?? "bacs",
+    });
+
+    setSubmitting(false);
+
+    if (result) {
+      setOrderResult(result);
+      clearCart();
+      if (result.payment_url) {
+        window.location.href = result.payment_url;
+      }
+    } else {
+      setOrderError(
+        "We couldn't place this order. Please double-check your delivery details, or email research@purepep.com if it persists.",
+      );
+    }
+  }
 
   const titleEyebrow =
     mode === "cart"
@@ -153,58 +231,100 @@ export function CheckoutShell({ mode }: { mode: "cart" | "checkout" }) {
                     <div className="v3co-field-grid">
                       <div className="v3co-field">
                         <label>First name</label>
-                        <input type="text" autoComplete="given-name" />
+                        <input
+                          type="text"
+                          autoComplete="given-name"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                        />
                       </div>
                       <div className="v3co-field">
                         <label>Last name</label>
-                        <input type="text" autoComplete="family-name" />
-                      </div>
-                      <div className="v3co-field full">
-                        <label>
-                          Institution / Lab name <span className="opt">Optional</span>
-                        </label>
-                        <input type="text" autoComplete="organization" />
+                        <input
+                          type="text"
+                          autoComplete="family-name"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                        />
                       </div>
                       <div className="v3co-field full">
                         <label>Address line 1</label>
-                        <input type="text" autoComplete="address-line1" />
+                        <input
+                          type="text"
+                          autoComplete="address-line1"
+                          value={address1}
+                          onChange={(e) => setAddress1(e.target.value)}
+                        />
                       </div>
                       <div className="v3co-field full">
                         <label>
                           Address line 2 <span className="opt">Optional</span>
                         </label>
-                        <input type="text" autoComplete="address-line2" />
+                        <input
+                          type="text"
+                          autoComplete="address-line2"
+                          value={address2}
+                          onChange={(e) => setAddress2(e.target.value)}
+                        />
                       </div>
                       <div className="v3co-field">
                         <label>City</label>
-                        <input type="text" autoComplete="address-level2" />
+                        <input
+                          type="text"
+                          autoComplete="address-level2"
+                          value={city}
+                          onChange={(e) => setCity(e.target.value)}
+                        />
                       </div>
                       <div className="v3co-field">
                         <label>State / Region</label>
-                        <input type="text" autoComplete="address-level1" />
+                        <input
+                          type="text"
+                          autoComplete="address-level1"
+                          value={stateField}
+                          onChange={(e) => setStateField(e.target.value)}
+                        />
                       </div>
                       <div className="v3co-field">
                         <label>Postal code</label>
-                        <input type="text" autoComplete="postal-code" />
+                        <input
+                          type="text"
+                          autoComplete="postal-code"
+                          value={postcode}
+                          onChange={(e) => setPostcode(e.target.value)}
+                        />
                       </div>
                       <div className="v3co-field">
                         <label>Country</label>
-                        <select autoComplete="country" defaultValue="United States">
-                          <option>United States</option>
-                          <option>United Kingdom</option>
-                          <option>Germany</option>
-                          <option>France</option>
-                          <option>Sweden</option>
-                          <option>Japan</option>
+                        <select
+                          autoComplete="country"
+                          value={country}
+                          onChange={(e) => setCountry(e.target.value)}
+                        >
+                          {COUNTRY_OPTIONS.map((c) => (
+                            <option key={c.code} value={c.code}>
+                              {c.label}
+                            </option>
+                          ))}
                         </select>
                       </div>
                       <div className="v3co-field full">
                         <label>Email</label>
-                        <input type="email" autoComplete="email" />
+                        <input
+                          type="email"
+                          autoComplete="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
                       </div>
                       <div className="v3co-field full">
                         <label>Phone</label>
-                        <input type="tel" autoComplete="tel" />
+                        <input
+                          type="tel"
+                          autoComplete="tel"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                        />
                       </div>
                     </div>
 
@@ -297,6 +417,10 @@ export function CheckoutShell({ mode }: { mode: "cart" | "checkout" }) {
               grandTotal={grandTotal}
               mode={mode}
               empty={empty}
+              onPlaceOrder={handlePlaceOrder}
+              submitting={submitting}
+              orderResult={orderResult}
+              orderError={orderError}
             />
           </aside>
         </div>
@@ -338,8 +462,14 @@ export function CheckoutShell({ mode }: { mode: "cart" | "checkout" }) {
                 Checkout <span className="arrow">→</span>
               </Link>
             ) : (
-              <button type="button" className="v3co-mobile-summary-cta">
-                Place order <span className="arrow">→</span>
+              <button
+                type="button"
+                className="v3co-mobile-summary-cta"
+                onClick={handlePlaceOrder}
+                disabled={submitting || empty}
+                aria-busy={submitting}
+              >
+                {submitting ? "Placing…" : "Place order"} <span className="arrow">→</span>
               </button>
             )}
           </div>
@@ -395,6 +525,10 @@ function SummaryCard({
   grandTotal,
   mode,
   empty,
+  onPlaceOrder,
+  submitting,
+  orderResult,
+  orderError,
 }: {
   items: ReturnType<typeof useCartStore.getState>["items"];
   itemsTotal: number;
@@ -404,6 +538,10 @@ function SummaryCard({
   grandTotal: number;
   mode: "cart" | "checkout";
   empty: boolean;
+  onPlaceOrder: () => void;
+  submitting: boolean;
+  orderResult: WcOrderResult | null;
+  orderError: string | null;
 }) {
   return (
     <div className="v3co-summary-card">
@@ -483,9 +621,51 @@ function SummaryCard({
               Proceed to checkout <span className="arrow">→</span>
             </Link>
           ) : (
-            <button type="button" className="v3co-place-cta">
-              Place order <span className="arrow">→</span>
+            <button
+              type="button"
+              className="v3co-place-cta"
+              onClick={onPlaceOrder}
+              disabled={submitting}
+              aria-busy={submitting}
+            >
+              {submitting ? "Placing…" : "Place order"} <span className="arrow">→</span>
             </button>
+          )}
+
+          {mode === "checkout" && orderError && (
+            <p
+              role="alert"
+              style={{
+                marginTop: 12,
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "var(--pp-alert)",
+                lineHeight: 1.5,
+              }}
+            >
+              {orderError}
+            </p>
+          )}
+
+          {mode === "checkout" && orderResult && (
+            <p
+              role="status"
+              style={{
+                marginTop: 12,
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "var(--pp-emerald)",
+                lineHeight: 1.5,
+              }}
+            >
+              Order #{orderResult.order_id} placed. We&rsquo;ll email next steps.
+            </p>
           )}
 
           <div className="v3co-trust-stack">

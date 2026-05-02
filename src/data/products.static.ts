@@ -53,6 +53,14 @@ export interface Product {
   sku: string;
   /** WooCommerce product ID — populated when sourced from the WC REST API. */
   wcId?: number;
+  /**
+   * Maps dose string → WC variation id + per-dose price. Only populated when
+   * the upstream WC product is type:"variable" — the variation id is what the
+   * Store API /cart/add-item needs (parent ids are rejected for variable
+   * products), and the per-dose price is what the PDP must surface so the
+   * "5 mg / 10 mg / 15 mg" toggle reflects real WC pricing.
+   */
+  variantMap?: Record<string, { wcId: number; price: number }>;
 }
 
 export const PRODUCTS: Product[] = [
