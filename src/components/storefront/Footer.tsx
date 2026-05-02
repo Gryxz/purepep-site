@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Lockup } from "./primitives";
 import { clsx } from "@/lib/clsx";
 import type { Product } from "@/data/products";
+import type { WpPage } from "@/lib/wp-pages";
 
 function FootCol({ title, items }: { title: string; items: { label: string; href?: string }[] }) {
   const [open, setOpen] = useState(false);
@@ -57,6 +58,7 @@ function FootCol({ title, items }: { title: string; items: { label: string; href
 export function Footer({
   minimal = false,
   products = [],
+  policies = [],
 }: {
   minimal?: boolean;
   /**
@@ -66,6 +68,14 @@ export function Footer({
    * so a missing/failed WC fetch never leaves the column with 404 links.
    */
   products?: Product[];
+  /**
+   * Policy + contact pages mirrored from WP at build time.  Footer reads
+   * the WP page titles directly so Storefront copy never forks from the
+   * canonical CMS source.  When empty (no WP creds, fetch failed), the
+   * column falls back to a humanised label per slug so the links still
+   * work.
+   */
+  policies?: WpPage[];
 }) {
   if (minimal) {
     return (
@@ -82,6 +92,18 @@ export function Footer({
     })),
     { label: "View all", href: "/shop" },
   ];
+
+  const policyItems: { label: string; href?: string }[] =
+    policies.length > 0
+      ? policies.map((p) => ({ label: p.title, href: `/legal/${p.slug}` }))
+      : [
+          { label: "Refund policy", href: "/legal/refund-policy" },
+          { label: "Terms of service", href: "/legal/terms-of-service" },
+          { label: "Privacy policy", href: "/legal/privacy-policy" },
+          { label: "Shipping policy", href: "/legal/shipping-policy" },
+          { label: "Disclaimer", href: "/legal/disclaimer" },
+          { label: "Contact", href: "/legal/contact" },
+        ];
 
   return (
     <footer className="bg-ink text-bone">
@@ -123,15 +145,7 @@ export function Footer({
               { label: "Re-order" },
             ]}
           />
-          <FootCol
-            title="Policies"
-            items={[
-              { label: "No-refund policy" },
-              { label: "Terms of sale" },
-              { label: "Privacy" },
-              { label: "Contact" },
-            ]}
-          />
+          <FootCol title="Policies" items={policyItems} />
         </div>
 
         <div className="my-8 h-px bg-bone/20 md:my-12" />
