@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { fetchWcOrder, type WcOrderData } from "@/lib/wc-store-api";
-import { trackPurchase } from "@/lib/analytics";
+import { identifyUserByEmail, trackPurchase } from "@/lib/analytics";
 
 function minorFmt(cents: string | undefined, minorUnit = 2): string {
   const n = Number(cents ?? "0") / Math.pow(10, minorUnit);
@@ -88,6 +88,11 @@ export default function OrderConfirmPage() {
   useEffect(() => {
     if (!order || hasFiredPurchase.current) return;
     hasFiredPurchase.current = true;
+    // Identify before capture so this and every subsequent event in the
+    // session shares the `email:<billing_email>` distinct_id used by the
+    // server-side WC mu-plugin webhook.
+    const email = order.billing_address?.email ?? "";
+    if (email) identifyUserByEmail(email);
     const mu = order.totals?.currency_minor_unit ?? 2;
     const total = Number(order.totals?.total_price ?? "0") / Math.pow(10, mu);
     trackPurchase(

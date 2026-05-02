@@ -145,6 +145,27 @@ interface OrderItemLike {
   total: number;
 }
 
+/**
+ * Bind the current PostHog session to a stable user identifier so the
+ * client-side `purchase` event stitches with the server-side mu-plugin
+ * webhook (which uses `email:<billing_email>` as distinct_id).  No-op
+ * if PostHog isn't initialised or the email is empty.
+ *
+ * Note: persistence is `memory` so the identification doesn't survive a
+ * reload — that's fine; we only need it for the lifetime of the
+ * /order-confirm/ page where the `purchase` event fires.
+ */
+export function identifyUserByEmail(email: string): void {
+  if (!client) return;
+  const trimmed = email.trim();
+  if (trimmed === "") return;
+  try {
+    client.identify(`email:${trimmed}`);
+  } catch {
+    // never throw from a tracking call
+  }
+}
+
 export function trackPurchase(
   orderId: number,
   total: number,
