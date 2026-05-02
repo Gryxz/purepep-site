@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { clsx } from "@/lib/clsx";
 import { useCartStore } from "@/lib/cart-store";
 import { placeWcOrder, type WcOrderResult } from "@/lib/wc-store-api";
+import { trackBeginCheckout } from "@/lib/analytics";
 import { RetaVialMini } from "./RetaVialMini";
 
 /**
@@ -92,6 +93,18 @@ export function CheckoutShell({ mode }: { mode: "cart" | "checkout" }) {
   const grandTotal = Math.max(0, itemsTotal + (mode === "checkout" ? shipPrice : 0) - promoApplied);
 
   const empty = items.length === 0;
+
+  // Fire begin_checkout when the /checkout route mounts with a non-empty
+  // cart.  Cart-route mounts (the /cart page also uses this shell) are
+  // intentionally NOT tracked — that's catalog browsing, not intent.
+  useEffect(() => {
+    if (mode !== "checkout") return;
+    if (items.length === 0) return;
+    trackBeginCheckout(items, itemsTotal);
+    // Intentionally only fire on mount — re-running on every items/total
+    // change would spam PostHog with one event per qty stepper click.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode]);
 
   async function handlePlaceOrder() {
     if (submitting || empty) return;

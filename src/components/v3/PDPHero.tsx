@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { clsx } from "@/lib/clsx";
+import { trackProductView, trackAddToCart } from "@/lib/analytics";
 import type { Product } from "@/data/products";
 import { RetaVial } from "./RetaVial";
 import { RetaVialMini } from "./RetaVialMini";
@@ -135,6 +136,12 @@ export function PDPHero({ product }: { product: Product }) {
   const [footerIn, setFooterIn] = useState(false);
   const stickyVisible = buyboxAbove && !footerIn && !isOut;
 
+  // Fire product_view exactly once per PDP mount, keyed on slug so a
+  // client-side route change to a different SKU re-fires.
+  useEffect(() => {
+    trackProductView(product);
+  }, [product]);
+
   useEffect(() => {
     const buyboxEl = buyboxRef.current;
     const footerEl = footerSentinelRef.current;
@@ -183,6 +190,11 @@ export function PDPHero({ product }: { product: Product }) {
         wcId: effectiveWcId,
       });
     }
+    // Analytics fire on user intent — local zustand has updated, the WC
+    // mirror is already in flight from cart-store.addItem.  Tracking here
+    // captures the click even if the WC sync later 401s; the event is
+    // about user action, not backend success.
+    trackAddToCart(product, variant, totalUnits, orderTotal, effectiveWcId);
     openCart();
   }
 

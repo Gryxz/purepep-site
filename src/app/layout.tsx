@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Inter, IBM_Plex_Mono } from "next/font/google";
 import { compliance } from "@design/tokens";
 import { Header } from "@/components/storefront/Header";
 import { Footer } from "@/components/storefront/Footer";
 import { CartDrawer } from "@/components/storefront/CartDrawer";
+import PostHogProvider from "@/components/PostHogProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -50,10 +52,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${ibmPlexMono.variable}`}>
       <body className="bg-bone text-ink antialiased">
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <CartDrawer />
+        {/* Suspense wraps the analytics provider because useSearchParams forces
+            a client-render boundary; without it the static export bails on
+            every page that doesn't already opt in to dynamic rendering. */}
+        <Suspense fallback={null}>
+          <PostHogProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+            <CartDrawer />
+          </PostHogProvider>
+        </Suspense>
       </body>
     </html>
   );
