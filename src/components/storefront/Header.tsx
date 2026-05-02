@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { Lockup, Icon, Eyebrow } from "./primitives";
 import { clsx } from "@/lib/clsx";
@@ -35,8 +34,8 @@ function UtilityStrip() {
 function NavLink({ children, href = "#", active = false }: { children: React.ReactNode; href?: string; active?: boolean }) {
   const [hovered, setHovered] = useState(false);
   return (
-    <Link
-      href={href as never}
+    <a
+      href={href}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={clsx(
@@ -45,15 +44,15 @@ function NavLink({ children, href = "#", active = false }: { children: React.Rea
       )}
     >
       {children}
-    </Link>
+    </a>
   );
 }
 
 function DropdownRow({ href, children, divider }: { href: string; children: React.ReactNode; divider?: boolean }) {
   const [hovered, setHovered] = useState(false);
   return (
-    <Link
-      href={href as never}
+    <a
+      href={href}
       role="menuitem"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -64,7 +63,7 @@ function DropdownRow({ href, children, divider }: { href: string; children: Reac
       )}
     >
       {children}
-    </Link>
+    </a>
   );
 }
 
@@ -142,9 +141,9 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
             : "grid-cols-[auto_minmax(0,1fr)_auto] gap-4 md:grid-cols-[auto_minmax(0,1fr)_auto] md:gap-8",
         )}
       >
-        <Link href="/" className="inline-block no-underline">
+        <a href="/" className="inline-block no-underline">
           <Lockup className="h-8 w-auto md:h-9" />
-        </Link>
+        </a>
 
         {!minimal && (
           /* Desktop nav — hidden on mobile */
@@ -209,9 +208,9 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
         <div className="fixed inset-0 z-50 flex flex-col bg-bone md:hidden">
           {/* Top bar */}
           <div className="flex items-center justify-between border-b border-ink px-4 py-4">
-            <Link href="/" onClick={() => setMenuOpen(false)} className="inline-block no-underline">
+            <a href="/" onClick={() => setMenuOpen(false)} className="inline-block no-underline">
               <Lockup className="h-8 w-auto" />
-            </Link>
+            </a>
             <button
               type="button"
               aria-label="Close menu"
@@ -225,14 +224,14 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
           {/* Nav links */}
           <nav className="flex flex-1 flex-col overflow-y-auto">
             {MOBILE_NAV_LINKS.map((link) => (
-              <Link
+              <a
                 key={link.label}
-                href={link.href as never}
+                href={link.href}
                 onClick={() => setMenuOpen(false)}
                 className="flex min-h-[56px] items-center border-b border-line px-4 font-sans text-[17px] font-medium text-ink no-underline"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
           </nav>
 
@@ -246,13 +245,13 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
               <Icon name="cart" size={16} />
               Cart · {String(count).padStart(2, "0")}
             </button>
-            <Link
+            <a
               href="/researcher-access"
               onClick={() => setMenuOpen(false)}
               className="mt-3 flex h-11 w-full items-center justify-center border border-ink bg-transparent font-mono text-[11px] uppercase tracking-[0.14em] text-ink no-underline"
             >
               Researcher access →
-            </Link>
+            </a>
           </div>
         </div>
       )}
