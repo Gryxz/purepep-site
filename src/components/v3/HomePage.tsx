@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { clsx } from "@/lib/clsx";
-import { plural } from "@/lib/text";
+import { padded2, plural } from "@/lib/text";
 import type { Product } from "@/data/products";
 import { RetaVial } from "./RetaVial";
 
@@ -61,7 +61,7 @@ export function HomePage({ products }: { products: Product[] }) {
         <div className="v3home-hero-grid">
           <div className="v3home-hero-stage">
             <div className="v3home-corner tl">
-              {featured ? `01 / 0${products.length} — ${featured.compound}` : "Research grade"}
+              {featured ? `01 / ${padded2(products.length)} — ${featured.compound}` : "Research grade"}
             </div>
             {featured && (
               <RetaVial
@@ -125,7 +125,7 @@ export function HomePage({ products }: { products: Product[] }) {
             <div className="v3home-featured-grid">
               <div>
                 <p className="v3-section-eyebrow">
-                  Featured · 01 / 0{products.length}
+                  Featured · 01 / {padded2(products.length)}
                 </p>
                 <h2 className="v3home-featured-headline">
                   {featured.name}. The current frontier for metabolic research.

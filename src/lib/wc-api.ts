@@ -340,10 +340,17 @@ function toProduct(wc: WcProduct, variations?: WcVariation[]): Product {
   // otherwise the first variant; otherwise empty.
   const dose = variants[0] ?? "";
 
+  // Display name: strip the trailing " - PLACEHOLDER" suffix (em-dash
+  // variants) so a stale WP draft never leaks the marker into the eyebrow,
+  // PDP spec table, page <title>, or "View {name}" CTAs. The "PurePep "
+  // prefix is intentionally KEPT here — design wants the eyebrow to read
+  // "PUREPEP RETA · LYOPHILIZED", not "RETA · LYOPHILIZED".
+  const displayName = wc.name.replace(/\s*[-–—]\s*PLACEHOLDER\s*$/i, "").trim();
+
   return {
     slug: wc.slug,
     compound,
-    name: wc.name,
+    name: displayName || wc.name,
     dose,
     variants,
     cas,

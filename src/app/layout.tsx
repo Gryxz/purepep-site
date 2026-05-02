@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { Inter, IBM_Plex_Mono } from "next/font/google";
 import { compliance } from "@design/tokens";
 import { Header } from "@/components/storefront/Header";
@@ -62,17 +61,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${inter.variable} ${ibmPlexMono.variable}`}>
       <body className="bg-bone text-ink antialiased">
-        {/* Suspense wraps the analytics provider because useSearchParams forces
-            a client-render boundary; without it the static export bails on
-            every page that doesn't already opt in to dynamic rendering. */}
-        <Suspense fallback={null}>
-          <PostHogProvider>
-            <Header />
-            <main>{children}</main>
-            <Footer products={products} policies={policies} />
-            <CartDrawer />
-          </PostHogProvider>
-        </Suspense>
+        {/* PostHogProvider keeps its own Suspense boundary internally
+            (around the useSearchParams-driven pageview tracker), so the
+            rest of this tree SSRs normally — header, content, and
+            footer all land in the static HTML for SEO + first paint. */}
+        <PostHogProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer products={products} policies={policies} />
+          <CartDrawer />
+        </PostHogProvider>
       </body>
     </html>
   );
