@@ -75,7 +75,37 @@ export interface WcCheckoutPayload {
 
 export interface WcOrderResult {
   order_id: number;
+  order_key?: string;
   payment_url?: string;
+}
+
+export interface WcOrderLine {
+  id: number;
+  quantity: number;
+  name: string;
+  totals: {
+    line_total?: string;
+    currency_code?: string;
+    currency_minor_unit?: number;
+  };
+}
+
+export interface WcOrderData {
+  id: number;
+  status: string;
+  payment_method: string;
+  payment_method_title: string;
+  billing_address: WcAddress;
+  shipping_address: WcAddress;
+  totals: {
+    total_price?: string;
+    currency_code?: string;
+    currency_minor_unit?: number;
+  };
+  items: WcOrderLine[];
+  payment_result?: {
+    payment_details?: Array<{ key: string; value: string }>;
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -308,7 +338,11 @@ export async function placeWcOrder(
     if (!res || !res.ok) return null;
     const data: unknown = await res.json();
     if (!data || typeof data !== "object") return null;
-    const obj = data as { order_id?: unknown; payment_result?: { payment_details?: unknown; redirect_url?: unknown } };
+    const obj = data as {
+      order_id?: unknown;
+      order_key?: unknown;
+      payment_result?: { payment_details?: unknown; redirect_url?: unknown };
+    };
     const idRaw = obj.order_id;
     const orderId =
       typeof idRaw === "number"
@@ -317,12 +351,36 @@ export async function placeWcOrder(
           ? Number.parseInt(idRaw, 10)
           : NaN;
     if (!Number.isFinite(orderId) || orderId <= 0) return null;
+    const orderKey = typeof obj.order_key === "string" ? obj.order_key : undefined;
     let paymentUrl: string | undefined;
     const redirect = obj.payment_result?.redirect_url;
     if (typeof redirect === "string" && redirect.length > 0) {
       paymentUrl = redirect;
     }
-    return { order_id: orderId, payment_url: paymentUrl };
+    return { order_id: orderId, order_key: orderKey, payment_url: paymentUrl };
+  } catch {
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Order read — authenticated by order_key query param (no nonce/cart-token).
+// ---------------------------------------------------------------------------
+
+export async function fetchWcOrder(
+  orderId: number,
+  orderKey: string,
+): Promise<WcOrderData | null> {
+  try {
+    const url = `${STORE_URL}/order/${orderId}?key=${encodeURIComponent(orderKey)}`;
+    const res = await fetch(url, {
+      credentials: "include",
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) return null;
+    const data: unknown = await res.json();
+    if (!data || typeof data !== "object") return null;
+    return data as WcOrderData;
   } catch {
     return null;
   }

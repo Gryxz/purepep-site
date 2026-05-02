@@ -139,6 +139,31 @@ export function trackBeginCheckout(
   });
 }
 
+interface OrderItemLike {
+  name: string;
+  quantity: number;
+  total: number;
+}
+
+export function trackPurchase(
+  orderId: number,
+  total: number,
+  items: OrderItemLike[],
+): void {
+  safeCapture("purchase", {
+    order_id: orderId,
+    total: Number(total.toFixed(2)),
+    currency: "USD",
+    item_count: items.reduce((s, i) => s + i.quantity, 0),
+    line_count: items.length,
+    items: items.map((i) => ({
+      name: i.name,
+      quantity: i.quantity,
+      line_total: Number(i.total.toFixed(2)),
+    })),
+  });
+}
+
 export function trackAgeGate(accepted: boolean): void {
   safeCapture("age_gate", { accepted });
 }

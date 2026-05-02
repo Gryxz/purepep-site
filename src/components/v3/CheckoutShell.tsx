@@ -137,6 +137,9 @@ export function CheckoutShell({ mode }: { mode: "cart" | "checkout" }) {
       clearCart();
       if (result.payment_url) {
         window.location.href = result.payment_url;
+      } else {
+        const key = result.order_key ?? "";
+        window.location.href = `/order-confirm/?key=${encodeURIComponent(key)}&id=${result.order_id}`;
       }
     } else {
       setOrderError(

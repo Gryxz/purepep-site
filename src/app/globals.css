@@ -3371,3 +3371,125 @@ a.v3-pill-ghost:hover {
     font-size: 56px;
   }
 }
+
+/* ── ORDER CONFIRMATION ─────────────────────────────── */
+
+.v3co-confirm-check {
+  width: 56px; height: 56px;
+  border-radius: 9999px;
+  background: var(--v3-accent);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+}
+
+.v3co-confirm-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 58%) minmax(0, 42%);
+  gap: 48px;
+  padding: 64px 0 96px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .v3co-confirm-grid { grid-template-columns: 1fr; gap: 32px; padding: 48px 0 96px; }
+}
+
+.v3co-confirm-card {
+  background: var(--v3-surface-1);
+  border-radius: 24px;
+  border: 1px solid var(--v3-hair);
+  padding: 28px 32px;
+}
+
+.v3co-confirm-addr {
+  font-family: var(--font-sans);
+  font-size: 14.5px; line-height: 1.7;
+  color: var(--v3-ink-70);
+}
+
+.v3co-confirm-bacs {
+  background: var(--v3-surface-3);
+  border-radius: 16px;
+  border: 1px solid var(--v3-hair-strong);
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.v3co-confirm-bacs .bacs-title {
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--v3-ink-60);
+  margin: 0 0 12px;
+}
+
+.v3co-confirm-bacs .bacs-note {
+  font-family: var(--font-sans);
+  font-size: 14.5px; line-height: 1.6;
+  color: var(--v3-ink-70);
+  margin: 0 0 16px;
+}
+
+.v3co-confirm-bank-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--v3-hair);
+  font-family: var(--font-sans); font-size: 14.5px; color: var(--v3-ink);
+}
+
+.v3co-confirm-bank-row:last-child { border-bottom: none; }
+
+.v3co-confirm-bank-label {
+  color: var(--v3-ink-60);
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.v3co-confirm-actions {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  margin-top: 40px;
+}
+
+.v3co-confirm-eta {
+  margin-top: 24px; padding: 20px 24px;
+  border-radius: 16px;
+  background: var(--v3-surface-2);
+  border: 1px solid var(--v3-hair);
+}
+
+.v3co-confirm-eta .eta-label {
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--v3-ink-55);
+  margin: 0 0 6px;
+}
+
+.v3co-confirm-eta .eta-value {
+  font-family: var(--font-sans);
+  font-size: 15px; font-weight: 600;
+  color: var(--v3-ink);
+  margin: 0;
+}
+
+.v3co-confirm-payment-method {
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--v3-ink-55);
+}
+
+.v3co-confirm-skel {
+  background: var(--v3-surface-2);
+  border-radius: 8px;
+  animation: v3co-skel-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes v3co-skel-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
