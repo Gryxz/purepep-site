@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -84,6 +85,10 @@ export function CheckoutShell({ mode }: { mode: "cart" | "checkout" }) {
   const [submitting, setSubmitting] = useState(false);
   const [orderResult, setOrderResult] = useState<WcOrderResult | null>(null);
   const [orderError, setOrderError] = useState<string | null>(null);
+  // Bankful compliance — T&C + research-use attestation must be ticked
+  // before the Place order button is enabled.  Lives at the top so both
+  // the desktop SummaryCard and mobile sticky CTA can read the same flag.
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const itemsTotal = subtotal();
   const totalVials = totalItems();
@@ -437,6 +442,8 @@ export function CheckoutShell({ mode }: { mode: "cart" | "checkout" }) {
               submitting={submitting}
               orderResult={orderResult}
               orderError={orderError}
+              termsAccepted={termsAccepted}
+              onTermsChange={setTermsAccepted}
             />
           </aside>
         </div>
@@ -480,9 +487,12 @@ export function CheckoutShell({ mode }: { mode: "cart" | "checkout" }) {
             ) : (
               <button
                 type="button"
-                className="v3co-mobile-summary-cta"
+                className={clsx(
+                  "v3co-mobile-summary-cta",
+                  !termsAccepted && "opacity-50 cursor-not-allowed",
+                )}
                 onClick={handlePlaceOrder}
-                disabled={submitting || empty}
+                disabled={submitting || empty || !termsAccepted}
                 aria-busy={submitting}
               >
                 {submitting ? "Placing…" : "Place order"} <span className="arrow">→</span>
@@ -545,6 +555,8 @@ function SummaryCard({
   submitting,
   orderResult,
   orderError,
+  termsAccepted,
+  onTermsChange,
 }: {
   items: ReturnType<typeof useCartStore.getState>["items"];
   itemsTotal: number;
@@ -558,6 +570,8 @@ function SummaryCard({
   submitting: boolean;
   orderResult: WcOrderResult | null;
   orderError: string | null;
+  termsAccepted: boolean;
+  onTermsChange: (next: boolean) => void;
 }) {
   return (
     <div className="v3co-summary-card">
@@ -632,6 +646,60 @@ function SummaryCard({
             </span>
           </div>
 
+          {/* Bankful merchant disclosure — required for card processing */}
+          <div className="mt-4 space-y-1 border-t border-ink/10 pt-4 text-xs text-ink/50">
+            <p>
+              <span className="font-medium text-ink/70">Merchant:</span> PurePep LLC
+            </p>
+            <p>
+              <span className="font-medium text-ink/70">Country:</span> United States
+            </p>
+            <p>
+              <span className="font-medium text-ink/70">Descriptor:</span> PUREPEP*ORDER
+            </p>
+            <p className="pt-1">
+              <a href="/legal/refund-policy" className="underline hover:text-ink/80">
+                Refund Policy
+              </a>
+              {" · "}
+              <a href="/legal/terms-of-service" className="underline hover:text-ink/80">
+                Terms
+              </a>
+              {" · "}
+              <a href="/legal/privacy-policy" className="underline hover:text-ink/80">
+                Privacy
+              </a>
+            </p>
+          </div>
+
+          {/* Bankful compliance — research-use + 21+ + policy attestation */}
+          {mode === "checkout" && (
+            <div className="mt-4 flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="terms-accept"
+                checked={termsAccepted}
+                onChange={(e) => onTermsChange(e.target.checked)}
+                className="mt-1 h-4 w-4 flex-shrink-0 cursor-pointer accent-loden"
+              />
+              <label
+                htmlFor="terms-accept"
+                className="cursor-pointer text-xs leading-relaxed text-ink/60"
+              >
+                I agree to the{" "}
+                <a href="/legal/terms-of-service" className="text-ink underline">
+                  Terms of Service
+                </a>{" "}
+                and{" "}
+                <a href="/legal/refund-policy" className="text-ink underline">
+                  Refund Policy
+                </a>
+                . I confirm I am 21+ and purchasing for legitimate research
+                purposes only.
+              </label>
+            </div>
+          )}
+
           {mode === "cart" ? (
             <Link href="/checkout" className="v3co-place-cta">
               Proceed to checkout <span className="arrow">→</span>
@@ -639,9 +707,12 @@ function SummaryCard({
           ) : (
             <button
               type="button"
-              className="v3co-place-cta"
+              className={clsx(
+                "v3co-place-cta",
+                !termsAccepted && "cursor-not-allowed opacity-50",
+              )}
               onClick={onPlaceOrder}
-              disabled={submitting}
+              disabled={submitting || !termsAccepted}
               aria-busy={submitting}
             >
               {submitting ? "Placing…" : "Place order"} <span className="arrow">→</span>

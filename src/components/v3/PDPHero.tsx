@@ -399,6 +399,13 @@ export function PDPHero({ product }: { product: Product }) {
               <span className="dot">·</span>
               <span>Carrier-tracked</span>
             </div>
+
+            {/* Bankful compliance — research-use attestation under the CTA */}
+            <p className="mx-auto mt-3 max-w-md text-center text-xs leading-relaxed text-ink/40">
+              For research use only. Not for human consumption, diagnostic, or
+              therapeutic use. Must be 21+. By purchasing you confirm you are a
+              qualified researcher.
+            </p>
           </div>
 
           {/* COA panel */}

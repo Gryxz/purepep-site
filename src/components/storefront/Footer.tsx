@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Lockup } from "./primitives";
+import { PaymentLogos } from "./PaymentLogos";
 import { clsx } from "@/lib/clsx";
 import type { Product } from "@/data/products";
 import type { WpPage } from "@/lib/wp-pages";
@@ -152,7 +153,10 @@ export function Footer({
 
         <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[10.5px] uppercase tracking-[0.14em] text-bone/55">
           <span>For research use only · Not for human consumption · 21+ qualified researchers</span>
-          <span>© 2026 PurePep</span>
+          <div className="flex items-center gap-4">
+            <PaymentLogos />
+            <span>© 2026 PurePep</span>
+          </div>
         </div>
       </div>
     </footer>

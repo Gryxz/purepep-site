@@ -27,6 +27,14 @@
   --pp-success:     #1F1F1F;
   --pp-white:       #FFFFFF;
 
+  /* Card-network brand colors — used by PaymentLogos in the footer.
+     Kept here (the only file the token fence permits hex literals in)
+     so the inline SVGs can reference them via fill="var(--pp-visa-blue)"
+     without leaking brand hex into TSX source. */
+  --pp-visa-blue:   #1A1F71;
+  --pp-mc-red:      #EB001B;
+  --pp-mc-yellow:   #F79E1B;
+
   /* Semantic accents — type + 1.5 px border only, never hero fill */
   --pp-emerald:       #0F5132;
   --pp-emerald-soft:  #E8F0EB;

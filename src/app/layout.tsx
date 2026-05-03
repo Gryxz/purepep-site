@@ -5,6 +5,8 @@ import { Header } from "@/components/storefront/Header";
 import { Footer } from "@/components/storefront/Footer";
 import { CartDrawer } from "@/components/storefront/CartDrawer";
 import PostHogProvider from "@/components/PostHogProvider";
+import AgeGateGuard from "@/components/AgeGateGuard";
+import CookieBanner from "@/components/v3/CookieBanner";
 import { getAllProducts } from "@/lib/wc-api";
 import { getAllPolicyPages } from "@/lib/wp-pages";
 import "./globals.css";
@@ -66,10 +68,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             rest of this tree SSRs normally — header, content, and
             footer all land in the static HTML for SEO + first paint. */}
         <PostHogProvider>
+          <AgeGateGuard />
           <Header />
           <main>{children}</main>
           <Footer products={products} policies={policies} />
           <CartDrawer />
+          <CookieBanner />
         </PostHogProvider>
       </body>
     </html>
