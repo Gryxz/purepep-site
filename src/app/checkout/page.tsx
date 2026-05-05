@@ -1,5 +1,5 @@
-import { CheckoutShell } from "@/components/v3/CheckoutShell";
+import { CheckoutPage } from "@/components/v3/CheckoutPage";
 
-export default function CheckoutPage() {
-  return <CheckoutShell mode="checkout" />;
+export default function Checkout() {
+  return <CheckoutPage />;
 }

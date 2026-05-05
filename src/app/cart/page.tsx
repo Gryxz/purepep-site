@@ -1,5 +1,7 @@
-import { CheckoutShell } from "@/components/v3/CheckoutShell";
+import { getAllProducts } from "@/lib/wc-api";
+import { CartPage } from "@/components/v3/CartPage";
 
-export default function CartPage() {
-  return <CheckoutShell mode="cart" />;
+export default async function Cart() {
+  const products = await getAllProducts();
+  return <CartPage products={products} />;
 }
