@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import { useMemo, useState } from "react";
@@ -5,6 +6,7 @@ import Link from "next/link";
 import { clsx } from "@/lib/clsx";
 import type { Product, Category } from "@/data/products";
 import { RetaVial } from "./RetaVial";
+import { TrustBar } from "./TrustBar";
 
 /**
  * v3 Apple Swiss Catalog page.
@@ -53,6 +55,7 @@ export function CatalogPage({ products }: { products: Product[] }) {
 
   return (
     <div className="v3-shop">
+      <TrustBar />
       <main className="v3-container">
         <section className="v3cat-intro">
           <div className="eyebrow">Catalog</div>
@@ -174,6 +177,26 @@ export function CatalogPage({ products }: { products: Product[] }) {
           All products sold for laboratory research use only · Not for human or animal consumption
         </div>
       </main>
+
+      {/* Dark CTA — For Research Teams */}
+      <div className="v3-dark-cta">
+        <div className="v3-dark-cta-eyebrow">For Research Teams</div>
+        <h2 className="v3-dark-cta-h">
+          Need a compound <em>that isn&apos;t listed?</em>
+        </h2>
+        <p className="v3-dark-cta-body">
+          We regularly source and synthesize additional peptides for labs and repeat buyers. Reach out with your
+          spec — we&apos;ll get back within one business day.
+        </p>
+        <div className="v3-dark-cta-btns">
+          <a href="/legal/contact" className="v3-dark-cta-btn-primary">
+            Request a quote →
+          </a>
+          <a href="/documentation" className="v3-dark-cta-btn-secondary">
+            View all COAs
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

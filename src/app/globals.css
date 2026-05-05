@@ -3589,3 +3589,118 @@ a.v3-pill-ghost:hover {
 .v3doc-link:hover {
   color: var(--v3-accent-hover);
 }
+
+/* ===========================================================================
+   v3 mobile — trust bar, tab bar, dark CTA, category pill
+   (ported from mockup.html v5 Axis 1-to-1)
+   =========================================================================== */
+
+/* ── Amber-dot trust strip (ink bg, horizontal scroll) ── */
+.v3-trust-bar {
+  display: flex; gap: 24px;
+  padding: 12px 20px;
+  background: var(--v3-ink);
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; white-space: nowrap;
+  scrollbar-width: none;
+}
+.v3-trust-bar::-webkit-scrollbar { display: none; }
+
+.v3-trust-bar-item {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  font-family: var(--font-mono); font-size: 10.5px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: rgb(250 247 240 / 85%); scroll-snap-align: start;
+}
+
+.v3-trust-dot {
+  width: 5px; height: 5px; border-radius: 9999px;
+  background: var(--v3-accent); flex-shrink: 0;
+}
+
+/* ── Mobile bottom tab bar ── */
+.v3-tab-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+  background: rgb(250 247 240 / 96%);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--v3-hair-strong);
+  display: none; grid-template-columns: repeat(4, 1fr);
+  padding-top: 8px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
+}
+
+@media (max-width: 767px) { .v3-tab-bar { display: grid; } }
+
+.v3-tab-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 6px 0; color: var(--v3-ink-muted);
+  font-family: var(--font-sans); font-size: 10px; font-weight: 500;
+  position: relative; text-decoration: none;
+  background: none; border: none; cursor: pointer;
+}
+.v3-tab-btn.is-active { color: var(--v3-ink); }
+
+.v3-tab-btn.is-active::before {
+  content: ''; position: absolute; top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 24px; height: 2px;
+  background: var(--v3-accent); border-radius: 0 0 2px 2px;
+}
+.v3-tab-btn svg { width: 22px; height: 22px; }
+
+/* ── Dark CTA band (For Research Teams) ── */
+.v3-dark-cta {
+  background: var(--v3-ink); color: var(--v3-canvas);
+  padding: 48px 24px; text-align: center;
+}
+
+.v3-dark-cta-eyebrow {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--v3-accent); margin-bottom: 14px;
+}
+
+.v3-dark-cta-h {
+  font-weight: 900; font-size: clamp(26px, 4vw, 38px);
+  letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 14px;
+  color: var(--v3-canvas);
+}
+
+.v3-dark-cta-h em {
+  font-style: italic; color: rgb(250 247 240 / 70%); font-weight: 400;
+}
+
+.v3-dark-cta-body {
+  font-size: 14px; line-height: 1.6; color: rgb(250 247 240 / 65%);
+  margin-bottom: 28px; max-width: 38ch; margin-left: auto; margin-right: auto;
+}
+
+.v3-dark-cta-btns {
+  display: flex; flex-direction: column; gap: 10px;
+  max-width: 280px; margin: 0 auto;
+}
+
+.v3-dark-cta-btn-primary {
+  background: var(--v3-accent); color: var(--v3-accent-ink);
+  padding: 16px 24px; border-radius: 9999px; border: none; cursor: pointer;
+  font-weight: 700; font-size: 13px; letter-spacing: 0.08em;
+  text-transform: uppercase; display: flex; align-items: center;
+  justify-content: center; gap: 8px; transition: opacity 0.12s;
+}
+.v3-dark-cta-btn-primary:active { opacity: 0.85; }
+
+.v3-dark-cta-btn-secondary {
+  background: transparent; color: var(--v3-canvas);
+  padding: 15px 24px; border-radius: 9999px; cursor: pointer;
+  border: 1px solid rgb(250 247 240 / 25%);
+  font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+}
+
+/* ── Amber category pill (PDP page header) ── */
+.v3-cat-pill {
+  display: inline-flex; align-items: center;
+  background: var(--v3-accent); color: var(--v3-accent-ink);
+  padding: 7px 16px; border-radius: 9999px;
+  font-family: var(--font-sans); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+}

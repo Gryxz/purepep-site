@@ -178,17 +178,25 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
             >
               <Icon name="user" size={18} />
             </button>
-            {/* Cart */}
+            {/* Cart — desktop: bordered label; mobile: icon + amber badge */}
             <button
               type="button"
               onClick={openCart}
-              aria-label="Open cart"
+              aria-label={`Open cart, ${count} item${count !== 1 ? "s" : ""}`}
               className="relative inline-flex h-11 cursor-pointer items-center gap-2 border border-ink bg-transparent px-3 py-2 text-ink"
             >
               <Icon name="cart" size={16} />
-              <span className="hidden font-mono text-[11px] font-semibold tracking-[0.12em] min-[360px]:inline">
+              <span className="hidden font-mono text-[11px] font-semibold tracking-[0.12em] min-[360px]:inline md:inline">
                 {String(count).padStart(2, "0")}
               </span>
+              {count > 0 && (
+                <span
+                  className="absolute -right-1 -top-1 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-amber px-0.5 font-mono text-[8px] font-bold text-ink md:hidden"
+                  aria-hidden="true"
+                >
+                  {count}
+                </span>
+              )}
             </button>
             {/* Hamburger — mobile only */}
             <button

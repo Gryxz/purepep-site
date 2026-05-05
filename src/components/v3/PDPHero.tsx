@@ -5,9 +5,20 @@ import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { clsx } from "@/lib/clsx";
 import { trackProductView, trackAddToCart } from "@/lib/analytics";
-import type { Product } from "@/data/products";
+import type { Product, Category } from "@/data/products";
 import { RetaVial } from "./RetaVial";
 import { RetaVialMini } from "./RetaVialMini";
+import { TrustBar } from "./TrustBar";
+
+const CATEGORY_LABEL: Record<Category, string> = {
+  "Incretin mimetics": "GLP-1 Peptides",
+  "GH secretagogues":  "Growth Hormone",
+  "Healing":           "Healing",
+  "Cognition":         "Cognition",
+  "Metabolic":         "Metabolic",
+};
+
+const PDP_TRUST = ["99.5%+ Purity", "Third-Party Tested", "2–3 Day Shipping", "Secure Checkout"];
 
 /**
  * v3 Apple Swiss PDP — bone canvas, cream surface stack, amber accent.
@@ -205,6 +216,8 @@ export function PDPHero({ product }: { product: Product }) {
 
   return (
     <div className="v3pdp">
+      <TrustBar items={PDP_TRUST} />
+
       {/* Breadcrumb */}
       <nav className="v3pdp-container v3pdp-breadcrumb" aria-label="Breadcrumb">
         <ol>
@@ -239,6 +252,13 @@ export function PDPHero({ product }: { product: Product }) {
             </div>
 
             <div className="v3pdp-info">
+              {/* Amber category pill */}
+              <div style={{ marginBottom: 16 }}>
+                <span className="v3-cat-pill">
+                  {CATEGORY_LABEL[product.category] ?? product.category}
+                </span>
+              </div>
+
               <div className="v3pdp-eyebrow-row">
                 <span className="v3pdp-eyebrow">{product.name} · Lyophilized</span>
                 <StockPill stock={product.stock} lowCount={product.lowCount} />

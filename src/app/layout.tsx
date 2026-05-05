@@ -7,6 +7,7 @@ import { CartDrawer } from "@/components/storefront/CartDrawer";
 import PostHogProvider from "@/components/PostHogProvider";
 import AgeGateGuard from "@/components/AgeGateGuard";
 import CookieBanner from "@/components/v3/CookieBanner";
+import { TabBar } from "@/components/v3/TabBar";
 import { getAllProducts } from "@/lib/wc-api";
 import { getAllPolicyPages } from "@/lib/wp-pages";
 import "./globals.css";
@@ -70,10 +71,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <PostHogProvider>
           <AgeGateGuard />
           <Header />
-          <main>{children}</main>
+          <main className="pb-[74px] md:pb-0">{children}</main>
           <Footer products={products} policies={policies} />
           <CartDrawer />
           <CookieBanner />
+          <TabBar />
         </PostHogProvider>
       </body>
     </html>
