@@ -3,7 +3,7 @@ import { Inter, IBM_Plex_Mono } from "next/font/google";
 import { compliance } from "@design/tokens";
 import { Header } from "@/components/storefront/Header";
 import { Footer } from "@/components/storefront/Footer";
-import { CartDrawer } from "@/components/storefront/CartDrawer";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 import PostHogProvider from "@/components/PostHogProvider";
 import AgeGateGuard from "@/components/AgeGateGuard";
 import CookieBanner from "@/components/v3/CookieBanner";
