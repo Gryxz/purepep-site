@@ -198,7 +198,7 @@ button { font-family: inherit; }
  * var() references) so the JIT scanner can resolve them and grep(1) on the
  * bundle confirms they landed (e.g. grep FAF7F0 out/).
  *
- * Amber is intentionally absent — favicon-only per brand bible.
+ * Amber (#DC9814) is the CTA accent, mapped via --color-loden / --v3-accent.
  */
 @theme {
   /* Core palette */
@@ -216,9 +216,9 @@ button { font-family: inherit; }
   --color-surface-3:    #EFEAE0;
   --color-surface-4:    #E9E3D7;
 
-  /* Loden accent — interactive states only */
-  --color-loden:        #3D4232;
-  --color-loden-hover:  #2F3328;
+  /* Amber CTA accent — interactive states only */
+  --color-loden:        #DC9814;
+  --color-loden-hover:  #BE840F;
   --color-blush:        #F2D7D7;
   --color-line:         #E4DFCF;
   --color-emerald:      #0F5132;
@@ -333,10 +333,10 @@ button { font-family: inherit; }
   --v3-ink:       #1F1F1F;
   --v3-ink-muted: #6A6A6A;
 
-  /* Single accent — deep loden olive. Interactive states only. */
-  --v3-accent:       #3D4232;
-  --v3-accent-hover: #2F3328;
-  --v3-accent-ink:   #FAF7F0;
+  /* Single accent — amber CTA. Interactive states only. */
+  --v3-accent:       #DC9814;
+  --v3-accent-hover: #BE840F;
+  --v3-accent-ink:   #1F1F1F;
 
   /* Hairlines (used for dividers, ring outlines, ghost-pill borders). */
   --v3-hair:        rgb(31 31 31 / 8%);
@@ -350,8 +350,8 @@ button { font-family: inherit; }
   /* Soft Apple-grade elevation. Shadows are the only legal "decoration". */
   --v3-shadow-card: 0 1px 2px rgb(31 31 31 / 4%), 0 8px 24px rgb(31 31 31 / 6%);
   --v3-shadow-hero: 0 1px 2px rgb(31 31 31 / 5%), 0 18px 48px rgb(31 31 31 / 10%);
-  --v3-shadow-cta:  0 1px 2px rgb(61 66 50 / 18%), 0 10px 24px rgb(61 66 50 / 22%);
-  --v3-shadow-cta-hover: 0 1px 2px rgb(61 66 50 / 20%), 0 14px 30px rgb(61 66 50 / 26%);
+  --v3-shadow-cta:  0 1px 2px rgb(220 152 20 / 18%), 0 10px 24px rgb(220 152 20 / 22%);
+  --v3-shadow-cta-hover: 0 1px 2px rgb(220 152 20 / 20%), 0 14px 30px rgb(220 152 20 / 26%);
 
   /* Motion — Apple soft-ease default. */
   --v3-ease: cubic-bezier(0.2, 0.6, 0.2, 1);
@@ -507,8 +507,8 @@ button { font-family: inherit; }
 
 .v3pdp-pill-stock .dot {
   width: 6px; height: 6px; border-radius: 50%;
-  background: var(--v3-accent);
-  box-shadow: 0 0 0 3px rgb(61 66 50 / 18%);
+  background: var(--color-emerald);
+  box-shadow: 0 0 0 3px rgb(15 81 50 / 18%);
 }
 .v3pdp-pill-stock.is-low .dot { background: #DC9814; box-shadow: 0 0 0 3px rgb(220 152 20 / 18%); }
 .v3pdp-pill-stock.is-out { color: var(--v3-ink-muted); }
@@ -660,7 +660,7 @@ button { font-family: inherit; }
 .v3pdp-tier.is-active {
   background: var(--v3-surface-3);
   border-color: var(--v3-accent);
-  box-shadow: 0 0 0 2px var(--v3-accent), 0 1px 2px rgb(31 31 31 / 4%), 0 10px 24px rgb(61 66 50 / 12%);
+  box-shadow: 0 0 0 2px var(--v3-accent), 0 1px 2px rgb(31 31 31 / 4%), 0 10px 24px rgb(220 152 20 / 12%);
 }
 
 .v3pdp-tier-badge {
@@ -1483,8 +1483,8 @@ a.v3-pill-ghost:hover {
 
 .v3-stock .dot {
   width: 6px; height: 6px; border-radius: 50%;
-  background: var(--v3-accent);
-  box-shadow: 0 0 0 3px rgb(61 66 50 / 16%);
+  background: var(--color-emerald);
+  box-shadow: 0 0 0 3px rgb(15 81 50 / 16%);
 }
 .v3-stock.is-low .dot { background: #B8821C; box-shadow: 0 0 0 3px rgb(184 130 28 / 18%); }
 .v3-stock.is-wait { color: var(--v3-ink); }
@@ -2438,8 +2438,8 @@ a.v3-pill-ghost:hover {
 
 .v3qual-verify-row .ldot {
   width: 8px; height: 8px; border-radius: 50%;
-  background: var(--v3-accent);
-  box-shadow: 0 0 0 4px rgb(61 66 50 / 16%);
+  background: var(--color-emerald);
+  box-shadow: 0 0 0 4px rgb(15 81 50 / 16%);
 }
 
 .v3qual-verify-row .lbl {
@@ -3204,7 +3204,7 @@ a.v3-pill-ghost:hover {
   font-size: 11.5px; font-weight: 500;
   letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--v3-accent);
-  border-bottom: 1px solid rgb(61 66 50 / 40%);
+  border-bottom: 1px solid rgb(220 152 20 / 40%);
   padding-bottom: 4px;
   transition: border-color 160ms var(--v3-ease), color 160ms;
 }
