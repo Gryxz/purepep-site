@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
  * first effect to avoid hydration mismatch warnings (server: hidden,
  * client: depends on cookie).
  *
- * Bone background, ink text, loden Accept button, ghost Decline.  No
+ * Bone background, ink text, amber Accept button, ghost Decline.  No
  * tracking calls — this is a UI primitive only; the analytics layer
  * reads the cookie itself if it cares.
  */
@@ -82,7 +82,7 @@ export default function CookieBanner() {
           <button
             type="button"
             onClick={handleAccept}
-            className="inline-flex h-10 cursor-pointer items-center justify-center rounded-full bg-loden px-5 text-[13px] font-semibold text-bone transition-colors hover:bg-loden-hover"
+            className="inline-flex h-10 cursor-pointer items-center justify-center rounded-full bg-amber px-5 text-[13px] font-semibold text-ink transition-colors hover:bg-amber-hover"
           >
             Accept
           </button>

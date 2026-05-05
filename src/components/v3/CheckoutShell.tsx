@@ -680,7 +680,7 @@ function SummaryCard({
                 id="terms-accept"
                 checked={termsAccepted}
                 onChange={(e) => onTermsChange(e.target.checked)}
-                className="mt-1 h-4 w-4 flex-shrink-0 cursor-pointer accent-loden"
+                className="mt-1 h-4 w-4 flex-shrink-0 cursor-pointer accent-amber"
               />
               <label
                 htmlFor="terms-accept"

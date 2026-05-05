@@ -15,7 +15,7 @@ import { plural } from "@/lib/text";
  *      30/70 grid with method, reference, independent-confirmation, and
  *      "typical result" strip on a hairline-framed card.
  *   3. Sample COA — full mono-style certificate card with 16-cell grid
- *      and ghost loden download pill foot.
+ *      and ghost amber download pill foot.
  *   4. Verification — left column copy + bullets, right column verified-
  *      identity card + ghost CTA + verify note.
  *   5. Logistics timeline — 4-node (reuses .v3pdp-timeline).

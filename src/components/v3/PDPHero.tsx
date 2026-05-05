@@ -10,7 +10,7 @@ import { RetaVial } from "./RetaVial";
 import { RetaVialMini } from "./RetaVialMini";
 
 /**
- * v3 Apple Swiss PDP — bone canvas, cream surface stack, loden accent.
+ * v3 Apple Swiss PDP — bone canvas, cream surface stack, amber accent.
  * Renders compliance bar → breadcrumb → hero (vial + info) → buybox + COA →
  * Proven & Tested → Order timeline → sticky add-to-cart bar.
  *

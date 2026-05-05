@@ -4,7 +4,7 @@ import type { Config } from "tailwindcss";
  * Tailwind v4 JS config — loaded via `@config "../../tailwind.config.ts"` in globals.css.
  *
  * Defines the brand color palette as theme.extend.colors so utilities like
- * bg-bone, text-ink, bg-loden, bg-surface-{2,3,4}, text-ink-{60,40,20} are
+ * bg-bone, text-ink, bg-amber, bg-surface-{2,3,4}, text-ink-{60,40,20} are
  * available.  These same values live in the @theme block in globals.css as
  * literal hex so grep(1) on the bundle confirms they landed.
  *
@@ -26,9 +26,9 @@ const config: Config = {
           40: "rgb(31 31 31 / 40%)",
           20: "rgb(31 31 31 / 20%)",
         },
-        loden: {
-          DEFAULT: "#3D4232",
-          hover: "#2F3328",
+        amber: {
+          DEFAULT: "#DC9814",
+          hover: "#BE840F",
         },
         surface: {
           DEFAULT: "#F1EDE3",

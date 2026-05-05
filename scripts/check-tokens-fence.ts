@@ -21,7 +21,7 @@ type Pattern = { name: string; re: RegExp; allowFile?: (file: string) => boolean
 /**
  * globals.css is the project's local token-extension point: stylelint already
  * permits box-shadow + gradient background-image there (see .stylelintrc.json
- * overrides), and v3 Apple Swiss tokens (loden, surface stack, soft elevation
+ * overrides), and v3 Apple Swiss tokens (amber, surface stack, soft elevation
  * shadows) are defined there as :root custom properties so the rest of src/
  * can consume them via var(...). Hex literals are therefore allowed in
  * globals.css only — every other src/ file must use those vars.

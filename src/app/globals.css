@@ -11,7 +11,7 @@
  * (.pp-eyebrow / .pp-hairline / .pp-rule / .pp-frame) live here, kept
  * in sync with the submodule by hand.
  *
- * Locked palette: Ink / Bone / Loden / Soft Blush / Surface stack. Amber is favicon-only.
+ * Locked palette: Ink / Bone / Soft Blush / Surface stack. Amber is the CTA accent.
  */
 
 :root {
@@ -198,7 +198,7 @@ button { font-family: inherit; }
  * var() references) so the JIT scanner can resolve them and grep(1) on the
  * bundle confirms they landed (e.g. grep FAF7F0 out/).
  *
- * Amber (#DC9814) is the CTA accent, mapped via --color-loden / --v3-accent.
+ * Amber (#DC9814) is the CTA accent, mapped via --color-amber / --v3-accent.
  */
 @theme {
   /* Core palette */
@@ -217,8 +217,8 @@ button { font-family: inherit; }
   --color-surface-4:    #E9E3D7;
 
   /* Amber CTA accent — interactive states only */
-  --color-loden:        #DC9814;
-  --color-loden-hover:  #BE840F;
+  --color-amber:        #DC9814;
+  --color-amber-hover:  #BE840F;
   --color-blush:        #F2D7D7;
   --color-line:         #E4DFCF;
   --color-emerald:      #0F5132;
@@ -278,10 +278,10 @@ button { font-family: inherit; }
 
 /* Safelist — force critical brand utilities into the bundle even when the JIT
    scanner doesn't find a complete string match in content files. */
-@source inline("{bg,text,border,fill,stroke}-{bone,loden,ink,surface,white}");
+@source inline("{bg,text,border,fill,stroke}-{bone,amber,ink,surface,white}");
 @source inline("{bg,text,border}-{bone-soft,ink-muted,ink-60,ink-40,ink-20}");
 @source inline("bg-surface-{2,3,4}");
-@source inline("{bg,text,border}-loden-hover");
+@source inline("{bg,text,border}-amber-hover");
 
 /**
  * Canonical content container — tokens.layout.maxContent (1280 px) with the
@@ -1285,7 +1285,7 @@ button { font-family: inherit; }
 }
 .v3-pill:hover .arrow { transform: translateX(4px); }
 
-/* Primary loden pill — bone label on loden, weight 600, no opacity tricks.
+/* Primary amber pill — ink label on amber, weight 600, no opacity tricks.
    Selector duplicated as `a.v3-pill-primary` so the global `a {}` and
    `a:hover { color: var(--pp-ink-muted) }` rules can't darken the label
    on hover.  Color is the locked bone token, not a translucent of ink. */
@@ -3229,7 +3229,7 @@ a.v3-pill-ghost:hover {
 
 /* ===========================================================================
    /legal/[slug] policy pages — typography wrapper for sanitized WP content.
-   Tokens: max-w 68ch, body Inter, ink color, loden links, surface-2 hover.
+   Tokens: max-w 68ch, body Inter, ink color, amber links, surface-2 hover.
    =========================================================================== */
 .legal-page {
   background: var(--v3-canvas);

@@ -5,7 +5,7 @@ import { clsx } from "@/lib/clsx";
 /**
  * Canonical button for the v3 Apple Swiss surfaces.  Two locked variants:
  *
- *   primary  — loden background, bone label.  Used for the dominant CTA
+ *   primary  — amber background, ink label.  Used for the dominant CTA
  *              on a section: "Add to cart", "Browse catalogue",
  *              "Place order".
  *   ghost    — transparent background, ink label, 1 px ink/15 stroke,

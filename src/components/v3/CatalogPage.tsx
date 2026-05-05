@@ -20,7 +20,7 @@ import { RetaVial } from "./RetaVial";
  *      (vs. the design's horizontal rail) so the full catalog is visible
  *      without horizontal scroll. Re-uses the same .v3-tile family as the
  *      homepage rail.
- *   5. Footnote — RUO compliance line on a loden hairline.
+ *   5. Footnote — RUO compliance line on an amber hairline.
  */
 
 type ChipKey = "all" | "glp1" | "growth" | "repair" | "cosmetic" | "blends";
