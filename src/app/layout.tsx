@@ -4,6 +4,12 @@ import { compliance } from "@design/tokens";
 import { Header } from "@/components/storefront/Header";
 import { Footer } from "@/components/storefront/Footer";
 import { CartDrawer } from "@/components/storefront/CartDrawer";
+import PostHogProvider from "@/components/PostHogProvider";
+import AgeGateGuard from "@/components/AgeGateGuard";
+import CookieBanner from "@/components/v3/CookieBanner";
+import { TabBar } from "@/components/v3/TabBar";
+import { getAllProducts } from "@/lib/wc-api";
+import { getAllPolicyPages } from "@/lib/wp-pages";
 import "./globals.css";
 
 const inter = Inter({
@@ -46,14 +52,31 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.ico" },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Fetched once per build (output: "export") and deduped by React's
+  // request cache when other server components hit the same URL.  Products
+  // populate the Footer catalogue column; policies populate the Policies
+  // column with the live WP titles so editorial stays single-sourced.
+  const [products, policies] = await Promise.all([
+    getAllProducts(),
+    getAllPolicyPages(),
+  ]);
   return (
     <html lang="en" className={`${inter.variable} ${ibmPlexMono.variable}`}>
       <body className="bg-bone text-ink antialiased">
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <CartDrawer />
+        {/* PostHogProvider keeps its own Suspense boundary internally
+            (around the useSearchParams-driven pageview tracker), so the
+            rest of this tree SSRs normally — header, content, and
+            footer all land in the static HTML for SEO + first paint. */}
+        <PostHogProvider>
+          <AgeGateGuard />
+          <Header />
+          <main className="pb-[74px] md:pb-0">{children}</main>
+          <Footer products={products} policies={policies} />
+          <CartDrawer />
+          <CookieBanner />
+          <TabBar />
+        </PostHogProvider>
       </body>
     </html>
   );

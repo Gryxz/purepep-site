@@ -1,0 +1,1740 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PurePep — Research-grade peptides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --canvas: #FAF7F0;
+    --surface-1: #F5F1EA;
+    --surface-2: #F1EDE3;
+    --surface-3: #EFEAE0;
+    --surface-4: #E9E3D7;
+
+    --ink: #1F1F1F;
+    --ink-body: #1F1F1F;
+    --ink-muted: #6A6A6A;
+
+    --accent: #3D4232;
+    --accent-ink: #FAF7F0;
+
+    --hair: rgba(31, 31, 31, 0.08);
+    --hair-strong: rgba(31, 31, 31, 0.14);
+
+    --shadow-cta: 0 1px 2px rgba(61,66,50,.18), 0 10px 24px rgba(61,66,50,.22);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--canvas);
+    color: var(--ink-body);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+  /* ───── Compliance bar ───── */
+  .compliance { background: var(--surface-1); border-bottom: 1px solid var(--hair); }
+  .compliance-inner {
+    display: flex; justify-content: center; gap: 28px; padding: 10px 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .compliance-inner .dot { opacity: 0.5; }
+
+  /* ───── Header ───── */
+  header.site {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250, 247, 240, 0.85);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid var(--hair);
+  }
+  .header-inner {
+    display: grid; grid-template-columns: auto 1fr auto;
+    align-items: center; gap: 32px;
+    padding: 18px 32px; max-width: 1280px; margin: 0 auto;
+  }
+  .wordmark {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 24px; color: var(--ink);
+    letter-spacing: -0.02em;
+    display: inline-flex; align-items: center; gap: 8px; line-height: 1;
+  }
+  .wordmark svg.mark { display: block; height: 30px; width: auto; }
+  nav.primary { display: flex; justify-content: center; gap: 36px; }
+  nav.primary a {
+    color: var(--ink-body); opacity: 0.72;
+    font-size: 14px; font-weight: 500;
+    letter-spacing: -0.005em;
+    transition: opacity 200ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+  nav.primary a:hover { opacity: 1; }
+  nav.primary a.active { opacity: 1; font-weight: 600; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .icon-btn {
+    width: 38px; height: 38px; border-radius: 9999px;
+    background: transparent; border: none; color: var(--ink); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 180ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+  .icon-btn:hover { background: rgba(31,31,31,0.06); }
+  .cart-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 38px; padding: 0 16px 0 14px;
+    border-radius: 9999px; background: var(--accent); color: var(--accent-ink);
+    font-size: 13px; font-weight: 600; border: none; cursor: pointer;
+    transition: transform 180ms, background 180ms;
+  }
+  .cart-pill:hover { background: #2F3328; transform: translateY(-1px); }
+  .cart-pill .count { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
+
+  /* ───── Pills (CTA family) ───── */
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    height: 56px; padding: 0 28px;
+    border-radius: 9999px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700; font-size: 15px;
+    letter-spacing: -0.005em;
+    cursor: pointer; border: none;
+    transition: background 180ms cubic-bezier(0.2, 0.6, 0.2, 1),
+                color 180ms, border-color 180ms,
+                transform 180ms;
+  }
+  .pill .arrow { display: inline-block; transition: transform 220ms cubic-bezier(0.2, 0.6, 0.2, 1); }
+  .pill:hover .arrow { transform: translateX(4px); }
+  .pill-primary { background: var(--accent); color: var(--accent-ink); box-shadow: var(--shadow-cta); }
+  .pill-primary:hover { background: #2F3328; transform: translateY(-1px); }
+  .pill-ghost {
+    background: transparent; color: var(--ink);
+    border: 1px solid var(--hair-strong);
+  }
+  .pill-ghost:hover { border-color: var(--ink); }
+  .pill-sm { height: 44px; padding: 0 20px; font-size: 13.5px; }
+
+  /* mono utility */
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(31,31,31,0.6);
+  }
+
+  /* ───── Section header utility (lifted from PDP) ───── */
+  .section { padding: 96px 0; }
+  .section-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(31,31,31,0.6);
+    margin: 0 0 18px;
+  }
+  .section-headline {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(40px, 4.5vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .section-sub {
+    margin: 16px 0 0;
+    max-width: 640px;
+    font-size: 16px; line-height: 1.6;
+    color: rgba(31,31,31,0.7);
+  }
+  .section-head-row {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 32px; flex-wrap: wrap;
+  }
+
+  /* ─────────────────────────────────────────────
+     SECTION 1 — Cinematic hero
+     ───────────────────────────────────────────── */
+  .hero {
+    background: var(--canvas);
+    border-bottom: 1px solid var(--hair);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 55% 45%;
+    min-height: 88vh;
+  }
+  @media (max-width: 1024px) {
+    .hero-grid { grid-template-columns: 1fr; }
+  }
+  .hero-stage {
+    position: relative;
+    background: var(--surface-3);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 64px;
+    border-right: 1px solid var(--hair);
+    min-height: 60vh;
+  }
+  @media (max-width: 1024px) { .hero-stage { border-right: none; border-bottom: 1px solid var(--hair); padding: 56px 32px; min-height: 70vh;} }
+
+  /* faint Swiss grid behind vial */
+  .hero-stage::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(31,31,31,0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(31,31,31,0.05) 1px, transparent 1px);
+    background-size: 80px 80px;
+    background-position: center;
+    mask-image: radial-gradient(ellipse 70% 70% at center, #000 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 70% at center, #000 30%, transparent 80%);
+    pointer-events: none;
+  }
+  /* soft floor shadow under vial */
+  .hero-stage::after {
+    content: "";
+    position: absolute;
+    left: 50%; bottom: 18%;
+    width: 320px; height: 36px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(31,31,31,0.28), rgba(31,31,31,0) 70%);
+    filter: blur(3px);
+    pointer-events: none;
+  }
+  .hero-vial {
+    position: relative; z-index: 1;
+    width: auto; height: 70%;
+    max-height: 640px;
+    filter: drop-shadow(0 20px 32px rgba(31,31,31,0.20));
+  }
+
+  .hero-stage .corner-tl, .hero-stage .corner-bl {
+    position: absolute;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-muted);
+    z-index: 2;
+  }
+  .hero-stage .corner-tl { top: 32px; left: 32px; }
+  .hero-stage .corner-bl { bottom: 32px; left: 32px; }
+
+  .hero-info {
+    padding: 88px 64px;
+    display: flex; flex-direction: column; justify-content: center;
+    gap: 28px;
+    background: var(--canvas);
+  }
+  @media (max-width: 1024px) { .hero-info { padding: 56px 32px; } }
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+  .hero-headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(56px, 7vw, 104px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .hero-deck {
+    margin: 0;
+    max-width: 52ch;
+    font-size: 18px; line-height: 1.55;
+    color: rgba(31,31,31,0.7);
+  }
+  .hero-cta-row {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .hero-data {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    padding-top: 32px;
+    border-top: 1px solid var(--hair);
+    margin-top: 16px;
+  }
+  @media (max-width: 720px) { .hero-data { grid-template-columns: repeat(2, 1fr); } }
+  .hero-data .lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .hero-data .val {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900; font-size: 18px;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-stamp {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--hair);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  /* ─────────────────────────────────────────────
+     SECTION 2 — Featured compound
+     ───────────────────────────────────────────── */
+  .featured-band {
+    background: var(--surface-1);
+    border-bottom: 1px solid var(--hair);
+  }
+  .featured-grid {
+    display: grid; grid-template-columns: 60% 40%;
+    gap: 64px;
+    min-height: 80vh;
+    align-items: center;
+    padding: 96px 0;
+  }
+  @media (max-width: 1024px) {
+    .featured-grid { grid-template-columns: 1fr; gap: 40px; min-height: 0; padding: 64px 0;}
+  }
+  .featured-headline {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(48px, 5.5vw, 84px);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin: 18px 0 0;
+    max-width: 16ch;
+  }
+  .featured-body {
+    margin: 28px 0 0;
+    font-size: 17px; line-height: 1.6;
+    color: rgba(31,31,31,0.72);
+    max-width: 52ch;
+  }
+  .featured-ctas {
+    margin-top: 36px;
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .label-crop {
+    background: var(--surface-2);
+    border-radius: 28px;
+    border: 1px solid var(--hair);
+    padding: 56px 48px;
+    aspect-ratio: 4 / 5;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .label-crop svg { width: 100%; height: auto; max-height: 100%; }
+
+  /* ─────────────────────────────────────────────
+     SECTION 3 — Proven & Tested (lifted from PDP)
+     ───────────────────────────────────────────── */
+  .stat-grid {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 1024px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .stat-grid { grid-template-columns: 1fr; } }
+  .stat-card {
+    background: var(--surface-2);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: inset 0 0 0 1px rgba(31,31,31,0.06);
+    display: flex; flex-direction: column; gap: 14px;
+    min-height: 240px;
+  }
+  .stat-num {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(54px, 4.6vw, 68px);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-num.placeholder { color: rgba(31,31,31,0.4); }
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .stat-source {
+    margin-top: auto;
+    font-size: 12px; line-height: 1.5;
+    color: rgba(31,31,31,0.65);
+  }
+
+  /* ─────────────────────────────────────────────
+     SECTION 4 — Catalog teaser rail + expand
+     ───────────────────────────────────────────── */
+  .rail-subhead {
+    margin-top: 36px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px; flex-wrap: wrap;
+  }
+  .rail-subhead .aside {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(31,31,31,0.6);
+  }
+  .rail-arrows { display: inline-flex; gap: 8px; }
+  .arrow-btn {
+    width: 40px; height: 40px;
+    border-radius: 9999px;
+    background: var(--surface-2);
+    border: 1px solid var(--hair-strong);
+    color: var(--ink);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: border-color 180ms, background 180ms, opacity 180ms;
+  }
+  .arrow-btn:hover:not(:disabled) { border-color: rgba(31,31,31,0.24); }
+  .arrow-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .rail-viewport {
+    margin-top: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    margin-left: -32px; margin-right: -32px;
+    padding: 4px 32px 8px;
+  }
+  .rail-viewport::-webkit-scrollbar { display: none; }
+  .rail-track {
+    display: flex;
+    gap: 24px;
+  }
+  .rail-track .tile {
+    flex: 0 0 calc((100% - 48px) / 3);
+    scroll-snap-align: start;
+  }
+  @media (max-width: 1024px) {
+    .rail-track .tile { flex: 0 0 calc((100% - 24px) / 2.2); }
+  }
+  @media (max-width: 640px) {
+    .rail-track .tile { flex: 0 0 82%; }
+  }
+  .rail-progress-track {
+    margin-top: 24px;
+    height: 2px;
+    background: rgba(31,31,31,0.15);
+    position: relative;
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+  .rail-progress-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 33%;
+    background: var(--accent);
+    transition: width 200ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+
+  /* Expand tab */
+  .expand-tab {
+    margin-top: 32px;
+    width: 100%; height: 64px;
+    background: var(--surface-2);
+    border: none;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink);
+    transition: background 180ms;
+  }
+  .expand-tab:hover { background: var(--surface-3); }
+  .expand-tab .chev {
+    color: var(--accent);
+    display: inline-flex;
+    transition: transform 240ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+  .expand-tab.is-open .chev { transform: rotate(180deg); }
+
+  .expand-region {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 240ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+  .expand-grid {
+    padding-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    row-gap: 24px;
+  }
+  @media (max-width: 1024px) { .expand-grid { grid-template-columns: repeat(2, 1fr);} }
+  @media (max-width: 640px)  { .expand-grid { grid-template-columns: 1fr;} }
+
+  /* Stock pill variants (amber for low stock; outline for waitlist) */
+  .stock.low .dot { background: #B8821C; box-shadow: 0 0 0 3px rgba(184,130,28,0.18); }
+  .stock.wait { color: var(--ink); }
+  .tile {
+    background: var(--surface-2);
+    border-radius: 24px;
+    box-shadow: inset 0 0 0 1px rgba(31,31,31,0.06);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: box-shadow 200ms cubic-bezier(0.2, 0.6, 0.2, 1);
+    cursor: pointer;
+  }
+  .tile:hover { box-shadow: inset 0 0 0 2px var(--ink); }
+  .tile:hover .view-pill .arrow { transform: translateX(4px); }
+  .tile .photo {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(168deg, var(--surface-1) 0%, var(--surface-3) 55%, var(--surface-4) 100%);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(31,31,31,0.05);
+  }
+  .tile .photo::before {
+    content: ""; position: absolute;
+    top: -20%; left: -20%; width: 70%; height: 70%;
+    background: radial-gradient(closest-side, rgba(255,251,242,0.55), rgba(255,251,242,0));
+    pointer-events: none;
+  }
+  .tile .vial-shadow {
+    position: absolute; left: 50%; bottom: 14%;
+    width: 60%; height: 14px; transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(31,31,31,0.28), rgba(31,31,31,0) 70%);
+    filter: blur(2px);
+  }
+  .tile .vial-svg {
+    position: relative; z-index: 1;
+    width: auto; height: 82%; max-width: 62%;
+    filter: drop-shadow(0 12px 18px rgba(31,31,31,0.16));
+  }
+  .tile-content { padding: 22px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .meta-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .sku-line {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .sku-line .sku { color: var(--accent); }
+  .sku-line .sep { color: rgba(31,31,31,0.35); }
+  .sku-line .generic { color: rgba(31,31,31,0.6); }
+  .stock {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--hair-strong);
+    border-radius: 9999px;
+    padding: 3px 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.10em; text-transform: uppercase;
+    color: var(--ink); white-space: nowrap;
+  }
+  .stock .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px rgba(61,66,50,0.16); }
+  .name {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 20px; line-height: 1.15;
+    letter-spacing: -0.015em; color: var(--ink);
+    margin: 0;
+  }
+  .sub {
+    margin: 0;
+    font-size: 14px; line-height: 1.5;
+    color: rgba(31,31,31,0.7);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .mini-spec {
+    margin-top: 4px; padding-top: 14px;
+    border-top: 1px solid rgba(31,31,31,0.08);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  .mini-spec .lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(31,31,31,0.5);
+    margin-bottom: 4px;
+  }
+  .mini-spec .val {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 14px; color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  .action-row {
+    margin-top: auto; padding-top: 14px;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
+  }
+  .price {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 22px; letter-spacing: -0.02em;
+    color: var(--ink); line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .price-from {
+    margin-top: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(31,31,31,0.5);
+  }
+  .view-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent); color: var(--accent-ink);
+    border: none; cursor: pointer;
+    padding: 10px 16px 10px 18px;
+    border-radius: 9999px;
+    font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: 13px; letter-spacing: -0.005em;
+    transition: background 180ms;
+  }
+  .view-pill:hover { background: #2F3328; }
+  .view-pill .arrow { transition: transform 200ms cubic-bezier(0.2, 0.6, 0.2, 1); }
+
+  /* ─────────────────────────────────────────────
+     SECTION 5 — Timeline (lifted)
+     ───────────────────────────────────────────── */
+  .timeline-wrap { margin-top: 64px; position: relative; }
+  .timeline {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  .timeline::before {
+    content: ""; position: absolute;
+    top: 20px; left: 12.5%; right: 12.5%;
+    height: 1px; background: var(--accent); opacity: 0.5;
+    z-index: 0;
+  }
+  @media (max-width: 1024px) {
+    .timeline { grid-template-columns: 1fr; }
+    .timeline::before { display: none; }
+  }
+  .tl-node {
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 18px; position: relative; z-index: 1;
+  }
+  .tl-circle {
+    width: 40px; height: 40px; border-radius: 9999px;
+    background: var(--canvas);
+    border: 1.5px solid var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px; font-weight: 500; color: var(--accent);
+    margin-left: calc(50% - 20px);
+  }
+  .tl-card { width: 100%; padding: 0 8px; text-align: center; }
+  .tl-title {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 18px; letter-spacing: -0.01em;
+    color: var(--ink); margin: 0 0 8px;
+  }
+  .tl-body { margin: 0; font-size: 13.5px; line-height: 1.55; color: rgba(31,31,31,0.7); }
+
+  /* ─────────────────────────────────────────────
+     SECTION 6 — Documentation strip
+     ───────────────────────────────────────────── */
+  .docs-band {
+    background: var(--surface-4);
+    border-top: 1px solid var(--hair);
+    border-bottom: 1px solid var(--hair);
+  }
+  .docs-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 96px 0;
+  }
+  @media (max-width: 1024px) { .docs-grid { grid-template-columns: 1fr; padding: 64px 0; } }
+  .doc-card {
+    background: var(--canvas);
+    border-radius: 24px;
+    border: 1px solid var(--hair);
+    padding: 32px;
+    display: flex; flex-direction: column; gap: 16px;
+    min-height: 220px;
+    cursor: pointer;
+    transition: border-color 200ms cubic-bezier(0.2, 0.6, 0.2, 1),
+                box-shadow 200ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+  .doc-card:hover {
+    border-color: var(--ink);
+    border-width: 2px;
+    padding: 31px;
+  }
+  .doc-card:hover .arrow { transform: translateX(4px); }
+  .doc-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .doc-title {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 24px; line-height: 1.15;
+    letter-spacing: -0.02em; color: var(--ink);
+    margin: 0; max-width: 14ch;
+  }
+  .doc-foot {
+    margin-top: auto;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .doc-foot .arrow { transition: transform 220ms cubic-bezier(0.2, 0.6, 0.2, 1); }
+
+  /* ─────────────────────────────────────────────
+     SECTION 7 — Closing CTA
+     ───────────────────────────────────────────── */
+  .closing {
+    padding: 120px 0;
+    text-align: center;
+    background: var(--canvas);
+  }
+  .closing-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 0 0 24px;
+  }
+  .closing-headline {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(48px, 6.5vw, 88px);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin: 0 0 40px;
+  }
+  .closing-stamp {
+    margin: 32px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--hair);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-muted);
+    max-width: 520px;
+  }
+
+  /* ─────────────────────────────────────────────
+     Footer
+     ───────────────────────────────────────────── */
+  .footnote-divider {
+    height: 1px; background: var(--accent); opacity: 0.35;
+    border: none; margin: 16px 0 24px;
+  }
+  footer.site {
+    background: var(--surface-1);
+    border-top: 1px solid var(--hair);
+    padding: 56px 0 80px;
+  }
+  .footer-grid {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 32px; flex-wrap: wrap;
+  }
+  .footer-links {
+    display: flex; gap: 28px; flex-wrap: wrap;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .footer-links a:hover { color: var(--ink); }
+  .footer-foot {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--hair);
+    display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  @media (max-width: 1024px) {
+    nav.primary { display: none; }
+    .section { padding: 64px 0; }
+  }
+
+  /* ───── Cart drawer ───── */
+  .drawer-backdrop {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(31,31,31,0.40);
+    opacity: 0; pointer-events: none;
+    transition: opacity 200ms ease-out;
+  }
+  .drawer-backdrop.is-open { opacity: 1; pointer-events: auto; }
+  .drawer-panel {
+    position: fixed; top: 0; right: 0; height: 100%;
+    width: 100%; max-width: 440px; z-index: 60;
+    background: var(--canvas);
+    border-left: 1px solid rgba(31,31,31,0.20);
+    transform: translateX(100%);
+    transition: transform 280ms cubic-bezier(0.2,0.6,0.2,1);
+    display: flex; flex-direction: column;
+  }
+  .drawer-panel.is-open { transform: translateX(0); }
+  .drawer-head {
+    height: 80px; padding: 0 24px;
+    border-bottom: 1px solid var(--hair);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .drawer-title {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .drawer-close {
+    width: 32px; height: 32px;
+    border-radius: 9999px;
+    background: transparent;
+    border: 1px solid var(--hair-strong);
+    cursor: pointer; color: var(--ink);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: border-color 160ms;
+  }
+  .drawer-close:hover { border-color: var(--ink); }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 24px; }
+  .drawer-state-toggle { margin: 0 0 16px; text-align: center; }
+  .drawer-state-toggle button {
+    background: transparent; border: none; cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(31,31,31,0.55);
+    text-decoration: underline; text-underline-offset: 3px;
+    padding: 0;
+  }
+  .drawer-state-toggle button:hover { color: var(--ink); }
+  .drawer-empty {
+    display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 80px 24px; text-align: center;
+  }
+  .drawer-empty .name {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 20px; letter-spacing: -0.015em;
+    color: var(--ink); margin: 0 0 8px;
+  }
+  .drawer-empty .sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(31,31,31,0.55);
+    margin: 0;
+  }
+  .drawer-panel[data-state="empty"] .drawer-empty { display: flex; }
+  .drawer-panel[data-state="empty"] .drawer-filled { display: none; }
+  .drawer-panel[data-state="empty"] .drawer-dock { display: none; }
+  .d-row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--hair);
+    align-items: flex-start;
+  }
+  .d-row:last-child { border-bottom: none; }
+  .d-thumb {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    background: var(--surface-1);
+    border: 1px solid var(--hair);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .d-thumb svg { width: 70%; height: 90%; }
+  .d-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(31,31,31,0.55);
+    margin: 0 0 4px;
+  }
+  .d-name {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 16px; letter-spacing: -0.01em;
+    color: var(--ink); margin: 0 0 6px;
+  }
+  .d-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(31,31,31,0.6);
+  }
+  .d-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .d-price {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 16px; letter-spacing: -0.01em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .d-qty {
+    display: inline-flex; align-items: center; gap: 4px;
+    height: 28px; padding: 0 4px;
+    border: 1px solid var(--hair-strong);
+    border-radius: 9999px;
+    background: var(--canvas);
+  }
+  .d-qty button {
+    width: 20px; height: 20px;
+    border-radius: 9999px;
+    background: transparent; border: none; cursor: pointer;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .d-qty button:hover { box-shadow: 0 0 0 1.5px var(--accent) inset; }
+  .d-qty .num {
+    min-width: 20px; text-align: center;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    color: var(--ink);
+  }
+  .d-remove {
+    background: transparent; border: none; cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(31,31,31,0.55);
+    padding: 0;
+  }
+  .d-remove:hover { color: var(--ink); }
+  .drawer-dock {
+    border-top: 1px solid var(--hair);
+    padding: 24px;
+    flex-shrink: 0;
+  }
+  .dock-sub {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .dock-sub .lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(31,31,31,0.6);
+  }
+  .dock-sub .val {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 24px; letter-spacing: -0.02em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .dock-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(31,31,31,0.55);
+    margin: 0 0 18px;
+  }
+  .dock-cta {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; height: 56px;
+    border-radius: 9999px;
+    background: var(--accent); color: var(--canvas);
+    border: none; cursor: pointer; text-decoration: none;
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 16px; letter-spacing: -0.005em;
+    transition: background 180ms;
+  }
+  .dock-cta:hover { background: #2F3328; }
+  .dock-cta .arrow { transition: transform 220ms cubic-bezier(0.2,0.6,0.2,1); }
+  .dock-cta:hover .arrow { transform: translateX(4px); }
+  .dock-continue {
+    display: block; margin: 14px auto 0;
+    background: transparent; border: none; cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(31,31,31,0.55);
+    padding: 0;
+  }
+  .dock-continue:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  body.drawer-open { overflow: hidden; }
+</style>
+</head>
+<body data-screen-label="01 Homepage">
+
+<!-- Compliance bar -->
+<div class="compliance">
+  <div class="compliance-inner">
+    <span>For research use only</span>
+    <span class="dot">·</span>
+    <span>21+ qualified researchers</span>
+    <span class="dot">·</span>
+    <span>All sales final</span>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="site">
+  <div class="header-inner">
+    <a class="wordmark" href="#" aria-label="PurePep home">
+      <svg class="mark" viewBox="0 0 60 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="4"  y="4"  width="22" height="64" fill="#1F1F1F"/>
+        <rect x="34" y="4"  width="22" height="36" fill="#1F1F1F"/>
+        <rect x="26" y="22" width="8"  height="2"  fill="#1F1F1F"/>
+        <rect x="26" y="29" width="8"  height="2"  fill="#1F1F1F"/>
+      </svg>
+      PurePep
+    </a>
+    <nav class="primary">
+      <a href="Catalog - Apple Swiss.html">Catalog</a>
+      <a href="PDP Hero - Apple Swiss.html">RETA</a>
+      <a href="#">Quality</a>
+      <a href="#">Documentation</a>
+      <a href="#">Affiliates</a>
+    </nav>
+    <div class="header-right">
+      <button class="icon-btn" aria-label="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+      </button>
+      <button class="cart-pill" aria-label="Cart" data-cart-trigger>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l-1.4 10.5a2 2 0 0 1-2 1.5H8.4a2 2 0 0 1-2-1.5L5 7Z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>
+        Cart <span class="count">02</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ───── Section 1 — Cinematic Hero ───── -->
+<section class="hero" data-screen-label="01a Hero">
+  <div class="hero-grid">
+
+    <!-- Vial stage -->
+    <div class="hero-stage">
+      <div class="corner-tl">01 / 09 — RETA</div>
+      <svg class="hero-vial" viewBox="0 0 220 540" xmlns="http://www.w3.org/2000/svg" aria-label="RETA 10 mg vial">
+        <defs>
+          <linearGradient id="glass" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stop-color="#F8F4EA"/>
+            <stop offset="18%" stop-color="#FFFDF6"/>
+            <stop offset="50%" stop-color="#EDE6D2"/>
+            <stop offset="82%" stop-color="#C9BFA3"/>
+            <stop offset="100%" stop-color="#A89E83"/>
+          </linearGradient>
+          <linearGradient id="powder" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#FAF6EB"/>
+            <stop offset="100%" stop-color="#E5DDC8"/>
+          </linearGradient>
+          <linearGradient id="cap" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stop-color="#2A2D38"/>
+            <stop offset="40%" stop-color="#5A5E6E"/>
+            <stop offset="55%" stop-color="#7C8092"/>
+            <stop offset="70%" stop-color="#3E4252"/>
+            <stop offset="100%" stop-color="#191B23"/>
+          </linearGradient>
+          <linearGradient id="stopper" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stop-color="#1A1C24"/>
+            <stop offset="50%" stop-color="#2C2F3A"/>
+            <stop offset="100%" stop-color="#0F1116"/>
+          </linearGradient>
+          <linearGradient id="label" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stop-color="#F2EBD9"/>
+            <stop offset="100%" stop-color="#E5DCC4"/>
+          </linearGradient>
+        </defs>
+        <rect x="40" y="120" width="140" height="380" rx="14" fill="url(#glass)"/>
+        <rect x="50" y="280" width="120" height="210" rx="6" fill="url(#powder)" opacity="0.95"/>
+        <g opacity="0.18">
+          <line x1="56" y1="320" x2="166" y2="320" stroke="#C8BE9F" stroke-width="0.5"/>
+          <line x1="56" y1="345" x2="166" y2="345" stroke="#C8BE9F" stroke-width="0.5"/>
+          <line x1="56" y1="380" x2="166" y2="380" stroke="#C8BE9F" stroke-width="0.5"/>
+          <line x1="56" y1="430" x2="166" y2="430" stroke="#C8BE9F" stroke-width="0.5"/>
+        </g>
+        <path d="M50 282 Q 80 274 110 280 T 170 282 L 170 290 L 50 290 Z" fill="#D4CAB0" opacity="0.6"/>
+        <rect x="48" y="130" width="6" height="360" rx="3" fill="#FFFDF6" opacity="0.9"/>
+        <rect x="172" y="130" width="3" height="360" rx="1.5" fill="#86795A" opacity="0.5"/>
+        <path d="M40 120 L 56 100 L 164 100 L 180 120 Z" fill="url(#glass)"/>
+        <rect x="40" y="118" width="140" height="3" fill="#9C9176" opacity="0.5"/>
+        <rect x="56" y="76" width="108" height="28" rx="2" fill="url(#stopper)"/>
+        <rect x="58" y="78" width="104" height="2" fill="#3D414F" opacity="0.7"/>
+        <rect x="50" y="40" width="120" height="44" rx="3" fill="url(#cap)"/>
+        <ellipse cx="110" cy="40" rx="60" ry="6" fill="#3A3D49"/>
+        <ellipse cx="110" cy="40" rx="60" ry="3" fill="#5C6072"/>
+        <rect x="56" y="46" width="6" height="36" fill="#9094A7" opacity="0.85"/>
+        <rect x="68" y="46" width="2" height="36" fill="#C9CCDA" opacity="0.7"/>
+        <rect x="50" y="78" width="120" height="2" fill="#0E1016" opacity="0.7"/>
+        <rect x="50" y="82" width="120" height="2" fill="#0E1016" opacity="0.7"/>
+        <circle cx="110" cy="40" r="14" fill="#3D4232"/>
+        <circle cx="110" cy="40" r="11" fill="none" stroke="#5A5F4B" stroke-width="0.5"/>
+
+        <rect x="44" y="195" width="132" height="220" rx="3" fill="url(#label)"/>
+        <rect x="48" y="199" width="124" height="212" rx="2" fill="none" stroke="#B5A989" stroke-width="0.5" opacity="0.7"/>
+
+        <g transform="translate(56,210)">
+          <g transform="translate(0,0) scale(0.18)">
+            <rect x="4"  y="4"  width="22" height="64" fill="#1F1F1F"/>
+            <rect x="34" y="4"  width="22" height="36" fill="#1F1F1F"/>
+            <rect x="26" y="22" width="8"  height="2"  fill="#1F1F1F"/>
+            <rect x="26" y="29" width="8"  height="2"  fill="#1F1F1F"/>
+          </g>
+          <text x="16" y="11" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="900" font-size="11" letter-spacing="-0.5">PurePep</text>
+        </g>
+        <line x1="56" y1="234" x2="164" y2="234" stroke="#1F1F1F" stroke-width="0.4" opacity="0.3"/>
+        <text x="56" y="282" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="900" font-size="40" letter-spacing="-2">RETA</text>
+        <text x="56" y="310" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="500" font-size="14" letter-spacing="-0.2">10 mg · lyophilized</text>
+        <line x1="56" y1="328" x2="164" y2="328" stroke="#1F1F1F" stroke-width="0.4" opacity="0.2"/>
+        <text x="56" y="346" fill="#7A7E8A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="6.5" letter-spacing="1">LOT</text>
+        <text x="56" y="360" fill="#1F1F1F" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="9">RT-2604-A11</text>
+        <text x="120" y="346" fill="#7A7E8A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="6.5" letter-spacing="1">EXP</text>
+        <text x="120" y="360" fill="#1F1F1F" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="9">2027-04</text>
+        <text x="56" y="382" fill="#7A7E8A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="6.5" letter-spacing="1">STORAGE</text>
+        <text x="56" y="396" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="500" font-size="9">2–8 °C · protect from light</text>
+        <line x1="56" y1="402" x2="164" y2="402" stroke="#1F1F1F" stroke-width="0.3" opacity="0.2"/>
+        <text x="56" y="411" fill="#7A7E8A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="5.5" letter-spacing="1">FOR RESEARCH USE ONLY</text>
+      </svg>
+      <div class="corner-bl">Lyophilized · Research use only</div>
+    </div>
+
+    <!-- Headline -->
+    <div class="hero-info">
+      <p class="hero-eyebrow">Research-grade peptides</p>
+      <h1 class="hero-headline">Specifications,<br/>not slogans.</h1>
+      <p class="hero-deck">Every lot ships with a matched Certificate of Analysis. Purity by HPLC. Identity by mass spectrometry. Endotoxin by LAL. That is the entire pitch.</p>
+      <div class="hero-cta-row">
+        <a href="Catalog - Apple Swiss.html" class="pill pill-primary">Browse the catalog <span class="arrow">→</span></a>
+        <a href="#" class="pill pill-ghost">Read a sample COA</a>
+      </div>
+
+      <div class="hero-data">
+        <div>
+          <div class="lbl">Purity</div>
+          <div class="val">≥99.5%</div>
+        </div>
+        <div>
+          <div class="lbl">Mass</div>
+          <div class="val">≤0.5 Da</div>
+        </div>
+        <div>
+          <div class="lbl">Endotoxin</div>
+          <div class="val">&lt;1.0 EU/mg</div>
+        </div>
+        <div>
+          <div class="lbl">Lots</div>
+          <div class="val">LAL-tested</div>
+        </div>
+      </div>
+
+      <div class="hero-stamp">Sample COA released 2026-04-12</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───── Section 2 — Featured compound ───── -->
+<section class="featured-band" data-screen-label="02 Featured Reta">
+  <div class="container">
+    <div class="featured-grid">
+      <div>
+        <p class="section-eyebrow">Featured · 01 / 09</p>
+        <h2 class="featured-headline">Reta. The current frontier for metabolic research.</h2>
+        <p class="featured-body">Triple GLP-1 / GIP / glucagon agonist, 39-amino-acid peptide. Supplied as lyophilized powder in a stoppered glass vial. Available in 1, 3, and 5-vial configurations, each shipped with a lot-matched Certificate of Analysis.</p>
+        <div class="featured-ctas">
+          <a href="PDP Hero - Apple Swiss.html" class="pill pill-primary">View Reta <span class="arrow">→</span></a>
+          <a href="#" class="pill pill-ghost">Compare configurations</a>
+        </div>
+      </div>
+      <!-- Close-crop of the label -->
+      <div class="label-crop" aria-label="RETA label close-up">
+        <svg viewBox="0 0 240 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="labelClose" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0%" stop-color="#F2EBD9"/>
+              <stop offset="100%" stop-color="#E5DCC4"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="240" height="280" rx="6" fill="url(#labelClose)"/>
+          <rect x="6" y="6" width="228" height="268" rx="4" fill="none" stroke="#B5A989" stroke-width="1" opacity="0.7"/>
+
+          <!-- header -->
+          <g transform="translate(20, 28)">
+            <g transform="scale(0.32)">
+              <rect x="4"  y="4"  width="22" height="64" fill="#1F1F1F"/>
+              <rect x="34" y="4"  width="22" height="36" fill="#1F1F1F"/>
+              <rect x="26" y="22" width="8"  height="2"  fill="#1F1F1F"/>
+              <rect x="26" y="29" width="8"  height="2"  fill="#1F1F1F"/>
+            </g>
+            <text x="30" y="18" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="900" font-size="20" letter-spacing="-0.8">PurePep</text>
+          </g>
+
+          <line x1="20" y1="68" x2="220" y2="68" stroke="#1F1F1F" stroke-width="0.6" opacity="0.3"/>
+
+          <!-- Big RETA -->
+          <text x="20" y="138" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="900" font-size="68" letter-spacing="-3.4">RETA</text>
+          <text x="20" y="170" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="500" font-size="22" letter-spacing="-0.4">10 mg · lyophilized</text>
+
+          <line x1="20" y1="190" x2="220" y2="190" stroke="#1F1F1F" stroke-width="0.6" opacity="0.2"/>
+
+          <!-- mono lot -->
+          <text x="20" y="212" fill="#7A7E8A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="9" letter-spacing="1.5">LOT</text>
+          <text x="20" y="230" fill="#1F1F1F" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="13">RT-2604-A11</text>
+          <text x="120" y="212" fill="#7A7E8A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="9" letter-spacing="1.5">EXP</text>
+          <text x="120" y="230" fill="#1F1F1F" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="13">2027-04</text>
+
+          <text x="20" y="258" fill="#7A7E8A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="8" letter-spacing="1.4">FOR RESEARCH USE ONLY</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Section 3 — Proven & Tested ───── -->
+<section class="section" data-screen-label="03 Proven & Tested">
+  <div class="container">
+    <p class="section-eyebrow">The standard</p>
+    <h2 class="section-headline">Specifications we publish.</h2>
+    <p class="section-sub">Analytical specifications verified per lot. No marketing math, no rounded promises — just the numbers from the instruments.</p>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-num">≥99.5%</div>
+        <div class="stat-label">HPLC Verified</div>
+        <div class="stat-source">Reverse-phase C18 HPLC, in-house QC. Independent third-party confirmation per lot.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">≤0.5 Da</div>
+        <div class="stat-label">MS Deviation</div>
+        <div class="stat-source">ESI high-resolution mass spectrometry. Molecular identity confirmed per lot, reported in COA.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">&lt;1.0 EU/mg</div>
+        <div class="stat-label">Endotoxin Tested</div>
+        <div class="stat-source">Limulus Amebocyte Lysate (LAL) assay per lot. Results included in downloadable Certificate of Analysis.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num placeholder">[TBD]</div>
+        <div class="stat-label">Research Accounts Served</div>
+        <div class="stat-source">Operational scale stat — exact figure to be committed by PurePep at launch.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Section 4 — Catalog teaser ───── -->
+<section class="section" data-screen-label="04 Catalog teaser" style="padding-top: 0;">
+  <div class="container">
+    <div class="section-head-row">
+      <div>
+        <p class="section-eyebrow">Catalog</p>
+        <h2 class="section-headline">Nine compounds.<br/>One standard.</h2>
+      </div>
+      <a href="Catalog - Apple Swiss.html" class="pill pill-primary pill-sm">See all 09 peptides <span class="arrow">→</span></a>
+    </div>
+
+    <div class="rail-subhead">
+      <span class="aside">← Scroll horizontally · 09 products</span>
+      <div class="rail-arrows">
+        <button class="arrow-btn" id="rail-prev" aria-label="Scroll rail left">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>
+        </button>
+        <button class="arrow-btn" id="rail-next" aria-label="Scroll rail right">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="rail-viewport" id="rail-viewport">
+      <div class="rail-track" id="rail-track"></div>
+    </div>
+    <div class="rail-progress-track">
+      <div class="rail-progress-fill" id="rail-progress"></div>
+    </div>
+
+    <button class="expand-tab" id="expand-tab" aria-expanded="false" aria-controls="expand-region">
+      <span id="expand-label">Expand all 09</span>
+      <span class="aside" aria-hidden="true">·</span>
+      <span class="chev" aria-hidden="true">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </span>
+    </button>
+    <div class="expand-region" id="expand-region">
+      <div class="expand-grid" id="expand-grid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Section 5 — From order to lab ───── -->
+<section class="section" data-screen-label="05 Logistics" style="padding-top: 0;">
+  <div class="container">
+    <p class="section-eyebrow">Logistics</p>
+    <h2 class="section-headline">From order to lab.</h2>
+    <p class="section-sub">What happens after Add to cart. No surprises, no cold-chain anxiety.</p>
+
+    <div class="timeline-wrap">
+      <div class="timeline">
+        <div class="tl-node">
+          <div class="tl-circle">1</div>
+          <div class="tl-card">
+            <h3 class="tl-title">Order confirmed</h3>
+            <p class="tl-body">Research eligibility verified. Your lot is allocated and reserved within 1 hour.</p>
+          </div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-circle">2</div>
+          <div class="tl-card">
+            <h3 class="tl-title">COA released + dispatched</h3>
+            <p class="tl-body">Lot-specific Certificate of Analysis issued. Ships same or next business day.</p>
+          </div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-circle">3</div>
+          <div class="tl-card">
+            <h3 class="tl-title">Delivered</h3>
+            <p class="tl-body">Lyophilized powder, stable at room temperature in transit. No cold-chain anxiety.</p>
+          </div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-circle">4</div>
+          <div class="tl-card">
+            <h3 class="tl-title">Research-ready</h3>
+            <p class="tl-body">Reconstitute with bacteriostatic water. Stable 30+ days refrigerated post-reconstitution.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Section 6 — Documentation strip ───── -->
+<section class="docs-band" data-screen-label="06 Documentation">
+  <div class="container">
+    <div class="docs-grid">
+      <a href="#" class="doc-card">
+        <div class="doc-num">01 — Methods</div>
+        <h3 class="doc-title">How we test every lot</h3>
+        <div class="doc-foot">
+          <span>Read methods</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+      <a href="#" class="doc-card">
+        <div class="doc-num">02 — Sample COA</div>
+        <h3 class="doc-title">Read a real Certificate of Analysis</h3>
+        <div class="doc-foot">
+          <span>Open sample</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+      <a href="#" class="doc-card">
+        <div class="doc-num">03 — Researcher verification</div>
+        <h3 class="doc-title">21+ qualified researchers only</h3>
+        <div class="doc-foot">
+          <span>Verify access</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Section 7 — Closing CTA ───── -->
+<section class="closing" data-screen-label="07 Closing">
+  <div class="container">
+    <p class="closing-eyebrow">Ready when you are</p>
+    <h2 class="closing-headline">Open the catalog.</h2>
+    <a href="Catalog - Apple Swiss.html" class="pill pill-primary">Browse 09 peptides <span class="arrow">→</span></a>
+    <div class="closing-stamp">For research use only · Not for human consumption · Sales final</div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site">
+  <div class="container">
+    <div class="footer-grid">
+      <a class="wordmark" href="#" aria-label="PurePep home">
+        <svg class="mark" viewBox="0 0 60 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="4"  y="4"  width="22" height="64" fill="#1F1F1F"/>
+          <rect x="34" y="4"  width="22" height="36" fill="#1F1F1F"/>
+          <rect x="26" y="22" width="8"  height="2"  fill="#1F1F1F"/>
+          <rect x="26" y="29" width="8"  height="2"  fill="#1F1F1F"/>
+        </svg>
+        PurePep
+      </a>
+      <div class="footer-links">
+        <a href="Catalog - Apple Swiss.html">Catalog</a>
+        <a href="PDP Hero - Apple Swiss.html">RETA</a>
+        <a href="#">Quality</a>
+        <a href="#">Documentation</a>
+        <a href="#">Affiliates</a>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+    <hr class="footnote-divider"/>
+    <div class="footer-foot">
+      <span>For research use only · Not for human consumption · Sales final</span>
+      <span>© 2026 PurePep</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Reusable vial gradient defs (for teaser tiles) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="t-glass" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#F8F4EA"/>
+      <stop offset="18%" stop-color="#FFFDF6"/>
+      <stop offset="50%" stop-color="#EDE6D2"/>
+      <stop offset="82%" stop-color="#C9BFA3"/>
+      <stop offset="100%" stop-color="#A89E83"/>
+    </linearGradient>
+    <linearGradient id="t-powder" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#FAF6EB"/>
+      <stop offset="100%" stop-color="#E5DDC8"/>
+    </linearGradient>
+    <linearGradient id="t-cap" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#2A2D38"/>
+      <stop offset="40%" stop-color="#5A5E6E"/>
+      <stop offset="55%" stop-color="#7C8092"/>
+      <stop offset="70%" stop-color="#3E4252"/>
+      <stop offset="100%" stop-color="#191B23"/>
+    </linearGradient>
+    <linearGradient id="t-stopper" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#1A1C24"/>
+      <stop offset="50%" stop-color="#2C2F3A"/>
+      <stop offset="100%" stop-color="#0F1116"/>
+    </linearGradient>
+    <linearGradient id="t-label" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#F2EBD9"/>
+      <stop offset="100%" stop-color="#E5DCC4"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<script>
+  // All 9 peptides — same data as Catalog rail
+  const teaser = [
+    { sku: 'RETA',  generic: 'Retatrutide',          name: 'Reta',       sub: 'Triple GLP-1 / GIP / glucagon agonist. The current frontier for metabolic research.', purity: '≥99.5%', mass: '10 mg', price: 189, stock: 'in',   labelDose: '10 mg · lyophilized' },
+    { sku: 'TIRZ',  generic: 'Tirzepatide',          name: 'Tirz',       sub: 'Dual GLP-1 / GIP agonist. Reference standard for incretin work.',                  purity: '≥99.5%', mass: '10 mg', price: 169, stock: 'in',   labelDose: '10 mg · lyophilized' },
+    { sku: 'SEMA',  generic: 'Semaglutide',          name: 'Sema',       sub: 'Long-acting GLP-1 analogue. Established baseline for comparative studies.',         purity: '≥99.5%', mass: '5 mg',  price: 129, stock: 'in',   labelDose: '5 mg · lyophilized'  },
+    { sku: 'BPC',   generic: 'BPC-157',              name: 'BPC-157',    sub: 'Pentadecapeptide isolated from gastric juice. For repair and tissue research.',     purity: '≥99.0%', mass: '5 mg',  price: 59,  stock: 'in',   labelDose: '5 mg · lyophilized'  },
+    { sku: 'TB500', generic: 'Thymosin-β4 fragment', name: 'TB-500',     sub: 'Synthetic fragment of thymosin-β4. Common research companion to BPC-157.',          purity: '≥99.0%', mass: '5 mg',  price: 69,  stock: 'in',   labelDose: '5 mg · lyophilized'  },
+    { sku: 'GHK',   generic: 'GHK-Cu',               name: 'GHK-Cu',     sub: 'Copper tripeptide. Cosmetic and dermal-research reference standard.',                purity: '≥99.0%', mass: '50 mg', price: 39,  stock: 'low',  labelDose: '50 mg · lyophilized' },
+    { sku: 'CJC',   generic: 'CJC-1295 no DAC',      name: 'CJC-1295',   sub: 'Modified GHRH analogue, no DAC. Pulsatile GH-axis research.',                       purity: '≥99.0%', mass: '5 mg',  price: 49,  stock: 'in',   labelDose: '5 mg · lyophilized'  },
+    { sku: 'IPAM',  generic: 'Ipamorelin',           name: 'Ipamorelin', sub: 'Selective GH secretagogue. Frequently paired with CJC-1295 in research protocols.', purity: '≥99.0%', mass: '5 mg',  price: 45,  stock: 'in',   labelDose: '5 mg · lyophilized'  },
+    { sku: 'MOTS',  generic: 'MOTS-c',               name: 'MOTS-c',     sub: 'Mitochondrial-derived peptide. Emerging metabolic-research target.',                purity: '≥99.0%', mass: '10 mg', price: 79,  stock: 'wait', labelDose: '10 mg · lyophilized' },
+  ];
+
+  function skuFontSize(sku) {
+    if (sku.length <= 3) return 36;
+    if (sku.length <= 4) return 32;
+    if (sku.length <= 5) return 26;
+    return 22;
+  }
+
+  function vialSvg(p) {
+    const fs = skuFontSize(p.sku);
+    return `
+<svg class="vial-svg" viewBox="0 0 220 540" xmlns="http://www.w3.org/2000/svg" aria-label="${p.sku} vial">
+  <rect x="40" y="120" width="140" height="380" rx="14" fill="url(#t-glass)"/>
+  <rect x="50" y="285" width="120" height="205" rx="6" fill="url(#t-powder)" opacity="0.95"/>
+  <path d="M50 287 Q 80 279 110 285 T 170 287 L 170 295 L 50 295 Z" fill="#D4CAB0" opacity="0.6"/>
+  <rect x="48" y="130" width="6" height="360" rx="3" fill="#FFFDF6" opacity="0.9"/>
+  <rect x="172" y="130" width="3" height="360" rx="1.5" fill="#86795A" opacity="0.5"/>
+  <path d="M40 120 L 56 100 L 164 100 L 180 120 Z" fill="url(#t-glass)"/>
+  <rect x="40" y="118" width="140" height="3" fill="#9C9176" opacity="0.5"/>
+  <rect x="56" y="76" width="108" height="28" rx="2" fill="url(#t-stopper)"/>
+  <rect x="58" y="78" width="104" height="2" fill="#3D414F" opacity="0.7"/>
+  <rect x="50" y="40" width="120" height="44" rx="3" fill="url(#t-cap)"/>
+  <ellipse cx="110" cy="40" rx="60" ry="6" fill="#3A3D49"/>
+  <ellipse cx="110" cy="40" rx="60" ry="3" fill="#5C6072"/>
+  <rect x="56" y="46" width="6" height="36" fill="#9094A7" opacity="0.85"/>
+  <rect x="68" y="46" width="2" height="36" fill="#C9CCDA" opacity="0.7"/>
+  <rect x="50" y="78" width="120" height="2" fill="#0E1016" opacity="0.7"/>
+  <rect x="50" y="82" width="120" height="2" fill="#0E1016" opacity="0.7"/>
+  <circle cx="110" cy="40" r="14" fill="#3D4232"/>
+  <circle cx="110" cy="40" r="11" fill="none" stroke="#5A5F4B" stroke-width="0.5"/>
+  <rect x="44" y="195" width="132" height="220" rx="3" fill="url(#t-label)"/>
+  <rect x="48" y="199" width="124" height="212" rx="2" fill="none" stroke="#B5A989" stroke-width="0.5" opacity="0.7"/>
+  <g transform="translate(56,210)">
+    <g transform="scale(0.18)">
+      <rect x="4"  y="4"  width="22" height="64" fill="#1F1F1F"/>
+      <rect x="34" y="4"  width="22" height="36" fill="#1F1F1F"/>
+      <rect x="26" y="22" width="8"  height="2"  fill="#1F1F1F"/>
+      <rect x="26" y="29" width="8"  height="2"  fill="#1F1F1F"/>
+    </g>
+    <text x="16" y="11" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="900" font-size="11" letter-spacing="-0.5">PurePep</text>
+  </g>
+  <line x1="56" y1="234" x2="164" y2="234" stroke="#1F1F1F" stroke-width="0.4" opacity="0.3"/>
+  <text x="56" y="282" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="900" font-size="${fs}" letter-spacing="-1.5">${p.sku}</text>
+  <text x="56" y="306" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="500" font-size="11" letter-spacing="-0.2">${p.labelDose}</text>
+  <line x1="56" y1="326" x2="164" y2="326" stroke="#1F1F1F" stroke-width="0.4" opacity="0.2"/>
+  <text x="56" y="346" fill="#7A7A7A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="6.5" letter-spacing="1">LOT</text>
+  <text x="56" y="360" fill="#1F1F1F" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="9">${p.sku}-2604-A</text>
+  <text x="120" y="346" fill="#7A7A7A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="6.5" letter-spacing="1">EXP</text>
+  <text x="120" y="360" fill="#1F1F1F" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="9">2027-04</text>
+  <text x="56" y="382" fill="#7A7A7A" font-family="IBM Plex Mono, monospace" font-weight="500" font-size="6.5" letter-spacing="1">STORAGE</text>
+  <text x="56" y="396" fill="#1F1F1F" font-family="Inter, sans-serif" font-weight="500" font-size="9">2–8 °C · protect from light</text>
+</svg>`;
+  }
+
+  function tile(p) {
+    const stockHtml =
+      p.stock === 'low'  ? `<span class="stock low"><span class="dot"></span>Low stock</span>` :
+      p.stock === 'wait' ? `<span class="stock wait">Waitlist</span>` :
+                           `<span class="stock"><span class="dot"></span>In stock</span>`;
+    return `
+<a href="Catalog - Apple Swiss.html" class="tile">
+  <div class="photo">
+    ${vialSvg(p)}
+    <div class="vial-shadow"></div>
+  </div>
+  <div class="tile-content">
+    <div class="meta-row">
+      <span class="sku-line">
+        <span class="sku">${p.sku}</span>
+        <span class="sep">·</span>
+        <span class="generic">${p.generic}</span>
+      </span>
+      ${stockHtml}
+    </div>
+    <h3 class="name">${p.name}</h3>
+    <p class="sub">${p.sub}</p>
+    <div class="mini-spec">
+      <div>
+        <div class="lbl">Purity</div>
+        <div class="val">${p.purity}</div>
+      </div>
+      <div>
+        <div class="lbl">Net mass</div>
+        <div class="val">${p.mass}</div>
+      </div>
+    </div>
+    <div class="action-row">
+      <div>
+        <div class="price">$${p.price}</div>
+        <div class="price-from">From · 1 vial</div>
+      </div>
+      <span class="view-pill">
+        View <span class="arrow">→</span>
+      </span>
+    </div>
+  </div>
+</a>`;
+  }
+
+  // Render rail + (hidden) full grid
+  const railHtml = teaser.map(tile).join('');
+  document.getElementById('rail-track').innerHTML = railHtml;
+  document.getElementById('expand-grid').innerHTML = railHtml;
+
+  // Rail scroll progress + arrow buttons
+  const railVp = document.getElementById('rail-viewport');
+  const railFill = document.getElementById('rail-progress');
+  const railPrev = document.getElementById('rail-prev');
+  const railNext = document.getElementById('rail-next');
+  function updateProgress() {
+    const max = railVp.scrollWidth - railVp.clientWidth;
+    const pct = max > 0 ? (railVp.scrollLeft / max) : 0;
+    const windowPct = railVp.clientWidth / railVp.scrollWidth;
+    const fillPct = Math.max(windowPct * 100, 18);
+    railFill.style.width = fillPct + '%';
+    railFill.style.left = (pct * (100 - fillPct)) + '%';
+    railPrev.disabled = railVp.scrollLeft <= 1;
+    railNext.disabled = railVp.scrollLeft >= max - 1;
+  }
+  railVp.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+  function railStep() {
+    const tileEl = railVp.querySelector('.tile');
+    if (!tileEl) return railVp.clientWidth;
+    return tileEl.getBoundingClientRect().width + 24;
+  }
+  railPrev.addEventListener('click', () => railVp.scrollBy({ left: -railStep(), behavior: 'smooth' }));
+  railNext.addEventListener('click', () => railVp.scrollBy({ left:  railStep(), behavior: 'smooth' }));
+
+  // Expand tab toggle
+  const expandTab = document.getElementById('expand-tab');
+  const expandRegion = document.getElementById('expand-region');
+  const expandLabel = document.getElementById('expand-label');
+  let expanded = false;
+  expandTab.addEventListener('click', () => {
+    expanded = !expanded;
+    expandTab.classList.toggle('is-open', expanded);
+    expandTab.setAttribute('aria-expanded', String(expanded));
+    if (expanded) {
+      const grid = document.getElementById('expand-grid');
+      // measure full natural height including padding-top
+      expandRegion.style.maxHeight = (grid.scrollHeight + 24) + 'px';
+      expandLabel.textContent = 'Collapse grid';
+    } else {
+      expandRegion.style.maxHeight = '0px';
+      expandLabel.textContent = 'Expand all 09';
+    }
+  });
+  // Keep height correct on resize when open
+  window.addEventListener('resize', () => {
+    if (expanded) {
+      const grid = document.getElementById('expand-grid');
+      expandRegion.style.maxHeight = (grid.scrollHeight + 24) + 'px';
+    }
+  });
+</script>
+
+<!-- ───── Cart drawer ───── -->
+<div class="drawer-backdrop" id="drawer-backdrop" aria-hidden="true"></div>
+<aside class="drawer-panel" id="drawer-panel" data-state="filled" role="dialog" aria-modal="true" aria-label="Cart" aria-hidden="true">
+  <div class="drawer-head">
+    <span class="drawer-title">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l-1.4 10.5a2 2 0 0 1-2 1.5H8.4a2 2 0 0 1-2-1.5L5 7Z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>
+      Cart · 02 items
+    </span>
+    <button class="drawer-close" id="drawer-close" type="button" aria-label="Close cart">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6l-12 12"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-state-toggle">
+      <button type="button" data-state-set="empty">View empty state →</button>
+      <button type="button" data-state-set="filled" style="margin-left: 12px;">View filled state →</button>
+    </div>
+    <div class="drawer-empty">
+      <p class="name">Cart is empty</p>
+      <p class="sub">Add a vial to get started</p>
+    </div>
+    <div class="drawer-filled">
+      <div class="d-row">
+        <span class="d-thumb">
+          <svg viewBox="0 0 80 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="14" y="44" width="52" height="138" rx="6" fill="#EDE6D2"/>
+            <rect x="18" y="110" width="44" height="68" rx="3" fill="#D9CDA8"/>
+            <rect x="16" y="22" width="48" height="22" rx="2" fill="#3D4232"/>
+            <rect x="20" y="60" width="40" height="42" rx="1.5" fill="#F2EBD9"/>
+            <text x="40" y="86" text-anchor="middle" fill="#1F1F1F" font-family="Inter" font-weight="900" font-size="14">RETA</text>
+          </svg>
+        </span>
+        <div>
+          <p class="d-eyebrow">RETA · Retatrutide</p>
+          <p class="d-name">Reta</p>
+          <span class="d-meta">Lot RT-2604-A11 · 10 mg · 3 vials</span>
+        </div>
+        <div class="d-right">
+          <span class="d-price">$510.30</span>
+          <span class="d-qty"><button type="button" aria-label="Decrease">–</button><span class="num">1</span><button type="button" aria-label="Increase">+</button></span>
+          <button class="d-remove" type="button">Remove</button>
+        </div>
+      </div>
+      <div class="d-row">
+        <span class="d-thumb">
+          <svg viewBox="0 0 80 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="14" y="44" width="52" height="138" rx="6" fill="#EDE6D2"/>
+            <rect x="18" y="118" width="44" height="60" rx="3" fill="#D9CDA8"/>
+            <rect x="16" y="22" width="48" height="22" rx="2" fill="#3D4232"/>
+            <rect x="20" y="60" width="40" height="42" rx="1.5" fill="#F2EBD9"/>
+            <text x="40" y="86" text-anchor="middle" fill="#1F1F1F" font-family="Inter" font-weight="900" font-size="14">TIRZ</text>
+          </svg>
+        </span>
+        <div>
+          <p class="d-eyebrow">TIRZ · Tirzepatide</p>
+          <p class="d-name">Tirz</p>
+          <span class="d-meta">Lot TZ-2603-B07 · 10 mg · 1 vial</span>
+        </div>
+        <div class="d-right">
+          <span class="d-price">$169.00</span>
+          <span class="d-qty"><button type="button" aria-label="Decrease">–</button><span class="num">1</span><button type="button" aria-label="Increase">+</button></span>
+          <button class="d-remove" type="button">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-dock">
+    <div class="dock-sub">
+      <span class="lbl">Subtotal</span>
+      <span class="val">$679.30</span>
+    </div>
+    <p class="dock-note">All sales final · Taxes + shipping at checkout</p>
+    <a class="dock-cta" href="Cart Checkout - Apple Swiss.html">Proceed to checkout <span class="arrow">→</span></a>
+    <button class="dock-continue" id="drawer-continue" type="button">Continue browsing</button>
+  </div>
+</aside>
+
+<script>
+  // ───── Cart drawer ─────
+  const backdrop = document.getElementById('drawer-backdrop');
+  const panel    = document.getElementById('drawer-panel');
+  const closeBtn = document.getElementById('drawer-close');
+  let lastFocus = null;
+  function openDrawer() {
+    if (!panel) return;
+    lastFocus = document.activeElement;
+    backdrop.classList.add('is-open');
+    panel.classList.add('is-open');
+    document.body.classList.add('drawer-open');
+    backdrop.setAttribute('aria-hidden', 'false');
+    panel.setAttribute('aria-hidden', 'false');
+    setTimeout(() => closeBtn && closeBtn.focus(), 50);
+  }
+  function closeDrawer() {
+    if (!panel) return;
+    backdrop.classList.remove('is-open');
+    panel.classList.remove('is-open');
+    document.body.classList.remove('drawer-open');
+    backdrop.setAttribute('aria-hidden', 'true');
+    panel.setAttribute('aria-hidden', 'true');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  document.querySelectorAll('[data-cart-trigger]').forEach(t => {
+    t.addEventListener('click', (e) => { e.preventDefault(); openDrawer(); });
+  });
+  if (backdrop) backdrop.addEventListener('click', closeDrawer);
+  if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e) => {
+    if (!panel) return;
+    if (e.key === 'Escape' && panel.classList.contains('is-open')) closeDrawer();
+    if (e.key === 'Tab' && panel.classList.contains('is-open')) {
+      const focusables = panel.querySelectorAll('button, a, input, [tabindex]:not([tabindex="-1"])');
+      if (!focusables.length) return;
+      const first = focusables[0], last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  const continueBtn = document.getElementById('drawer-continue');
+  if (continueBtn) continueBtn.addEventListener('click', closeDrawer);
+  document.querySelectorAll('[data-state-set]').forEach(b => {
+    b.addEventListener('click', () => panel.setAttribute('data-state', b.getAttribute('data-state-set')));
+  });
+  if (panel) panel.querySelectorAll('.d-qty').forEach(group => {
+    const num = group.querySelector('.num');
+    const [m, p] = group.querySelectorAll('button');
+    let n = parseInt(num.textContent, 10) || 1;
+    m.addEventListener('click', () => { if (n > 1) { n--; num.textContent = n; } });
+    p.addEventListener('click', () => { n++; num.textContent = n; });
+  });
+</script>
+
+</body>
+</html>

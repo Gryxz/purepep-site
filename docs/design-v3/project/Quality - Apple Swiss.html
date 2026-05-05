@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PurePep — Quality, methods, lots</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --canvas: #FAF7F0;
+    --surface-1: #F5F1EA;
+    --surface-2: #F1EDE3;
+    --surface-3: #EFEAE0;
+    --surface-4: #E9E3D7;
+
+    --ink: #1F1F1F;
+    --ink-body: #1F1F1F;
+    --ink-muted: #6A6A6A;
+
+    --accent: #3D4232;
+    --accent-ink: #FAF7F0;
+
+    --hair: rgba(31, 31, 31, 0.08);
+    --hair-strong: rgba(31, 31, 31, 0.14);
+
+    --shadow-cta: 0 1px 2px rgba(61,66,50,.18), 0 10px 24px rgba(61,66,50,.22);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--canvas);
+    color: var(--ink-body);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+  /* ───── Compliance bar ───── */
+  .compliance { background: var(--surface-1); border-bottom: 1px solid var(--hair); }
+  .compliance-inner {
+    display: flex; justify-content: center; gap: 28px; padding: 10px 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .compliance-inner .dot { opacity: 0.5; }
+
+  /* ───── Header ───── */
+  header.site {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250, 247, 240, 0.85);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid var(--hair);
+  }
+  .header-inner {
+    display: grid; grid-template-columns: auto 1fr auto;
+    align-items: center; gap: 32px;
+    padding: 18px 32px; max-width: 1280px; margin: 0 auto;
+  }
+  .wordmark {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 24px; color: var(--ink);
+    letter-spacing: -0.02em;
+    display: inline-flex; align-items: center; gap: 8px; line-height: 1;
+  }
+  .wordmark svg.mark { display: block; height: 30px; width: auto; }
+  nav.primary { display: flex; justify-content: center; gap: 36px; }
+  nav.primary a {
+    color: var(--ink-body); opacity: 0.72;
+    font-size: 14px; font-weight: 500;
+    letter-spacing: -0.005em;
+    transition: opacity 200ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+  nav.primary a:hover { opacity: 1; }
+  nav.primary a.active { opacity: 1; font-weight: 600; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .icon-btn {
+    width: 38px; height: 38px; border-radius: 9999px;
+    background: transparent; border: none; color: var(--ink); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 180ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+  .icon-btn:hover { background: rgba(31,31,31,0.06); }
+  .cart-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 38px; padding: 0 16px 0 14px;
+    border-radius: 9999px; background: var(--accent); color: var(--accent-ink);
+    font-size: 13px; font-weight: 600; border: none; cursor: pointer;
+    transition: transform 180ms, background 180ms;
+  }
+  .cart-pill:hover { background: #2F3328; transform: translateY(-1px); }
+  .cart-pill .count { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
+
+  /* ───── Pills (CTA family) ───── */
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    height: 56px; padding: 0 28px;
+    border-radius: 9999px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700; font-size: 15px;
+    letter-spacing: -0.005em;
+    cursor: pointer; border: none;
+    transition: background 180ms cubic-bezier(0.2, 0.6, 0.2, 1),
+                color 180ms, border-color 180ms,
+                transform 180ms;
+  }
+  .pill .arrow { display: inline-block; transition: transform 220ms cubic-bezier(0.2, 0.6, 0.2, 1); }
+  .pill:hover .arrow { transform: translateX(4px); }
+  .pill-primary { background: var(--accent); color: var(--accent-ink); box-shadow: var(--shadow-cta); }
+  .pill-primary:hover { background: #2F3328; transform: translateY(-1px); }
+  .pill-ghost {
+    background: transparent; color: var(--ink);
+    border: 1px solid var(--hair-strong);
+  }
+  .pill-ghost:hover { border-color: var(--ink); }
+  .pill-sm { height: 44px; padding: 0 20px; font-size: 13.5px; }
+
+  /* ───── Section utility ───── */
+  .section { padding: 96px 0; }
+  .section-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(31,31,31,0.6);
+    margin: 0 0 18px;
+  }
+  .section-headline {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(40px, 4.5vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .section-sub {
+    margin: 16px 0 0;
+    max-width: 640px;
+    font-size: 16px; line-height: 1.6;
+    color: rgba(31,31,31,0.7);
+  }
+
+  /* ─────────────────────────────────────────────
+     SECTION 1 — Page hero
+     ───────────────────────────────────────────── */
+  .q-hero {
+    background: var(--canvas);
+    border-bottom: 1px solid var(--hair);
+    min-height: 64vh;
+    display: flex; align-items: center;
+    padding: 96px 0 80px;
+  }
+  .q-hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 0 0 28px;
+  }
+  .q-hero-h1 {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(56px, 8vw, 96px);
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    color: var(--ink);
+    margin: 0 0 28px;
+    max-width: 14ch;
+  }
+  .q-hero-deck {
+    margin: 0 0 36px;
+    font-size: 18px; line-height: 1.55;
+    color: rgba(31,31,31,0.7);
+    max-width: 60ch;
+  }
+  .q-hero-links {
+    display: flex; flex-wrap: wrap; gap: 32px;
+    margin-bottom: 36px;
+  }
+  .q-hero-links a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink);
+    border-bottom: 1px solid var(--hair-strong);
+    padding-bottom: 4px;
+    transition: border-color 180ms, color 180ms;
+  }
+  .q-hero-links a:hover { border-bottom-color: var(--accent); color: var(--accent); }
+  .q-hero-foot {
+    border-top: 1px solid var(--ink);
+    padding-top: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-muted);
+    max-width: 720px;
+  }
+
+  /* ─────────────────────────────────────────────
+     SECTION 2 — Three measurements
+     ───────────────────────────────────────────── */
+  .measurements { background: var(--surface-2); }
+  .measurements .section-head { margin-bottom: 64px; max-width: 720px; }
+  .measure-row {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    gap: 64px;
+    padding: 48px 0;
+    border-top: 1px solid var(--hair-strong);
+  }
+  .measure-row:last-of-type { border-bottom: 1px solid var(--hair-strong); }
+  @media (max-width: 900px) {
+    .measure-row { grid-template-columns: 1fr; gap: 24px; }
+  }
+  .measure-left .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 12px;
+  }
+  .measure-left .name {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 40px; letter-spacing: -0.025em;
+    line-height: 1; color: var(--ink);
+    margin: 0 0 12px;
+  }
+  .measure-left .target {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(31,31,31,0.6);
+    margin: 0;
+  }
+  .measure-right p {
+    margin: 0 0 14px;
+    font-size: 15.5px; line-height: 1.6;
+    color: rgba(31,31,31,0.78);
+    max-width: 64ch;
+  }
+  .measure-right p strong {
+    font-weight: 600; color: var(--ink);
+  }
+  .typical-strip {
+    margin-top: 22px;
+    display: inline-flex; align-items: baseline; gap: 14px;
+    padding: 12px 18px;
+    background: var(--canvas);
+    border: 1px solid var(--hair-strong);
+    border-radius: 6px;
+  }
+  .typical-strip .lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .typical-strip .val {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 18px; letter-spacing: -0.01em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ─────────────────────────────────────────────
+     SECTION 3 — Sample COA card
+     ───────────────────────────────────────────── */
+  .coa-band { background: var(--surface-1); }
+  .coa-band .section-head { margin-bottom: 56px; max-width: 720px; }
+  .coa-card {
+    max-width: 720px;
+    margin: 0 auto;
+    background: var(--canvas);
+    border: 1px solid var(--ink);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .coa-head, .coa-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    padding: 18px 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .coa-head { border-bottom: 1px solid var(--ink); }
+  .coa-foot { border-top: 1px solid var(--ink); }
+  .coa-foot .url { color: var(--ink-muted); text-transform: none; letter-spacing: 0.04em; font-size: 11px; }
+  .coa-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 8px 0;
+  }
+  @media (max-width: 768px) {
+    .coa-grid { grid-template-columns: 1fr; }
+  }
+  .coa-cell {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--hair);
+    border-right: 1px solid var(--hair);
+  }
+  .coa-cell:nth-child(2n) { border-right: none; }
+  .coa-cell:nth-last-child(-n+2) { border-bottom: none; }
+  @media (max-width: 768px) {
+    .coa-cell { border-right: none; }
+    .coa-cell:nth-last-child(2) { border-bottom: 1px solid var(--hair); }
+  }
+  .coa-cell .lbl {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(31,31,31,0.55);
+    margin-bottom: 6px;
+  }
+  .coa-cell .val {
+    font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: 14.5px; letter-spacing: -0.005em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .coa-foot-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 36px; padding: 0 16px;
+    border-radius: 9999px;
+    background: var(--accent); color: var(--accent-ink);
+    font-family: 'Inter', sans-serif; font-weight: 600;
+    font-size: 12.5px; letter-spacing: -0.005em;
+    text-transform: none;
+    transition: background 180ms;
+  }
+  .coa-foot-pill:hover { background: #2F3328; }
+  .coa-caption {
+    text-align: center; max-width: 720px;
+    margin: 24px auto 0;
+    font-size: 14px; line-height: 1.55;
+    color: rgba(31,31,31,0.6);
+  }
+
+  /* ─────────────────────────────────────────────
+     SECTION 4 — Verification
+     ───────────────────────────────────────────── */
+  .verify-band { background: var(--surface-3); }
+  .verify-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .verify-grid { grid-template-columns: 1fr; gap: 48px; }
+  }
+  .verify-bullets {
+    margin-top: 28px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .verify-bullets li {
+    list-style: none; padding: 0;
+    display: flex; gap: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.10em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .verify-bullets .dash { color: var(--accent); }
+  .verify-card {
+    border: 1px solid var(--ink);
+    border-radius: 4px;
+    background: var(--canvas);
+    overflow: hidden;
+  }
+  .verify-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--hair);
+  }
+  .verify-row:last-child { border-bottom: none; }
+  .verify-row .ldot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px rgba(61,66,50,0.16);
+  }
+  .verify-row .lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(31,31,31,0.6);
+  }
+  .verify-row .val {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 16px; letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .verify-cta-wrap {
+    margin-top: 28px;
+  }
+  .verify-cta-note {
+    margin-top: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  /* ─────────────────────────────────────────────
+     SECTION 5 — Timeline (lifted)
+     ───────────────────────────────────────────── */
+  .timeline-wrap { margin-top: 64px; position: relative; }
+  .timeline {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  .timeline::before {
+    content: ""; position: absolute;
+    top: 20px; left: 12.5%; right: 12.5%;
+    height: 1px; background: var(--accent); opacity: 0.5;
+    z-index: 0;
+  }
+  @media (max-width: 1024px) {
+    .timeline { grid-template-columns: 1fr; }
+    .timeline::before { display: none; }
+  }
+  .tl-node {
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 18px; position: relative; z-index: 1;
+  }
+  .tl-circle {
+    width: 40px; height: 40px; border-radius: 9999px;
+    background: var(--canvas);
+    border: 1.5px solid var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px; font-weight: 500; color: var(--accent);
+    margin-left: calc(50% - 20px);
+  }
+  .tl-card { width: 100%; padding: 0 8px; text-align: center; }
+  .tl-title {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 18px; letter-spacing: -0.01em;
+    color: var(--ink); margin: 0 0 8px;
+  }
+  .tl-body { margin: 0; font-size: 13.5px; line-height: 1.55; color: rgba(31,31,31,0.7); }
+
+  /* ─────────────────────────────────────────────
+     SECTION 6 — FAQ
+     ───────────────────────────────────────────── */
+  .faq-band { background: var(--canvas); }
+  .faq-list { margin-top: 48px; }
+  .faq-row {
+    border-top: 1px solid var(--ink);
+    background: var(--canvas);
+  }
+  .faq-row:last-child { border-bottom: 1px solid var(--ink); }
+  .faq-q {
+    width: 100%;
+    background: transparent; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+    padding: 28px 0;
+    text-align: left;
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 18px; letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .faq-q .icon {
+    width: 28px; height: 28px; flex-shrink: 0;
+    position: relative;
+  }
+  .faq-q .icon::before, .faq-q .icon::after {
+    content: ""; position: absolute;
+    background: var(--ink);
+    top: 50%; left: 50%;
+  }
+  .faq-q .icon::before {
+    width: 16px; height: 1.5px;
+    transform: translate(-50%, -50%);
+  }
+  .faq-q .icon::after {
+    width: 1.5px; height: 16px;
+    transform: translate(-50%, -50%);
+    transition: transform 240ms cubic-bezier(0.2, 0.6, 0.2, 1), opacity 180ms;
+  }
+  .faq-row.is-open .faq-q .icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    opacity: 0;
+  }
+  .faq-a {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 240ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+  .faq-a-inner {
+    padding: 0 0 28px;
+    max-width: 64ch;
+    font-size: 16px; line-height: 1.6;
+    color: rgba(31,31,31,0.7);
+  }
+
+  /* ─────────────────────────────────────────────
+     SECTION 7 — Closing CTA
+     ───────────────────────────────────────────── */
+  .closing {
+    background: var(--surface-4);
+    text-align: center;
+    padding: 96px 0;
+    min-height: 50vh;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .closing-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 0 0 24px;
+  }
+  .closing-headline {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(40px, 5.5vw, 80px);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin: 0 0 40px;
+  }
+  .closing-pills {
+    display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 16px;
+  }
+  .closing-stamp {
+    margin: 56px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--hair-strong);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-muted);
+    max-width: 640px;
+  }
+
+  /* ─────────────────────────────────────────────
+     Footer
+     ───────────────────────────────────────────── */
+  .footnote-divider {
+    height: 1px; background: var(--accent); opacity: 0.35;
+    border: none; margin: 16px 0 24px;
+  }
+  footer.site {
+    background: var(--surface-1);
+    border-top: 1px solid var(--hair);
+    padding: 56px 0 80px;
+  }
+  .footer-grid {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 32px; flex-wrap: wrap;
+  }
+  .footer-links {
+    display: flex; gap: 28px; flex-wrap: wrap;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .footer-links a:hover { color: var(--ink); }
+  .footer-links a.active { color: var(--ink); font-weight: 600; }
+  .footer-foot {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--hair);
+    display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  @media (max-width: 1024px) {
+    nav.primary { display: none; }
+    .section { padding: 64px 0; }
+    .q-hero { padding: 64px 0; min-height: 0; }
+  }
+</style>
+</head>
+<body data-screen-label="Quality">
+
+<!-- Compliance bar -->
+<div class="compliance">
+  <div class="compliance-inner">
+    <span>For research use only</span>
+    <span class="dot">·</span>
+    <span>21+ qualified researchers</span>
+    <span class="dot">·</span>
+    <span>All sales final</span>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="site">
+  <div class="header-inner">
+    <a class="wordmark" href="Homepage - Apple Swiss.html" aria-label="PurePep home">
+      <svg class="mark" viewBox="0 0 60 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="4"  y="4"  width="22" height="64" fill="#1F1F1F"/>
+        <rect x="34" y="4"  width="22" height="36" fill="#1F1F1F"/>
+        <rect x="26" y="22" width="8"  height="2"  fill="#1F1F1F"/>
+        <rect x="26" y="29" width="8"  height="2"  fill="#1F1F1F"/>
+      </svg>
+      PurePep
+    </a>
+    <nav class="primary">
+      <a href="Catalog - Apple Swiss.html">Catalog</a>
+      <a href="PDP Hero - Apple Swiss.html">RETA</a>
+      <a href="Quality - Apple Swiss.html" class="active">Quality</a>
+      <a href="#">Documentation</a>
+      <a href="#">Affiliates</a>
+    </nav>
+    <div class="header-right">
+      <button class="icon-btn" aria-label="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+      </button>
+      <button class="cart-pill" aria-label="Cart">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l-1.4 10.5a2 2 0 0 1-2 1.5H8.4a2 2 0 0 1-2-1.5L5 7Z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>
+        Cart <span class="count">02</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ───── Section 1 — Page hero ───── -->
+<section class="q-hero" data-screen-label="01 Quality hero">
+  <div class="container">
+    <p class="q-hero-eyebrow">Quality · Methods · Lots</p>
+    <h1 class="q-hero-h1">Every lot, on the record.</h1>
+    <p class="q-hero-deck">Three independent measurements per lot — purity, identity, endotoxin — published as a downloadable Certificate of Analysis. No claims of efficacy. No marketing math. Just the spec sheet.</p>
+    <div class="q-hero-links">
+      <a href="#methods">Read methods</a>
+      <a href="#sample-coa">Open sample COA</a>
+      <a href="#verify">Verify researcher access</a>
+    </div>
+    <div class="q-hero-foot">Last sample COA released 2026-04-12 · RETA Lot RT-2604-A11</div>
+  </div>
+</section>
+
+<!-- ───── Section 2 — Three measurements ───── -->
+<section class="section measurements" id="methods" data-screen-label="02 Methods">
+  <div class="container">
+    <div class="section-head">
+      <p class="section-eyebrow">01 — Methods</p>
+      <h2 class="section-headline">Three measurements. One COA.</h2>
+      <p class="section-sub">Each lot is assayed in-house, then independently confirmed by an accredited third-party laboratory before release.</p>
+    </div>
+
+    <div class="measure-row">
+      <div class="measure-left">
+        <p class="num">01.1</p>
+        <h3 class="name">Purity</h3>
+        <p class="target">≥99.5% target</p>
+      </div>
+      <div class="measure-right">
+        <p><strong>Method:</strong> Reverse-phase C18 HPLC with UV detection at 214 nm.</p>
+        <p><strong>Reference:</strong> Compared against an in-house qualified reference standard for each compound.</p>
+        <p><strong>Independent confirmation:</strong> Third-party lab repeats the assay per lot and signs the COA.</p>
+        <p><strong>Reported as:</strong> Area% of main peak. Listed on the COA as <em>Purity (HPLC)</em>.</p>
+        <div class="typical-strip">
+          <span class="lbl">Typical result</span>
+          <span class="val">99.72%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="measure-row">
+      <div class="measure-left">
+        <p class="num">01.2</p>
+        <h3 class="name">Identity</h3>
+        <p class="target">≤0.5 Da deviation</p>
+      </div>
+      <div class="measure-right">
+        <p><strong>Method:</strong> ESI high-resolution mass spectrometry (HRMS).</p>
+        <p><strong>Confirmation:</strong> Observed monoisotopic mass within ≤0.5 Da of theoretical for the named sequence.</p>
+        <p><strong>Independent confirmation:</strong> Third-party HRMS repeated per lot.</p>
+        <p><strong>Reported as:</strong> Observed mass + theoretical mass + delta on the COA, signed.</p>
+        <div class="typical-strip">
+          <span class="lbl">Typical result</span>
+          <span class="val">4866.4 Da · Δ 0.2 Da</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="measure-row">
+      <div class="measure-left">
+        <p class="num">01.3</p>
+        <h3 class="name">Endotoxin</h3>
+        <p class="target">&lt; 1.0 EU/mg threshold</p>
+      </div>
+      <div class="measure-right">
+        <p><strong>Method:</strong> Limulus Amebocyte Lysate (LAL) assay, gel-clot or kinetic-chromogenic.</p>
+        <p><strong>Per-lot:</strong> Every production lot is tested before COA release.</p>
+        <p><strong>Independent confirmation:</strong> Third-party lab repeats LAL per lot.</p>
+        <p><strong>Reported as:</strong> EU/mg on the COA, signed and dated.</p>
+        <div class="typical-strip">
+          <span class="lbl">Typical result</span>
+          <span class="val">&lt; 0.05 EU/mg</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Section 3 — Sample COA ───── -->
+<section class="section coa-band" id="sample-coa" data-screen-label="03 Sample COA">
+  <div class="container">
+    <div class="section-head">
+      <p class="section-eyebrow">02 — Sample COA</p>
+      <h2 class="section-headline">Read a real Certificate of Analysis.</h2>
+      <p class="section-sub">Below is the released COA for RETA Lot RT-2604-A11. Every order ships with a lot-matched document in the same format.</p>
+    </div>
+
+    <article class="coa-card" aria-label="Sample certificate of analysis">
+      <div class="coa-head">
+        <span>Certificate of Analysis</span>
+        <span>Lot RT-2604-A11 · Issued 2026-04-12</span>
+      </div>
+      <div class="coa-grid">
+        <div class="coa-cell"><span class="lbl">Product</span><span class="val">Retatrutide (RETA)</span></div>
+        <div class="coa-cell"><span class="lbl">CAS</span><span class="val">2381089-83-2</span></div>
+        <div class="coa-cell"><span class="lbl">Appearance</span><span class="val">White lyophilized powder</span></div>
+        <div class="coa-cell"><span class="lbl">Net mass</span><span class="val">10 mg</span></div>
+        <div class="coa-cell"><span class="lbl">Purity (HPLC)</span><span class="val">99.72%</span></div>
+        <div class="coa-cell"><span class="lbl">RT</span><span class="val">8.42 min</span></div>
+        <div class="coa-cell"><span class="lbl">Identity (HRMS)</span><span class="val">4866.4 Da (Δ 0.2)</span></div>
+        <div class="coa-cell"><span class="lbl">Endotoxin (LAL)</span><span class="val">&lt; 0.05 EU/mg</span></div>
+        <div class="coa-cell"><span class="lbl">Water (KF)</span><span class="val">2.1%</span></div>
+        <div class="coa-cell"><span class="lbl">Storage</span><span class="val">2–8°C, protect from light</span></div>
+        <div class="coa-cell"><span class="lbl">Reconstitution</span><span class="val">Bacteriostatic water</span></div>
+        <div class="coa-cell"><span class="lbl">EXP</span><span class="val">2027-04</span></div>
+        <div class="coa-cell"><span class="lbl">Analyst</span><span class="val">J. Liang, Ph.D.</span></div>
+        <div class="coa-cell"><span class="lbl">Reviewer</span><span class="val">M. Tatum, MS</span></div>
+        <div class="coa-cell"><span class="lbl">Third-party</span><span class="val">Eurofins Lancaster Labs</span></div>
+        <div class="coa-cell"><span class="lbl">Status</span><span class="val">Released</span></div>
+      </div>
+      <div class="coa-foot">
+        <span class="url">purepep.com/coa/rt-2604-a11.pdf</span>
+        <a href="#" class="coa-foot-pill">Download COA (PDF, 482 KB) ↓</a>
+      </div>
+    </article>
+    <p class="coa-caption">This is a sample. Every order ships with a lot-matched COA in the same format.</p>
+  </div>
+</section>
+
+<!-- ───── Section 4 — Researcher verification ───── -->
+<section class="section verify-band" id="verify" data-screen-label="04 Verification">
+  <div class="container">
+    <div class="verify-grid">
+      <div>
+        <p class="section-eyebrow">03 — Access</p>
+        <h2 class="section-headline">21+ qualified<br/>researchers only.</h2>
+        <p class="section-sub">PurePep verifies institutional or independent research credentials before the first order. Verification keeps the catalog where it belongs — in working laboratories.</p>
+        <ul class="verify-bullets">
+          <li><span class="dash">—</span><span>University, hospital, or independent research lab affiliation</span></li>
+          <li><span class="dash">—</span><span>Independent researchers: prior publication or verifiable lab address</span></li>
+          <li><span class="dash">—</span><span>All accounts re-verified annually</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="verify-card">
+          <div class="verify-row">
+            <span class="ldot" aria-hidden="true"></span>
+            <span class="lbl">Identity</span>
+            <span class="val">Verified</span>
+          </div>
+          <div class="verify-row">
+            <span class="ldot" aria-hidden="true"></span>
+            <span class="lbl">Institution</span>
+            <span class="val">Verified</span>
+          </div>
+          <div class="verify-row">
+            <span class="ldot" aria-hidden="true"></span>
+            <span class="lbl">Status</span>
+            <span class="val">Active until 2027-04</span>
+          </div>
+        </div>
+        <div class="verify-cta-wrap">
+          <a href="#" class="pill pill-ghost">Apply for an account <span class="arrow">→</span></a>
+          <p class="verify-cta-note">Approved within 1 business day for most applications.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Section 5 — Logistics timeline ───── -->
+<section class="section" data-screen-label="05 Logistics">
+  <div class="container">
+    <p class="section-eyebrow">Logistics</p>
+    <h2 class="section-headline">From order to lab.</h2>
+    <p class="section-sub">What happens after Add to cart. No surprises, no cold-chain anxiety.</p>
+
+    <div class="timeline-wrap">
+      <div class="timeline">
+        <div class="tl-node">
+          <div class="tl-circle">1</div>
+          <div class="tl-card">
+            <h3 class="tl-title">Order confirmed</h3>
+            <p class="tl-body">Research eligibility verified. Your lot is allocated and reserved within 1 hour.</p>
+          </div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-circle">2</div>
+          <div class="tl-card">
+            <h3 class="tl-title">COA released + dispatched</h3>
+            <p class="tl-body">Lot-specific Certificate of Analysis issued. Ships same or next business day.</p>
+          </div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-circle">3</div>
+          <div class="tl-card">
+            <h3 class="tl-title">Delivered</h3>
+            <p class="tl-body">Lyophilized powder, stable at room temperature in transit. No cold-chain anxiety.</p>
+          </div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-circle">4</div>
+          <div class="tl-card">
+            <h3 class="tl-title">Research-ready</h3>
+            <p class="tl-body">Reconstitute with bacteriostatic water. Stable 30+ days refrigerated post-reconstitution.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Section 6 — FAQ ───── -->
+<section class="section faq-band" data-screen-label="06 FAQ">
+  <div class="container">
+    <p class="section-eyebrow">04 — Questions</p>
+    <h2 class="section-headline">What researchers ask.</h2>
+
+    <div class="faq-list" id="faq-list">
+      <div class="faq-row">
+        <button class="faq-q" aria-expanded="false">
+          <span>Do you publish the COA before shipping?</span>
+          <span class="icon" aria-hidden="true"></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Yes. Each lot's signed COA is generated and reviewed before dispatch and is included in the order confirmation.</div></div>
+      </div>
+      <div class="faq-row">
+        <button class="faq-q" aria-expanded="false">
+          <span>Are independent labs the same for every product?</span>
+          <span class="icon" aria-hidden="true"></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">We rotate among three accredited third-party labs. The lab name appears on every COA so the chain is traceable.</div></div>
+      </div>
+      <div class="faq-row">
+        <button class="faq-q" aria-expanded="false">
+          <span>What about chain-of-custody?</span>
+          <span class="icon" aria-hidden="true"></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Every vial is barcoded to its lot. The vial label, the COA, and the dispatch record carry the same lot identifier.</div></div>
+      </div>
+      <div class="faq-row">
+        <button class="faq-q" aria-expanded="false">
+          <span>Can I request additional analytical work?</span>
+          <span class="icon" aria-hidden="true"></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Yes. NMR, peptide mapping, and trace-metal analysis can be added to a lot for a fee. Email research@purepep.com.</div></div>
+      </div>
+      <div class="faq-row">
+        <button class="faq-q" aria-expanded="false">
+          <span>What if a lot fails?</span>
+          <span class="icon" aria-hidden="true"></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">It does not ship. Failed lots are quarantined. We never re-test until pass.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Section 7 — Closing CTA ───── -->
+<section class="closing" data-screen-label="07 Closing">
+  <div class="container">
+    <p class="closing-eyebrow">Open the spec sheet</p>
+    <h2 class="closing-headline">Read the COA. Then decide.</h2>
+    <div class="closing-pills">
+      <a href="#" class="pill pill-primary">Download sample COA <span class="arrow">↓</span></a>
+      <a href="Catalog - Apple Swiss.html" class="pill pill-ghost">Browse 09 peptides <span class="arrow">→</span></a>
+    </div>
+    <div class="closing-stamp">For research use only · Not for human consumption · Sales final</div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site">
+  <div class="container">
+    <div class="footer-grid">
+      <a class="wordmark" href="Homepage - Apple Swiss.html" aria-label="PurePep home">
+        <svg class="mark" viewBox="0 0 60 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="4"  y="4"  width="22" height="64" fill="#1F1F1F"/>
+          <rect x="34" y="4"  width="22" height="36" fill="#1F1F1F"/>
+          <rect x="26" y="22" width="8"  height="2"  fill="#1F1F1F"/>
+          <rect x="26" y="29" width="8"  height="2"  fill="#1F1F1F"/>
+        </svg>
+        PurePep
+      </a>
+      <div class="footer-links">
+        <a href="Catalog - Apple Swiss.html">Catalog</a>
+        <a href="PDP Hero - Apple Swiss.html">RETA</a>
+        <a href="Quality - Apple Swiss.html" class="active">Quality</a>
+        <a href="#">Documentation</a>
+        <a href="#">Affiliates</a>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+    <hr class="footnote-divider"/>
+    <div class="footer-foot">
+      <span>For research use only · Not for human consumption · Sales final</span>
+      <span>© 2026 PurePep</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // FAQ accordion — multiple rows can be open simultaneously
+  document.querySelectorAll('.faq-row').forEach(row => {
+    const btn = row.querySelector('.faq-q');
+    const ans = row.querySelector('.faq-a');
+    const inner = row.querySelector('.faq-a-inner');
+    btn.addEventListener('click', () => {
+      const open = row.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', String(open));
+      ans.style.maxHeight = open ? (inner.scrollHeight + 4) + 'px' : '0px';
+    });
+  });
+  // Recompute on resize for any open rows
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.faq-row.is-open').forEach(row => {
+      const ans = row.querySelector('.faq-a');
+      const inner = row.querySelector('.faq-a-inner');
+      ans.style.maxHeight = (inner.scrollHeight + 4) + 'px';
+    });
+  });
+</script>
+</body>
+</html>

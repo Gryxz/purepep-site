@@ -19,7 +19,7 @@
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./src/*"],
-      "@design/*": ["./purepep-site/design-system/*"]
+      "@design/*": ["./src/design-system/*"]
     }
   },
   "include": [

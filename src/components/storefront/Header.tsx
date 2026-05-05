@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from "react";
 import Link from "next/link";
+import React, { useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
 import { Lockup, Icon, Eyebrow } from "./primitives";
 import { clsx } from "@/lib/clsx";
@@ -35,8 +35,8 @@ function UtilityStrip() {
 function NavLink({ children, href = "#", active = false }: { children: React.ReactNode; href?: string; active?: boolean }) {
   const [hovered, setHovered] = useState(false);
   return (
-    <Link
-      href={href as never}
+    <a
+      href={href}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={clsx(
@@ -45,15 +45,15 @@ function NavLink({ children, href = "#", active = false }: { children: React.Rea
       )}
     >
       {children}
-    </Link>
+    </a>
   );
 }
 
 function DropdownRow({ href, children, divider }: { href: string; children: React.ReactNode; divider?: boolean }) {
   const [hovered, setHovered] = useState(false);
   return (
-    <Link
-      href={href as never}
+    <a
+      href={href}
       role="menuitem"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -64,7 +64,7 @@ function DropdownRow({ href, children, divider }: { href: string; children: Reac
       )}
     >
       {children}
-    </Link>
+    </a>
   );
 }
 
@@ -111,11 +111,16 @@ function NavAffiliatesDropdown({ active = false }: { active?: boolean }) {
   );
 }
 
+// TODO: when the WC product slug is renamed from `purepep-reta-test` to
+// `reta` in WP admin, switch this href back to `/shop/reta`.  Header is
+// hard-pinned to the live WC slug to avoid a 404 today.
+const RETA_HREF = "/shop/purepep-reta-test";
+
 const MOBILE_NAV_LINKS = [
   { label: "Catalog", href: "/shop" },
-  { label: "RETA", href: "/shop/reta" },
-  { label: "Quality", href: "#" },
-  { label: "Documentation", href: "#" },
+  { label: "RETA", href: RETA_HREF },
+  { label: "Quality", href: "/quality" },
+  { label: "Documentation", href: "/documentation" },
   { label: "Affiliates", href: "/affiliates" },
   { label: "Affiliate dashboard", href: "/affiliates/dashboard" },
   { label: "Account", href: "#" },
@@ -145,9 +150,9 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
           /* Desktop nav — hidden on mobile */
           <nav className="hidden items-center justify-center gap-7 md:flex">
             <NavLink href="/shop">Catalog</NavLink>
-            <NavLink href="/shop/reta">RETA</NavLink>
-            <NavLink>Quality</NavLink>
-            <NavLink>Documentation</NavLink>
+            <NavLink href={RETA_HREF}>RETA</NavLink>
+            <NavLink href="/quality">Quality</NavLink>
+            <NavLink href="/documentation">Documentation</NavLink>
             <NavAffiliatesDropdown />
             <NavLink>Account</NavLink>
           </nav>
@@ -173,17 +178,25 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
             >
               <Icon name="user" size={18} />
             </button>
-            {/* Cart */}
+            {/* Cart — desktop: bordered label; mobile: icon + amber badge */}
             <button
               type="button"
               onClick={openCart}
-              aria-label="Open cart"
+              aria-label={`Open cart, ${count} item${count !== 1 ? "s" : ""}`}
               className="relative inline-flex h-11 cursor-pointer items-center gap-2 border border-ink bg-transparent px-3 py-2 text-ink"
             >
               <Icon name="cart" size={16} />
-              <span className="hidden font-mono text-[11px] font-semibold tracking-[0.12em] min-[360px]:inline">
+              <span className="hidden font-mono text-[11px] font-semibold tracking-[0.12em] min-[360px]:inline md:inline">
                 {String(count).padStart(2, "0")}
               </span>
+              {count > 0 && (
+                <span
+                  className="absolute -right-1 -top-1 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-amber px-0.5 font-mono text-[8px] font-bold text-ink md:hidden"
+                  aria-hidden="true"
+                >
+                  {count}
+                </span>
+              )}
             </button>
             {/* Hamburger — mobile only */}
             <button
@@ -220,14 +233,14 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
           {/* Nav links */}
           <nav className="flex flex-1 flex-col overflow-y-auto">
             {MOBILE_NAV_LINKS.map((link) => (
-              <Link
+              <a
                 key={link.label}
-                href={link.href as never}
+                href={link.href}
                 onClick={() => setMenuOpen(false)}
                 className="flex min-h-[56px] items-center border-b border-line px-4 font-sans text-[17px] font-medium text-ink no-underline"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
           </nav>
 
@@ -241,13 +254,13 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
               <Icon name="cart" size={16} />
               Cart · {String(count).padStart(2, "0")}
             </button>
-            <Link
+            <a
               href="/researcher-access"
               onClick={() => setMenuOpen(false)}
               className="mt-3 flex h-11 w-full items-center justify-center border border-ink bg-transparent font-mono text-[11px] uppercase tracking-[0.14em] text-ink no-underline"
             >
               Researcher access →
-            </Link>
+            </a>
           </div>
         </div>
       )}

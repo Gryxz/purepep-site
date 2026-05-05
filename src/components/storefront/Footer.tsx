@@ -2,7 +2,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Lockup } from "./primitives";
+import { PaymentLogos } from "./PaymentLogos";
 import { clsx } from "@/lib/clsx";
+import type { Product } from "@/data/products";
+import type { WpPage } from "@/lib/wp-pages";
 
 function FootCol({ title, items }: { title: string; items: { label: string; href?: string }[] }) {
   const [open, setOpen] = useState(false);
@@ -53,7 +56,28 @@ function FootCol({ title, items }: { title: string; items: { label: string; href
   );
 }
 
-export function Footer({ minimal = false }: { minimal?: boolean }) {
+export function Footer({
+  minimal = false,
+  products = [],
+  policies = [],
+}: {
+  minimal?: boolean;
+  /**
+   * Live WC catalogue passed in from the server-side layout.  Used to
+   * populate the Catalog column with whatever products actually exist
+   * (capped at 4); falls back to a single "View all" entry when empty
+   * so a missing/failed WC fetch never leaves the column with 404 links.
+   */
+  products?: Product[];
+  /**
+   * Policy + contact pages mirrored from WP at build time.  Footer reads
+   * the WP page titles directly so Storefront copy never forks from the
+   * canonical CMS source.  When empty (no WP creds, fetch failed), the
+   * column falls back to a humanised label per slug so the links still
+   * work.
+   */
+  policies?: WpPage[];
+}) {
   if (minimal) {
     return (
       <footer className="bg-ink py-5 text-center font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-bone">
@@ -61,6 +85,26 @@ export function Footer({ minimal = false }: { minimal?: boolean }) {
       </footer>
     );
   }
+
+  const catalogItems: { label: string; href?: string }[] = [
+    ...products.slice(0, 4).map((p) => ({
+      label: `${p.compound} · ${p.name}`,
+      href: `/shop/${p.slug}`,
+    })),
+    { label: "View all", href: "/shop" },
+  ];
+
+  const policyItems: { label: string; href?: string }[] =
+    policies.length > 0
+      ? policies.map((p) => ({ label: p.title, href: `/legal/${p.slug}` }))
+      : [
+          { label: "Refund policy", href: "/legal/refund-policy" },
+          { label: "Terms of service", href: "/legal/terms-of-service" },
+          { label: "Privacy policy", href: "/legal/privacy-policy" },
+          { label: "Shipping policy", href: "/legal/shipping-policy" },
+          { label: "Disclaimer", href: "/legal/disclaimer" },
+          { label: "Contact", href: "/legal/contact" },
+        ];
 
   return (
     <footer className="bg-ink text-bone">
@@ -83,15 +127,7 @@ export function Footer({ minimal = false }: { minimal?: boolean }) {
             </p>
           </div>
 
-          <FootCol
-            title="Catalog"
-            items={[
-              { label: "RETA · Retatrutide", href: "/shop/reta" },
-              { label: "SEMA · Semaglutide", href: "/shop/sema" },
-              { label: "TIRZ · Tirzepatide", href: "/shop/tirz" },
-              { label: "View all", href: "/shop" },
-            ]}
-          />
+          <FootCol title="Catalog" items={catalogItems} />
           <FootCol
             title="Quality"
             items={[
@@ -110,22 +146,17 @@ export function Footer({ minimal = false }: { minimal?: boolean }) {
               { label: "Re-order" },
             ]}
           />
-          <FootCol
-            title="Policies"
-            items={[
-              { label: "No-refund policy" },
-              { label: "Terms of sale" },
-              { label: "Privacy" },
-              { label: "Contact" },
-            ]}
-          />
+          <FootCol title="Policies" items={policyItems} />
         </div>
 
         <div className="my-8 h-px bg-bone/20 md:my-12" />
 
         <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[10.5px] uppercase tracking-[0.14em] text-bone/55">
           <span>For research use only · Not for human consumption · 21+ qualified researchers</span>
-          <span>© 2026 PurePep</span>
+          <div className="flex items-center gap-4">
+            <PaymentLogos />
+            <span>© 2026 PurePep</span>
+          </div>
         </div>
       </div>
     </footer>

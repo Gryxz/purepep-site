@@ -1,12 +1,30 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 import { Lockup, Eyebrow, Checkbox } from "@/components/storefront/primitives";
 
+/**
+ * Bankful compliance — research-use + 21+ attestation gate.
+ *
+ * On confirm we set `pp_age_verified=1` (path=/, max-age=1y) via
+ * document.cookie and bounce to `/` with a hard navigation so the
+ * AgeGateGuard sees the cookie before its first render.
+ *
+ * Pure client component — under `output: 'export'` we have no server
+ * runtime to set cookies via headers, so document.cookie is the only
+ * channel.  Cookie is non-HttpOnly by necessity, which is acceptable
+ * here: the gate is a regulatory veneer over UX, not a security
+ * control.
+ */
 export default function AgeGatePage() {
   const [age, setAge] = useState(false);
   const [researcher, setResearcher] = useState(false);
   const ready = age && researcher;
+
+  function handleEnter() {
+    if (!ready) return;
+    document.cookie = "pp_age_verified=1; path=/; max-age=31536000; samesite=lax";
+    window.location.href = "/";
+  }
 
   return (
     <main className="flex min-h-screen flex-col bg-bone px-4 py-10 sm:px-6 sm:py-12 md:items-center md:justify-center">
@@ -51,14 +69,14 @@ export default function AgeGatePage() {
         </div>
 
         {/* CTA */}
-        <Link
-          href="/"
-          aria-disabled={!ready}
-          className="mb-5 flex h-14 w-full items-center justify-center rounded-md border border-ink font-sans text-[14px] font-bold uppercase tracking-[0.06em] no-underline transition-colors aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:border-line aria-disabled:bg-line aria-disabled:text-ink-muted bg-ink text-bone hover:bg-ink/90"
-          style={!ready ? { background: "var(--pp-line)", color: "var(--pp-ink-muted)", borderColor: "var(--pp-ink)" } : {}}
+        <button
+          type="button"
+          onClick={handleEnter}
+          disabled={!ready}
+          className="mb-5 flex h-14 w-full items-center justify-center rounded-md border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.06em] text-bone no-underline transition-colors hover:bg-ink/90 disabled:cursor-not-allowed disabled:border-line disabled:bg-line disabled:text-ink-muted"
         >
           Enter site
-        </Link>
+        </button>
 
         {/* leave */}
         <div className="mb-12 text-center">
