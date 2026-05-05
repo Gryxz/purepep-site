@@ -51,7 +51,7 @@ a{text-decoration:none;color:inherit}
   border-bottom:1px solid var(--rule);
   position:sticky;top:0;z-index:40;
 }
-.hdr-left{display:flex;align-items:center;gap:10px}
+.hdr-logo{display:flex;align-items:center;gap:10px;position:absolute;left:50%;transform:translateX(-50%)}
 .mono{
   width:32px;height:32px;background:var(--ink);color:var(--bone);
   border-radius:8px;display:grid;place-items:center;
@@ -414,16 +414,16 @@ a{text-decoration:none;color:inherit}
 <div class="device">
 <div class="scroll">
 
-  <!-- Header -->
+  <!-- Header — back top-left, logo centered (locked convention) -->
   <header class="hdr">
-    <div class="hdr-left">
-      <div class="mono">P</div>
-      <span class="wm">PurePep</span>
-    </div>
     <button class="back-btn" onclick="history.back()">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
       Back
     </button>
+    <div class="hdr-logo">
+      <div class="mono">P</div>
+      <span class="wm">PurePep</span>
+    </div>
   </header>
 
   <!-- Page title -->
