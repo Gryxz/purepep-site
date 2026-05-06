@@ -48,10 +48,10 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
-          printf '%s\n' "$CLOUDWAYS_SSH_KEY" > ~/.ssh/id_ed25519
+          printf '%s' "$SSH_KEY_B64" | base64 -d > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
         env:
-          CLOUDWAYS_SSH_KEY: ${{ secrets.CLOUDWAYS_SSH_KEY }}
+          SSH_KEY_B64: ${{ secrets.CLOUDWAYS_SSH_KEY }}
 
       - name: Add Cloudways host to known_hosts
         run: ssh-keyscan -H "$CLOUDWAYS_SSH_HOST" >> ~/.ssh/known_hosts
