@@ -1,11 +1,12 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { clsx } from "@/lib/clsx";
 import { padded2, plural } from "@/lib/text";
 import type { Product } from "@/data/products";
 import { RetaVial } from "./RetaVial";
+import { LabelCropSvg } from "./LabelCropSvg";
 
 /**
  * v3 Apple Swiss Homepage.
@@ -86,12 +87,12 @@ export function HomePage({ products }: { products: Product[] }) {
               Endotoxin by LAL. That is the entire pitch.
             </p>
             <div className="v3home-hero-cta-row">
-              <Link href="/shop" className="v3-pill v3-pill-primary">
+              <a href="/shop" className="v3-pill v3-pill-primary">
                 Browse the catalog <span className="arrow">→</span>
-              </Link>
-              <Link href="/quality" className="v3-pill v3-pill-ghost">
+              </a>
+              <a href="/quality" className="v3-pill v3-pill-ghost">
                 Read a sample COA
-              </Link>
+              </a>
             </div>
 
             <div className="v3home-hero-data">
@@ -136,20 +137,19 @@ export function HomePage({ products }: { products: Product[] }) {
                   Certificate of Analysis.
                 </p>
                 <div className="v3home-featured-ctas">
-                  <Link href={`/shop/${featured.slug}`} className="v3-pill v3-pill-primary">
+                  <a href={`/shop/${featured.slug}`} className="v3-pill v3-pill-primary">
                     View {featured.name} <span className="arrow">→</span>
-                  </Link>
-                  <Link href="/shop" className="v3-pill v3-pill-ghost">
+                  </a>
+                  <a href="/shop" className="v3-pill v3-pill-ghost">
                     Compare configurations
-                  </Link>
+                  </a>
                 </div>
               </div>
               <div className="v3home-label-crop" aria-label={`${featured.compound} label close-up`}>
-                <RetaVial
+                <LabelCropSvg
                   compound={featured.compound}
                   dose={featured.dose}
                   lot={featured.lot}
-                  storage={featured.storage}
                 />
               </div>
             </div>
@@ -212,9 +212,9 @@ export function HomePage({ products }: { products: Product[] }) {
                 One standard.
               </h2>
             </div>
-            <Link href="/shop" className="v3-pill v3-pill-primary v3-pill-sm">
+            <a href="/shop" className="v3-pill v3-pill-primary v3-pill-sm">
               See all {plural(products.length, "peptide")} <span className="arrow">→</span>
-            </Link>
+            </a>
           </div>
 
           <div
@@ -342,30 +342,30 @@ export function HomePage({ products }: { products: Product[] }) {
       <section className="v3-docs-band">
         <div className="v3-container">
           <div className="v3-docs-grid">
-            <Link href="/quality#methods" className="v3-doc-card">
+            <a href="/quality#methods" className="v3-doc-card">
               <div className="v3-doc-num">01 — Methods</div>
               <h3 className="v3-doc-title">How we test every lot</h3>
               <div className="v3-doc-foot">
                 <span>Read methods</span>
                 <span className="arrow">→</span>
               </div>
-            </Link>
-            <Link href="/quality#sample-coa" className="v3-doc-card">
+            </a>
+            <a href="/quality#sample-coa" className="v3-doc-card">
               <div className="v3-doc-num">02 — Sample COA</div>
               <h3 className="v3-doc-title">Read a real Certificate of Analysis</h3>
               <div className="v3-doc-foot">
                 <span>Open sample</span>
                 <span className="arrow">→</span>
               </div>
-            </Link>
-            <Link href="/researcher-access" className="v3-doc-card">
+            </a>
+            <a href="/researcher-access" className="v3-doc-card">
               <div className="v3-doc-num">03 — Researcher verification</div>
               <h3 className="v3-doc-title">21+ qualified researchers only</h3>
               <div className="v3-doc-foot">
                 <span>Verify access</span>
                 <span className="arrow">→</span>
               </div>
-            </Link>
+            </a>
           </div>
         </div>
       </section>
@@ -375,9 +375,9 @@ export function HomePage({ products }: { products: Product[] }) {
         <div className="v3-container">
           <p className="v3-closing-eyebrow">Ready when you are</p>
           <h2 className="v3-closing-headline">Open the catalog.</h2>
-          <Link href="/shop" className="v3-pill v3-pill-primary">
+          <a href="/shop" className="v3-pill v3-pill-primary">
             Browse {plural(products.length, "peptide")} <span className="arrow">→</span>
-          </Link>
+          </a>
           <div className="v3-closing-stamp">
             For research use only · Not for human consumption · Sales final
           </div>
@@ -395,7 +395,7 @@ function ProductTile({ product }: { product: Product }) {
   const showDot = product.stock !== "out";
 
   return (
-    <Link href={`/shop/${product.slug}`} className="v3-tile">
+    <a href={`/shop/${product.slug}`} className="v3-tile">
       <div className="v3-tile-photo">
         <RetaVial compound={product.compound} dose={product.dose} lot={product.lot} storage={product.storage} />
         <div className="v3-tile-shadow" />
@@ -439,6 +439,6 @@ function ProductTile({ product }: { product: Product }) {
           </span>
         </div>
       </div>
-    </Link>
+    </a>
   );
 }

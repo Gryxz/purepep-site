@@ -46,7 +46,11 @@ const config = [
   // are non-token by design intent. Keep the ESLint hex ban off only here;
   // every other src/ file still goes through the brand fence.
   {
-    files: ["src/components/v3/RetaVial.tsx", "src/components/v3/RetaVialMini.tsx"],
+    files: [
+      "src/components/v3/RetaVial.tsx",
+      "src/components/v3/RetaVialMini.tsx",
+      "src/components/v3/LabelCropSvg.tsx",
+    ],
     rules: {
       "no-restricted-syntax": "off",
     },

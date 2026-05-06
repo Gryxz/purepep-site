@@ -1969,7 +1969,7 @@ a.v3-pill-ghost:hover {
   overflow: hidden;
 }
 
-.v3home-label-crop .v3pdp-vial {
+.v3home-label-crop svg {
   width: 100%; height: auto; max-height: 100%;
 }
 

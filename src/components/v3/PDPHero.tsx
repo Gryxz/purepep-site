@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { clsx } from "@/lib/clsx";
 import { trackProductView, trackAddToCart } from "@/lib/analytics";
@@ -222,11 +222,11 @@ export function PDPHero({ product }: { product: Product }) {
       <nav className="v3pdp-container v3pdp-breadcrumb" aria-label="Breadcrumb">
         <ol>
           <li>
-            <Link href="/">Home</Link>
+            <a href="/">Home</a>
           </li>
           <li className="sep">/</li>
           <li>
-            <Link href="/shop">Catalog</Link>
+            <a href="/shop">Catalog</a>
           </li>
           <li className="sep">/</li>
           <li className="current">{product.compound}</li>

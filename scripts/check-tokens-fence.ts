@@ -35,6 +35,7 @@ const HEX_ALLOWED_FILES = [
   "src/app/globals.css",
   "src/components/v3/RetaVial.tsx",
   "src/components/v3/RetaVialMini.tsx",
+  "src/components/v3/LabelCropSvg.tsx",
 ];
 const isHexAllowed = (f: string) =>
   HEX_ALLOWED_FILES.some((p) => f.endsWith(p) || f.endsWith("/" + p));
