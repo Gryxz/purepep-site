@@ -60,7 +60,7 @@ jobs:
 
       - name: Deploy via rsync
         run: |
-          rsync -avz --delete --omit-dir-times --exclude='index.txt' \
+          rsync -rltvz --delete --no-perms --no-owner --no-group --omit-dir-times --exclude='index.txt' \
             -e 'ssh -o StrictHostKeyChecking=no' \
             out/ \
             "${CLOUDWAYS_SSH_USER}@${CLOUDWAYS_SSH_HOST}:/home/master/applications/tupbkzzpnc/public_html/"

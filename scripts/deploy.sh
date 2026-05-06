@@ -20,7 +20,7 @@ NEXT_PUBLIC_INDEXING_ENABLED="true" \
 pnpm build
 
 echo "==> Deploy via rsync → ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}"
-rsync -avz --delete --omit-dir-times --exclude='index.txt' \
+rsync -rltvz --delete --no-perms --no-owner --no-group --omit-dir-times --exclude='index.txt' \
   -e 'ssh -o StrictHostKeyChecking=no' \
   out/ \
   "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}"
