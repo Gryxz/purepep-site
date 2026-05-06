@@ -1,62 +1,69 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { clsx } from "@/lib/clsx";
 import type { Product, Category } from "@/data/products";
 import { RetaVial } from "./RetaVial";
 import { TrustBar } from "./TrustBar";
 
-/**
- * v3 Apple Swiss Catalog page.
- *
- * Sections (from docs/design-v3/project/Catalog - Apple Swiss.html):
- *   1. Page intro (Catalog eyebrow + h1 + lede)
- *   2. Filter chip row + sort button + hairline divider
- *   3. Featured carousel — 3 slides on desktop, swipeable, 56 px arrow
- *      buttons hugging the card edges, hairline-bar pagination + "01 / 03"
- *      mono caption
- *   4. Responsive product grid — 3 cols desktop / 2 tablet / 1 mobile.
- *      The user spec preferred a static 3-col grid for this surface
- *      (vs. the design's horizontal rail) so the full catalog is visible
- *      without horizontal scroll. Re-uses the same .v3-tile family as the
- *      homepage rail.
- *   5. Footnote — RUO compliance line on an amber hairline.
- */
-
 type ChipKey = "all" | "glp1" | "growth" | "repair" | "cosmetic" | "blends";
 
 const CHIPS: { key: ChipKey; label: string; categories: Category[] | "all" }[] = [
-  { key: "all",      label: "All",              categories: "all" },
-  { key: "glp1",     label: "GLP-1",            categories: ["Incretin mimetics"] },
-  { key: "growth",   label: "Growth",           categories: ["GH secretagogues"] },
-  { key: "repair",   label: "Repair",           categories: ["Healing"] },
-  { key: "cosmetic", label: "Cosmetic",         categories: ["Healing"] },
-  { key: "blends",   label: "Research blends",  categories: ["Metabolic", "Cognition"] },
+  { key: "all",      label: "All",             categories: "all" },
+  { key: "glp1",     label: "GLP-1",           categories: ["Incretin mimetics"] },
+  { key: "growth",   label: "Growth",          categories: ["GH secretagogues"] },
+  { key: "repair",   label: "Repair",          categories: ["Healing"] },
+  { key: "cosmetic", label: "Cosmetic",        categories: ["Healing"] },
+  { key: "blends",   label: "Research blends", categories: ["Metabolic", "Cognition"] },
 ];
 
 export function CatalogPage({ products }: { products: Product[] }) {
   const [chip, setChip] = useState<ChipKey>("all");
   const [slide, setSlide] = useState(0);
-
-  const filtered = useMemo(() => {
-    const def = CHIPS.find((c) => c.key === chip)!;
-    if (def.categories === "all") return products;
-    const set = new Set(def.categories);
-    return products.filter((p) => set.has(p.category));
-  }, [chip, products]);
+  const railRef = useRef<HTMLDivElement | null>(null);
+  const [progress, setProgress] = useState({ width: 33, left: 0 });
 
   const featured = products.slice(0, 3);
 
+  useEffect(() => {
+    const el = railRef.current;
+    if (!el) return;
+    const update = () => {
+      const max = el.scrollWidth - el.clientWidth;
+      const pct = max > 0 ? el.scrollLeft / max : 0;
+      const windowPct = el.clientWidth / el.scrollWidth;
+      const fillPct = Math.max(windowPct * 100, 18);
+      setProgress({ width: fillPct, left: pct * (100 - fillPct) });
+    };
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      el.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
   function goTo(i: number) {
     setSlide(((i % featured.length) + featured.length) % featured.length);
+  }
+
+  function railStep(dir: 1 | -1) {
+    const el = railRef.current;
+    if (!el) return;
+    const tile = el.querySelector(".v3-tile") as HTMLElement | null;
+    const step = tile ? tile.getBoundingClientRect().width + 24 : el.clientWidth;
+    el.scrollBy({ left: step * dir, behavior: "smooth" });
   }
 
   return (
     <div className="v3-shop">
       <TrustBar />
       <main className="v3-container">
+
+        {/* ── Page intro ── */}
         <section className="v3cat-intro">
           <div className="eyebrow">Catalog</div>
           <h1>Research-grade peptides.</h1>
@@ -66,6 +73,7 @@ export function CatalogPage({ products }: { products: Product[] }) {
           </p>
         </section>
 
+        {/* ── Filter / sort ── */}
         <div className="v3cat-filterbar">
           <div className="v3cat-chips" role="tablist" aria-label="Filter peptides">
             {CHIPS.map((c) => (
@@ -90,7 +98,7 @@ export function CatalogPage({ products }: { products: Product[] }) {
         </div>
         <hr className="v3cat-filterbar-divider" />
 
-        {/* Featured carousel */}
+        {/* ── Featured carousel ── */}
         <section className="v3cat-featured" aria-label="Featured peptides">
           <div className="v3-section-head-row" style={{ marginBottom: 24 }}>
             <p className="v3-section-eyebrow">Featured</p>
@@ -143,33 +151,51 @@ export function CatalogPage({ products }: { products: Product[] }) {
           </div>
         </section>
 
-        {/* Product grid — 3/2/1 */}
-        <section aria-label="All peptides">
-          <div className="v3-section-head-row" style={{ marginBottom: 24 }}>
-            <p className="v3-section-eyebrow">All peptides · {String(filtered.length).padStart(2, "0")} of {String(products.length).padStart(2, "0")}</p>
+        {/* ── All peptides — horizontal rail ── */}
+        <section className="v3cat-rail-section" aria-label="All peptides">
+          <div className="v3cat-rail-head">
+            <p className="v3-section-eyebrow">All peptides</p>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 20 }}>
+              <span className="v3cat-section-aside">
+                ← Scroll horizontally · {String(products.length).padStart(2, "0")} products
+              </span>
+              <div style={{ display: "inline-flex", gap: 8 }}>
+                <button
+                  type="button"
+                  className="v3-arrow-btn is-sm"
+                  aria-label="Scroll rail left"
+                  onClick={() => railStep(-1)}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m15 6-6 6 6 6" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  className="v3-arrow-btn is-sm"
+                  aria-label="Scroll rail right"
+                  onClick={() => railStep(1)}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m9 6 6 6-6 6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
-          {filtered.length > 0 ? (
-            <div className="v3cat-grid">
-              {filtered.map((p) => (
+          <div className="v3-rail-viewport" ref={railRef}>
+            <div className="v3-rail-track">
+              {products.map((p) => (
                 <ProductTile key={p.slug} product={p} />
               ))}
             </div>
-          ) : (
-            <p
-              style={{
-                padding: "64px 0",
-                textAlign: "center",
-                fontFamily: "var(--font-mono)",
-                fontSize: 12,
-                fontWeight: 500,
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-                color: "var(--v3-ink-55)",
-              }}
-            >
-              No peptides match this filter
-            </p>
-          )}
+          </div>
+          <div className="v3-rail-progress-track">
+            <div
+              className="v3-rail-progress-fill"
+              style={{ width: `${progress.width}%`, left: `${progress.left}%` }}
+            />
+          </div>
         </section>
 
         <hr className="v3cat-footnote-divider" />
@@ -178,7 +204,7 @@ export function CatalogPage({ products }: { products: Product[] }) {
         </div>
       </main>
 
-      {/* Dark CTA — For Research Teams */}
+      {/* ── For Research Teams CTA ── */}
       <div className="v3-dark-cta">
         <div className="v3-dark-cta-eyebrow">For Research Teams</div>
         <h2 className="v3-dark-cta-h">

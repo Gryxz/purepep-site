@@ -2051,6 +2051,30 @@ a.v3-pill-ghost:hover {
   height: 1px; background: var(--v3-hair); border: none; margin: 0 0 32px;
 }
 
+/* CATALOG — rail section (all peptides horizontal scroll) */
+.v3cat-rail-section { padding: 24px 0 56px; }
+
+.v3cat-rail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.v3cat-section-aside {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(31 31 31 / 45%);
+}
+
 /* CATALOG — featured carousel */
 .v3cat-featured { position: relative; padding: 0 0 56px; }
 
