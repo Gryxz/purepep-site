@@ -1,0 +1,87 @@
+name: Deploy to Cloudways
+
+on:
+  push:
+    branches:
+      - main
+      - claude/port-apple-swiss-design-29ktB
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build static export
+        run: pnpm build
+        env:
+          WC_API_URL: ""
+          NEXT_PUBLIC_SITE_URL: "https://purepep.shop"
+          NEXT_PUBLIC_INDEXING_ENABLED: "true"
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$CLOUDWAYS_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+        env:
+          CLOUDWAYS_SSH_KEY: ${{ secrets.CLOUDWAYS_SSH_KEY }}
+
+      - name: Add Cloudways host to known_hosts
+        run: ssh-keyscan -H "$CLOUDWAYS_SSH_HOST" >> ~/.ssh/known_hosts
+        env:
+          CLOUDWAYS_SSH_HOST: ${{ secrets.CLOUDWAYS_SSH_HOST }}
+
+      - name: Deploy via rsync
+        run: |
+          rsync -avz --delete --omit-dir-times --exclude='index.txt' \
+            -e 'ssh -o StrictHostKeyChecking=no' \
+            out/ \
+            "${CLOUDWAYS_SSH_USER}@${CLOUDWAYS_SSH_HOST}:/home/master/applications/tupbkzzpnc/public_html/"
+        env:
+          CLOUDWAYS_SSH_HOST: ${{ secrets.CLOUDWAYS_SSH_HOST }}
+          CLOUDWAYS_SSH_USER: ${{ secrets.CLOUDWAYS_SSH_USER }}
+
+      - name: Purge Varnish cache
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+            "${CLOUDWAYS_SSH_USER}@${CLOUDWAYS_SSH_HOST}" \
+            "curl -s -o /dev/null -X PURGE 'http://localhost/' -H 'Host: purepep.shop' \
+             && curl -s -o /dev/null -X PURGE 'http://localhost/.*' -H 'Host: purepep.shop'"
+        env:
+          CLOUDWAYS_SSH_HOST: ${{ secrets.CLOUDWAYS_SSH_HOST }}
+          CLOUDWAYS_SSH_USER: ${{ secrets.CLOUDWAYS_SSH_USER }}
+
+      - name: Smoke test — check https://purepep.shop/ returns 200
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://purepep.shop/)
+          echo "HTTP status: $STATUS"
+          [ "$STATUS" = "200" ] || { echo "Smoke test FAILED: expected 200, got $STATUS" >&2; exit 1; }
