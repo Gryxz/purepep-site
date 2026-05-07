@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
 import { getProduct } from "@/data/products.static";
 import { MobileVial } from "./MobileVial";
@@ -17,8 +18,10 @@ const UPSELL_SLUG = "bpc-157";
  * serve viewports >768px.
  */
 export function MobileCartDrawer() {
+  const pathname = usePathname();
   const { items, isOpen, closeCart, updateQty, removeItem, addItem, subtotal } = useCartStore();
   const [promoOpen, setPromoOpen] = useState(false);
+  const [shipBarHidden, setShipBarHidden] = useState(false);
   const sub = subtotal();
   const count = items.reduce((s, i) => s + i.qty, 0);
   const remaining = Math.max(0, FREE_SHIP_THRESHOLD - sub);
@@ -44,6 +47,22 @@ export function MobileCartDrawer() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, closeCart]);
+
+  // Auto-hide the free-ship bar once unlocked.  Brief celebration window
+  // (1.8s) so the user sees the "✓ unlocked" state, then the bar slides
+  // out to reclaim the precious vertical real estate.  If they later drop
+  // below the threshold (remove items / change qty), the bar reappears.
+  useEffect(() => {
+    if (!unlocked) {
+      setShipBarHidden(false);
+      return;
+    }
+    const t = setTimeout(() => setShipBarHidden(true), 1800);
+    return () => clearTimeout(t);
+  }, [unlocked]);
+
+  // Suppress the entire drawer on the age-gate (no cart access until verified).
+  if (pathname === "/age-gate") return null;
 
   // Upsell candidate: BPC-157 if it exists in catalog AND isn't already in cart.
   const upsellProduct = getProduct(UPSELL_SLUG);
@@ -89,9 +108,10 @@ export function MobileCartDrawer() {
           </button>
         </header>
 
-        {/* Free-ship progress bar (only when there are items) */}
-        {items.length > 0 && (
-          <div className="mob-ship-bar">
+        {/* Free-ship progress bar (only when there are items, auto-hides
+            after the unlock celebration window — see effect above) */}
+        {items.length > 0 && !shipBarHidden && (
+          <div className={`mob-ship-bar${unlocked ? " is-celebrating" : ""}`}>
             <div className="mob-ship-bar-label">
               <span className={`mob-ship-bar-text${unlocked ? " is-unlocked" : ""}`}>
                 {unlocked ? (
@@ -193,7 +213,7 @@ export function MobileCartDrawer() {
                       <div className="mob-upsell-meta">{upsellProduct.dose} · LYOPHILIZED</div>
                       <div className="mob-upsell-price">${upsellProduct.price.toFixed(2)}</div>
                     </div>
-                    <button type="button" className="mob-upsell-add" onClick={handleAddUpsell}>
+                    <button type="button" className="mob-cta-amber-base mob-upsell-add" onClick={handleAddUpsell}>
                       + Add
                     </button>
                   </div>
@@ -234,7 +254,7 @@ export function MobileCartDrawer() {
         {/* CTAs */}
         <div className="mob-cart-ctas">
           {items.length > 0 && (
-            <a href="/checkout" className="mob-cta-checkout" onClick={closeCart}>
+            <a href="/checkout" className="mob-cta-amber-base mob-cta-checkout" onClick={closeCart}>
               Continue to checkout
               <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <line x1="5" y1="12" x2="19" y2="12" />

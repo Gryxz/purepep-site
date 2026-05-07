@@ -29,21 +29,27 @@ export function MobileHomePage({ products }: { products: Product[] }) {
 
   return (
     <div className="mob-app">
-      {/* Trust strip */}
-      <div className="mob-trust-bar">
-        <div className="mob-trust-item"><span className="dot" />99.5%+ Purity</div>
-        <div className="mob-trust-item"><span className="dot" />Third-Party Tested</div>
-        <div className="mob-trust-item"><span className="dot" />2-3 Day Shipping</div>
-        <div className="mob-trust-item"><span className="dot" />Free over $200</div>
+      {/* Trust strip — auto-loop marquee.  Items duplicated so the
+          translate(-50%) wrap reads seamlessly. */}
+      <div className="mob-trust-bar" data-mob-section="dark">
+        <div className="mob-trust-track">
+          <div className="mob-trust-item"><span className="dot" />99.5%+ Purity</div>
+          <div className="mob-trust-item"><span className="dot" />Third-Party Tested</div>
+          <div className="mob-trust-item"><span className="dot" />2-3 Day Shipping</div>
+          <div className="mob-trust-item"><span className="dot" />Free over $200</div>
+          <div className="mob-trust-item"><span className="dot" />Lot-matched COA</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />99.5%+ Purity</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Third-Party Tested</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />2-3 Day Shipping</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Free over $200</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Lot-matched COA</div>
+        </div>
       </div>
 
-      {/* Hero */}
-      <section className="mob-hero">
+      {/* Hero — corner ornaments + 21+ compliance pill removed.  CTA now
+          carries a spec tagline so new visitors understand the flagship. */}
+      <section className="mob-hero" data-mob-section="dark">
         <div className="mob-hero-bg" />
-        <div className="mob-hero-corner tl" />
-        <div className="mob-hero-corner tr" />
-        <div className="mob-hero-corner bl" />
-        <div className="mob-hero-corner br" />
         <div className="mob-hero-content">
           <div className="mob-hero-eyebrow">
             <span className="dot" />
@@ -51,16 +57,23 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           </div>
           <h1 className="mob-hero-h1">The standard for research peptides.</h1>
           <p className="mob-hero-sub">
-            Lab-verified compounds for in vitro research. Documented, tracked, shipped from the US.
+            Lab-verified peptides for in vitro research. Lot-matched COA on every vial, tracked US shipping.
           </p>
           <div className="mob-hero-ctas">
-            <a href={featured ? `/shop/${featured.slug}` : "/shop"} className="mob-cta-amber">
+            <a href={featured ? `/shop/${featured.slug}` : "/shop"} className="mob-cta-amber-base mob-cta-amber">
               {featured ? `Shop ${featured.name}` : "Shop the catalog"}
               <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
               </svg>
             </a>
+            {featured && (
+              <p className="mob-hero-cta-tagline">
+                {featured.compound === "RETA"
+                  ? `${featured.name} · Triple GLP-1 / GIP / glucagon agonist`
+                  : `${featured.name} · ${shortSpec(featured)}`}
+              </p>
+            )}
             <a href="/shop" className="mob-cta-ghost">
               Browse catalog
               <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -69,22 +82,15 @@ export function MobileHomePage({ products }: { products: Product[] }) {
               </svg>
             </a>
           </div>
-          <div className="mob-hero-compliance">
-            <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-            21+ Qualified researchers · Research use only
-          </div>
         </div>
       </section>
 
-      {/* Spotlight */}
+      {/* Spotlight — eyebrow dropped (context is now in the spec line);
+          declarative title; explicit spec line so visitors know what
+          this compound is at a glance. */}
       {featured && (
         <section className="mob-spotlight">
-          <div className="mob-spotlight-eyebrow">Featured · Triple agonist</div>
-          <h2 className="mob-spotlight-h">
-            Our flagship compound, <em>{featured.name}.</em>
-          </h2>
+          <h2 className="mob-spotlight-h">{featured.name} — our flagship compound</h2>
           <a href={`/shop/${featured.slug}`} className="mob-spotlight-card">
             <div className="mob-spotlight-img">
               <span className="mob-spotlight-cat">{categoryShort(featured.category)}</span>
@@ -101,7 +107,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             </div>
             <div className="mob-spotlight-body">
               <h3 className="mob-spotlight-name">{featured.name}</h3>
-              <p className="mob-spotlight-desc">{shortDesc(featured)}</p>
+              <p className="mob-spotlight-spec">{shortSpec(featured)}</p>
               <div className="mob-spotlight-foot">
                 <div className="mob-spotlight-price-block">
                   <span className="mob-spotlight-price">${Math.round(featured.price)}</span>
@@ -120,12 +126,11 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         </section>
       )}
 
-      {/* Catalog teaser */}
+      {/* Catalog teaser — eyebrow dropped (the section header is enough). */}
       <section className="mob-catalog-section">
         <div className="mob-catalog-header">
-          <div className="mob-catalog-eyebrow">Browse all</div>
           <div className="mob-catalog-h-row">
-            <h2 className="mob-catalog-h">The catalog.</h2>
+            <h2 className="mob-catalog-h">The catalog</h2>
             <a href="/shop" className="mob-catalog-all">View all →</a>
           </div>
         </div>
@@ -158,11 +163,10 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         </div>
       </section>
 
-      {/* Transparency */}
+      {/* Transparency — eyebrow dropped, headline declarative. */}
       <section className="mob-transparency">
         <div className="mob-tr-header">
-          <div className="mob-tr-eyebrow">See for yourself</div>
-          <h2 className="mob-tr-h">Trust, <em>verified.</em></h2>
+          <h2 className="mob-tr-h">Independent verification</h2>
         </div>
         <div className="mob-tr-stack">
           <a href="/quality" className="mob-tr-card">
@@ -216,13 +220,12 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         </div>
       </section>
 
-      {/* Process timeline */}
-      <section className="mob-process">
+      {/* Process timeline — eyebrow dropped, declarative headline + tightened sub. */}
+      <section className="mob-process" data-mob-section="dark">
         <div className="mob-process-header">
-          <div className="mob-process-eyebrow">After checkout</div>
-          <h2 className="mob-process-h">From order <em>to lab.</em></h2>
+          <h2 className="mob-process-h">From order to your lab</h2>
           <p className="mob-process-sub">
-            No surprises. No cold-chain anxiety. Here&apos;s exactly what happens after you tap Add to cart.
+            What happens after you tap Add to cart. No cold-chain anxiety.
           </p>
         </div>
         <div className="mob-timeline">
@@ -269,12 +272,11 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         </div>
       </section>
 
-      {/* Referral */}
+      {/* Referral — eyebrow dropped, declarative headline. */}
       <section className="mob-referral">
         <div className="mob-ref-frame">
           <div className="mob-ref-content">
-            <div className="mob-ref-eyebrow">Refer · Earn</div>
-            <h2 className="mob-ref-h">Bring a researcher. <em>Earn store credit.</em></h2>
+            <h2 className="mob-ref-h">Refer a colleague, earn store credit</h2>
             <p className="mob-ref-sub">
               For labs and verified researchers. Share your code, both sides save — no caps, stack indefinitely.
             </p>
@@ -304,15 +306,15 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         </div>
       </section>
 
-      {/* Dark CTA */}
-      <section className="mob-dcta">
-        <div className="mob-dcta-eyebrow">For Research Teams</div>
-        <h2 className="mob-dcta-h">Need a compound <em>that isn&apos;t listed?</em></h2>
+      {/* Dark CTA — declarative headline + tightened body. */}
+      <section className="mob-dcta" data-mob-section="dark">
+        <div className="mob-dcta-eyebrow">For research teams</div>
+        <h2 className="mob-dcta-h">Don&apos;t see what you need?</h2>
         <p className="mob-dcta-body">
-          We regularly source and synthesize additional peptides for labs and repeat buyers. Reach out
-          with your spec — we&apos;ll respond within one business day.
+          We source and synthesize additional peptides for labs and repeat buyers. Send us your spec —
+          we respond within one business day.
         </p>
-        <a href="/legal/contact" className="mob-dcta-btn">
+        <a href="/legal/contact" className="mob-cta-amber-base mob-dcta-btn">
           Request a quote
           <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
             <line x1="5" y1="12" x2="19" y2="12" />
@@ -346,4 +348,22 @@ function categoryShort(c: Product["category"]): string {
 function shortDesc(p: Product): string {
   const first = p.description.split(".")[0] ?? p.name;
   return first.length > 60 ? first.slice(0, 57) + "..." : first + ".";
+}
+
+/** Compact technical spec line: receptor profile + structure + form. */
+function shortSpec(p: Product): string {
+  const knownSpec: Record<string, string> = {
+    RETA: "Triple GLP-1 / GIP / glucagon agonist · 39 amino acids · Lyophilized",
+    SEMA: "GLP-1 receptor agonist · 31 amino acids · Lyophilized",
+    TIRZ: "Dual GLP-1 / GIP agonist · 39 amino acids · Lyophilized",
+    CAGRI: "Long-acting amylin analogue · Lyophilized",
+    SURVO: "Dual GLP-1 / glucagon agonist · Lyophilized",
+    BPC: "Pentadecapeptide · 15 amino acids · Lyophilized",
+    "BPC-157": "Pentadecapeptide · 15 amino acids · Lyophilized",
+    "TB-500": "Thymosin β-4 fragment · 17 amino acids · Lyophilized",
+    TB500: "Thymosin β-4 fragment · 17 amino acids · Lyophilized",
+    IPAM: "GH secretagogue pentapeptide · Lyophilized",
+    BACW: "0.9% benzyl alcohol bacteriostatic water · Sterile-filtered",
+  };
+  return knownSpec[p.compound] ?? `${p.purity.replace(/\s*\(.*\)$/, "")} · Lyophilized`;
 }

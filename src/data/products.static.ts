@@ -33,6 +33,12 @@ export interface Product {
   price: number;
   /** Display price string for parity with the fixture. */
   priceLabel: string;
+  /**
+   * Optional list price for sale items. When set and greater than `price`,
+   * surfaces (PDP big price block, etc.) render a strikethrough of this
+   * value next to the live price to communicate "on sale".
+   */
+  regularPrice?: number;
   /** Catalog category for filtering. */
   category: Category;
   /** Stock state. */
@@ -225,6 +231,27 @@ export const PRODUCTS: Product[] = [
     storage: "2–8 °C, protect from light",
     purity: "≥ 99.0% (HPLC)",
     sku: "PP-IP-005",
+  },
+  {
+    slug: "bac-water",
+    compound: "BACW",
+    name: "Bacteriostatic Water",
+    dose: "30 mL",
+    variants: ["30 mL"],
+    cas: "—",
+    price: 25.0,
+    priceLabel: "$25.00",
+    regularPrice: 30.0,
+    category: "Healing",
+    stock: "in",
+    description:
+      "0.9% benzyl alcohol bacteriostatic water for in vitro reconstitution of lyophilized peptides. Sterile-filtered, multi-dose 30 mL vial. Pairs with every PurePep peptide vial.",
+    disclaimer:
+      "Bacteriostatic water for laboratory reconstitution of lyophilized research peptides — not for human or veterinary use.",
+    lot: "BW-2604-A01",
+    storage: "Room temperature, protect from light",
+    purity: "USP-grade · 0.9% benzyl alcohol",
+    sku: "PP-BACW-030",
   },
 ];
 

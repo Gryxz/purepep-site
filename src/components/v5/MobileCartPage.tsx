@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
 import { getProduct } from "@/data/products.static";
@@ -28,6 +28,7 @@ export function MobileCartPage() {
   const router = useRouter();
   const { items, updateQty, removeItem, addItem, subtotal } = useCartStore();
   const [promoOpen, setPromoOpen] = useState(false);
+  const [shipBarHidden, setShipBarHidden] = useState(false);
 
   const sub = subtotal();
   const count = items.reduce((s, i) => s + i.qty, 0);
@@ -38,6 +39,16 @@ export function MobileCartPage() {
   const upsellProduct = getProduct(UPSELL_SLUG);
   const upsellInCart = items.some((i) => i.slug === UPSELL_SLUG);
   const showUpsell = !!upsellProduct && !upsellInCart && items.length > 0;
+
+  // Auto-hide free-ship bar 1.8s after unlock — same behavior as drawer.
+  useEffect(() => {
+    if (!unlocked) {
+      setShipBarHidden(false);
+      return;
+    }
+    const t = setTimeout(() => setShipBarHidden(true), 1800);
+    return () => clearTimeout(t);
+  }, [unlocked]);
 
   function handleAddUpsell() {
     if (!upsellProduct) return;
@@ -64,9 +75,9 @@ export function MobileCartPage() {
         </h1>
       </div>
 
-      {/* Free-ship bar */}
-      {items.length > 0 && (
-        <div className="mob-ship-bar">
+      {/* Free-ship bar (auto-hides 1.8s after unlock) */}
+      {items.length > 0 && !shipBarHidden && (
+        <div className={`mob-ship-bar${unlocked ? " is-celebrating" : ""}`}>
           <div className="mob-ship-bar-label">
             <span className={`mob-ship-bar-text${unlocked ? " is-unlocked" : ""}`}>
               {unlocked ? (
@@ -205,7 +216,7 @@ export function MobileCartPage() {
                   <div className="mob-upsell-meta">{upsellProduct.dose} · LYOPHILIZED</div>
                   <div className="mob-upsell-price">${upsellProduct.price.toFixed(2)}</div>
                 </div>
-                <button type="button" className="mob-upsell-add" onClick={handleAddUpsell}>
+                <button type="button" className="mob-cta-amber-base mob-upsell-add" onClick={handleAddUpsell}>
                   + Add
                 </button>
               </div>
@@ -214,7 +225,7 @@ export function MobileCartPage() {
 
           {/* CTAs */}
           <div className="mob-ctas-section">
-            <a href="/checkout" className="mob-cta-checkout">
+            <a href="/checkout" className="mob-cta-amber-base mob-cta-checkout">
               Continue to checkout
               <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <line x1="5" y1="12" x2="19" y2="12" />

@@ -7,7 +7,7 @@
  */
 export function MobileFooter() {
   return (
-    <footer className="mob-foot">
+    <footer className="mob-foot" data-mob-section="dark">
       <div className="mob-foot-section">
         <div className="mob-foot-h">Catalog</div>
         <a href="/shop" className="mob-foot-link">Shop all peptides</a>

@@ -69,12 +69,20 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
 
   return (
     <div className="mob-app">
-      {/* Trust strip */}
-      <div className="mob-trust-bar">
-        <div className="mob-trust-item"><span className="dot" />99.5%+ Purity</div>
-        <div className="mob-trust-item"><span className="dot" />Third-Party Tested</div>
-        <div className="mob-trust-item"><span className="dot" />2-3 Day Shipping</div>
-        <div className="mob-trust-item"><span className="dot" />Secure Checkout</div>
+      {/* Trust strip — auto-loop marquee */}
+      <div className="mob-trust-bar" data-mob-section="dark">
+        <div className="mob-trust-track">
+          <div className="mob-trust-item"><span className="dot" />99.5%+ Purity</div>
+          <div className="mob-trust-item"><span className="dot" />Third-Party Tested</div>
+          <div className="mob-trust-item"><span className="dot" />2-3 Day Shipping</div>
+          <div className="mob-trust-item"><span className="dot" />Secure Checkout</div>
+          <div className="mob-trust-item"><span className="dot" />Lot-matched COA</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />99.5%+ Purity</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Third-Party Tested</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />2-3 Day Shipping</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Secure Checkout</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Lot-matched COA</div>
+        </div>
       </div>
 
       {/* Breadcrumb */}
@@ -154,7 +162,7 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
           </div>
           <button
             type="button"
-            className="mob-buybox"
+            className="mob-cta-amber-base mob-buybox"
             onClick={handleAddToCart}
             disabled={isOut}
             aria-label={isOut ? "Out of stock" : `Add to cart, ${formatPrice(orderTotal)}`}
@@ -231,10 +239,9 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
         </ul>
       </section>
 
-      {/* Often paired with — first related product */}
+      {/* Often paired with — first related product (eyebrow dropped). */}
       {related[0] && (
         <div className="mob-paired-band">
-          <div className="mob-paired-eyebrow">Complete your research kit</div>
           <h2 className="mob-paired-h2">Often paired with</h2>
           <a href={`/shop/${related[0].slug}`} className="mob-paired-card">
             <div className="mob-paired-thumb">{related[0].compound[0]}</div>

@@ -413,27 +413,13 @@ export function MobileCheckout() {
               </div>
             </div>
 
-            {/* Crypto panel */}
+            {/* Crypto panel — simplified: single bone card with the fallback
+                instruction.  The dramatic gold-glass dome / coin badges felt
+                ornamental for a feature that doesn't ship. */}
             <div className={`mob-chk-pay-panel${pay === "crypto" ? " is-active" : ""}`}>
-              <div className="mob-chk-crypto-panel">
-                <div className="mob-chk-crypto-eyebrow">Coming soon</div>
-                <div className="mob-chk-crypto-h">Pay with crypto</div>
-                <div className="mob-chk-crypto-sub">
-                  Direct crypto payments coming soon. <span style={{ color: "rgb(255 210 80 / 75%)", fontWeight: 600 }}>Pay in crypto and receive a 3% discount</span> on your order — automatically applied at checkout.
-                </div>
-                <div className="mob-chk-crypto-coming">
-                  <span className="mob-chk-crypto-dot" />
-                  Integration in progress
-                </div>
-                <div className="mob-chk-crypto-coins">
-                  <div className="mob-chk-coin">BTC</div>
-                  <div className="mob-chk-coin">ETH</div>
-                  <div className="mob-chk-coin">USDC</div>
-                  <div className="mob-chk-coin">SOL</div>
-                </div>
-              </div>
               <div className="mob-chk-crypto-fallback">
-                Want to pay in crypto now? Email <strong>info@purepep.shop</strong> — we&apos;ll handle it manually.
+                Crypto payments coming soon · 3% off when launched. To pay in crypto today, email{" "}
+                <strong>info@purepep.shop</strong> and we&apos;ll handle it manually.
               </div>
             </div>
 
@@ -452,7 +438,9 @@ export function MobileCheckout() {
         </section>
       </div>
 
-      {/* Compliance gate */}
+      {/* Terms acknowledgement gate — researcher 21+ verification already
+          happened at the AgeGate, so this surface is for sale-policy
+          consent only. */}
       <div className={`mob-chk-compliance-box${compliance ? " is-confirmed" : ""}`}>
         <label className={`mob-chk-compliance-check${compliance ? " is-confirmed" : ""}`}>
           <input
@@ -461,11 +449,15 @@ export function MobileCheckout() {
             onChange={(e) => setCompliance(e.target.checked)}
           />
           <span className="mob-chk-compliance-text">
-            I confirm I am a <strong>qualified researcher aged 21+</strong> and that these products will be used <strong>strictly for in vitro laboratory research</strong>. I understand all sales are final.
+            I agree to PurePep&apos;s{" "}
+            <a href="/legal/terms-of-service" style={{ color: "var(--m-amber-cta)", fontWeight: 600 }}>Terms of Sale</a>,{" "}
+            <a href="/legal/refund-policy" style={{ color: "var(--m-amber-cta)", fontWeight: 600 }}>Refund Policy</a>, and{" "}
+            <a href="/legal/shipping-policy" style={{ color: "var(--m-amber-cta)", fontWeight: 600 }}>Shipping Policy</a>.{" "}
+            <strong>All sales are final.</strong>
           </span>
         </label>
         <div className={`mob-chk-compliance-bar${compliance ? " is-show" : ""}`}>
-          <span>✓ Confirmed — research use acknowledged</span>
+          <span>✓ Terms accepted</span>
         </div>
       </div>
 
@@ -473,7 +465,7 @@ export function MobileCheckout() {
       <div className="mob-chk-place-wrap">
         <button
           type="button"
-          className="mob-chk-place"
+          className="mob-cta-amber-base mob-chk-place"
           disabled={!compliance || submitting}
           onClick={handlePlaceOrder}
         >

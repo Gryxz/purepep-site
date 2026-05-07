@@ -1,6 +1,46 @@
+ 
 "use client";
 import { useState } from "react";
 import { Eyebrow } from "@/components/storefront/primitives";
+
+/**
+ * Slim referral card surfaced on the Account / Researcher access page —
+ * mobile-only ($25 off / $25 credit / no cap). Mirrors the larger
+ * homepage referral frame but tuned for the account context (smaller
+ * headline, denser stats, single CTA).
+ */
+function ReferralCard() {
+  return (
+    <div className="mob-only mob-rais-referral">
+      <div className="mob-rais-referral-eyebrow">Refer · Earn</div>
+      <h3 className="mob-rais-referral-h">Refer a colleague, earn store credit</h3>
+      <p style={{ fontSize: 13, lineHeight: 1.55, color: "rgb(250 247 240 / 55%)", maxWidth: "32ch" }}>
+        Share your code with another verified researcher. Both sides save — no caps, stack indefinitely.
+      </p>
+      <div className="mob-rais-referral-stats">
+        <div>
+          <div className="mob-rais-referral-stat-num">$25</div>
+          <div className="mob-rais-referral-stat-label">Off their<br />first order</div>
+        </div>
+        <div>
+          <div className="mob-rais-referral-stat-num">$25</div>
+          <div className="mob-rais-referral-stat-label">Credit when<br />they receive</div>
+        </div>
+        <div>
+          <div className="mob-rais-referral-stat-num">∞</div>
+          <div className="mob-rais-referral-stat-label">Referrals<br />no cap</div>
+        </div>
+      </div>
+      <a href="/affiliates" className="mob-cta-amber-base mob-rais-referral-cta">
+        Join the program
+        <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </a>
+    </div>
+  );
+}
 
 export default function ResearcherAccessPage() {
   const [email, setEmail] = useState("");
@@ -8,9 +48,10 @@ export default function ResearcherAccessPage() {
 
   return (
     <>
-      {/* Hero */}
+      {/* Hero — extra top padding on mobile so the eyebrow clears the
+          fixed glass header (MobileShell). */}
       <section className="bg-bone">
-        <div className="layout-content py-8 md:py-12">
+        <div className="layout-content pt-14 pb-8 md:py-12">
           <Eyebrow>Researcher access</Eyebrow>
           <h1
             className="mt-4 font-display font-black leading-[1] tracking-[-0.035em] text-ink"
@@ -122,6 +163,9 @@ export default function ResearcherAccessPage() {
           </div>
         </div>
       </section>
+
+      {/* Mobile-only referral card */}
+      <ReferralCard />
     </>
   );
 }

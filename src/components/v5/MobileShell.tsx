@@ -1,40 +1,131 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
 import { Lockup } from "@/components/storefront/primitives";
 import { MoreMenu } from "./MoreMenu";
 
 /**
- * v5 mobile chrome — sticky header (logo + hamburger + cart) and the
- * fixed bottom tab bar (Home / Shop / Cart / Account).  Mounted in
- * src/app/layout.tsx inside a `.mob-only` wrapper so it serves only at
- * ≤768px viewports; the existing v3 desktop chrome continues to serve
- * everyone else unchanged.
+ * v5 mobile chrome — fixed glass header (logo + hamburger + cart) and
+ * the fixed bottom tab bar with a sliding amber-glass active indicator.
  *
- * Cart icon dispatches into the same useCartStore the rest of the
- * storefront uses, so the badge count and drawer toggle stay in sync
- * with the desktop header.  The hamburger opens MoreMenu (designed
- * from scratch — no mockup exists for that surface).
+ * Adaptive chrome: an IntersectionObserver watches every element marked
+ * `data-mob-section="dark"` (hero, process, dark CTA, footer, etc.).
+ * When any of them overlap the header zone (top 64px) the header gets
+ * `.is-on-dark`; same for the tab bar zone (bottom 80px).  Glass tints
+ * + text colors invert under dark sections so chrome reads cleanly.
  */
 export function MobileShell() {
   const pathname = usePathname() ?? "/";
   const { openCart, totalItems } = useCartStore();
   const count = totalItems();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [headerDark, setHeaderDark] = useState(false);
+  const [tabBarDark, setTabBarDark] = useState(false);
+  const headerRef = useRef<HTMLElement | null>(null);
+  const tabBarRef = useRef<HTMLElement | null>(null);
 
+  // Active-tab index drives the sliding indicator pill (Home/Shop/Cart/Account).
   const isHome = pathname === "/";
   const isShop = pathname.startsWith("/shop");
   const isCart = pathname === "/cart" || pathname === "/checkout";
+  const isAccount = pathname.startsWith("/researcher-access");
+  const tabIndex = isHome ? 0 : isShop ? 1 : isCart ? 2 : isAccount ? 3 : -1;
+
+  // Adaptive chrome — IntersectionObserver tracks dark-themed sections.
+  // Re-runs when the route changes since the dark sentinels live inside
+  // the page component tree which remounts on navigation.
+  useEffect(() => {
+    if (pathname === "/age-gate") return;
+
+    // Wait one frame so the new route's DOM is mounted before query.
+    const raf = requestAnimationFrame(() => {
+      const sections = Array.from(
+        document.querySelectorAll<HTMLElement>('[data-mob-section="dark"]'),
+      );
+      if (sections.length === 0) {
+        setHeaderDark(false);
+        setTabBarDark(false);
+        return;
+      }
+
+      // Track which dark sections are intersecting which strip.
+      const headerHits = new Set<Element>();
+      const tabBarHits = new Set<Element>();
+
+      // Header observer: top of viewport, 56px tall (header height + buffer).
+      const headerObs = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) headerHits.add(e.target);
+            else headerHits.delete(e.target);
+          }
+          setHeaderDark(headerHits.size > 0);
+        },
+        {
+          rootMargin: "0px 0px -100% 0px", // collapse bottom edge to 0
+          threshold: 0,
+        },
+      );
+      // Use a top sentinel by treating any intersection in the top 64px
+      // as "behind header". rootMargin trick: shrink bottom to top+64px.
+      // Simpler: switch to threshold-based approach below.
+      headerObs.disconnect();
+
+      // Replace with dual observers using rootMargin to define zones.
+      const headerZoneObs = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) headerHits.add(e.target);
+            else headerHits.delete(e.target);
+          }
+          setHeaderDark(headerHits.size > 0);
+        },
+        // Zone: top 0 to top+56px. Bottom margin = -(viewport - 56)px.
+        { rootMargin: `0px 0px -${Math.max(0, (typeof window !== "undefined" ? window.innerHeight : 800) - 56)}px 0px`, threshold: 0 },
+      );
+
+      const tabBarZoneObs = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) tabBarHits.add(e.target);
+            else tabBarHits.delete(e.target);
+          }
+          setTabBarDark(tabBarHits.size > 0);
+        },
+        // Zone: bottom-80px to bottom. Top margin = -(viewport - 80)px.
+        { rootMargin: `-${Math.max(0, (typeof window !== "undefined" ? window.innerHeight : 800) - 80)}px 0px 0px 0px`, threshold: 0 },
+      );
+
+      sections.forEach((s) => {
+        headerZoneObs.observe(s);
+        tabBarZoneObs.observe(s);
+      });
+
+      return () => {
+        headerZoneObs.disconnect();
+        tabBarZoneObs.disconnect();
+      };
+    });
+
+    return () => cancelAnimationFrame(raf);
+  }, [pathname]);
+
+  // Suppress mobile chrome on the age-gate so the user has nothing to tap
+  // except the verification controls (no header, no tab bar, no cart icon).
+  if (pathname === "/age-gate") return null;
 
   return (
     <>
       {/* Header */}
-      <header className="mob-hdr mob-only">
+      <header
+        ref={headerRef}
+        className={`mob-hdr mob-only${headerDark ? " is-on-dark" : ""}`}
+      >
         <a href="/" className="mob-logo" aria-label="PurePep home">
-          <Lockup className="h-7 w-auto text-ink" />
+          <Lockup className="h-7 w-auto" />
         </a>
         <div className="mob-hdr-r">
           <button
@@ -74,8 +165,16 @@ export function MobileShell() {
         <MoreMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
       </div>
 
-      {/* Bottom tab bar */}
-      <nav className="mob-tab-bar mob-only" aria-label="Mobile navigation">
+      {/* Bottom tab bar with sliding indicator */}
+      <nav
+        ref={tabBarRef}
+        className={`mob-tab-bar mob-only${tabBarDark ? " is-on-dark" : ""}`}
+        aria-label="Mobile navigation"
+        style={{ ["--mob-tab-index" as string]: String(Math.max(0, tabIndex)) }}
+      >
+        <span className={`mob-tab-indicator${tabIndex < 0 ? " is-hidden" : ""}`} aria-hidden="true">
+          <span className="mob-tab-indicator-pill" />
+        </span>
         <a href="/" className={`mob-tab-btn${isHome ? " is-active" : ""}`} aria-current={isHome ? "page" : undefined}>
           <svg fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
             <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -106,7 +205,11 @@ export function MobileShell() {
           </span>
           Cart
         </button>
-        <a href="/researcher-access" className="mob-tab-btn">
+        <a
+          href="/researcher-access"
+          className={`mob-tab-btn${isAccount ? " is-active" : ""}`}
+          aria-current={isAccount ? "page" : undefined}
+        >
           <svg fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />

@@ -57,13 +57,20 @@ export function MobileShopPage({ products }: { products: Product[] }) {
 
   return (
     <div className="mob-app mob-shop">
-      {/* Trust strip */}
-      <div className="mob-trust-bar">
-        <div className="mob-trust-item"><span className="dot" />99.5%+ Purity</div>
-        <div className="mob-trust-item"><span className="dot" />Third-Party Tested</div>
-        <div className="mob-trust-item"><span className="dot" />2-3 Day Shipping</div>
-        <div className="mob-trust-item"><span className="dot" />Secure Checkout</div>
-        <div className="mob-trust-item"><span className="dot" />Free over $200</div>
+      {/* Trust strip — auto-loop marquee */}
+      <div className="mob-trust-bar" data-mob-section="dark">
+        <div className="mob-trust-track">
+          <div className="mob-trust-item"><span className="dot" />99.5%+ Purity</div>
+          <div className="mob-trust-item"><span className="dot" />Third-Party Tested</div>
+          <div className="mob-trust-item"><span className="dot" />2-3 Day Shipping</div>
+          <div className="mob-trust-item"><span className="dot" />Secure Checkout</div>
+          <div className="mob-trust-item"><span className="dot" />Free over $200</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />99.5%+ Purity</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Third-Party Tested</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />2-3 Day Shipping</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Secure Checkout</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Free over $200</div>
+        </div>
       </div>
 
       {/* Page title */}
@@ -176,14 +183,14 @@ export function MobileShopPage({ products }: { products: Product[] }) {
       </section>
 
       {/* Dark CTA */}
-      <section className="mob-dcta">
-        <div className="mob-dcta-eyebrow">For Research Teams</div>
-        <h2 className="mob-dcta-h">Need a compound <em>that isn&apos;t listed?</em></h2>
+      <section className="mob-dcta" data-mob-section="dark">
+        <div className="mob-dcta-eyebrow">For research teams</div>
+        <h2 className="mob-dcta-h">Don&apos;t see what you need?</h2>
         <p className="mob-dcta-body">
-          We regularly source and synthesize additional peptides for labs and repeat buyers. Reach out
-          with your spec — we&apos;ll get back within one business day.
+          We source and synthesize additional peptides for labs and repeat buyers. Send us your spec —
+          we respond within one business day.
         </p>
-        <a href="/legal/contact" className="mob-dcta-btn">
+        <a href="/legal/contact" className="mob-cta-amber-base mob-dcta-btn">
           Request a quote
           <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
             <line x1="5" y1="12" x2="19" y2="12" />
