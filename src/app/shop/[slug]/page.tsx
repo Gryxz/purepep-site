@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
-import { getAllSlugs, getProductBySlug } from "@/lib/wc-api";
+import { getAllSlugs, getProductBySlug, getAllProducts } from "@/lib/wc-api";
 import { PDPHero } from "@/components/v3/PDPHero";
+import { MobilePDP } from "@/components/v5/MobilePDP";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -31,5 +32,21 @@ export default async function PDPPage({
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  return <PDPHero product={product} />;
+  // Related products for the mobile carousel — same-category first, then
+  // others, capped to 8 cards. Fetched at build time alongside the product.
+  const all = await getAllProducts();
+  const sameCat = all.filter((p) => p.slug !== slug && p.category === product.category);
+  const others  = all.filter((p) => p.slug !== slug && p.category !== product.category);
+  const related = [...sameCat, ...others].slice(0, 8);
+
+  return (
+    <>
+      <div className="desktop-only">
+        <PDPHero product={product} />
+      </div>
+      <div className="mob-only">
+        <MobilePDP product={product} related={related} />
+      </div>
+    </>
+  );
 }
