@@ -77,7 +77,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <Header />
           </div>
           <main className="pb-[74px] md:pb-0">{children}</main>
-          <Footer products={products} policies={policies} />
+          <div className="desktop-only">
+            <Footer products={products} policies={policies} />
+          </div>
           <CartDrawer />
           <CookieBanner />
           <div className="desktop-only">
