@@ -5201,24 +5201,27 @@ a.v3-pill-ghost:hover {
   min-height: 100vh;
   position: relative;
 
-  /* Top inset = mobile header height (kept fixed at top of viewport
-     because MobileShell mounts after children in layout.tsx). Bottom
-     inset = tab bar height + safe area. */
-  padding-top: 62px;
-  padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+  /* Top inset = mobile header height (now slimmer, ~50px). Bottom
+     padding kept minimal — tab bar is liquid-glass so footer scrolls
+     visibly through it; only safe-area buffer needed. */
+  padding-top: 50px;
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 .mob-app a { color: inherit; text-decoration: none; }
 .mob-app button { font-family: var(--font-sans); cursor: pointer; border: none; background: none; color: inherit; }
 
-/* ── Header (fixed at top of viewport, glassy) ──────────────────── */
+/* ── Header (fixed at top, true liquid-glass material) ─────────── */
 .mob-hdr {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 20px;
-  background: rgb(250 247 240 / 92%);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  padding: 9px 16px;
+  background: rgb(250 247 240 / 62%);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-  border-bottom: 1px solid rgb(229 223 210 / 50%);
+  border-bottom: 1px solid rgb(229 223 210 / 35%);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 55%) inset,
+    0 4px 16px rgb(31 31 31 / 4%);
 }
 .mob-logo { display: flex; align-items: center; gap: 10px; }
 
@@ -5282,15 +5285,19 @@ a.v3-pill-ghost:hover {
   flex-shrink: 0;
 }
 
-/* ── Bottom tab bar ──────────────────────────────────────────────── */
+/* ── Bottom tab bar (liquid-glass material) ────────────────────── */
 .mob-tab-bar {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
-  background: rgb(250 247 240 / 96%);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--m-rule);
+  background: rgb(250 247 240 / 70%);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border-top: 1px solid rgb(229 223 210 / 35%);
   display: grid; grid-template-columns: repeat(4, 1fr);
   padding-top: 8px;
   padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
+  box-shadow:
+    0 -1px 0 rgb(255 255 255 / 55%) inset,
+    0 -4px 16px rgb(31 31 31 / 4%);
 }
 
 .mob-tab-btn {
@@ -5590,10 +5597,11 @@ a.v3-pill-ghost:hover {
 
 .mob-spotlight-cat {
   position: absolute; top: 14px; left: 14px; z-index: 2;
-  background: var(--m-ink); color: var(--m-bone);
+  background: var(--m-amber-cta); color: var(--m-bone);
   padding: 6px 12px; border-radius: var(--m-rf);
   font-family: var(--font-sans); font-size: 10px; font-weight: 600;
   letter-spacing: 0.06em;
+  box-shadow: 0 1px 4px rgb(160 95 0 / 25%);
 }
 
 .mob-spotlight-stock {
@@ -5674,10 +5682,11 @@ a.v3-pill-ghost:hover {
 
 .mob-cat-pill {
   position: absolute; top: 10px; left: 10px; z-index: 2;
-  background: var(--m-ink); color: var(--m-bone);
+  background: var(--m-amber-cta); color: var(--m-bone);
   padding: 5px 10px; border-radius: var(--m-rf);
   font-family: var(--font-sans); font-size: 10px; font-weight: 600;
   letter-spacing: 0.04em;
+  box-shadow: 0 1px 4px rgb(160 95 0 / 25%);
 }
 
 .mob-stock-chip {
@@ -6863,31 +6872,36 @@ a.v3-pill-ghost:hover {
 
 .mob-cta-checkout {
   width: 100%; padding: 17px 24px;
-  background: linear-gradient(160deg, #4a5238 0%, #3D4232 55%, #333827 100%);
-  color: var(--m-bone);
+  background: linear-gradient(158deg, #E5A30D 0%, #C8890A 18%, #A86F00 50%, #8A5A00 78%, #6B4500 100%);
+  color: #fff;
   border-radius: var(--m-rf);
   font-weight: 700; font-size: 14px;
   letter-spacing: 0.06em; text-transform: uppercase;
   display: flex; align-items: center; justify-content: center; gap: 8px;
   position: relative; overflow: hidden;
-  border-top: 1px solid rgb(255 255 255 / 10%);
-  border-bottom: 1px solid rgb(0 0 0 / 25%);
+  border: 1px solid transparent;
+  border-color: rgb(255 235 150 / 55%) rgb(80 50 0 / 20%) rgb(60 35 0 / 40%) rgb(255 220 120 / 25%);
   box-shadow:
-    0 4px 16px rgb(45 50 35 / 50%),
-    0 1px 3px rgb(0 0 0 / 20%),
-    inset 0 1px 0 rgb(255 255 255 / 8%);
+    0 1px 0 rgb(255 235 150 / 25%),
+    0 8px 24px rgb(120 75 0 / 55%),
+    0 2px 6px rgb(0 0 0 / 30%),
+    inset 0 1px 0 rgb(255 240 170 / 40%),
+    inset 0 2px 8px rgb(255 235 150 / 10%),
+    inset 0 -2px 6px rgb(80 50 0 / 30%),
+    inset 0 -1px 0 rgb(60 35 0 / 40%);
   text-decoration: none;
   transition: filter 0.2s, transform 0.15s;
 }
 
 .mob-cta-checkout::before {
   content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 40%;
-  background: linear-gradient(to bottom, rgb(255 255 255 / 6%), transparent);
+  top: -1px; left: -1px; right: -1px; height: 55%;
+  background: linear-gradient(to bottom, rgb(255 245 200 / 28%), rgb(255 235 160 / 8%) 50%, rgb(255 255 255 / 0%));
+  border-radius: var(--m-rf) var(--m-rf) 60% 60% / var(--m-rf) var(--m-rf) 40% 40%;
   pointer-events: none;
 }
-.mob-cta-checkout:hover { filter: brightness(1.12); }
-.mob-cta-checkout:active { transform: scale(0.99); filter: brightness(0.95); }
+.mob-cta-checkout:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.mob-cta-checkout:active { transform: translateY(1px); filter: brightness(0.94); }
 
 .mob-cta-view {
   width: 100%; padding: 14px 24px;
@@ -7419,22 +7433,22 @@ a.v3-pill-ghost:hover {
 
 .mob-chk-place {
   width: 100%; padding: 19px 24px;
-  background: linear-gradient(158deg, #5a6647 0%, #4a5238 18%, #3D4232 50%, #333827 78%, #2a2f1f 100%);
-  color: var(--m-bone);
+  background: linear-gradient(158deg, #E5A30D 0%, #C8890A 18%, #A86F00 50%, #8A5A00 78%, #6B4500 100%);
+  color: #fff;
   border-radius: var(--m-rf);
   font-weight: 700; font-size: 15px;
   letter-spacing: 0.06em; text-transform: uppercase;
   display: flex; align-items: center; justify-content: center; gap: 8px;
   position: relative; overflow: hidden;
   border: 1px solid transparent;
-  border-color: rgb(255 255 255 / 28%) rgb(0 0 0 / 15%) rgb(0 0 0 / 35%) rgb(255 255 255 / 12%);
+  border-color: rgb(255 235 150 / 55%) rgb(80 50 0 / 20%) rgb(60 35 0 / 40%) rgb(255 220 120 / 25%);
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 15%),
-    0 8px 24px rgb(20 28 14 / 65%),
+    0 1px 0 rgb(255 235 150 / 25%),
+    0 8px 24px rgb(120 75 0 / 55%),
     0 2px 6px rgb(0 0 0 / 30%),
     0 1px 2px rgb(0 0 0 / 20%),
-    inset 0 1px 0 rgb(255 255 255 / 22%),
-    inset 0 -2px 6px rgb(0 0 0 / 25%);
+    inset 0 1px 0 rgb(255 240 170 / 40%),
+    inset 0 -2px 6px rgb(80 50 0 / 30%);
   transition: filter 0.18s, transform 0.15s;
   cursor: pointer;
 }

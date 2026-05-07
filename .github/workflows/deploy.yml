@@ -41,7 +41,18 @@ jobs:
       - name: Build static export
         run: pnpm build
         env:
-          WC_API_URL: ""
+          # WooCommerce REST credentials — used by lib/wc-api.ts to pull
+          # the live product catalogue at build time. When unset the
+          # build silently falls back to the static fixture in
+          # src/data/products.static.ts.  Add these as repo secrets:
+          #   WC_BASE_URL          = https://<wp-host>/wp-json/wc/v3
+          #   WC_CONSUMER_KEY      = ck_xxxxxxxxxxxxxxxx
+          #   WC_CONSUMER_SECRET   = cs_xxxxxxxxxxxxxxxx
+          #   NEXT_PUBLIC_WC_STORE_URL = https://<wp-host>/wp-json/wc/store/v1
+          WC_BASE_URL: ${{ secrets.WC_BASE_URL }}
+          WC_CONSUMER_KEY: ${{ secrets.WC_CONSUMER_KEY }}
+          WC_CONSUMER_SECRET: ${{ secrets.WC_CONSUMER_SECRET }}
+          NEXT_PUBLIC_WC_STORE_URL: ${{ secrets.NEXT_PUBLIC_WC_STORE_URL }}
           NEXT_PUBLIC_SITE_URL: "https://purepep.shop"
           NEXT_PUBLIC_INDEXING_ENABLED: "true"
 
