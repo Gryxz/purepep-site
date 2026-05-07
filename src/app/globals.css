@@ -6039,4 +6039,94 @@ a.v3-pill-ghost:hover {
   letter-spacing: 0.06em; line-height: 1.55; margin-top: 18px;
 }
 
+/* ════════════════════════════════════════════════════════════════════
+   v5 MOBILE — SHOP / CATALOG PAGE
+   ════════════════════════════════════════════════════════════════════ */
+
+.mob-shop-title { padding: 32px 20px 18px; text-align: center; }
+
+.mob-shop-h1 {
+  font-weight: 900; font-size: 34px; letter-spacing: -0.025em;
+  line-height: 1; color: var(--m-ink);
+}
+
+.mob-search-wrap { padding: 0 20px 16px; }
+
+.mob-search-pill {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 14px 18px;
+  background: var(--m-bone);
+  border: 1px solid var(--m-rule);
+  border-radius: var(--m-rf);
+  color: var(--m-ink-mute);
+  font-family: var(--font-sans); font-size: 14px;
+}
+.mob-search-pill svg { flex-shrink: 0; color: var(--m-ink-mute); }
+
+.mob-filter-row {
+  display: flex; gap: 8px;
+  padding: 0 20px 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.mob-filter-row::-webkit-scrollbar { display: none; }
+.mob-filter-row::after { content: ''; flex-shrink: 0; width: 8px; }
+
+.mob-fchip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 16px; border-radius: var(--m-rf);
+  background: var(--m-s2); color: var(--m-ink);
+  border: 1px solid var(--m-rule);
+  font-family: var(--font-sans); font-size: 13px; font-weight: 500;
+  white-space: nowrap; flex-shrink: 0;
+  scroll-snap-align: start;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  cursor: pointer;
+}
+
+.mob-fchip .ct {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  color: var(--m-ink-mute);
+}
+.mob-fchip.is-active { background: var(--m-ink); color: var(--m-bone); border-color: var(--m-ink); }
+.mob-fchip.is-active .ct { color: rgb(250 247 240 / 60%); }
+
+.mob-count-row {
+  display: flex; justify-content: flex-start; align-items: center;
+  padding: 8px 20px 16px;
+  border-bottom: 1px solid var(--m-rule);
+}
+
+.mob-show-count {
+  font-family: var(--font-sans); font-size: 13px;
+  color: var(--m-ink-mute);
+}
+.mob-show-count strong { color: var(--m-ink); font-weight: 600; }
+
+/* Trust band (4 cells, 2x2) */
+.mob-trust-band-section { padding: 32px 20px; background: var(--m-bone); }
+.mob-trust-band { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.mob-tcell {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 10px; padding: 8px;
+}
+
+.mob-ticon-tile {
+  width: 44px; height: 44px;
+  background: var(--m-s1);
+  border-radius: 12px;
+  display: grid; place-items: center;
+  color: var(--m-amber-cta);
+}
+
+.mob-tlabel {
+  font-weight: 700; font-size: 14px;
+  letter-spacing: -0.01em; color: var(--m-ink);
+}
+.mob-tcap { font-size: 12px; color: var(--m-ink-mute); line-height: 1.45; }
+
+/* Catalog grid spacing override on Shop (uses 20px page padding, not 0) */
+.mob-shop .mob-pgrid { padding: 20px; }
 
