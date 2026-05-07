@@ -9,6 +9,7 @@ import AgeGateGuard from "@/components/AgeGateGuard";
 import CookieBanner from "@/components/v3/CookieBanner";
 import { TabBar } from "@/components/v3/TabBar";
 import { MobileShell } from "@/components/v5/MobileShell";
+import { MobileCartDrawer } from "@/components/v5/MobileCartDrawer";
 import { getAllProducts } from "@/lib/wc-api";
 import { getAllPolicyPages } from "@/lib/wp-pages";
 import "./globals.css";
@@ -80,7 +81,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <div className="desktop-only">
             <Footer products={products} policies={policies} />
           </div>
-          <CartDrawer />
+          {/* Cart drawers — both listen to useCartStore.isOpen but only
+              one renders per viewport via the .mob-only / .desktop-only
+              CSS swap so users see exactly one cart UI. */}
+          <div className="desktop-only">
+            <CartDrawer />
+          </div>
+          <div className="mob-only">
+            <MobileCartDrawer />
+          </div>
           <CookieBanner />
           <div className="desktop-only">
             <TabBar />
