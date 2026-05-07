@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
+import { Lockup } from "@/components/storefront/primitives";
 import { MoreMenu } from "./MoreMenu";
 
 /**
@@ -33,8 +34,7 @@ export function MobileShell() {
       {/* Header */}
       <header className="mob-hdr mob-only">
         <a href="/" className="mob-logo" aria-label="PurePep home">
-          <div className="mob-mono">P</div>
-          <span className="mob-wm">PurePep</span>
+          <Lockup className="h-7 w-auto text-ink" />
         </a>
         <div className="mob-hdr-r">
           <button
