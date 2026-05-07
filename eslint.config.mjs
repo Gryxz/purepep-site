@@ -50,6 +50,7 @@ const config = [
       "src/components/v3/RetaVial.tsx",
       "src/components/v3/RetaVialMini.tsx",
       "src/components/v3/LabelCropSvg.tsx",
+      "src/components/v5/MobileVial.tsx",
     ],
     rules: {
       "no-restricted-syntax": "off",

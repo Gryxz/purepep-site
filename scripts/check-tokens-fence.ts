@@ -36,6 +36,7 @@ const HEX_ALLOWED_FILES = [
   "src/components/v3/RetaVial.tsx",
   "src/components/v3/RetaVialMini.tsx",
   "src/components/v3/LabelCropSvg.tsx",
+  "src/components/v5/MobileVial.tsx",
 ];
 const isHexAllowed = (f: string) =>
   HEX_ALLOWED_FILES.some((p) => f.endsWith(p) || f.endsWith("/" + p));
@@ -49,6 +50,7 @@ const PATTERNS: Pattern[] = [
   {
     name: "Inline style hex literal",
     re: /style=\{\{[^}]*#[0-9A-Fa-f]{3,8}[^}]*\}\}/g,
+    allowFile: isHexAllowed,
   },
   {
     name: "Banned typeface in CSS",

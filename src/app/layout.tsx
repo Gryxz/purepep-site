@@ -8,6 +8,7 @@ import PostHogProvider from "@/components/PostHogProvider";
 import AgeGateGuard from "@/components/AgeGateGuard";
 import CookieBanner from "@/components/v3/CookieBanner";
 import { TabBar } from "@/components/v3/TabBar";
+import { MobileShell } from "@/components/v5/MobileShell";
 import { getAllProducts } from "@/lib/wc-api";
 import { getAllPolicyPages } from "@/lib/wp-pages";
 import "./globals.css";
@@ -70,12 +71,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             footer all land in the static HTML for SEO + first paint. */}
         <PostHogProvider>
           <AgeGateGuard />
-          <Header />
+          {/* Desktop chrome — v3 header + bottom tab bar.  Hidden at
+              ≤768px by .desktop-only; mobile users get MobileShell. */}
+          <div className="desktop-only">
+            <Header />
+          </div>
           <main className="pb-[74px] md:pb-0">{children}</main>
           <Footer products={products} policies={policies} />
           <CartDrawer />
           <CookieBanner />
-          <TabBar />
+          <div className="desktop-only">
+            <TabBar />
+          </div>
+          {/* Mobile chrome — only renders ≤768px (mob-only inside). */}
+          <MobileShell />
         </PostHogProvider>
       </body>
     </html>
