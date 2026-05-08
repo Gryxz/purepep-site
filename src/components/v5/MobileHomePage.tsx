@@ -47,25 +47,24 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       raf = 0;
       const rect = el.getBoundingClientRect();
       const vh = window.innerHeight;
-      // Stack is 130vh; panes stick for ~30vh of scroll (stack height -
-      // pane height).  Fade should complete inside that 30vh window,
-      // so divide by 0.3 * vh.
-      const raw = -rect.top / (vh * 0.3);
+      // Stack is 160vh; panes stick for ~60vh of scroll.  Front-load the
+      // fade — divide by 0.25 * vh so progress hits 1 by ~25vh of
+      // scroll.  Combined with the CSS clamp() multipliers, pane 2
+      // reaches full opacity early and then sits fully on for the
+      // remaining ~35vh of stick range — "feature shows up longer".
+      const raw = -rect.top / (vh * 0.25);
       const p = Math.max(0, Math.min(1, raw));
       el.style.setProperty("--mob-px-p", p.toFixed(4));
 
-      // Catalog rise — as the user approaches the end of the parallax
-      // un-stick zone, lift the catalog section upward so it slides
-      // over the bottom of the dark hero instead of meeting it at a
-      // static seam.  Progress range: stack-bottom going from 1.0 vh
-      // (just below viewport) to 0.4 vh (almost reached viewport top).
+      // Catalog rise — tighten the trigger from 0.6vh to 0.25vh of
+      // scroll so the catalog snaps up quickly once it's coming into
+      // view, rather than dragging in over a long range.  "Faster JS
+      // transition to catalog".
       const catalog = catalogRef.current;
       if (catalog) {
         const stackBottom = rect.bottom;
-        const norm = (vh - stackBottom) / (vh * 0.6); // 0 when stack-bottom = vh, 1 when stack-bottom = 0.4vh
+        const norm = (vh - stackBottom) / (vh * 0.25);
         const lift = Math.max(0, Math.min(1, norm));
-        // Lift up to 80px so the catalog gradient overlaps the hero's
-        // dark surface during the transition.
         catalog.style.transform = `translateY(${(-lift * 80).toFixed(1)}px)`;
       }
     };

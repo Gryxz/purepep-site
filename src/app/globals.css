@@ -7905,13 +7905,13 @@ a.v3-pill-ghost:hover {
 .mob-heropx {
   position: relative;
 
-  /* Stack height = pane height (100vh) + scroll runway for the parallax
-     fade.  130vh gives the JS fade 30vh of scroll to play, then the
-     next section (catalog) takes over.  Bg is #050505 to match pane 2's
-     dark tone — the un-stick area between panes scrolling up and the
-     catalog section taking over reads as one continuous dark surface
-     rather than flashing through to bone. */
-  height: 130vh;
+  /* Stack height = pane height (100vh) + scroll runway for the
+     parallax.  160vh gives panes 60vh of stick range — pane 2 reaches
+     full opacity early via the JS fade, then sits fully visible for
+     ~35vh of additional scroll before un-sticking.  Bg is #050505 so
+     the un-stick zone reads as one continuous dark surface that flows
+     into the catalog gradient. */
+  height: 160vh;
   background: #050505;
 }
 
@@ -7951,15 +7951,17 @@ a.v3-pill-ghost:hover {
 .mob-heropx-1 {
   z-index: 1;
 
-  /* Fade out fast: gone by progress 0.6 so pane 2 has air. */
-  opacity: calc(1 - clamp(0, var(--mob-px-p, 0) * 1.7, 1));
+  /* Fade out aggressively — gone by progress 0.35 so pane 2 has the
+     stage to itself for the remainder of the stick range. */
+  opacity: calc(1 - clamp(0, var(--mob-px-p, 0) * 3, 1));
 }
 
 .mob-heropx-2 {
   z-index: 2;
 
-  /* Fade in starting at progress 0.35, fully on by 0.85. */
-  opacity: clamp(0, (var(--mob-px-p, 0) - 0.35) * 2, 1);
+  /* Fade in starting at progress 0.15, fully on by 0.4 — pane 2 then
+     sits at opacity 1 from 0.4 → 1.0 = 60% of the stick range. */
+  opacity: clamp(0, (var(--mob-px-p, 0) - 0.15) * 4, 1);
 
   /* Stack on top of pane 1 so its bg covers as it fades in. */
   margin-top: -100vh;
