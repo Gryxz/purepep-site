@@ -7897,10 +7897,10 @@ a.v3-pill-ghost:hover {
 /* Pane 2: override the parent flex centering so the cluster anchors to
    the bottom of the pane instead of floating mid-viewport.  Higher
    specificity (.mob-heropx > .mob-heropx-2 = two classes vs
-   .mob-heropx-pane single class) so this wins cleanly. */
+   .mob-heropx-pane single class) plus !important for belt-and-braces. */
 .mob-heropx > .mob-heropx-2 {
-  justify-content: flex-end;
-  padding-bottom: clamp(80px, 14vh, 120px);
+  justify-content: flex-end !important;
+  padding-bottom: clamp(80px, 14vh, 120px) !important;
 }
 
 .mob-heropx-1 {
@@ -8030,10 +8030,12 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-content-2 {
-  /* No special handling — parent flex (justify-content:flex-end on
-     .mob-heropx-2) anchors the cluster to the bottom of the pane.
-     Vial + watermark sit behind as absolute background siblings. */
+  /* margin-top: auto in a column-flex container is the atomic
+     mechanism for "push this single child to the bottom of the
+     container".  Belt-and-braces with the parent's justify-content
+     override above. */
   position: relative;
+  margin-top: auto !important;
 }
 
 .mob-heropx-eyebrow {
