@@ -7980,26 +7980,26 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-vial-wrap {
-  /* Pull the vial into the upper-middle so it dominates the top half
-     of the viewport — the headline+CTA cluster (anchored to lower
-     third) reads as the action sitting below it. */
+  /* Vial centered, large, sits BEHIND the content cluster so headline
+     and CTA overlay it cleanly.  Lower opacity so the text reads
+     without fighting the vial outline. */
   position: absolute;
-  top: 32%; left: 50%;
-  transform: translate(-50%, -50%) scale(1.45);
-  filter: drop-shadow(0 30px 50px rgb(0 0 0 / 60%)) drop-shadow(0 0 60px rgb(255 200 80 / 18%));
-  opacity: 0.95;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(1.7);
+  filter: drop-shadow(0 30px 50px rgb(0 0 0 / 60%)) drop-shadow(0 0 80px rgb(255 200 80 / 22%));
+  opacity: 0.4;
 }
 
 .mob-heropx-brand-watermark {
-  /* Centered on the vial's vertical axis — reads as a watermark plate
-     the vial is sitting on rather than a stray title above. */
+  /* Wordmark plate behind the vial, dead-center.  Faint so it reads
+     as a brand watermark, not as competing text. */
   position: absolute;
-  top: 32%; left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   font-family: var(--font-display); font-weight: 900;
-  font-size: clamp(72px, 22vw, 120px);
+  font-size: clamp(80px, 24vw, 140px);
   letter-spacing: -0.06em;
-  color: rgb(255 220 120 / 4%);
+  color: rgb(255 220 120 / 5%);
   white-space: nowrap;
   pointer-events: none;
   user-select: none;
@@ -8017,25 +8017,11 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-content-2 {
-  /* Absolute-position the cluster so it locks to the lower third of
-     the pane regardless of how flex sizes its parent.  Earlier
-     attempt with height:100% + justify-content:flex-end didn't work
-     because flex-basis:auto in a column container ignores height:100%
-     and sized the box to its content — pushing the cluster up against
-     the eyebrow with empty space beneath. */
-  position: absolute;
-  left: 50%;
-  bottom: clamp(56px, 14vh, 110px);
-  transform: translateX(-50%);
-  width: calc(100% - 48px);
-  max-width: 480px;
-
-  /* Override base flex parent justify-content so children stack
-     compact (eyebrow → headline → spec → CTA), centered horizontally. */
-  height: auto;
-  margin-top: 0;
-  padding-bottom: 0;
-  justify-content: flex-start;
+  /* Pane 2 content stacks identically to pane 1: parent's flex
+     justify-content:center vertically centers the cluster.  Vial +
+     watermark sit behind as background.  No absolute / flex-end gymnastics
+     — that was producing inconsistent results across iOS viewport states. */
+  position: relative;
 }
 
 .mob-heropx-eyebrow {
