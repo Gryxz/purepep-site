@@ -8017,11 +8017,24 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-content-2 {
-  /* Pane 2 content stacks identically to pane 1: parent's flex
-     justify-content:center vertically centers the cluster.  Vial +
-     watermark sit behind as background.  No absolute / flex-end gymnastics
-     — that was producing inconsistent results across iOS viewport states. */
-  position: relative;
+  /* Force-anchor pane 2 cluster to the lower-middle of the viewport.
+     Every property has !important so nothing in the cascade can fight
+     it — sticky+margin+flex layout has been producing inconsistent
+     results, this is the unmissable version. */
+  position: absolute !important;
+  left: 50% !important;
+  bottom: 18vh !important;
+  top: auto !important;
+  transform: translateX(-50%) !important;
+  width: calc(100% - 48px) !important;
+  max-width: 480px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
 }
 
 .mob-heropx-eyebrow {
