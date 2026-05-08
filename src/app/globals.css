@@ -5651,6 +5651,18 @@ a.v3-pill-ghost:hover {
     var(--m-bone) 56px,
     var(--m-bone) 100%
   );
+
+  /* Stays above the hero stack so the JS-driven translateY(-80px)
+     reveal slides the gradient over the hero bottom edge instead of
+     under it. */
+  position: relative;
+  z-index: 3;
+  will-change: transform;
+  transition: transform 0.05s linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mob-catalog-section { transition: none; }
 }
 .mob-catalog-header { padding: 0 24px 24px; }
 
@@ -7917,7 +7929,7 @@ a.v3-pill-ghost:hover {
    .mob-heropx-pane single class) plus !important for belt-and-braces. */
 .mob-heropx > .mob-heropx-2 {
   justify-content: flex-end !important;
-  padding-bottom: clamp(80px, 14vh, 120px) !important;
+  padding-bottom: clamp(36px, 6vh, 64px) !important;
 }
 
 .mob-heropx-1 {

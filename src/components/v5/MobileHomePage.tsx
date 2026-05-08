@@ -29,6 +29,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
   const featured = products[0];
   const rest = products.slice(1, 8); // up to 7 cards in the catalog teaser
   const parallaxRef = useRef<HTMLDivElement | null>(null);
+  const catalogRef = useRef<HTMLElement | null>(null);
 
   // Hero parallax — tracks scroll progress through the 2-viewport stack and
   // writes it into a CSS variable.  Pane 1 (lab + headline) fades out; pane
@@ -52,6 +53,21 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       const raw = -rect.top / (vh * 0.3);
       const p = Math.max(0, Math.min(1, raw));
       el.style.setProperty("--mob-px-p", p.toFixed(4));
+
+      // Catalog rise — as the user approaches the end of the parallax
+      // un-stick zone, lift the catalog section upward so it slides
+      // over the bottom of the dark hero instead of meeting it at a
+      // static seam.  Progress range: stack-bottom going from 1.0 vh
+      // (just below viewport) to 0.4 vh (almost reached viewport top).
+      const catalog = catalogRef.current;
+      if (catalog) {
+        const stackBottom = rect.bottom;
+        const norm = (vh - stackBottom) / (vh * 0.6); // 0 when stack-bottom = vh, 1 when stack-bottom = 0.4vh
+        const lift = Math.max(0, Math.min(1, norm));
+        // Lift up to 80px so the catalog gradient overlaps the hero's
+        // dark surface during the transition.
+        catalog.style.transform = `translateY(${(-lift * 80).toFixed(1)}px)`;
+      }
     };
     const onScroll = () => {
       if (raf) return;
@@ -175,7 +191,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
 
 
       {/* Catalog teaser — eyebrow dropped (the section header is enough). */}
-      <section className="mob-catalog-section">
+      <section ref={catalogRef} className="mob-catalog-section">
         <div className="mob-catalog-header">
           <div className="mob-catalog-h-row">
             <h2 className="mob-catalog-h">The catalog</h2>
