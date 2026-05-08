@@ -7905,6 +7905,10 @@ a.v3-pill-ghost:hover {
 
   /* Stack on top of pane 1 so its bg covers as it fades in. */
   margin-top: -100vh;
+
+  /* Override the shared .mob-heropx-pane flex centering — content-2 is
+     absolutely positioned (top:60%) so we don't want flex fighting. */
+  display: block;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -8017,11 +8021,20 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-content-2 {
-  /* Pane 2 content stacks identically to pane 1: parent's flex
-     justify-content:center vertically centers the cluster.  Vial +
-     watermark sit behind as background.  No absolute / flex-end gymnastics
-     — that was producing inconsistent results across iOS viewport states. */
-  position: relative;
+  /* Force the cluster to a fixed vertical anchor regardless of how the
+     parent's flex centering decides to behave (it apparently decides
+     to slam to the top in some viewport states).  Absolute + top:60% +
+     translateY(-50%) = cluster center sits 60% down the viewport,
+     putting the SHOP RETATRUTIDE pill in the comfortable lower-middle
+     thumb zone. */
+  position: absolute !important;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% - 48px);
+  max-width: 480px;
+  margin: 0;
+  padding: 0;
 }
 
 .mob-heropx-eyebrow {
