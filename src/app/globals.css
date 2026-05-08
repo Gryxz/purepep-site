@@ -5639,7 +5639,19 @@ a.v3-pill-ghost:hover {
 .mob-spotlight-cta:active { opacity: 0.85; }
 
 /* ── Catalog grid (shared with Shop page) ─────────────────────────── */
-.mob-catalog-section { padding: 48px 0 40px; background: var(--m-bone); }
+.mob-catalog-section {
+  /* Top padding hosts the dark→bone gradient that smooths the seam out
+     of the hero parallax.  Gradient finishes by the time the
+     "The catalog" header begins so the header sits on full bone. */
+  padding: 56px 0 40px;
+  background: linear-gradient(
+    180deg,
+    #050505 0%,
+    #1a1a1a 16px,
+    var(--m-bone) 56px,
+    var(--m-bone) 100%
+  );
+}
 .mob-catalog-header { padding: 0 24px 24px; }
 
 .mob-catalog-eyebrow {
@@ -7759,7 +7771,7 @@ a.v3-pill-ghost:hover {
   .mob-spotlight { padding: 36px 16px 28px; }
   .mob-spotlight-h { font-size: 22px; }
 
-  .mob-catalog-section { padding: 36px 0 28px; }
+  .mob-catalog-section { padding: 44px 0 28px; }
   .mob-catalog-header { padding: 0 20px 18px; }
   .mob-catalog-h { font-size: 28px; }
 
@@ -7865,14 +7877,14 @@ a.v3-pill-ghost:hover {
 .mob-heropx {
   position: relative;
 
-  /* Stack height = pane height + scroll runway for the parallax fade.
-     Was 200vh which left a full 100vh of empty stack below the panes
-     (since both panes overlay at stack-y 0-100vh via pane 2's
-     margin-top:-100vh, leaving stack-y 100vh-200vh as a black void
-     showing the stack's bg).  130vh gives the JS fade ~30vh of scroll
-     to play, then the next section (catalog) appears immediately. */
+  /* Stack height = pane height (100vh) + scroll runway for the parallax
+     fade.  130vh gives the JS fade 30vh of scroll to play, then the
+     next section (catalog) takes over.  Bg is #050505 to match pane 2's
+     dark tone — the un-stick area between panes scrolling up and the
+     catalog section taking over reads as one continuous dark surface
+     rather than flashing through to bone. */
   height: 130vh;
-  background: transparent;
+  background: #050505;
 }
 
 .mob-heropx-pane {
