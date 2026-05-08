@@ -43,7 +43,13 @@ export default function CookieBanner() {
 
   useEffect(() => {
     setMounted(true);
-    setVisible(readConsent() === null);
+    const pending = readConsent() === null;
+    setVisible(pending);
+    // Toggle a global flag so MobileShell / globals.css can hide the
+    // tab bar while the banner is unanswered (it overtakes the bottom).
+    if (typeof document !== "undefined") {
+      document.documentElement.classList.toggle("mob-cookie-pending", pending);
+    }
   }, []);
 
   // Defer cookie consent on the age-gate so the user handles one decision
@@ -53,11 +59,13 @@ export default function CookieBanner() {
   function handleAccept() {
     writeConsent("1");
     setVisible(false);
+    document.documentElement.classList.remove("mob-cookie-pending");
   }
 
   function handleDecline() {
     writeConsent("0");
     setVisible(false);
+    document.documentElement.classList.remove("mob-cookie-pending");
   }
 
   if (!mounted || !visible) return null;
@@ -66,34 +74,27 @@ export default function CookieBanner() {
     <div
       role="dialog"
       aria-label="Cookie consent"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-ink/15 bg-bone shadow-[0_-1px_0_rgb(31_31_31_/_5%)]"
-      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0px)" }}
+      className="mob-cookies"
     >
-      <div className="mx-auto flex max-w-[1280px] flex-col items-start gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-8">
-        <p className="text-[13px] leading-relaxed text-ink/75">
-          We use essential cookies to operate this site. By continuing, you
-          agree to our{" "}
-          <a href="/legal/privacy-policy" className="underline hover:text-ink">
-            Privacy Policy
-          </a>
-          .
-        </p>
-        <div className="flex flex-shrink-0 items-center gap-3 self-stretch sm:self-auto">
-          <button
-            type="button"
-            onClick={handleDecline}
-            className="inline-flex h-10 max-h-10 min-h-10 flex-1 cursor-pointer items-center justify-center rounded-full border border-ink/20 bg-transparent px-5 text-[13px] font-medium leading-none text-ink transition-colors hover:bg-surface-2 sm:flex-none"
-          >
-            Decline
-          </button>
-          <button
-            type="button"
-            onClick={handleAccept}
-            className="inline-flex h-10 max-h-10 min-h-10 flex-1 cursor-pointer items-center justify-center rounded-full bg-amber px-5 text-[13px] font-semibold leading-none text-ink transition-colors hover:bg-amber-hover sm:flex-none"
-          >
-            Accept
-          </button>
-        </div>
+      <p className="mob-cookies-text">
+        Essential cookies only.{" "}
+        <a href="/legal/privacy-policy">Privacy Policy</a>
+      </p>
+      <div className="mob-cookies-buttons">
+        <button
+          type="button"
+          onClick={handleDecline}
+          className="mob-cookies-btn mob-cookies-btn-decline"
+        >
+          Decline
+        </button>
+        <button
+          type="button"
+          onClick={handleAccept}
+          className="mob-cookies-btn mob-cookies-btn-accept"
+        >
+          Accept
+        </button>
       </div>
     </div>
   );

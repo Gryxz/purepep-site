@@ -158,7 +158,15 @@ export function MobileCartDrawer() {
                     <div className="mob-item-name">{item.name}</div>
                     <div className="mob-item-meta">{item.dose} · LYOPHILIZED</div>
                     <div className="mob-item-price-row" style={{ marginTop: 6 }}>
-                      <div className="mob-item-unit">Unit ${item.price.toFixed(2)}</div>
+                      <div className="mob-item-unit">
+                        Unit ${item.price.toFixed(2)}
+                        {(() => {
+                          const reg = getProduct(item.slug)?.regularPrice;
+                          return reg && reg > item.price ? (
+                            <span className="mob-item-strike">${reg.toFixed(2)}</span>
+                          ) : null;
+                        })()}
+                      </div>
                       <div className="mob-item-total">${(item.price * item.qty).toFixed(2)}</div>
                     </div>
                     <div className="mob-item-stepper">

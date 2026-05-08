@@ -123,7 +123,19 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
       <div className="mob-pdp-rule" />
 
       <div className="mob-pdp-price-wrap">
-        <span className="mob-pdp-price-big">{formatPrice(orderTotal)}</span>
+        {product.regularPrice && product.regularPrice > product.price && (
+          <span className="mob-pdp-sale-badge">
+            Sale · Save ${Math.round(product.regularPrice - product.price)}
+          </span>
+        )}
+        <div className="mob-pdp-price-row" style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+          <span className="mob-pdp-price-big">{formatPrice(orderTotal)}</span>
+          {product.regularPrice && product.regularPrice > product.price && (
+            <span className="mob-pdp-price-strike">
+              {formatPrice(product.regularPrice * qty)}
+            </span>
+          )}
+        </div>
         <span className="mob-pdp-price-sub">
           {variant} vial · {isOut ? "out of stock" : product.stock === "low" ? "low stock" : "in stock"}
         </span>

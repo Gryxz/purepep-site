@@ -7854,3 +7854,481 @@ a.v3-pill-ghost:hover {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 12px 22px;
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   v5 MOBILE — BATCH 10 REFINEMENTS
+   Hero parallax · cookie / age-gate / chrome-fill · page-end seam ·
+   BAC sale urgency
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── Hero parallax stack ────────────────────────────────────────── */
+.mob-heropx {
+  position: relative;
+
+  /* Two stacked sticky panes, so overall stack is 2x viewport height. */
+  height: 200vh;
+  background: #050505; /* deep base so any sub-pixel gaps stay invisible */
+}
+
+.mob-heropx-pane {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: calc(var(--m-app-pt) + 40px) 24px 56px;
+  box-sizing: border-box;
+  overflow: hidden;
+  isolation: isolate;
+  will-change: opacity;
+
+  /* JS writes --mob-px-p (0..1) on the parent on scroll. */
+  transition: opacity 0.05s linear;
+}
+
+.mob-heropx-1 {
+  z-index: 1;
+
+  /* Fade out fast: gone by progress 0.6 so pane 2 has air. */
+  opacity: calc(1 - clamp(0, var(--mob-px-p, 0) * 1.7, 1));
+}
+
+.mob-heropx-2 {
+  z-index: 2;
+
+  /* Fade in starting at progress 0.35, fully on by 0.85. */
+  opacity: clamp(0, (var(--mob-px-p, 0) - 0.35) * 2, 1);
+
+  /* Stack on top of pane 1 so its bg covers as it fades in. */
+  margin-top: -100vh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mob-heropx-1, .mob-heropx-2 { transition: none; }
+}
+
+.mob-heropx-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* PANE 1 — Lab ambience.  CSS-rendered placeholder until a real photo
+   is available: deep ink gradient + faint grid + soft amber volumetric
+   glow + concentric rings (lab equipment / vial cap suggestion). */
+.mob-heropx-bg-lab {
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 30%, rgb(120 80 0 / 22%) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 80% at 50% 100%, rgb(40 25 0 / 60%) 0%, transparent 70%),
+    linear-gradient(180deg, #050505 0%, #0a0a0a 50%, #060606 100%);
+}
+
+.mob-heropx-lab-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, rgb(255 220 120 / 4%) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 220 120 / 4%) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 90% 90% at 50% 60%, black 0%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 60%, black 0%, transparent 80%);
+}
+
+.mob-heropx-lab-glow {
+  position: absolute;
+  top: 20%; left: 50%;
+  width: 70vw; height: 70vw;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at center, rgb(255 200 80 / 18%) 0%, rgb(180 120 0 / 6%) 30%, transparent 60%);
+  filter: blur(40px);
+}
+
+.mob-heropx-lab-rings {
+  position: absolute;
+  bottom: -10vh; left: 50%;
+  width: 120vw; height: 120vw;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 1px solid rgb(255 220 120 / 8%);
+  box-shadow:
+    0 0 0 80px rgb(255 220 120 / 4%),
+    0 0 0 160px rgb(255 220 120 / 2%),
+    inset 0 0 80px rgb(255 220 120 / 3%);
+}
+
+/* PANE 2 — Retatrutide vial + branding.  The MobileVial illustration
+   sits dead-center, scaled up; PUREPEP wordmark watermark behind it. */
+.mob-heropx-bg-vial {
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 45%, rgb(200 140 30 / 22%) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 80% at 50% 100%, rgb(20 12 0 / 70%) 0%, transparent 65%),
+    linear-gradient(180deg, #0a0805 0%, #050402 100%);
+}
+
+.mob-heropx-vial-glow {
+  position: absolute;
+  top: 35%; left: 50%;
+  width: 90vw; height: 90vw;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at center, rgb(255 200 80 / 22%) 0%, rgb(220 150 30 / 8%) 25%, transparent 55%);
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+.mob-heropx-vial-wrap {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -52%) scale(1.6);
+  filter: drop-shadow(0 30px 50px rgb(0 0 0 / 60%)) drop-shadow(0 0 60px rgb(255 200 80 / 18%));
+  opacity: 0.95;
+}
+
+.mob-heropx-brand-watermark {
+  position: absolute;
+  top: 16%; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(60px, 18vw, 96px);
+  letter-spacing: -0.06em;
+  color: rgb(255 220 120 / 5%);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  text-transform: uppercase;
+}
+
+/* Shared content layer (text overlay) for both panes */
+.mob-heropx-content {
+  position: relative;
+  z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+  max-width: 480px;
+  width: 100%;
+}
+
+.mob-heropx-content-2 {
+  /* On pane 2, push content toward the bottom so the vial dominates the
+     upper half visually and the CTA reads as the action point. */
+  justify-content: flex-end;
+  height: 100%;
+  padding-bottom: clamp(20px, 8vh, 48px);
+  margin-top: auto;
+}
+
+.mob-heropx-eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(255 220 120 / 75%);
+  background: rgb(200 137 10 / 8%);
+  border: 1px solid rgb(255 220 120 / 18%);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  margin-bottom: 28px;
+  font-weight: 500;
+}
+
+.mob-heropx-eyebrow .dot {
+  display: inline-block; width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #FFD97A;
+  box-shadow: 0 0 8px rgb(255 217 122 / 80%);
+}
+
+.mob-heropx-h1 {
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(40px, 9.5vw, 56px);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--m-bone);
+  margin: 0 0 18px;
+  text-shadow: 0 4px 24px rgb(0 0 0 / 50%);
+}
+
+.mob-heropx-sub {
+  font-size: 15px;
+  line-height: 1.55;
+  color: rgb(250 247 240 / 75%);
+  max-width: 32ch;
+  margin: 0;
+}
+
+.mob-heropx-h2 {
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(32px, 7vw, 44px);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  color: var(--m-bone);
+  margin: 0 0 12px;
+  text-shadow: 0 4px 24px rgb(0 0 0 / 60%);
+}
+
+.mob-heropx-spec {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: rgb(255 220 120 / 80%);
+  text-transform: uppercase;
+  line-height: 1.55;
+  max-width: 30ch;
+  margin: 0 0 24px;
+}
+
+.mob-heropx-cta-block {
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.mob-heropx-cta {
+  width: 100%;
+  padding: 17px 24px;
+  font-size: 13.5px;
+  letter-spacing: 0.16em;
+}
+
+.mob-heropx-cta-ghost {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgb(250 247 240 / 60%);
+  text-decoration: none;
+  padding: 8px 12px;
+  font-weight: 500;
+}
+.mob-heropx-cta-ghost:active { color: var(--m-bone); }
+
+.mob-heropx-scroll-cue {
+  position: absolute;
+  bottom: 32px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(250 247 240 / 45%);
+  pointer-events: none;
+
+  /* Fade with the pane it lives on. */
+  animation: mob-heropx-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes mob-heropx-pulse {
+  0%, 100% { transform: translate(-50%, 0); opacity: 0.45; }
+  50% { transform: translate(-50%, 6px); opacity: 0.85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mob-heropx-scroll-cue { animation: none; }
+}
+
+/* Compact-mode (small phones) tweaks */
+@media (max-height: 700px), (max-width: 380px) {
+  .mob-heropx-h1 { font-size: 36px; }
+  .mob-heropx-h2 { font-size: 28px; }
+  .mob-heropx-eyebrow { padding: 5px 14px; font-size: 10px; margin-bottom: 22px; }
+  .mob-heropx-vial-wrap { transform: translate(-50%, -52%) scale(1.35); }
+  .mob-heropx-brand-watermark { font-size: clamp(48px, 14vw, 76px); }
+  .mob-heropx-scroll-cue { bottom: 22px; }
+}
+
+/* ── Cookie banner slim variant ─────────────────────────────────── */
+.mob-cookies {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 60;
+  background: rgb(20 20 20 / 92%);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border-top: 1px solid rgb(255 255 255 / 8%);
+  color: var(--m-bone);
+  padding: 11px 16px max(env(safe-area-inset-bottom, 0px), 11px);
+  box-shadow: 0 -6px 18px rgb(0 0 0 / 28%);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.mob-cookies-text {
+  flex: 1;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: rgb(250 247 240 / 78%);
+  font-weight: 400;
+}
+
+.mob-cookies-text a {
+  color: rgb(255 220 120 / 90%);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.mob-cookies-buttons {
+  display: flex; gap: 7px; flex-shrink: 0;
+}
+
+.mob-cookies-btn {
+  height: 32px; padding: 0 14px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.mob-cookies-btn-decline {
+  background: transparent;
+  color: rgb(250 247 240 / 65%);
+  border: 1px solid rgb(255 255 255 / 18%);
+}
+
+.mob-cookies-btn-accept {
+  background: var(--m-bone);
+  color: var(--m-ink);
+}
+.mob-cookies-btn-accept:active { transform: translateY(1px); }
+
+/* When cookie consent is null, the cookies banner takes over the bottom
+   slot — hide the tab bar.  MobileShell adds .mob-cookie-pending to
+   <html> while consent is unanswered. */
+html.mob-cookie-pending .mob-tab-bar { display: none; }
+
+/* ── Age-gate chrome — header on (forced dark), tab bar off ───── */
+html.mob-age-gate .mob-tab-bar { display: none; }
+
+html.mob-age-gate .mob-hdr {
+  /* Force the dark variant regardless of section detection. */
+  background: rgb(15 15 15 / 88%);
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+  color: var(--m-bone);
+}
+html.mob-age-gate .mob-hdr .mob-ib { color: var(--m-bone); }
+html.mob-age-gate .mob-hdr .mob-mono { background: var(--m-bone); color: var(--m-ink); }
+html.mob-age-gate .mob-hdr svg { color: var(--m-bone); }
+
+/* Hide cart icon + hamburger on age-gate per user request: chrome
+   present, but no actions until verified.  Logo only. */
+html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
+
+/* ── Header / tab bar safe-area material fill ──────────────────── */
+
+/* Extends the same glass tint past the bar so iOS chrome appearing /
+   disappearing never reveals a transparent gap. */
+.mob-hdr::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  top: -200px; height: 200px;
+  background: inherit;
+  pointer-events: none;
+}
+
+.mob-tab-bar::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -200px; height: 200px;
+  background: inherit;
+  pointer-events: none;
+}
+
+/* ── Body / page-end seam ──────────────────────────────────────── */
+
+/* On mobile, the body bg matches the footer's deep ink so any
+   end-of-page or overscroll area inherits the dark — no harsh light
+   gap when the footer ends.  The MobileFooter already paints its own
+   bg; this just protects the viewport beyond it. */
+@media (max-width: 768px) {
+  html, body {
+    background: #050505;
+  }
+
+  .mob-app {
+    background: var(--m-bone);
+  }
+
+  /* Footer extends its dark material below the visible content via a
+     trailing block so anything between the last footer line and the
+     tab bar (or page bottom on iOS overscroll) reads as one continuous
+     dark surface. */
+  .mob-foot {
+    box-shadow: 0 200px 0 0 #050505;
+  }
+}
+
+/* ── BAC sale urgency rendering ─────────────────────────────────── */
+.mob-pdp-price-row {
+  /* Already exists — extend to host a strikethrough + sale badge. */
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mob-pdp-price-strike {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+  color: var(--m-ink-mute);
+  letter-spacing: 0.02em;
+}
+
+.mob-pdp-sale-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 9px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #6B4500;
+  background: linear-gradient(135deg, #FFD97A 0%, #E5A30D 100%);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgb(180 120 0 / 25%), inset 0 1px 0 rgb(255 245 180 / 60%);
+  white-space: nowrap;
+}
+
+.mob-pdp-sale-badge::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #6B4500;
+  display: inline-block;
+}
+
+/* Cart line item: small struck-through next to live price */
+.mob-item-strike {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-decoration: line-through;
+  color: var(--m-ink-mute);
+  margin-left: 6px;
+}
+
+/* Shop card: amber SALE corner ribbon */
+.mob-card-sale-ribbon {
+  position: absolute;
+  top: 8px; left: 8px;
+  z-index: 3;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6B4500;
+  background: linear-gradient(135deg, #FFD97A 0%, #E5A30D 100%);
+  border-radius: 3px;
+  box-shadow: 0 1px 4px rgb(180 120 0 / 30%);
+}

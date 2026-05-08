@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
+"use client";
 
+import { useEffect, useRef } from "react";
 import type { Product } from "@/data/products";
 import { MobileVial } from "./MobileVial";
 import { MobileFooter } from "./MobileFooter";
@@ -26,11 +28,48 @@ export function MobileHomePage({ products }: { products: Product[] }) {
   // Fall back to undefined-safe so an empty catalog doesn't crash the page.
   const featured = products[0];
   const rest = products.slice(1, 8); // up to 7 cards in the catalog teaser
+  const parallaxRef = useRef<HTMLDivElement | null>(null);
+
+  // Hero parallax — tracks scroll progress through the 2-viewport stack and
+  // writes it into a CSS variable.  Pane 1 (lab + headline) fades out; pane
+  // 2 (vial + brand + amber CTA) fades in.  Multiplier 1.6 means the fade
+  // settles to fully-on/fully-off before the user reaches either edge of
+  // the stack — gives a clean "rest" state at top and bottom of the
+  // parallax instead of a continuous fade through the whole range.
+  useEffect(() => {
+    const el = parallaxRef.current;
+    if (!el) return;
+    if (typeof window === "undefined") return;
+
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // stack is 200vh tall; rect.top runs from 0 → -vh as user scrolls
+      // the first pane out of view.  Normalize to 0..1.
+      const raw = -rect.top / vh;
+      const p = Math.max(0, Math.min(1, raw));
+      el.style.setProperty("--mob-px-p", p.toFixed(4));
+    };
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
   return (
     <div className="mob-app">
-      {/* Trust strip — auto-loop marquee.  Items duplicated so the
-          translate(-50%) wrap reads seamlessly. */}
+      {/* Trust strip — first scrollable element, sits flush under the
+          fixed glass header on load. */}
       <div className="mob-trust-bar" data-mob-section="dark">
         <div className="mob-trust-track">
           <div className="mob-trust-item"><span className="dot" />99.5%+ Purity</div>
@@ -46,85 +85,93 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         </div>
       </div>
 
-      {/* Hero — corner ornaments + 21+ compliance pill removed.  CTA now
-          carries a spec tagline so new visitors understand the flagship. */}
-      <section className="mob-hero" data-mob-section="dark">
-        <div className="mob-hero-bg" />
-        <div className="mob-hero-content">
-          <div className="mob-hero-eyebrow">
-            <span className="dot" />
-            Research-grade peptides
+      {/* Hero parallax — 200vh container holding two stacked sticky
+          panes.  Pane 1 = lab ambience + headline; pane 2 = Retatrutide
+          vial + branding + amber CTA.  JS-driven crossfade via the
+          --mob-px-p CSS variable (0..1, scroll progress through stack).
+          The standalone .mob-spotlight section is gone — the second pane
+          IS the spotlight now, the CTA the user came for. */}
+      <div
+        ref={parallaxRef}
+        className="mob-heropx"
+        data-mob-section="dark"
+        style={{ ["--mob-px-p" as string]: "0" }}
+      >
+        {/* Pane 1 — LAB AMBIENCE + brand promise */}
+        <section className="mob-heropx-pane mob-heropx-1" aria-label="Hero: research-grade peptides">
+          <div className="mob-heropx-bg mob-heropx-bg-lab" aria-hidden="true">
+            <div className="mob-heropx-lab-grid" />
+            <div className="mob-heropx-lab-glow" />
+            <div className="mob-heropx-lab-rings" />
           </div>
-          <h1 className="mob-hero-h1">The standard for research peptides.</h1>
-          <p className="mob-hero-sub">
-            Lab-verified peptides for in vitro research. Lot-matched COA on every vial, tracked US shipping.
-          </p>
-          <div className="mob-hero-ctas">
-            <a href={featured ? `/shop/${featured.slug}` : "/shop"} className="mob-cta-amber-base mob-cta-amber">
-              {featured ? `Shop ${featured.name}` : "Shop the catalog"}
-              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
+          <div className="mob-heropx-content">
+            <div className="mob-heropx-eyebrow">
+              <span className="dot" />
+              Research-grade peptides
+            </div>
+            <h1 className="mob-heropx-h1">The standard for research peptides.</h1>
+            <p className="mob-heropx-sub">
+              Lab-verified peptides for in vitro research. Lot-matched COA on every vial, tracked US shipping.
+            </p>
+            <div className="mob-heropx-scroll-cue" aria-hidden="true">
+              <span>Scroll</span>
+              <svg width="14" height="22" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 14 22">
+                <rect x="1" y="1" width="12" height="20" rx="6" />
+                <line x1="7" y1="6" x2="7" y2="11" strokeWidth="2" strokeLinecap="round" />
               </svg>
-            </a>
-            {featured && (
-              <p className="mob-hero-cta-tagline">
-                {featured.compound === "RETA"
-                  ? `${featured.name} · Triple GLP-1 / GIP / glucagon agonist`
-                  : `${featured.name} · ${shortSpec(featured)}`}
-              </p>
-            )}
-            <a href="/shop" className="mob-cta-ghost">
-              Browse catalog
-              <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </a>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* Spotlight — eyebrow dropped (context is now in the spec line);
-          declarative title; explicit spec line so visitors know what
-          this compound is at a glance. */}
-      {featured && (
-        <section className="mob-spotlight">
-          <h2 className="mob-spotlight-h">{featured.name} — our flagship compound</h2>
-          <a href={`/shop/${featured.slug}`} className="mob-spotlight-card">
-            <div className="mob-spotlight-img">
-              <span className="mob-spotlight-cat">{categoryShort(featured.category)}</span>
-              {featured.stock !== "out" && (
-                <span className="mob-spotlight-stock"><span className="sd" />In stock</span>
-              )}
-              <MobileVial
-                size="md"
-                compound={featured.compound}
-                mass={featured.dose}
-                fullName={featured.name}
-                purity="≥99.5%"
-              />
-            </div>
-            <div className="mob-spotlight-body">
-              <h3 className="mob-spotlight-name">{featured.name}</h3>
-              <p className="mob-spotlight-spec">{shortSpec(featured)}</p>
-              <div className="mob-spotlight-foot">
-                <div className="mob-spotlight-price-block">
-                  <span className="mob-spotlight-price">${Math.round(featured.price)}</span>
-                  <span className="mob-spotlight-per">{featured.dose} vial</span>
-                </div>
-                <span className="mob-spotlight-cta">
-                  Shop now
-                  <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
-                </span>
-              </div>
-            </div>
-          </a>
         </section>
-      )}
+
+        {/* Pane 2 — RETATRUTIDE FLAGSHIP + amber CTA */}
+        <section className="mob-heropx-pane mob-heropx-2" aria-label="Featured: Retatrutide">
+          <div className="mob-heropx-bg mob-heropx-bg-vial" aria-hidden="true">
+            <div className="mob-heropx-vial-glow" />
+            <div className="mob-heropx-vial-wrap">
+              {featured ? (
+                <MobileVial
+                  size="lg"
+                  compound={featured.compound}
+                  mass={featured.dose}
+                  fullName={featured.name}
+                  purity="≥99.5%"
+                />
+              ) : null}
+            </div>
+            <div className="mob-heropx-brand-watermark" aria-hidden="true">PUREPEP</div>
+          </div>
+          <div className="mob-heropx-content mob-heropx-content-2">
+            <div className="mob-heropx-eyebrow">
+              <span className="dot" />
+              Flagship compound
+            </div>
+            <h2 className="mob-heropx-h2">{featured?.name ?? "Retatrutide"} — our flagship compound</h2>
+            <p className="mob-heropx-spec">
+              {featured ? shortSpec(featured) : "Lab-verified · Lot-matched COA · Lyophilized"}
+            </p>
+            <div className="mob-heropx-cta-block">
+              <a
+                href={featured ? `/shop/${featured.slug}` : "/shop"}
+                className="mob-cta-amber-base mob-heropx-cta"
+              >
+                {featured ? `Shop ${featured.name}` : "Shop the catalog"}
+                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </a>
+              <a href="/shop" className="mob-heropx-cta-ghost">
+                Browse catalog
+                <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
 
       {/* Catalog teaser — eyebrow dropped (the section header is enough). */}
       <section className="mob-catalog-section">
@@ -138,6 +185,9 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           {rest.map((p) => (
             <a key={p.slug} href={`/shop/${p.slug}`} className="mob-pcard">
               <div className="mob-pcard-img">
+                {p.regularPrice && p.regularPrice > p.price && (
+                  <span className="mob-card-sale-ribbon">Sale</span>
+                )}
                 <span className="mob-cat-pill">{categoryShort(p.category)}</span>
                 <span className={`mob-stock-chip ${p.stock === "low" ? "is-low" : "is-in"}`}>
                   <span className="sd" />

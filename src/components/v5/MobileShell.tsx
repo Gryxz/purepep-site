@@ -22,7 +22,12 @@ export function MobileShell() {
   const { openCart, totalItems } = useCartStore();
   const count = totalItems();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [headerDark, setHeaderDark] = useState(false);
+  // Synchronous initial dark state — Home + age-gate ship top-of-page
+  // dark, so we paint the header glass-on-dark on the very first render
+  // (no light → dark flicker before IntersectionObserver fires).  Other
+  // routes start light and only flip when a dark sentinel scrolls in.
+  const initialDark = pathname === "/" || pathname === "/age-gate" || pathname === "/age-gate/";
+  const [headerDark, setHeaderDark] = useState(initialDark);
   const [tabBarDark, setTabBarDark] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
   const tabBarRef = useRef<HTMLElement | null>(null);
@@ -32,13 +37,25 @@ export function MobileShell() {
   const isShop = pathname.startsWith("/shop");
   const isCart = pathname === "/cart" || pathname === "/checkout";
   const isAccount = pathname.startsWith("/researcher-access");
+  const isAgeGate = pathname === "/age-gate" || pathname === "/age-gate/";
   const tabIndex = isHome ? 0 : isShop ? 1 : isCart ? 2 : isAccount ? 3 : -1;
+
+  // Toggle a global age-gate flag on <html> so globals.css can hide the
+  // tab bar + cart icon and force-dark the header without per-component
+  // conditionals.  Cleanup on unmount/route change.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.documentElement.classList.toggle("mob-age-gate", isAgeGate);
+    return () => {
+      document.documentElement.classList.remove("mob-age-gate");
+    };
+  }, [isAgeGate]);
 
   // Adaptive chrome — IntersectionObserver tracks dark-themed sections.
   // Re-runs when the route changes since the dark sentinels live inside
   // the page component tree which remounts on navigation.
   useEffect(() => {
-    if (pathname === "/age-gate") return;
+    if (isAgeGate) return;
 
     // Wait one frame so the new route's DOM is mounted before query.
     const raf = requestAnimationFrame(() => {
@@ -111,11 +128,11 @@ export function MobileShell() {
     });
 
     return () => cancelAnimationFrame(raf);
-  }, [pathname]);
+  }, [pathname, isAgeGate]);
 
-  // Suppress mobile chrome on the age-gate so the user has nothing to tap
-  // except the verification controls (no header, no tab bar, no cart icon).
-  if (pathname === "/age-gate") return null;
+  // Note: we no longer fully unmount on /age-gate.  The header now stays
+  // (forced-dark via the html.mob-age-gate class set above), but the tab
+  // bar is hidden via CSS and the right-side icons collapse via CSS too.
 
   return (
     <>

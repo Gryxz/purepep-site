@@ -116,6 +116,9 @@ export function MobileShopPage({ products }: { products: Product[] }) {
         {visible.map((p) => (
           <a key={p.slug} href={`/shop/${p.slug}`} className="mob-pcard">
             <div className="mob-pcard-img">
+              {p.regularPrice && p.regularPrice > p.price && (
+                <span className="mob-card-sale-ribbon">Sale</span>
+              )}
               <span className="mob-cat-pill">{categoryShort(p.category)}</span>
               <span className={`mob-stock-chip ${p.stock === "low" ? "is-low" : "is-in"}`}>
                 <span className="sd" />
