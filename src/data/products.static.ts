@@ -67,6 +67,13 @@ export interface Product {
    * "5 mg / 10 mg / 15 mg" toggle reflects real WC pricing.
    */
   variantMap?: Record<string, { wcId: number; price: number }>;
+  /**
+   * Static fallback prices per variant — used when variantMap (WC) is
+   * not yet populated.  Keyed by the same dose strings as `variants`.
+   * Lets the PDP variant selector update the live price even before
+   * WooCommerce variations have been configured.
+   */
+  variantPrices?: Record<string, number>;
 }
 
 export const PRODUCTS: Product[] = [
@@ -75,7 +82,8 @@ export const PRODUCTS: Product[] = [
     compound: "RETA",
     name: "Retatrutide",
     dose: "10 mg",
-    variants: ["5 mg", "10 mg"],
+    variants: ["5 mg", "10 mg", "15 mg"],
+    variantPrices: { "5 mg": 109.0, "10 mg": 189.0, "15 mg": 269.0 },
     cas: "2381089-83-2",
     price: 189.0,
     priceLabel: "$189.00",
@@ -95,7 +103,8 @@ export const PRODUCTS: Product[] = [
     compound: "SEMA",
     name: "Semaglutide",
     dose: "5 mg",
-    variants: ["2 mg", "5 mg", "10 mg"],
+    variants: ["5 mg", "10 mg", "15 mg"],
+    variantPrices: { "5 mg": 149.0, "10 mg": 249.0, "15 mg": 349.0 },
     cas: "910463-68-2",
     price: 149.0,
     priceLabel: "$149.00",
@@ -116,6 +125,7 @@ export const PRODUCTS: Product[] = [
     name: "Tirzepatide",
     dose: "10 mg",
     variants: ["5 mg", "10 mg", "15 mg"],
+    variantPrices: { "5 mg": 119.0, "10 mg": 199.0, "15 mg": 279.0 },
     cas: "2023788-19-2",
     price: 199.0,
     priceLabel: "$199.00",
@@ -136,7 +146,8 @@ export const PRODUCTS: Product[] = [
     compound: "CAGRI",
     name: "Cagrilintide",
     dose: "5 mg",
-    variants: ["5 mg", "10 mg"],
+    variants: ["5 mg", "10 mg", "15 mg"],
+    variantPrices: { "5 mg": 179.0, "10 mg": 299.0, "15 mg": 399.0 },
     cas: "1415456-99-3",
     price: 179.0,
     priceLabel: "$179.00",
@@ -156,7 +167,8 @@ export const PRODUCTS: Product[] = [
     compound: "SURVO",
     name: "Survodutide",
     dose: "10 mg",
-    variants: ["5 mg", "10 mg"],
+    variants: ["5 mg", "10 mg", "15 mg"],
+    variantPrices: { "5 mg": 109.0, "10 mg": 189.0, "15 mg": 269.0 },
     cas: "1510265-99-0",
     price: 189.0,
     priceLabel: "$189.00",
@@ -176,7 +188,8 @@ export const PRODUCTS: Product[] = [
     compound: "BPC",
     name: "BPC-157",
     dose: "5 mg",
-    variants: ["5 mg", "10 mg"],
+    variants: ["5 mg", "10 mg", "15 mg"],
+    variantPrices: { "5 mg": 69.0, "10 mg": 119.0, "15 mg": 169.0 },
     cas: "137525-51-0",
     price: 69.0,
     priceLabel: "$69.00",
@@ -196,7 +209,8 @@ export const PRODUCTS: Product[] = [
     compound: "TB500",
     name: "TB-500",
     dose: "5 mg",
-    variants: ["5 mg", "10 mg"],
+    variants: ["5 mg", "10 mg", "15 mg"],
+    variantPrices: { "5 mg": 89.0, "10 mg": 149.0, "15 mg": 209.0 },
     cas: "77591-33-4",
     price: 89.0,
     priceLabel: "$89.00",
@@ -216,7 +230,8 @@ export const PRODUCTS: Product[] = [
     compound: "IPAM",
     name: "Ipamorelin",
     dose: "5 mg",
-    variants: ["2 mg", "5 mg"],
+    variants: ["5 mg", "10 mg", "15 mg"],
+    variantPrices: { "5 mg": 79.0, "10 mg": 129.0, "15 mg": 179.0 },
     cas: "170851-70-4",
     price: 79.0,
     priceLabel: "$79.00",

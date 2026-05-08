@@ -5201,10 +5201,12 @@ a.v3-pill-ghost:hover {
   min-height: 100vh;
   position: relative;
 
-  /* Top inset = mobile header height (now slimmer, ~50px). Bottom
-     padding kept minimal — tab bar is liquid-glass so footer scrolls
-     visibly through it; only safe-area buffer needed. */
-  padding-top: 50px;
+  /* Top inset = mobile header height (~50px) + 8px so the trust
+     marquee fully clears the header's bottom shadow on initial load
+     instead of sliding under the translucent edge.  Bottom padding
+     kept minimal — tab bar is liquid-glass so footer scrolls visibly
+     through it; only safe-area buffer needed. */
+  padding-top: 58px;
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 .mob-app a { color: inherit; text-decoration: none; }
@@ -6342,21 +6344,35 @@ a.v3-pill-ghost:hover {
 
 .mob-spec-list, .mob-disc-list { list-style: none; padding: 0; margin: 0; }
 
+/* Block layout (not flex) so inline text + <strong> + text inside each
+   <li> stays on one continuous line that wraps naturally — flex was
+   treating each text node as its own flex item, causing the awkward
+   column-style wrapping in the regulatory bullets. */
 .mob-spec-list li, .mob-disc-list li {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 11px 0; font-size: 14px; line-height: 1.55;
+  position: relative;
+  display: block;
+  padding: 11px 0 11px 18px;
+  font-size: 14px;
+  line-height: 1.55;
   color: var(--m-ink-mute);
 }
 .mob-spec-list li { font-weight: 500; }
-.mob-disc-list li { padding: 10px 0; line-height: 1.5; }
+.mob-disc-list li { padding: 10px 0 10px 18px; line-height: 1.5; }
 
 .mob-spec-list li::before, .mob-disc-list li::before {
-  content: ''; width: 6px; height: 6px; border-radius: var(--m-rf);
-  background: var(--m-amber-cta); flex-shrink: 0; margin-top: 8px;
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 19px;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--m-rf);
+  background: var(--m-amber-cta);
 }
+.mob-disc-list li::before { top: 18px; }
 
 .mob-spec-list li strong, .mob-disc-list li strong {
-  color: var(--m-ink); font-weight: 700; margin-right: 6px;
+  color: var(--m-ink); font-weight: 700;
 }
 
 /* Often-paired band */
@@ -7769,7 +7785,7 @@ a.v3-pill-ghost:hover {
 
 /* ── Older / smaller phones — global compact mode ──────────────── */
 @media (max-height: 700px), (max-width: 380px) {
-  .mob-app { padding-top: 46px; }
+  .mob-app { padding-top: 54px; }
   .mob-hdr { padding: 7px 14px; }
 
   .mob-hero { min-height: 460px; padding: 56px 20px 40px; }

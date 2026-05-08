@@ -32,7 +32,14 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
 
   const variant = product.variants[doseIdx] ?? product.dose;
   const variantEntry = product.variantMap?.[variant];
-  const unitPrice = variantEntry?.price ?? product.price;
+  // Price priority: WC variation map > static variantPrices > base price.
+  // variantMap is populated when the upstream WC product is type:variable;
+  // variantPrices is the static fallback so the UI still updates per
+  // dose before WC variations are configured.
+  const unitPrice =
+    variantEntry?.price ??
+    product.variantPrices?.[variant] ??
+    product.price;
   const effectiveWcId = variantEntry?.wcId ?? product.wcId;
   const orderTotal = unitPrice * qty;
   const isOut = product.stock === "out";
@@ -174,7 +181,7 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
           </div>
           <button
             type="button"
-            className="mob-cta-amber-base mob-buybox"
+            className="mob-buybox"
             onClick={handleAddToCart}
             disabled={isOut}
             aria-label={isOut ? "Out of stock" : `Add to cart, ${formatPrice(orderTotal)}`}

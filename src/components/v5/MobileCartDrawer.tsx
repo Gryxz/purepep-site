@@ -190,24 +190,6 @@ export function MobileCartDrawer() {
                 </article>
               ))}
 
-              {/* Promo code */}
-              <div className="mob-promo-row">
-                <button
-                  type="button"
-                  className={`mob-promo-toggle${promoOpen ? " is-open" : ""}`}
-                  onClick={() => setPromoOpen((o) => !o)}
-                >
-                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                  Have a promo code?
-                </button>
-                <div className={`mob-promo-field${promoOpen ? " is-open" : ""}`}>
-                  <input className="mob-promo-input" placeholder="Enter code" type="text" />
-                  <button type="button" className="mob-promo-apply">Apply</button>
-                </div>
-              </div>
-
               {/* Upsell */}
               {showUpsell && upsellProduct && (
                 <div className="mob-upsell">
@@ -234,26 +216,32 @@ export function MobileCartDrawer() {
         {/* Order summary (only when items present) */}
         {items.length > 0 && (
           <div className="mob-order-summary">
-            <div className="mob-order-row">
-              <span className="ok">Items</span>
-              <span className="ov">{count}</span>
-            </div>
-            <div className="mob-order-row">
-              <span className="ok">Subtotal</span>
-              <span className="ov">${sub.toFixed(2)}</span>
-            </div>
-            <div className="mob-order-row">
-              <span className="ok">Shipping</span>
-              <span
-                className="ov"
-                style={{ color: unlocked ? "var(--m-emerald)" : "var(--m-ink-mute)", fontWeight: unlocked ? 600 : 400 }}
+            {/* Promo code — moved here from inside the items list, replaces
+                the old Items / Subtotal / Shipping rows. */}
+            <div className="mob-promo-row">
+              <button
+                type="button"
+                className={`mob-promo-toggle${promoOpen ? " is-open" : ""}`}
+                onClick={() => setPromoOpen((o) => !o)}
               >
-                {unlocked ? "Free" : "Calculated at checkout"}
-              </span>
+                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+                Have a promo code?
+              </button>
+              <div className={`mob-promo-field${promoOpen ? " is-open" : ""}`}>
+                <input className="mob-promo-input" placeholder="Enter code" type="text" />
+                <button type="button" className="mob-promo-apply">Apply</button>
+              </div>
             </div>
             <div className="mob-order-row is-total">
               <span className="ok">Total</span>
-              <span className="ov">${sub.toFixed(2)}</span>
+              <span className="ov">
+                ${sub.toFixed(2)}
+                {unlocked && (
+                  <span className="mob-order-ship-note"> · Free shipping</span>
+                )}
+              </span>
             </div>
             <div className="mob-order-note">Taxes calculated at checkout · All sales final</div>
           </div>

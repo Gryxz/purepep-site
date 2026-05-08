@@ -194,18 +194,12 @@ export function MobileCartPage() {
                 })}
               </div>
               <div className="mob-sum-divider" />
-              <div className="mob-sum-shipping-row">
-                <span className="mob-sum-shipping-k">Shipping</span>
-                <span
-                  className="mob-sum-shipping-v"
-                  style={{ color: unlocked ? "var(--m-emerald)" : "var(--m-ink-mute)", fontWeight: unlocked ? 600 : 400 }}
-                >
-                  {unlocked ? "Free" : "Calculated at checkout"}
-                </span>
-              </div>
               <div className="mob-sum-row-total">
                 <span className="tk">Total</span>
-                <span className="tv">${sub.toFixed(2)}</span>
+                <span className="tv">
+                  ${sub.toFixed(2)}
+                  {unlocked && <span className="mob-order-ship-note"> · Free shipping</span>}
+                </span>
               </div>
               <div className="mob-sum-note">Taxes calculated at checkout · All sales final · Research use only</div>
             </div>
