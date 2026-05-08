@@ -7980,25 +7980,31 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-vial-wrap {
+  /* Pull the vial into the upper-middle so it dominates the top half
+     of the viewport — the headline+CTA cluster (anchored to lower
+     third) reads as the action sitting below it. */
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -52%) scale(1.6);
+  top: 32%; left: 50%;
+  transform: translate(-50%, -50%) scale(1.45);
   filter: drop-shadow(0 30px 50px rgb(0 0 0 / 60%)) drop-shadow(0 0 60px rgb(255 200 80 / 18%));
   opacity: 0.95;
 }
 
 .mob-heropx-brand-watermark {
+  /* Centered on the vial's vertical axis — reads as a watermark plate
+     the vial is sitting on rather than a stray title above. */
   position: absolute;
-  top: 16%; left: 50%;
-  transform: translateX(-50%);
+  top: 32%; left: 50%;
+  transform: translate(-50%, -50%);
   font-family: var(--font-display); font-weight: 900;
-  font-size: clamp(60px, 18vw, 96px);
+  font-size: clamp(72px, 22vw, 120px);
   letter-spacing: -0.06em;
-  color: rgb(255 220 120 / 5%);
+  color: rgb(255 220 120 / 4%);
   white-space: nowrap;
   pointer-events: none;
   user-select: none;
   text-transform: uppercase;
+  z-index: 0;
 }
 
 /* Shared content layer (text overlay) for both panes */
@@ -8011,12 +8017,25 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-content-2 {
-  /* On pane 2, push content toward the bottom so the vial dominates the
-     upper half visually and the CTA reads as the action point. */
-  justify-content: flex-end;
-  height: 100%;
-  padding-bottom: clamp(20px, 8vh, 48px);
-  margin-top: auto;
+  /* Absolute-position the cluster so it locks to the lower third of
+     the pane regardless of how flex sizes its parent.  Earlier
+     attempt with height:100% + justify-content:flex-end didn't work
+     because flex-basis:auto in a column container ignores height:100%
+     and sized the box to its content — pushing the cluster up against
+     the eyebrow with empty space beneath. */
+  position: absolute;
+  left: 50%;
+  bottom: clamp(56px, 14vh, 110px);
+  transform: translateX(-50%);
+  width: calc(100% - 48px);
+  max-width: 480px;
+
+  /* Override base flex parent justify-content so children stack
+     compact (eyebrow → headline → spec → CTA), centered horizontally. */
+  height: auto;
+  margin-top: 0;
+  padding-bottom: 0;
+  justify-content: flex-start;
 }
 
 .mob-heropx-eyebrow {
