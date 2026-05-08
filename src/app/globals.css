@@ -7880,7 +7880,11 @@ a.v3-pill-ghost:hover {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: calc(var(--m-app-pt) + 40px) 24px 56px;
+
+  /* Hardcoded padding-top — earlier var(--m-app-pt) was never defined,
+     so the calc evaluated to invalid and padding-top fell back to 0,
+     skewing the flex centering above visual center. */
+  padding: 90px 24px 56px;
   box-sizing: border-box;
   overflow: hidden;
   isolation: isolate;
@@ -7888,6 +7892,15 @@ a.v3-pill-ghost:hover {
 
   /* JS writes --mob-px-p (0..1) on the parent on scroll. */
   transition: opacity 0.05s linear;
+}
+
+/* Pane 2: override the parent flex centering so the cluster anchors to
+   the bottom of the pane instead of floating mid-viewport.  Higher
+   specificity (.mob-heropx > .mob-heropx-2 = two classes vs
+   .mob-heropx-pane single class) so this wins cleanly. */
+.mob-heropx > .mob-heropx-2 {
+  justify-content: flex-end;
+  padding-bottom: clamp(80px, 14vh, 120px);
 }
 
 .mob-heropx-1 {
@@ -8017,24 +8030,10 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-content-2 {
-  /* Force-anchor pane 2 cluster to the lower-middle of the viewport.
-     Every property has !important so nothing in the cascade can fight
-     it — sticky+margin+flex layout has been producing inconsistent
-     results, this is the unmissable version. */
-  position: absolute !important;
-  left: 50% !important;
-  bottom: 18vh !important;
-  top: auto !important;
-  transform: translateX(-50%) !important;
-  width: calc(100% - 48px) !important;
-  max-width: 480px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  height: auto !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
+  /* No special handling — parent flex (justify-content:flex-end on
+     .mob-heropx-2) anchors the cluster to the bottom of the pane.
+     Vial + watermark sit behind as absolute background siblings. */
+  position: relative;
 }
 
 .mob-heropx-eyebrow {
