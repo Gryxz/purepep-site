@@ -46,9 +46,10 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       raf = 0;
       const rect = el.getBoundingClientRect();
       const vh = window.innerHeight;
-      // stack is 200vh tall; rect.top runs from 0 → -vh as user scrolls
-      // the first pane out of view.  Normalize to 0..1.
-      const raw = -rect.top / vh;
+      // Stack is 130vh; panes stick for ~30vh of scroll (stack height -
+      // pane height).  Fade should complete inside that 30vh window,
+      // so divide by 0.3 * vh.
+      const raw = -rect.top / (vh * 0.3);
       const p = Math.max(0, Math.min(1, raw));
       el.style.setProperty("--mob-px-p", p.toFixed(4));
     };

@@ -7865,9 +7865,14 @@ a.v3-pill-ghost:hover {
 .mob-heropx {
   position: relative;
 
-  /* Two stacked sticky panes, so overall stack is 2x viewport height. */
-  height: 200vh;
-  background: #050505; /* deep base so any sub-pixel gaps stay invisible */
+  /* Stack height = pane height + scroll runway for the parallax fade.
+     Was 200vh which left a full 100vh of empty stack below the panes
+     (since both panes overlay at stack-y 0-100vh via pane 2's
+     margin-top:-100vh, leaving stack-y 100vh-200vh as a black void
+     showing the stack's bg).  130vh gives the JS fade ~30vh of scroll
+     to play, then the next section (catalog) appears immediately. */
+  height: 130vh;
+  background: transparent;
 }
 
 .mob-heropx-pane {
