@@ -7579,6 +7579,22 @@ a.v3-pill-ghost:hover {
   letter-spacing: 0.16em;
 }
 
+/* Force dark pill on the PDP buy-row button.
+   Root cause: `.mob-app button { background: none; color: inherit }` (line 5213)
+   has specificity 0-1-1 which beats the single-class `.mob-buybox` rule (0-1-0),
+   silently stripping the dark bg.  The parent-scoped selector below wins that
+   race and !important ensures no future single-class rule can re-clobber it. */
+.mob-pdp-buy-row .mob-buybox {
+  background: var(--m-ink) !important;
+  color: var(--m-bone) !important;
+  border: none;
+}
+
+.mob-pdp-buy-row .mob-buybox:disabled {
+  background: var(--m-ink) !important;
+  opacity: 0.45;
+}
+
 /* Upsell + ADD button — small amber pill with glint sweep */
 .mob-upsell-add {
   flex-shrink: 0; padding: 10px 18px;
