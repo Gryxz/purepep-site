@@ -42,11 +42,15 @@ export function MobileHomePage({ products }: { products: Product[] }) {
     if (!el) return;
     if (typeof window === "undefined") return;
 
+    // Cache vh between scroll events; only re-read on resize.  Reading
+    // window.innerHeight inside the per-frame update was forcing layout
+    // queries that don't need to happen 60×/sec.
+    let vh = window.innerHeight;
+
     let raf = 0;
     const update = () => {
       raf = 0;
       const rect = el.getBoundingClientRect();
-      const vh = window.innerHeight;
       // Stack is 160vh; panes stick for ~60vh of scroll.  Front-load the
       // fade — divide by 0.25 * vh so progress hits 1 by ~25vh of
       // scroll.  Combined with the CSS clamp() multipliers, pane 2
@@ -82,20 +86,27 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         } else if (stackBottom >= 0) {
           lift = stackBottom; // pin to viewport top
         }
-        catalog.style.transform = `translateY(${(-lift).toFixed(1)}px)`;
+        // translate3d (vs translateY) forces the catalog onto its own
+        // GPU layer — the rise renders on the compositor instead of
+        // round-tripping through layout/paint each frame.
+        catalog.style.transform = `translate3d(0, ${(-lift).toFixed(1)}px, 0)`;
       }
     };
     const onScroll = () => {
       if (raf) return;
       raf = requestAnimationFrame(update);
     };
+    const onResize = () => {
+      vh = window.innerHeight;
+      onScroll();
+    };
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
     return () => {
       if (raf) cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 

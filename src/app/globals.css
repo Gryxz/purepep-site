@@ -5654,17 +5654,18 @@ a.v3-pill-ghost:hover {
     var(--m-bone) 100%
   );
 
-  /* Stays above the hero stack so the JS-driven translateY(-80px)
-     reveal slides the gradient over the hero bottom edge instead of
-     under it. */
+  /* Stays above the hero stack so the JS-driven rise slides the
+     gradient OVER the hero bottom edge.  GPU compositing hints below
+     promote the section to its own layer — transform updates render
+     on the GPU without triggering layout/paint.  No CSS transition:
+     JS writes a new transform every animation frame, and a CSS
+     transition would fight those updates frame-for-frame, causing
+     visible chop instead of preventing it. */
   position: relative;
   z-index: 3;
   will-change: transform;
-  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mob-catalog-section { transition: none; }
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 .mob-catalog-header { padding: 0 24px 24px; }
 
@@ -7933,10 +7934,16 @@ a.v3-pill-ghost:hover {
   box-sizing: border-box;
   overflow: hidden;
   isolation: isolate;
-  will-change: opacity;
 
-  /* JS writes --mob-px-p (0..1) on the parent on scroll. */
-  transition: opacity 0.05s linear;
+  /* GPU compositing — translate3d(0) promotes each pane to its own
+     composited layer so the opacity crossfade and any vial transforms
+     render on the GPU rather than forcing layout/paint per frame.
+     backface-visibility:hidden squelches a known iOS subpixel-flicker
+     during opacity transitions. */
+  will-change: opacity, transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* Pane 2: cluster sits centered vertically (parent's default
