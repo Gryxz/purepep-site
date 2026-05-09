@@ -60,35 +60,22 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       const p = Math.max(0, Math.min(1, raw));
       el.style.setProperty("--mob-px-p", p.toFixed(4));
 
-      // Catalog rise — three phases.  The user sees:
-      //   1. While catalog is below the viewport (stackBottom > vh) —
-      //      no transform, normal scroll.
-      //   2. Rapid rise (stackBottom in [0.75vh, vh]) — catalog
-      //      translates up by 0.75vh over just 0.25vh of scroll, so
-      //      its top reaches the viewport top after only 25vh of
-      //      scroll past pane 2 instead of the natural 100vh.  Eased
-      //      with ease-out-cubic so it settles instead of slamming.
-      //   3. Hold at viewport top (stackBottom in [0, 0.75vh]) — lift
-      //      decays as natural position rises so the catalog stays
-      //      pinned at the top of the viewport while the rest of the
-      //      hero scrolls out behind it.
-      //   4. Past the stack — no transform, scroll continues normally.
+      // Catalog lift — single ease-out-quad, max 80px overlap.  No
+      // phase changes, no velocity discontinuity, no lock zone.  As
+      // the catalog enters the viewport (stackBottom < vh), it
+      // translates up smoothly by up to 80px so the catalog gradient
+      // overlaps the bottom of the dark hero.  Once stackBottom < 0
+      // (catalog past viewport top, scrolling out), the transform
+      // resets to 0 — the section continues with normal scroll.
       const catalog = catalogRef.current;
       if (catalog) {
         const stackBottom = rect.bottom;
         let lift = 0;
-        if (stackBottom >= vh) {
-          lift = 0;
-        } else if (stackBottom > vh * 0.75) {
-          const t = (vh - stackBottom) / (vh * 0.25); // 0..1 over 25vh
-          const eased = 1 - Math.pow(1 - t, 3);
-          lift = eased * vh * 0.75;
-        } else if (stackBottom >= 0) {
-          lift = stackBottom; // pin to viewport top
+        if (stackBottom < vh && stackBottom > 0) {
+          const t = (vh - stackBottom) / vh; // 0 at viewport bottom, 1 as it reaches top
+          const eased = 1 - Math.pow(1 - t, 2); // ease-out-quad
+          lift = eased * 80;
         }
-        // translate3d (vs translateY) forces the catalog onto its own
-        // GPU layer — the rise renders on the compositor instead of
-        // round-tripping through layout/paint each frame.
         catalog.style.transform = `translate3d(0, ${(-lift).toFixed(1)}px, 0)`;
       }
     };
