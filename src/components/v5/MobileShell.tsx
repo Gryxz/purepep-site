@@ -38,6 +38,7 @@ export function MobileShell() {
   const isCart = pathname === "/cart" || pathname === "/checkout";
   const isAccount = pathname.startsWith("/researcher-access");
   const isAgeGate = pathname === "/age-gate" || pathname === "/age-gate/";
+  const isCheckout = pathname === "/checkout";
   const tabIndex = isHome ? 0 : isShop ? 1 : isCart ? 2 : isAccount ? 3 : -1;
 
   // Toggle a global age-gate flag on <html> so globals.css can hide the
@@ -50,6 +51,14 @@ export function MobileShell() {
       document.documentElement.classList.remove("mob-age-gate");
     };
   }, [isAgeGate]);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.documentElement.classList.toggle("mob-checkout", isCheckout);
+    return () => {
+      document.documentElement.classList.remove("mob-checkout");
+    };
+  }, [isCheckout]);
 
   // Adaptive chrome — IntersectionObserver tracks dark-themed sections.
   // Re-runs when the route changes since the dark sentinels live inside

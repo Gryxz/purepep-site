@@ -8301,6 +8301,11 @@ html.mob-cookie-pending .mob-tab-bar { display: none; }
 /* ── Age-gate chrome — header on (forced dark), tab bar off ───── */
 html.mob-age-gate .mob-tab-bar { display: none; }
 
+/* Checkout: hide the bottom tab bar so users can't accidentally
+   tap into a tab and lose their half-filled checkout form.  Header
+   stays (cart icon + back affordance still need to be reachable). */
+html.mob-checkout .mob-tab-bar { display: none; }
+
 html.mob-age-gate .mob-hdr {
   /* Force the dark variant regardless of section detection. */
   background: rgb(15 15 15 / 88%);
