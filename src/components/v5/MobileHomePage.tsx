@@ -56,17 +56,33 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       const p = Math.max(0, Math.min(1, raw));
       el.style.setProperty("--mob-px-p", p.toFixed(4));
 
-      // Catalog rise — happens AFTER the fade dwell.  Trigger range
-      // 0.25vh of scroll, eased with ease-out-cubic for a smooth
-      // settle instead of linear drag.  Catalog rises 80px to overlap
-      // the bottom of the dark hero during the transition.
+      // Catalog rise — three phases.  The user sees:
+      //   1. While catalog is below the viewport (stackBottom > vh) —
+      //      no transform, normal scroll.
+      //   2. Rapid rise (stackBottom in [0.75vh, vh]) — catalog
+      //      translates up by 0.75vh over just 0.25vh of scroll, so
+      //      its top reaches the viewport top after only 25vh of
+      //      scroll past pane 2 instead of the natural 100vh.  Eased
+      //      with ease-out-cubic so it settles instead of slamming.
+      //   3. Hold at viewport top (stackBottom in [0, 0.75vh]) — lift
+      //      decays as natural position rises so the catalog stays
+      //      pinned at the top of the viewport while the rest of the
+      //      hero scrolls out behind it.
+      //   4. Past the stack — no transform, scroll continues normally.
       const catalog = catalogRef.current;
       if (catalog) {
         const stackBottom = rect.bottom;
-        const norm = (vh - stackBottom) / (vh * 0.25);
-        const raw = Math.max(0, Math.min(1, norm));
-        const eased = 1 - Math.pow(1 - raw, 3); // ease-out-cubic
-        catalog.style.transform = `translateY(${(-eased * 80).toFixed(1)}px)`;
+        let lift = 0;
+        if (stackBottom >= vh) {
+          lift = 0;
+        } else if (stackBottom > vh * 0.75) {
+          const t = (vh - stackBottom) / (vh * 0.25); // 0..1 over 25vh
+          const eased = 1 - Math.pow(1 - t, 3);
+          lift = eased * vh * 0.75;
+        } else if (stackBottom >= 0) {
+          lift = stackBottom; // pin to viewport top
+        }
+        catalog.style.transform = `translateY(${(-lift).toFixed(1)}px)`;
       }
     };
     const onScroll = () => {
