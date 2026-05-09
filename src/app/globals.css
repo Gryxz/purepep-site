@@ -8154,11 +8154,11 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-cta-ghost {
-  /* Outlined pill — same pill geometry as the primary amber CTA above
-     it so the pair reads as "primary action / secondary action"
-     instead of "button / orphaned link".  Translucent bone fill +
-     bone outline + bone text is clearly readable against the deep
-     ink hero without competing with the amber gradient. */
+  /* Solid outlined pill — same geometry as the primary amber CTA above
+     it.  Bone outline + bone text at 100% alpha (no translucent stacking
+     with the pane's opacity fade) so the button stays readable at every
+     fade state.  No backdrop-filter, no translucent fill — those effects
+     collapse during the parallax opacity multiply. */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -8169,22 +8169,20 @@ a.v3-pill-ghost:hover {
   margin-top: 4px;
   font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--m-bone);
-  background: rgb(250 247 240 / 6%);
-  border: 1px solid rgb(250 247 240 / 28%);
+  background: transparent;
+  border: 1.5px solid var(--m-bone);
   border-radius: var(--m-rf);
   text-decoration: none;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: background 0.15s, border-color 0.15s, transform 0.12s;
+  transition: background 0.15s, color 0.15s, transform 0.12s;
 }
 
 .mob-heropx-cta-ghost:active {
-  background: rgb(250 247 240 / 14%);
-  border-color: rgb(250 247 240 / 55%);
+  background: var(--m-bone);
+  color: var(--m-ink);
   transform: translateY(1px);
 }
 
