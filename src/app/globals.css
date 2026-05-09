@@ -5660,7 +5660,7 @@ a.v3-pill-ghost:hover {
   position: relative;
   z-index: 3;
   will-change: transform;
-  transition: transform 0.05s linear;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -7939,14 +7939,11 @@ a.v3-pill-ghost:hover {
   transition: opacity 0.05s linear;
 }
 
-/* Pane 2: override the parent flex centering so the cluster anchors to
-   the bottom of the pane instead of floating mid-viewport.  Higher
-   specificity (.mob-heropx > .mob-heropx-2 = two classes vs
-   .mob-heropx-pane single class) plus !important for belt-and-braces. */
-.mob-heropx > .mob-heropx-2 {
-  justify-content: flex-end !important;
-  padding-bottom: clamp(36px, 6vh, 64px) !important;
-}
+/* Pane 2: cluster sits centered vertically (parent's default
+   justify-content: center).  Earlier flex-end attempt was anchoring
+   to the bottom but combined with the vial-wrap behind it, the
+   composition looked cluttered.  Centered cluster + clean dark bg +
+   amber halo reads cleanly. */
 
 .mob-heropx-1 {
   z-index: 1;
@@ -8040,31 +8037,19 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-vial-wrap {
-  /* Vial centered, large, sits BEHIND the content cluster so headline
-     and CTA overlay it cleanly.  Lower opacity so the text reads
-     without fighting the vial outline. */
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(1.7);
-  filter: drop-shadow(0 30px 50px rgb(0 0 0 / 60%)) drop-shadow(0 0 80px rgb(255 200 80 / 22%));
-  opacity: 0.4;
+  /* Hidden until real product photography lands — the CSS-rendered
+     placeholder vial overlapping the centered headline + CTA cluster
+     looked cluttered.  Pane 2 reads cleanly as: dark bg + amber halo
+     + centered text + amber CTA.  Re-enable (display: block) once
+     AI-generated vial photos are wired into a background-image. */
+  display: none;
 }
 
 .mob-heropx-brand-watermark {
-  /* Wordmark plate behind the vial, dead-center.  Faint so it reads
-     as a brand watermark, not as competing text. */
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-display); font-weight: 900;
-  font-size: clamp(80px, 24vw, 140px);
-  letter-spacing: -0.06em;
-  color: rgb(255 220 120 / 5%);
-  white-space: nowrap;
-  pointer-events: none;
-  user-select: none;
-  text-transform: uppercase;
-  z-index: 0;
+  /* Hidden alongside the vial-wrap until real product photography is
+     in place.  The watermark on its own without the vial it was
+     supposed to sit behind reads as orphaned text. */
+  display: none;
 }
 
 /* Shared content layer (text overlay) for both panes */

@@ -56,16 +56,17 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       const p = Math.max(0, Math.min(1, raw));
       el.style.setProperty("--mob-px-p", p.toFixed(4));
 
-      // Catalog rise — tighten the trigger from 0.6vh to 0.25vh of
-      // scroll so the catalog snaps up quickly once it's coming into
-      // view, rather than dragging in over a long range.  "Faster JS
-      // transition to catalog".
+      // Catalog rise — happens AFTER the fade dwell.  Trigger range
+      // 0.25vh of scroll, eased with ease-out-cubic for a smooth
+      // settle instead of linear drag.  Catalog rises 80px to overlap
+      // the bottom of the dark hero during the transition.
       const catalog = catalogRef.current;
       if (catalog) {
         const stackBottom = rect.bottom;
         const norm = (vh - stackBottom) / (vh * 0.25);
-        const lift = Math.max(0, Math.min(1, norm));
-        catalog.style.transform = `translateY(${(-lift * 80).toFixed(1)}px)`;
+        const raw = Math.max(0, Math.min(1, norm));
+        const eased = 1 - Math.pow(1 - raw, 3); // ease-out-cubic
+        catalog.style.transform = `translateY(${(-eased * 80).toFixed(1)}px)`;
       }
     };
     const onScroll = () => {
