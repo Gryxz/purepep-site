@@ -8156,15 +8156,28 @@ a.v3-pill-ghost:hover {
 .mob-heropx-cta-ghost {
   display: inline-flex; align-items: center; gap: 7px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgb(250 247 240 / 60%);
+
+  /* Higher contrast bone (was 60% alpha → invisible against deep
+     ink).  92% reads as a clear secondary action without competing
+     with the amber CTA above it. */
+  color: rgb(250 247 240 / 92%);
   text-decoration: none;
-  padding: 8px 12px;
-  font-weight: 500;
+  padding: 10px 14px;
+  font-weight: 600;
+
+  /* Hairline underline marks it as a link without the heavy weight
+     of a button.  Offset so the descenders don't crash into it. */
+  border-bottom: 1px solid rgb(255 220 120 / 35%);
+  margin-top: 4px;
 }
-.mob-heropx-cta-ghost:active { color: var(--m-bone); }
+
+.mob-heropx-cta-ghost:active {
+  color: var(--m-bone);
+  border-bottom-color: rgb(255 220 120 / 70%);
+}
 
 .mob-heropx-scroll-cue {
   position: absolute;
