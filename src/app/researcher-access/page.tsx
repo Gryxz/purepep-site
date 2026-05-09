@@ -51,7 +51,7 @@ export default function ResearcherAccessPage() {
       {/* Hero — extra top padding on mobile so the eyebrow clears the
           fixed glass header (MobileShell). */}
       <section className="bg-bone">
-        <div className="layout-content pt-14 pb-8 md:py-12">
+        <div className="layout-content pt-14 pb-3 md:py-12">
           <Eyebrow>Researcher access</Eyebrow>
           <h1
             className="mt-4 font-display font-black leading-[1] tracking-[-0.035em] text-ink"
@@ -68,7 +68,7 @@ export default function ResearcherAccessPage() {
 
       {/* Signup block */}
       <section className="bg-bone">
-        <div className="layout-content py-10 md:py-16">
+        <div className="layout-content pt-5 pb-10 md:py-16">
           <div className="grid grid-cols-1 items-end gap-8 border border-ink bg-bone px-6 py-8 md:grid-cols-[1fr_auto] md:gap-12 md:px-12 md:py-12">
             <div>
               <div className="mb-4">
