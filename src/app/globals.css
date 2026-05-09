@@ -8798,3 +8798,71 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   border-radius: 3px;
   box-shadow: 0 1px 4px rgb(180 120 0 / 30%);
 }
+
+/* Stack composition card on PDP */
+.mob-pdp-stack-card {
+  margin: 16px 0;
+  padding: 16px 18px;
+  background: rgb(31 31 31 / 4%);
+  border: 1px solid var(--m-rule);
+  border-radius: var(--m-rf);
+}
+
+.mob-pdp-stack-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-eyebrow, 11px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--m-ink-mute);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.mob-pdp-stack-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mob-pdp-stack-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--m-ink);
+  border-bottom: 1px solid rgb(31 31 31 / 6%);
+}
+.mob-pdp-stack-row:last-child { border-bottom: none; }
+.mob-pdp-stack-name { font-weight: 500; }
+
+.mob-pdp-stack-mass {
+  font-family: var(--font-mono);
+  color: var(--m-ink-mute);
+  font-size: 13px;
+}
+
+.mob-pdp-stack-total {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--m-rule);
+}
+.mob-pdp-stack-total .mob-pdp-stack-name { font-weight: 700; }
+.mob-pdp-stack-total .mob-pdp-stack-mass { color: var(--m-ink); font-weight: 600; }
+
+/* Stack ribbon on shop/home cards — dark variant of the sale ribbon */
+.mob-card-stack-ribbon {
+  position: absolute;
+  top: 8px; left: 8px;
+  z-index: 3;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--m-bone);
+  background: var(--m-ink);
+  border-radius: 3px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 25%);
+}

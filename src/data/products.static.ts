@@ -17,6 +17,12 @@ export type Category =
   | "Metabolic";
 
 export interface Product {
+  /** "single" (one peptide) vs "stack" (curated multi-peptide bundle).
+   *  Defaults to "single" when omitted. */
+  type?: "single" | "stack";
+  /** For stacks: list of components.  Renders on the PDP composition
+   *  block ("BPC-157 — 5 mg / TB-500 — 5 mg / Total · 10 mg"). */
+  stackComponents?: Array<{ compound: string; name: string; mass: string }>;
   /** URL slug — lowercased SKU code. */
   slug: string;
   /** Display SKU on the cream label, e.g. "RETA". */
@@ -267,6 +273,90 @@ export const PRODUCTS: Product[] = [
     storage: "Room temperature, protect from light",
     purity: "USP-grade · 0.9% benzyl alcohol",
     sku: "PP-BACW-030",
+  },
+  // Healing Stack — BPC-157 5mg + TB-500 5mg
+  {
+    slug: "healing-stack",
+    compound: "HEAL",
+    name: "Healing Stack",
+    dose: "10 mg",
+    variants: ["10 mg"],
+    variantPrices: { "10 mg": 150.0 },
+    cas: "—",
+    price: 150.0,
+    priceLabel: "$150.00",
+    regularPrice: 158.0,
+    category: "Healing",
+    stock: "in",
+    description:
+      "Curated tissue-repair bundle pairing BPC-157 and TB-500 in a single research SKU. Both peptides are studied for synergistic roles in connective-tissue and vascular repair models.",
+    disclaimer:
+      "This is a curated multi-peptide research stack — supplied as two lyophilized vials with a single lot-matched COA covering both compounds.",
+    lot: "HS-2604-A01",
+    storage: "2–8 °C, protect from light",
+    purity: "≥ 99.0% (HPLC)",
+    sku: "PP-HS-010",
+    type: "stack",
+    stackComponents: [
+      { compound: "BPC", name: "BPC-157", mass: "5 mg" },
+      { compound: "TB500", name: "TB-500", mass: "5 mg" },
+    ],
+  },
+  // GLP Stack — Retatrutide 5mg + Cagrilintide 5mg
+  {
+    slug: "glp-stack",
+    compound: "GLPS",
+    name: "GLP Stack",
+    dose: "10 mg",
+    variants: ["10 mg"],
+    variantPrices: { "10 mg": 274.0 },
+    cas: "—",
+    price: 274.0,
+    priceLabel: "$274.00",
+    regularPrice: 288.0,
+    category: "Incretin mimetics",
+    stock: "in",
+    description:
+      "GLP-1 / amylin combination stack pairing Retatrutide (triple GLP-1 / GIP / glucagon agonist) with Cagrilintide (long-acting amylin analogue). Studied in metabolic research models.",
+    disclaimer:
+      "This is a curated multi-peptide research stack — supplied as two lyophilized vials with a single lot-matched COA covering both compounds.",
+    lot: "GS-2604-A01",
+    storage: "2–8 °C, protect from light",
+    purity: "≥ 99.5% (HPLC)",
+    sku: "PP-GS-010",
+    type: "stack",
+    stackComponents: [
+      { compound: "RETA", name: "Retatrutide", mass: "5 mg" },
+      { compound: "CAGRI", name: "Cagrilintide", mass: "5 mg" },
+    ],
+  },
+  // Recovery Stack — BPC-157 5mg + Ipamorelin 5mg
+  {
+    slug: "recovery-stack",
+    compound: "RECOV",
+    name: "Recovery Stack",
+    dose: "10 mg",
+    variants: ["10 mg"],
+    variantPrices: { "10 mg": 141.0 },
+    cas: "—",
+    price: 141.0,
+    priceLabel: "$141.00",
+    regularPrice: 148.0,
+    category: "Healing",
+    stock: "in",
+    description:
+      "Combined tissue-repair and GH-secretagogue stack pairing BPC-157 with Ipamorelin. Studied for overlapping recovery research pathways.",
+    disclaimer:
+      "This is a curated multi-peptide research stack — supplied as two lyophilized vials with a single lot-matched COA covering both compounds.",
+    lot: "RS-2604-A01",
+    storage: "2–8 °C, protect from light",
+    purity: "≥ 99.0% (HPLC)",
+    sku: "PP-RS-010",
+    type: "stack",
+    stackComponents: [
+      { compound: "BPC", name: "BPC-157", mass: "5 mg" },
+      { compound: "IPAM", name: "Ipamorelin", mass: "5 mg" },
+    ],
   },
 ];
 

@@ -216,9 +216,11 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           {rest.map((p) => (
             <a key={p.slug} href={`/shop/${p.slug}`} className="mob-pcard">
               <div className="mob-pcard-img">
-                {p.regularPrice && p.regularPrice > p.price && (
+                {p.type === "stack" ? (
+                  <span className="mob-card-stack-ribbon">Stack</span>
+                ) : p.regularPrice && p.regularPrice > p.price ? (
                   <span className="mob-card-sale-ribbon">Sale</span>
-                )}
+                ) : null}
                 <span className="mob-cat-pill">{categoryShort(p.category)}</span>
                 <span className={`mob-stock-chip ${p.stock === "low" ? "is-low" : "is-in"}`}>
                   <span className="sd" />

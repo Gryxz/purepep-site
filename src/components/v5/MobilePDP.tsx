@@ -148,6 +148,24 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
         </span>
       </div>
 
+      {product.type === "stack" && product.stackComponents && (
+        <div className="mob-pdp-stack-card">
+          <div className="mob-pdp-stack-eyebrow">Stack composition</div>
+          <ul className="mob-pdp-stack-list">
+            {product.stackComponents.map((c) => (
+              <li key={c.compound} className="mob-pdp-stack-row">
+                <span className="mob-pdp-stack-name">{c.name}</span>
+                <span className="mob-pdp-stack-mass">{c.mass}</span>
+              </li>
+            ))}
+            <li className="mob-pdp-stack-row mob-pdp-stack-total">
+              <span className="mob-pdp-stack-name">Total</span>
+              <span className="mob-pdp-stack-mass">{product.dose}</span>
+            </li>
+          </ul>
+        </div>
+      )}
+
       <div className="mob-pdp-rule" />
 
       {/* Variant card */}
