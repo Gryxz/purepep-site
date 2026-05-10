@@ -8392,28 +8392,36 @@ a.v3-pill-ghost:hover {
    is available: deep ink gradient + faint grid + soft amber volumetric
    glow + concentric rings (lab equipment / vial cap suggestion). */
 .mob-heropx-bg-lab {
-  /* TODO: Once /public/hero/lab.jpg is added (lab ambience photo,
-     portrait orientation, ~1170×2532), restore the layered version:
-       background:
-         linear-gradient(180deg, rgb(0 0 0 / 35%) 0%,
-                                rgb(0 0 0 / 12%) 35%,
-                                rgb(0 0 0 / 8%) 60%,
-                                rgb(0 0 0 / 45%) 100%),
-         url("/hero/lab.jpg") center center / cover no-repeat,
-         <fallback gradients below>;
-     The vignette overlay keeps the headline + eyebrow legible over
-     any region of the photo. */
+  /* Layered background:
+     1. Top: subtle darken-vignette overlay so the white headline +
+        amber eyebrow stay readable over any region of the photo
+     2. Middle: lab ambience photo at /hero/lab.png
+     3. Bottom: gradient fallback for slow-load / 404 — same deep-ink
+        + amber bloom that the photo will swap in for. */
   background:
+    linear-gradient(
+      180deg,
+      rgb(0 0 0 / 35%) 0%,
+      rgb(0 0 0 / 12%) 35%,
+      rgb(0 0 0 / 8%) 60%,
+      rgb(0 0 0 / 45%) 100%
+    ),
+    url("/hero/lab.png") center center / cover no-repeat,
     radial-gradient(ellipse 100% 60% at 50% 30%, rgb(120 80 0 / 22%) 0%, transparent 60%),
     radial-gradient(ellipse 70% 80% at 50% 100%, rgb(40 25 0 / 60%) 0%, transparent 70%),
     linear-gradient(180deg, #050505 0%, #0a0a0a 50%, #060606 100%);
 }
 
-/* Decorative overlays restored — they provide the lab ambience while
-   the real photo is pending.  When /hero/lab.jpg is added these can
-   be hidden again with `.mob-heropx-lab-grid, .mob-heropx-lab-glow,
-   .mob-heropx-lab-rings { display: none; }` so the photo doesn't
-   fight them. */
+/* Decorative CSS overlays hidden — photo provides its own atmosphere
+   and the synthetic overlays would compete with the real lighting. */
+.mob-heropx-lab-grid,
+.mob-heropx-lab-glow,
+.mob-heropx-lab-rings {
+  display: none;
+}
+
+/* Original placeholder rules retained below for reference; harmless
+   while .mob-heropx-lab-* elements are display:none above. */
 .mob-heropx-lab-grid {
   position: absolute; inset: 0;
   background-image:
