@@ -6163,7 +6163,10 @@ a.v3-pill-ghost:hover {
 /* ── Dark CTA ────────────────────────────────────────────────────── */
 .mob-dcta {
   background: var(--m-ink); color: var(--m-bone);
-  padding: 56px 24px 64px; text-align: center;
+  /* Padding tightened to match the referral card rhythm — was
+     56px/64px which left the button feeling distant from the body
+     copy.  Now feels compact and intentional. */
+  padding: 36px 24px 40px; text-align: center;
   position: relative; overflow: hidden;
   border-top: 1px solid rgb(255 210 80 / 8%);
 }
@@ -6181,7 +6184,8 @@ a.v3-pill-ghost:hover {
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   color: var(--m-amber-cta);
-  margin-bottom: 14px;
+  /* 14px → 10px to match referral card eyebrow rhythm */
+  margin-bottom: 10px;
   position: relative; z-index: 1;
 }
 
@@ -6191,7 +6195,8 @@ a.v3-pill-ghost:hover {
   font-size: clamp(24px, 7.2vw, var(--t-h2));
   line-height: var(--lh-snug);
   letter-spacing: var(--tracking-display);
-  margin-bottom: 14px;
+  /* 14px → 12px to match referral card headline rhythm */
+  margin-bottom: 12px;
   position: relative; z-index: 1;
 }
 .mob-dcta-h em { font-style: italic; color: rgb(250 247 240 / 60%); font-weight: 400; }
@@ -6202,13 +6207,18 @@ a.v3-pill-ghost:hover {
   font-size: clamp(13px, 3.5vw, var(--t-body-s));
   line-height: var(--lh-normal);
   color: rgb(250 247 240 / 60%);
-  max-width: 32ch; margin: 0 auto 24px;
+  /* 24px → 16px so the button sits closer to the body copy, matching
+     the tight body→CTA rhythm of the referral card. */
+  max-width: 32ch; margin: 0 auto 16px;
   position: relative; z-index: 1;
 }
 
 .mob-dcta-btn {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 15px 28px; border-radius: var(--m-rf);
+  /* 15px 28px → 12px 22px — matches the .mob-rais-referral-cta sizing
+     so the dcta button visually pairs with the referral CTA across
+     the site. */
+  padding: 12px 22px; border-radius: var(--m-rf);
   background: linear-gradient(158deg, #E5A30D 0%, #C8890A 18%, #A86F00 50%, #8A5A00 78%, #6B4500 100%);
   color: #fff; font-weight: 700; font-size: 13px;
   letter-spacing: 0.08em; text-transform: uppercase;
@@ -8179,7 +8189,7 @@ a.v3-pill-ghost:hover {
   .mob-referral { padding: 48px 0 56px; }
   .mob-ref-h { font-size: 28px; }
 
-  .mob-dcta { padding: 40px 20px 48px; }
+  .mob-dcta { padding: 28px 20px 32px; }
   .mob-dcta-h { font-size: 24px; }
 
   .mob-pdp-h1 { font-size: 30px; }
