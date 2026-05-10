@@ -5704,18 +5704,11 @@ a.v3-pill-ghost:hover {
     var(--m-bone) 100%
   );
 
-  /* Stays above the hero stack so the JS-driven rise slides the
-     gradient OVER the hero bottom edge.  GPU compositing hints below
-     promote the section to its own layer — transform updates render
-     on the GPU without triggering layout/paint.  No CSS transition:
-     JS writes a new transform every animation frame, and a CSS
-     transition would fight those updates frame-for-frame, causing
-     visible chop instead of preventing it. */
+  /* JS-driven catalog lift removed (was producing perceived chop on
+     iOS Safari regardless of curve).  Section now flows naturally
+     after the hero.  Gradient still smooths the dark→bone seam at
+     the boundary. */
   position: relative;
-  z-index: 3;
-  will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }
 .mob-catalog-header { padding: 0 24px 24px; }
 

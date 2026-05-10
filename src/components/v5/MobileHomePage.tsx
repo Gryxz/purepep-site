@@ -29,7 +29,6 @@ export function MobileHomePage({ products }: { products: Product[] }) {
   const featured = products[0];
   const rest = products.slice(1, 8); // up to 7 cards in the catalog teaser
   const parallaxRef = useRef<HTMLDivElement | null>(null);
-  const catalogRef = useRef<HTMLElement | null>(null);
 
   // Hero parallax — tracks scroll progress through the 2-viewport stack and
   // writes it into a CSS variable.  Pane 1 (lab + headline) fades out; pane
@@ -60,24 +59,14 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       const p = Math.max(0, Math.min(1, raw));
       el.style.setProperty("--mob-px-p", p.toFixed(4));
 
-      // Catalog lift — single ease-out-quad, max 80px overlap.  No
-      // phase changes, no velocity discontinuity, no lock zone.  As
-      // the catalog enters the viewport (stackBottom < vh), it
-      // translates up smoothly by up to 80px so the catalog gradient
-      // overlaps the bottom of the dark hero.  Once stackBottom < 0
-      // (catalog past viewport top, scrolling out), the transform
-      // resets to 0 — the section continues with normal scroll.
-      const catalog = catalogRef.current;
-      if (catalog) {
-        const stackBottom = rect.bottom;
-        let lift = 0;
-        if (stackBottom < vh && stackBottom > 0) {
-          const t = (vh - stackBottom) / vh; // 0 at viewport bottom, 1 as it reaches top
-          const eased = 1 - Math.pow(1 - t, 2); // ease-out-quad
-          lift = eased * 80;
-        }
-        catalog.style.transform = `translate3d(0, ${(-lift).toFixed(1)}px, 0)`;
-      }
+      // Catalog lift removed.  Every scroll-driven transform on the
+      // catalog (regardless of single-curve smoothness) was producing
+      // perceived chop on iOS Safari — the section is tall and its
+      // bone+gradient bg with the cards inside is expensive to
+      // recomposite each frame, even with translate3d / GPU hints.
+      // Pure natural scroll has no chop and the catalog still appears
+      // at the right time because the parallax stack ends right where
+      // the catalog begins.
     };
     const onScroll = () => {
       if (raf) return;
@@ -205,7 +194,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
 
 
       {/* Catalog teaser — eyebrow dropped (the section header is enough). */}
-      <section ref={catalogRef} className="mob-catalog-section">
+      <section className="mob-catalog-section">
         <div className="mob-catalog-header">
           <div className="mob-catalog-h-row">
             <h2 className="mob-catalog-h">The catalog</h2>
