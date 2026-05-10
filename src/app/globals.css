@@ -5183,6 +5183,7 @@ a.v3-pill-ghost:hover {
    Render-both, hide-one. Static export friendly (no SSR/UA detection,
    no hydration flash).  Mobile chrome lives in .mob-only blocks; v3
    desktop pages live in .desktop-only blocks. */
+
 /* TEMPORARY DEBUG MODE: mobile layout shown on desktop too.
    .desktop-only is hidden globally; .mob-only is visible at every
    viewport.  Mobile UI just stretches full-width on desktop — no
