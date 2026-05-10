@@ -174,9 +174,6 @@ export function MobileHomePage({ products }: { products: Product[] }) {
               Flagship compound
             </div>
             <h2 className="mob-heropx-h2">{featured?.name ?? "Retatrutide"} — our flagship compound</h2>
-            <p className="mob-heropx-spec">
-              {featured ? shortSpec(featured) : "Lab-verified · Lot-matched COA · Lyophilized"}
-            </p>
             <div className="mob-heropx-cta-block">
               <a
                 href={featured ? `/shop/${featured.slug}` : "/shop"}
@@ -196,6 +193,14 @@ export function MobileHomePage({ products }: { products: Product[] }) {
                 </svg>
               </a>
             </div>
+            {/* Spec line moved below CTAs into the dark bottom zone of the
+                vial photo — was previously sandwiched against the lit
+                amber label area where amber-on-amber blended out. As a
+                post-CTA fine-print readout it reinforces the pharma
+                credibility note without competing with the headline. */}
+            <p className="mob-heropx-spec mob-heropx-spec-foot">
+              {featured ? shortSpec(featured) : "Lab-verified · Lot-matched COA · Lyophilized"}
+            </p>
           </div>
         </section>
       </div>

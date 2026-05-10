@@ -8606,6 +8606,16 @@ a.v3-pill-ghost:hover {
   margin: 0 0 24px;
 }
 
+/* Foot variant — spec sits below the CTA cluster as a fine-print
+   credibility readout in the dark bottom zone of the vial photo.
+   Slightly lower opacity than the inline variant since it's now
+   secondary attribution rather than headline expansion. */
+.mob-heropx-spec-foot {
+  margin: 22px 0 0;
+  color: rgb(255 220 120 / 65%);
+  text-align: center;
+}
+
 .mob-heropx-cta-block {
   display: flex; flex-direction: column; align-items: center; gap: 14px;
   width: 100%;
