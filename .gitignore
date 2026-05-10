@@ -19,3 +19,6 @@ tmp/
 
 # label-render font cache (downloaded on demand)
 scripts/.fonts-cache/
+
+# label-render output (deterministic from src/lib/labels/skus.ts; regen via 'pnpm labels')
+public/brand/labels/*.png
