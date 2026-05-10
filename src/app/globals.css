@@ -5193,7 +5193,15 @@ a.v3-pill-ghost:hover {
      .desktop-only { display: block; }
      @media (min-width: 769px) { .mob-only { display: none !important; } }
      @media (max-width: 768px) { .desktop-only { display: none !important; } } */
-.mob-only { display: block !important; }
+
+/* No !important on .mob-only here: that would override the inherent
+   display of every element wearing .mob-only (e.g. .mob-tab-bar which
+   needs display:grid for its 4-column layout, .mob-hdr which is
+   display:flex).  Since the original @media gate that hid .mob-only at
+   ≥769px is removed below, a plain `display: block` is enough — and
+   specific class rules later in the file (.mob-tab-bar, .mob-hdr,
+   .mob-trust-bar, etc.) cascade-override it correctly. */
+.mob-only { display: block; }
 .desktop-only { display: none !important; }
 
 /* ── Page shell ─────────────────────────────────────────────────────
