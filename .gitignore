@@ -16,3 +16,6 @@ next-env.d.ts
 
 # inspector output
 tmp/
+
+# label-render font cache (downloaded on demand)
+scripts/.fonts-cache/

@@ -37,6 +37,12 @@ const HEX_ALLOWED_FILES = [
   "src/components/v3/RetaVialMini.tsx",
   "src/components/v3/LabelCropSvg.tsx",
   "src/components/v5/MobileVial.tsx",
+  // Label-render pipeline: physical-label paper + ink colors are
+  // brand data printed on labels, NOT app theming.  The hex constants
+  // live alongside the SKU manifest; downstream Higgsfield compositing
+  // matches them.
+  "src/lib/labels/Label.tsx",
+  "src/lib/labels/skus.ts",
 ];
 const isHexAllowed = (f: string) =>
   HEX_ALLOWED_FILES.some((p) => f.endsWith(p) || f.endsWith("/" + p));
