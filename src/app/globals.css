@@ -7928,18 +7928,18 @@ a.v3-pill-ghost:hover {
    silently stripping the dark bg.  The parent-scoped selector below wins that
    race and !important ensures no future single-class rule can re-clobber it. */
 
-/* Add-to-cart pill — --m-loden (#3D4232) for a darker grey than the
-   prior --m-ink-mute (#6B6B66) which read too light.  Loden is the
-   darkest non-pure-black token in the mobile palette, gives the
-   button presence without going to full ink/black. */
+/* Add-to-cart pill — --m-ink (#1F1F1F) for a true-grayscale dark.
+   --m-ink-mute (#6B6B66) read too light; --m-loden (#3D4232) was
+   olive-tinted (the user wanted true grey, not green).  --m-ink is
+   the canonical dark token in the mobile palette, neutral. */
 .mob-cta-row .mob-buybox {
-  background: var(--m-loden) !important;
+  background: var(--m-ink) !important;
   color: var(--m-bone) !important;
   border: none;
 }
 
 .mob-cta-row .mob-buybox:disabled {
-  background: var(--m-loden) !important;
+  background: var(--m-ink) !important;
   opacity: 0.45;
 }
 
