@@ -8403,7 +8403,7 @@ a.v3-pill-ghost:hover {
   /* Layered background:
      1. Top: subtle darken-vignette overlay so the white headline +
         amber eyebrow stay readable over any region of the photo
-     2. Middle: lab ambience photo at /hero/lab.png
+     2. Middle: lab ambience photo at /hero/lab.jpg
      3. Bottom: gradient fallback for slow-load / 404 — same deep-ink
         + amber bloom that the photo will swap in for. */
   background:
@@ -8414,7 +8414,7 @@ a.v3-pill-ghost:hover {
       rgb(0 0 0 / 8%) 60%,
       rgb(0 0 0 / 45%) 100%
     ),
-    url("/hero/lab.png") center center / cover no-repeat,
+    url("/hero/lab.jpg") center center / cover no-repeat,
     radial-gradient(ellipse 100% 60% at 50% 30%, rgb(120 80 0 / 22%) 0%, transparent 60%),
     radial-gradient(ellipse 70% 80% at 50% 100%, rgb(40 25 0 / 60%) 0%, transparent 70%),
     linear-gradient(180deg, #050505 0%, #0a0a0a 50%, #060606 100%);
@@ -8465,10 +8465,32 @@ a.v3-pill-ghost:hover {
 /* PANE 2 — Retatrutide vial + branding.  The MobileVial illustration
    sits dead-center, scaled up; PUREPEP wordmark watermark behind it. */
 .mob-heropx-bg-vial {
+  /* Layered background:
+     1. Top: darken-vignette overlay so the headline + amber CTA + spec
+        line stay legible over any region of the photo
+     2. Middle: Retatrutide vial photo at /hero/reta.jpg
+     3. Bottom: gradient fallback (deep ink + amber bloom) for slow-load
+        / 404. */
   background:
+    linear-gradient(
+      180deg,
+      rgb(0 0 0 / 30%) 0%,
+      rgb(0 0 0 / 8%) 35%,
+      rgb(0 0 0 / 6%) 60%,
+      rgb(0 0 0 / 50%) 100%
+    ),
+    url("/hero/reta.jpg") center center / cover no-repeat,
     radial-gradient(ellipse 60% 70% at 50% 45%, rgb(200 140 30 / 22%) 0%, transparent 60%),
     radial-gradient(ellipse 100% 80% at 50% 100%, rgb(20 12 0 / 70%) 0%, transparent 65%),
     linear-gradient(180deg, #0a0805 0%, #050402 100%);
+}
+
+/* Decorative pane-2 overlays hidden — photo provides its own vial,
+   glow, and brand presence; the synthetic CSS overlays would compete. */
+.mob-heropx-vial-glow,
+.mob-heropx-vial-wrap,
+.mob-heropx-brand-watermark {
+  display: none;
 }
 
 .mob-heropx-vial-glow {
