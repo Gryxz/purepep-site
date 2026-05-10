@@ -474,7 +474,7 @@ function shortDesc(p: Product): string {
 /** Compact technical spec line: receptor profile + structure + form. */
 function shortSpec(p: Product): string {
   const knownSpec: Record<string, string> = {
-    RETA: "Triple GLP-1 / GIP / glucagon agonist · 39 amino acids · Lyophilized",
+    RETA: "Triple GLP-1 / GIP / glucagon agonist",
     SEMA: "GLP-1 receptor agonist · 31 amino acids · Lyophilized",
     TIRZ: "Dual GLP-1 / GIP agonist · 39 amino acids · Lyophilized",
     CAGRI: "Long-acting amylin analogue · Lyophilized",

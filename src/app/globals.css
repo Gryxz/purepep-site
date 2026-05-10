@@ -8608,11 +8608,12 @@ a.v3-pill-ghost:hover {
 
 /* Foot variant — spec sits below the CTA cluster as a fine-print
    credibility readout in the dark bottom zone of the vial photo.
-   Slightly lower opacity than the inline variant since it's now
-   secondary attribution rather than headline expansion. */
+   Bone-toned (not amber) so it reads cleanly even if the cluster
+   drifts upward into the vial's lit amber label region — amber-on-
+   amber was the original blend-out failure mode. */
 .mob-heropx-spec-foot {
   margin: 22px 0 0;
-  color: rgb(255 220 120 / 65%);
+  color: rgb(250 247 240 / 70%);
   text-align: center;
 }
 
