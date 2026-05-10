@@ -7922,20 +7922,18 @@ a.v3-pill-ghost:hover {
    silently stripping the dark bg.  The parent-scoped selector below wins that
    race and !important ensures no future single-class rule can re-clobber it. */
 
-/* Add-to-cart pill — grey design token (--m-ink-mute) fill + bone
-   text.  Higher specificity than `.mob-app button` (the global rule
-   that strips backgrounds, the actual culprit silently overriding
-   .mob-buybox), and !important on bg/color belt-and-braces.
-   Selector matches the actual JSX wrapper class (.mob-cta-row) — the
-   prior version targeted .mob-pdp-buy-row which doesn't exist. */
+/* Add-to-cart pill — --m-loden (#3D4232) for a darker grey than the
+   prior --m-ink-mute (#6B6B66) which read too light.  Loden is the
+   darkest non-pure-black token in the mobile palette, gives the
+   button presence without going to full ink/black. */
 .mob-cta-row .mob-buybox {
-  background: var(--m-ink-mute) !important;
+  background: var(--m-loden) !important;
   color: var(--m-bone) !important;
   border: none;
 }
 
 .mob-cta-row .mob-buybox:disabled {
-  background: var(--m-ink-mute) !important;
+  background: var(--m-loden) !important;
   opacity: 0.45;
 }
 
