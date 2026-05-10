@@ -8392,12 +8392,39 @@ a.v3-pill-ghost:hover {
    is available: deep ink gradient + faint grid + soft amber volumetric
    glow + concentric rings (lab equipment / vial cap suggestion). */
 .mob-heropx-bg-lab {
+  /* Layered background:
+     1. Top: subtle darken-vignette overlay so the white headline +
+        amber eyebrow stay readable over any part of the photo
+     2. Middle: the lab photo at /hero/lab.jpg (portrait, fills cover)
+     3. Bottom: gradient fallback for when the image is missing or
+        still loading — same deep-ink base + amber bloom that the
+        photo will swap in for. */
   background:
+    linear-gradient(
+      180deg,
+      rgb(0 0 0 / 35%) 0%,
+      rgb(0 0 0 / 12%) 35%,
+      rgb(0 0 0 / 8%) 60%,
+      rgb(0 0 0 / 45%) 100%
+    ),
+    url("/hero/lab.jpg") center center / cover no-repeat,
     radial-gradient(ellipse 100% 60% at 50% 30%, rgb(120 80 0 / 22%) 0%, transparent 60%),
     radial-gradient(ellipse 70% 80% at 50% 100%, rgb(40 25 0 / 60%) 0%, transparent 70%),
     linear-gradient(180deg, #050505 0%, #0a0a0a 50%, #060606 100%);
 }
 
+/* Decorative CSS effects (grid, glow, rings) hidden when the photo
+   is present — the photo provides its own atmosphere and the synthetic
+   overlays would compete with it.  Re-enable by removing these
+   display:none rules if reverting to the placeholder treatment. */
+.mob-heropx-lab-grid,
+.mob-heropx-lab-glow,
+.mob-heropx-lab-rings {
+  display: none;
+}
+
+/* Original placeholder rules retained below for reference; harmless
+   while .mob-heropx-lab-* elements are display:none above. */
 .mob-heropx-lab-grid {
   position: absolute; inset: 0;
   background-image:
