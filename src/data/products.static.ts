@@ -289,7 +289,7 @@ export const PRODUCTS: Product[] = [
     category: "Healing",
     stock: "in",
     description:
-      "Curated tissue-repair bundle pairing BPC-157 and TB-500 in a single research SKU. Both peptides are studied for synergistic roles in connective-tissue and vascular repair models.",
+      "Curated tissue-repair bundle pairing BPC-157 and TB-500. Each peptide ships as its own separately-sealed lyophilized vial — never pre-mixed — under a single lot-matched COA. Both peptides are studied for synergistic roles in connective-tissue and vascular repair models.",
     disclaimer:
       "This is a curated multi-peptide research stack — supplied as two lyophilized vials with a single lot-matched COA covering both compounds.",
     lot: "HS-2604-A01",
@@ -317,7 +317,7 @@ export const PRODUCTS: Product[] = [
     category: "Incretin mimetics",
     stock: "in",
     description:
-      "GLP-1 / amylin combination stack pairing Retatrutide (triple GLP-1 / GIP / glucagon agonist) with Cagrilintide (long-acting amylin analogue). Studied in metabolic research models.",
+      "GLP-1 / amylin combination stack pairing Retatrutide (triple GLP-1 / GIP / glucagon agonist) with Cagrilintide (long-acting amylin analogue). Each peptide ships as its own separately-sealed lyophilized vial — never pre-mixed — under a single lot-matched COA. Studied in metabolic research models.",
     disclaimer:
       "This is a curated multi-peptide research stack — supplied as two lyophilized vials with a single lot-matched COA covering both compounds.",
     lot: "GS-2604-A01",
@@ -345,7 +345,7 @@ export const PRODUCTS: Product[] = [
     category: "Healing",
     stock: "in",
     description:
-      "Combined tissue-repair and GH-secretagogue stack pairing BPC-157 with Ipamorelin. Studied for overlapping recovery research pathways.",
+      "Combined tissue-repair and GH-secretagogue stack pairing BPC-157 with Ipamorelin. Each peptide ships as its own separately-sealed lyophilized vial — never pre-mixed — under a single lot-matched COA. Studied for overlapping recovery research pathways.",
     disclaimer:
       "This is a curated multi-peptide research stack — supplied as two lyophilized vials with a single lot-matched COA covering both compounds.",
     lot: "RS-2604-A01",

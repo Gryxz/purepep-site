@@ -150,19 +150,26 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
 
       {product.type === "stack" && product.stackComponents && (
         <div className="mob-pdp-stack-card">
-          <div className="mob-pdp-stack-eyebrow">Stack composition</div>
+          <div className="mob-pdp-stack-eyebrow">
+            {product.stackComponents.length} separate vials · Not pre-mixed
+          </div>
           <ul className="mob-pdp-stack-list">
             {product.stackComponents.map((c) => (
               <li key={c.compound} className="mob-pdp-stack-row">
                 <span className="mob-pdp-stack-name">{c.name}</span>
-                <span className="mob-pdp-stack-mass">{c.mass}</span>
+                <span className="mob-pdp-stack-mass">{c.mass} vial</span>
               </li>
             ))}
             <li className="mob-pdp-stack-row mob-pdp-stack-total">
-              <span className="mob-pdp-stack-name">Total</span>
+              <span className="mob-pdp-stack-name">Total per bundle</span>
               <span className="mob-pdp-stack-mass">{product.dose}</span>
             </li>
           </ul>
+          <p className="mob-pdp-stack-note">
+            Each peptide ships in its own sealed lyophilized vial with a
+            single lot-matched COA covering both compounds. Reconstitute
+            and store separately per protocol.
+          </p>
         </div>
       )}
 

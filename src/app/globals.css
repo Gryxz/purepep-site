@@ -8877,6 +8877,14 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
 .mob-pdp-stack-total .mob-pdp-stack-name { font-weight: 700; }
 .mob-pdp-stack-total .mob-pdp-stack-mass { color: var(--m-ink); font-weight: 600; }
 
+.mob-pdp-stack-note {
+  margin: 12px 0 0;
+  font-family: var(--font-sans);
+  font-size: clamp(11px, 3vw, var(--t-caption));
+  line-height: var(--lh-normal);
+  color: var(--m-ink-mute);
+}
+
 /* Stack ribbon on shop/home cards — dark variant of the sale ribbon */
 .mob-card-stack-ribbon {
   position: absolute;
