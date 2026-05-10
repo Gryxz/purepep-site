@@ -201,6 +201,42 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       </div>
 
 
+      {/* Best Selling Bundles — surfaces stacks above the catalog so
+          buyers see curated pairings before scrolling through individual
+          peptides.  Reuses .mob-pcard styling so cards match the
+          catalog visually; the STACK ribbon distinguishes them. */}
+      {bundles.length > 0 && (
+        <section className="mob-bundles-section">
+          <div className="mob-bundles-header">
+            <div className="mob-bundles-eyebrow">Best sellers</div>
+            <h2 className="mob-bundles-h">Curated bundles</h2>
+            <p className="mob-bundles-sub">
+              Multiple research vials, stacked at a discount. Two
+              separately-sealed peptides per bundle — never pre-mixed.
+            </p>
+          </div>
+          <div className="mob-pgrid mob-bundles-grid">
+            {bundles.map((p) => (
+              <a key={p.slug} href={`/shop/${p.slug}`} className="mob-pcard">
+                <div className="mob-pcard-img">
+                  <span className="mob-card-stack-ribbon">Stack</span>
+                  <span className="mob-cat-pill">{categoryShort(p.category)}</span>
+                  <MobileVial size="md" compound={p.compound} mass={p.dose} purity="≥99.5%" />
+                </div>
+                <div className="mob-pcard-body">
+                  <div className="mob-pname">{p.name}</div>
+                  <div className="mob-pdesc">{shortDesc(p)}</div>
+                  <div className="mob-pcard-foot">
+                    <span className="mob-pprice">${Math.round(p.price)}</span>
+                    <span className="mob-parr">→</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Catalog teaser — eyebrow dropped (the section header is enough). */}
       <section className="mob-catalog-section">
         <div className="mob-catalog-header">
