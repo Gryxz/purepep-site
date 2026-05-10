@@ -5186,9 +5186,35 @@ a.v3-pill-ghost:hover {
 .mob-only { display: block; }
 .desktop-only { display: block; }
 
-@media (min-width: 769px) { .mob-only { display: none !important; } }
+/* TEMPORARY DEBUG MODE: mobile layout shown on desktop too.
+   Restore the breakpoint gates by replacing this block with:
+     @media (min-width: 769px) { .mob-only { display: none !important; } }
+     @media (max-width: 768px) { .desktop-only { display: none !important; } }
+   On desktop, the .mob-app container is constrained to a 420px
+   phone-frame width, centered, with a light shadow so it visually
+   reads as a phone simulator instead of stretching to full browser
+   width. */
+.desktop-only { display: none !important; }
 
-@media (max-width: 768px) { .desktop-only { display: none !important; } }
+@media (min-width: 769px) {
+  .mob-app {
+    max-width: 420px;
+    margin: 0 auto;
+    box-shadow: 0 0 40px rgb(0 0 0 / 12%);
+    min-height: 100vh;
+  }
+
+  /* Constrain the fixed mobile chrome (header / tab bar / cart drawer
+     / cookie banner) to the same phone-frame so they don't stretch
+     full-width on desktop. */
+  .mob-hdr, .mob-tab-bar, .mob-cart-drawer, .mob-cookies {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 420px !important;
+  }
+}
 
 /* ── Page shell ─────────────────────────────────────────────────────
    Reset the page background to bone so the dark cinematic sections
