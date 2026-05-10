@@ -6204,8 +6204,10 @@ a.v3-pill-ghost:hover {
   font-size: clamp(24px, 7.2vw, var(--t-h2));
   line-height: var(--lh-snug);
   letter-spacing: var(--tracking-display);
-
-  /* 14px → 12px to match referral card headline rhythm */
+  /* Pure white — was inheriting var(--m-bone) (#FAF7F0 warm off-white)
+     from the .mob-dcta parent; user wanted full white for max
+     contrast against the dark section. */
+  color: #fff;
   margin-bottom: 12px;
   position: relative; z-index: 1;
 }
