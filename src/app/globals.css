@@ -6128,7 +6128,14 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-ref-cta {
-  display: inline-flex; align-items: center; gap: 10px;
+  /* display:flex + width:fit-content + auto margins centers the pill
+     horizontally within .mob-ref-content (left-aligned text above
+     stays left-aligned, only the CTA centers). */
+  display: flex;
+  width: fit-content;
+  margin: 0 auto;
+  align-items: center;
+  gap: 10px;
   padding: 15px 26px; border-radius: var(--m-rf);
   background: linear-gradient(160deg, #D4980C 0%, #C8890A 35%, #9A6500 100%);
   color: #fff; font-weight: 700; font-size: 13px;
