@@ -7928,14 +7928,21 @@ a.v3-pill-ghost:hover {
    has specificity 0-1-1 which beats the single-class `.mob-buybox` rule (0-1-0),
    silently stripping the dark bg.  The parent-scoped selector below wins that
    race and !important ensures no future single-class rule can re-clobber it. */
-.mob-pdp-buy-row .mob-buybox {
-  background: var(--m-ink) !important;
+
+/* Add-to-cart pill — grey design token (--m-ink-mute) fill + bone
+   text.  Higher specificity than `.mob-app button` (the global rule
+   that strips backgrounds, the actual culprit silently overriding
+   .mob-buybox), and !important on bg/color belt-and-braces.
+   Selector matches the actual JSX wrapper class (.mob-cta-row) — the
+   prior version targeted .mob-pdp-buy-row which doesn't exist. */
+.mob-cta-row .mob-buybox {
+  background: var(--m-ink-mute) !important;
   color: var(--m-bone) !important;
   border: none;
 }
 
-.mob-pdp-buy-row .mob-buybox:disabled {
-  background: var(--m-ink) !important;
+.mob-cta-row .mob-buybox:disabled {
+  background: var(--m-ink-mute) !important;
   opacity: 0.45;
 }
 
