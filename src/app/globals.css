@@ -6163,6 +6163,7 @@ a.v3-pill-ghost:hover {
 /* ── Dark CTA ────────────────────────────────────────────────────── */
 .mob-dcta {
   background: var(--m-ink); color: var(--m-bone);
+
   /* Padding tightened to match the referral card rhythm — was
      56px/64px which left the button feeling distant from the body
      copy.  Now feels compact and intentional. */
@@ -6184,6 +6185,7 @@ a.v3-pill-ghost:hover {
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   color: var(--m-amber-cta);
+
   /* 14px → 10px to match referral card eyebrow rhythm */
   margin-bottom: 10px;
   position: relative; z-index: 1;
@@ -6195,6 +6197,7 @@ a.v3-pill-ghost:hover {
   font-size: clamp(24px, 7.2vw, var(--t-h2));
   line-height: var(--lh-snug);
   letter-spacing: var(--tracking-display);
+
   /* 14px → 12px to match referral card headline rhythm */
   margin-bottom: 12px;
   position: relative; z-index: 1;
@@ -6207,6 +6210,7 @@ a.v3-pill-ghost:hover {
   font-size: clamp(13px, 3.5vw, var(--t-body-s));
   line-height: var(--lh-normal);
   color: rgb(250 247 240 / 60%);
+
   /* 24px → 16px so the button sits closer to the body copy, matching
      the tight body→CTA rhythm of the referral card. */
   max-width: 32ch; margin: 0 auto 16px;
@@ -6215,6 +6219,7 @@ a.v3-pill-ghost:hover {
 
 .mob-dcta-btn {
   display: inline-flex; align-items: center; gap: 8px;
+
   /* 15px 28px → 12px 22px — matches the .mob-rais-referral-cta sizing
      so the dcta button visually pairs with the referral CTA across
      the site. */
