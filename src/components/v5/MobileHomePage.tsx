@@ -27,7 +27,15 @@ export function MobileHomePage({ products }: { products: Product[] }) {
   // Featured product is the first product (RETA in the canonical fixture).
   // Fall back to undefined-safe so an empty catalog doesn't crash the page.
   const featured = products[0];
-  const rest = products.slice(1, 8); // up to 7 cards in the catalog teaser
+  // Catalog teaser: every single-peptide + BAC water (skip the featured RETA
+  // since it owns the hero, and skip stacks which get their own "Best selling
+  // bundles" section above the catalog).
+  const rest = products
+    .slice(1)
+    .filter((p) => p.type !== "stack")
+    .slice(0, 8);
+  // Bundles: just the stacks, surfaced separately above the catalog teaser.
+  const bundles = products.filter((p) => p.type === "stack");
   const parallaxRef = useRef<HTMLDivElement | null>(null);
 
   // Hero parallax — tracks scroll progress through the 2-viewport stack and
