@@ -8537,11 +8537,10 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-cta-ghost {
-  /* Solid outlined pill — same geometry as the primary amber CTA above
-     it.  Bone outline + bone text at 100% alpha (no translucent stacking
-     with the pane's opacity fade) so the button stays readable at every
-     fade state.  No backdrop-filter, no translucent fill — those effects
-     collapse during the parallax opacity multiply. */
+  /* Solid white pill — bone fill + ink text, high contrast on the
+     dark hero.  Previous outline-only treatment kept washing out
+     during the parallax opacity multiply.  This is filled, opaque,
+     guaranteed visible at every fade state. */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -8555,17 +8554,16 @@ a.v3-pill-ghost:hover {
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--m-bone);
-  background: transparent;
-  border: 1.5px solid var(--m-bone);
+  color: var(--m-ink);
+  background: var(--m-bone);
+  border: none;
   border-radius: var(--m-rf);
   text-decoration: none;
-  transition: background 0.15s, color 0.15s, transform 0.12s;
+  transition: opacity 0.15s, transform 0.12s;
 }
 
 .mob-heropx-cta-ghost:active {
-  background: var(--m-bone);
-  color: var(--m-ink);
+  opacity: 0.85;
   transform: translateY(1px);
 }
 
