@@ -30,9 +30,7 @@ import { LABEL_SKUS, type LabelSku } from "../src/lib/labels/skus.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-const REFS_DIR = join(ROOT, "references");
-const REF_SEMA = join(REFS_DIR, "sema-10mg.jpg");
-const REF_TB500 = join(REFS_DIR, "tb-500-10mg.jpg");
+const BRAND_DIR = join(ROOT, "public", "brand", "products");
 const PRODUCTS_DIR = join(ROOT, "public", "products");
 
 // ---------------------------------------------------------------------------
@@ -63,48 +61,49 @@ function parseArgs(): Args {
 // ---------------------------------------------------------------------------
 
 function buildPrompt(sku: LabelSku): string {
-  return `A single peptide research vial, photorealistic editorial product \
-photograph. The vial geometry, lighting, framing, depth-of-field, \
-stopper, crimp seal, glass clarity, and powder fill level must \
-match the provided reference images exactly. The two reference \
-images show the canonical PurePep vial — replicate them precisely.
+  return `Photorealistic editorial product photograph of a single peptide \
+research vial. The first two reference images show the EXACT canonical \
+${sku.abbreviation} vial — replicate the packaging layout, label position, \
+label color, stopper, crimp seal, glass, and powder fill level \
+with pixel-perfect fidelity. This is the authoritative source of truth \
+for how this product looks.
 
-Apply the provided label artwork to the vial. The label wraps the \
-lower 60% of the vial body. Label print must appear matte and crisp, \
-no glossy reflections on label surface.
+CRITICAL — label: The third reference image is the updated label artwork. \
+Apply it directly over the label area visible in the first two references. \
+Label background color is ${sku.labelBg}. Preserve the dark ink border, \
+the compound code, the compliance bar at the bottom of the label, and the \
+τ (tau) brand mark replacing the dose pill in the upper-right area. \
+Label surface: matte, crisp, no gloss or reflections.
 
-Backdrop: solid ${sku.labelBg} matte studio cyc, fading to a \
-slightly darker tone at the floor where the vial sits. Match the \
-backdrop character of the reference images.
+Backdrop: match the seamless studio backdrop shown in the first two \
+reference images exactly — same color family (${sku.backdropUpper} upper, \
+${sku.backdropShelf} shelf), same soft gradient sweep to floor.
 
-Vial position: centered horizontally, sitting on a flat matte \
-surface. Generous negative space above and around. Match the \
-framing of the reference images exactly.
+Vial position: perfectly upright, 90 degrees vertical, no tilt. Centered \
+horizontally. Generous negative space above and on both sides, matching \
+the framing of the reference images.
 
 White lyophilized powder visible in the lower ~25% of the vial, \
-matching the powder fill level of the reference images exactly. \
-Same fill level for every SKU — do not vary by compound.
+matching the fill level shown in the reference images exactly.
 
-No text overlay. No watermark. No additional elements. The image \
-shows only the vial and the matte backdrop.`;
+No text overlay. No watermark. No added props. Only vial and backdrop.`;
 }
 
 // ---------------------------------------------------------------------------
 // Higgsfield call — product_shot mode, 3 reference images
 // ---------------------------------------------------------------------------
 
-function runHighgsfield(sku: LabelSku, labelPhoto: string, outPath: string): string {
+function runHighgsfield(sku: LabelSku, refs: string[], outPath: string): string {
   const prompt = buildPrompt(sku);
 
+  const imageArgs = refs.flatMap((r) => ["--image", r]);
   const result = spawnSync(
     "higgsfield",
     [
       "product-photoshoot", "create",
       "--mode", "product_shot",
       "--prompt", prompt,
-      "--image", REF_SEMA,
-      "--image", REF_TB500,
-      "--image", labelPhoto,
+      ...imageArgs,
       "--aspect_ratio", "2:3",
       "--json",
     ],
@@ -194,11 +193,9 @@ function preflight(): void {
     );
     process.exit(1);
   }
-  for (const [label, path] of [["sema reference", REF_SEMA], ["tb-500 reference", REF_TB500]] as const) {
-    if (!existsSync(path)) {
-      console.error(`Missing ${label}: ${path}`);
-      process.exit(1);
-    }
+  if (!existsSync(BRAND_DIR)) {
+    console.error(`Missing brand products dir: ${BRAND_DIR}`);
+    process.exit(1);
   }
   mkdirSync(PRODUCTS_DIR, { recursive: true });
 }
@@ -239,6 +236,14 @@ async function renderOne(sku: LabelSku, args: Args): Promise<RenderResult> {
 
   mkdirSync(dir, { recursive: true });
 
+  // SKU-specific canonical brand photos as geometry references
+  const brand10 = join(BRAND_DIR, `${sku.slug}-10mg.jpg`);
+  const brand5  = join(BRAND_DIR, `${sku.slug}-5mg.jpg`);
+  const refs: string[] = [];
+  if (existsSync(brand10)) refs.push(brand10);
+  if (existsSync(brand5))  refs.push(brand5);
+  refs.push(labelPhoto); // τ glyph label always last
+
   const failReasons: string[] = [];
   let attempts = 0;
 
@@ -247,7 +252,7 @@ async function renderOne(sku: LabelSku, args: Args): Promise<RenderResult> {
     console.log(`  [attempt ${attempts}/${args.maxAttempts}] ${sku.slug}…`);
     const t0 = Date.now();
     try {
-      const url = runHighgsfield(sku, labelPhoto, outPath);
+      const url = runHighgsfield(sku, refs, outPath);
       await downloadAsPng(url, outPath);
       const { size } = statSync(outPath);
       return { slug: sku.slug, outPath, fileSize: size, renderMs: Date.now() - t0, attempts, skipped: false, failed: false, failReasons };
