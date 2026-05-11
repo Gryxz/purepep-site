@@ -66,14 +66,11 @@ export function HomePage({ products }: { products: Product[] }) {
               {featured ? `01 / ${padded2(products.length)} — ${featured.compound}` : "Research grade"}
             </div>
             {featured && (
-              <Image
-                src={`/products/${featured.slug}/hero.png`}
-                alt={`${featured.compound} vial`}
-                fill
-                priority
-                sizes="(max-width:900px) 100vw, 55vw"
-                className="v3-product-hero-img"
-                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+              <RetaVial
+                compound={featured.compound}
+                dose={featured.dose}
+                lot={featured.lot}
+                storage={featured.storage}
               />
             )}
             <div className="v3home-corner bl">Lyophilized · Research use only</div>
