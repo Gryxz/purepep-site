@@ -8483,20 +8483,24 @@ a.v3-pill-ghost:hover {
     linear-gradient(180deg, #050505 0%, #0a0805 55%, #050402 100%);
 }
 
-/* Vignette overlay — paired with .mob-hero-vial-img-dark to crush the
- * cream cyc edges of the light photo down to near-black while leaving
- * the vial centre legible.  Centred slightly above mid (50% 45%) to
- * match where the vial body actually sits in the v1.0 photos. */
+/* Bottom scrim — sits ABOVE the photo, BELOW the content stack.
+ * With the photo now on object-fit:cover the pane is fully filled by
+ * the Reta vial photo and the cream cyc; this scrim ramps the lower
+ * half from transparent → near-black so the headline / CTAs / spec
+ * line read cleanly on top of it.  Shorter + less aggressive than the
+ * earlier vignette so the vial itself remains the dominant element. */
 .mob-heropx-bg-vial::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse 55% 50% at 50% 45%,
+  background: linear-gradient(
+    180deg,
     transparent 0%,
-    transparent 35%,
-    rgb(5 5 5 / 70%) 78%,
-    rgb(5 5 5 / 92%) 100%
+    transparent 48%,
+    rgb(5 5 5 / 25%) 60%,
+    rgb(5 5 5 / 60%) 75%,
+    rgb(5 5 5 / 88%) 92%,
+    #050505 100%
   );
   z-index: 1;
   pointer-events: none;
@@ -9135,28 +9139,30 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   z-index: 1;
 }
 
-/* mobile — homepage hero vial stage */
+/* mobile — homepage hero vial stage
+ *
+ * object-fit:cover (not contain) so the photo fills the 100vh pane
+ * with no letterboxing.  contain was leaving 130px black bars above
+ * and below the photo (photo 2:3 portrait, pane ~0.46:1) which read
+ * as a giant inconsistent black block above the text stack.  cover
+ * crops ~84px from each horizontal edge of the source photo — the
+ * vial sits centred in the frame so the crop loses only outer cyc,
+ * not the product itself. */
 .mob-hero-vial-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   z-index: 1;
 }
 
-/* Dark treatment for the flagship hero pane while we're sourcing the
- * Higgsfield dark render.  Applied to the existing v1.0 light photo:
- * a moderate brightness reduction PLUS the bg-vial vignette (see
- * .mob-heropx-bg-vial::after below) which crushes the cream cyc at
- * the edges while preserving the vial in the centre.  Combined, the
- * photo reads as a dark studio set without crushing the label print
- * into illegibility.  When the dark hero lands at
- * .../purepep-vial-{slug}-v1.0-dark.jpg, swap the JSX src and drop
- * this class. */
-.mob-hero-vial-img-dark {
-  filter: brightness(0.6) saturate(0.85) contrast(1.08);
-}
+/* Reserved class for the flagship hero pane image — kept so the JSX
+ * doesn't need a structural change when we want to apply any future
+ * treatment to the dark-hero photo.  Currently a no-op: the photo
+ * renders at full brightness and the .mob-heropx-bg-vial::after
+ * bottom scrim provides text legibility from the lower half down. */
+.mob-hero-vial-img-dark { /* intentionally empty */ }
 
 
