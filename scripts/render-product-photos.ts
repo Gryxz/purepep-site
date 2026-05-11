@@ -32,6 +32,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const BRAND_DIR = join(ROOT, "public", "brand", "products");
 const PRODUCTS_DIR = join(ROOT, "public", "products");
+// Dark variants land directly under the v1.0 source convention used by
+// the components (purepep-vial-{slug}-v1.0-dark.jpg).  Avoids a manual
+// move step between script output and the path consumed by JSX.
+const SOURCES_DIR = join(ROOT, "public", "images", "products", "source");
 
 // ---------------------------------------------------------------------------
 // CLI args
@@ -41,13 +45,26 @@ interface Args {
   force: boolean;
   only: string | null;
   maxAttempts: number;
+  /**
+   * Dark variant: same vial / label / geometry, but the studio backdrop
+   * is rendered as matte charcoal black instead of the per-SKU tone.
+   * Output is written to
+   *   public/images/products/source/purepep-vial-{slug}-v1.0-dark.jpg
+   * to match the v1.0 source naming convention used by the components
+   * (no manual rename step between render and use).  Consumed by the
+   * mobile homepage flagship hero pane.
+   *
+   * Run: pnpm products --only reta --dark
+   */
+  dark: boolean;
 }
 
 function parseArgs(): Args {
   const argv = process.argv.slice(2);
-  const args: Args = { force: false, only: null, maxAttempts: 5 };
+  const args: Args = { force: false, only: null, maxAttempts: 5, dark: false };
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--force" || argv[i] === "-f") args.force = true;
+    else if (argv[i] === "--dark") args.dark = true;
     else if (argv[i] === "--only" && argv[i + 1]) args.only = argv[++i]!;
     else if (argv[i] === "--attempts" && argv[i + 1]) {
       args.maxAttempts = Math.max(1, parseInt(argv[++i]!, 10) || 5);
@@ -60,7 +77,24 @@ function parseArgs(): Args {
 // Prompt template — geometry locked to both reference images
 // ---------------------------------------------------------------------------
 
-function buildPrompt(sku: LabelSku): string {
+function buildPrompt(sku: LabelSku, dark: boolean): string {
+  // Backdrop override: dark mode swaps the per-SKU coloured cyc
+  // (sku.backdropUpper → sku.backdropShelf) for a pure matte charcoal
+  // studio set with a warm rim-light directive.  Everything else
+  // (geometry, label artwork, powder fill, framing, reference fidelity)
+  // is kept identical to the standard render so the dark and light
+  // heroes read as the same vial photographed against different sets.
+  const backdropClause = dark
+    ? `solid matte charcoal black (#0a0a0a) studio cyc, with a soft warm \
+rim-light from camera-right grazing the vial shoulder so the crimp \
+seal and glass edge pop against the dark backdrop. The floor fades \
+to near-pure black, no horizon line visible. Subtle warm golden \
+practical bounce lifts the label print just enough to remain fully \
+legible. Treat as moody high-end editorial product photography.`
+    : `match the seamless studio backdrop shown in the first two \
+reference images exactly — same color family (${sku.backdropUpper} \
+upper, ${sku.backdropShelf} shelf), same soft gradient sweep to floor.`;
+
   return `Photorealistic editorial product photograph of a single peptide \
 research vial. The first two reference images show the EXACT canonical \
 ${sku.abbreviation} vial — replicate the packaging layout, label position, \
@@ -75,9 +109,7 @@ the compound code, the compliance bar at the bottom of the label, and the \
 τ (tau) brand mark replacing the dose pill in the upper-right area. \
 Label surface: matte, crisp, no gloss or reflections.
 
-Backdrop: match the seamless studio backdrop shown in the first two \
-reference images exactly — same color family (${sku.backdropUpper} upper, \
-${sku.backdropShelf} shelf), same soft gradient sweep to floor.
+Backdrop: ${backdropClause}
 
 Vial position: perfectly upright, 90 degrees vertical, no tilt. Centered \
 horizontally. Generous negative space above and on both sides, matching \
@@ -93,8 +125,8 @@ No text overlay. No watermark. No added props. Only vial and backdrop.`;
 // Higgsfield call — product_shot mode, 3 reference images
 // ---------------------------------------------------------------------------
 
-function runHighgsfield(sku: LabelSku, refs: string[], outPath: string): string {
-  const prompt = buildPrompt(sku);
+function runHighgsfield(sku: LabelSku, refs: string[], outPath: string, dark: boolean): string {
+  const prompt = buildPrompt(sku, dark);
 
   const imageArgs = refs.flatMap((r) => ["--image", r]);
   const result = spawnSync(
@@ -159,7 +191,14 @@ async function downloadAsPng(url: string, dest: string): Promise<void> {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Download failed: ${res.status} ${url}`);
   const buf = Buffer.from(await res.arrayBuffer());
-  await sharp(buf).png({ compressionLevel: 6 }).toFile(dest);
+  // Encode based on dest extension so the v1.0 source convention
+  // (.jpg) stays JPEG-encoded while the legacy /products/{slug}/hero
+  // path stays PNG.
+  const isJpg = /\.jpe?g$/i.test(dest);
+  const img = sharp(buf);
+  await (isJpg
+    ? img.jpeg({ quality: 90, mozjpeg: true }).toFile(dest)
+    : img.png({ compressionLevel: 6 }).toFile(dest));
 }
 
 // ---------------------------------------------------------------------------
@@ -226,8 +265,16 @@ function generatePhotoLabels(slugs: string[]): void {
 
 async function renderOne(sku: LabelSku, args: Args): Promise<RenderResult> {
   const dir = join(PRODUCTS_DIR, sku.slug);
-  const outPath = join(dir, "hero.png");
+  // Light variant: legacy per-SKU dir, hero.png (kept for any existing
+  // surfaces that still read it).
+  // Dark variant: written directly into the v1.0 source dir consumed by
+  // MobileHomePage's flagship pane, so no manual move step is required
+  // between `pnpm products --only reta --dark` and the page reading it.
+  const outPath = args.dark
+    ? join(SOURCES_DIR, `purepep-vial-${sku.slug}-v1.0-dark.jpg`)
+    : join(dir, "hero.png");
   const labelPhoto = join(dir, "label-photo.png");
+  if (args.dark) mkdirSync(SOURCES_DIR, { recursive: true });
 
   if (existsSync(outPath) && !args.force) {
     const { size } = statSync(outPath);
@@ -252,7 +299,7 @@ async function renderOne(sku: LabelSku, args: Args): Promise<RenderResult> {
     console.log(`  [attempt ${attempts}/${args.maxAttempts}] ${sku.slug}…`);
     const t0 = Date.now();
     try {
-      const url = runHighgsfield(sku, refs, outPath);
+      const url = runHighgsfield(sku, refs, outPath, args.dark);
       await downloadAsPng(url, outPath);
       const { size } = statSync(outPath);
       return { slug: sku.slug, outPath, fileSize: size, renderMs: Date.now() - t0, attempts, skipped: false, failed: false, failReasons };
@@ -367,7 +414,8 @@ async function main(): Promise<void> {
     }
   }
 
-  console.log(`PurePep vial photography — ${skus.length} SKU(s), up to ${args.maxAttempts} attempts each`);
+  const variant = args.dark ? "dark backdrop" : "light backdrop";
+  console.log(`PurePep vial photography — ${skus.length} SKU(s), ${variant}, up to ${args.maxAttempts} attempts each`);
   if (args.force) console.log("  --force: re-rolling existing outputs");
 
   // Step 1: generate photography labels
@@ -378,15 +426,20 @@ async function main(): Promise<void> {
   for (let i = 0; i < skus.length; i++) {
     const sku = skus[i]!;
     process.stdout.write(`\n[${i + 1}/${skus.length}] ${sku.slug} `);
-    if (existsSync(join(PRODUCTS_DIR, sku.slug, "hero.png")) && !args.force) {
+    const heroOut = args.dark
+      ? join(SOURCES_DIR, `purepep-vial-${sku.slug}-v1.0-dark.jpg`)
+      : join(PRODUCTS_DIR, sku.slug, "hero.png");
+    if (existsSync(heroOut) && !args.force) {
       console.log("→ skip");
     }
     const result = await renderOne(sku, args);
     results.push(result);
   }
 
-  // Step 3: contact sheet (only full runs)
-  if (!args.only) {
+  // Step 3: contact sheet — only on full light-mode runs.  Dark runs are
+  // typically single-SKU (flagship hero) so a sheet is not useful, and we
+  // never want the dark variant to clobber the canonical light sheet.
+  if (!args.only && !args.dark) {
     await buildContactSheet(LABEL_SKUS);
   }
 

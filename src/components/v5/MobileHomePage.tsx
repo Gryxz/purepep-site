@@ -152,14 +152,21 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           </div>
         </section>
 
-        {/* Pane 2 — RETATRUTIDE FLAGSHIP + amber CTA */}
+        {/* Pane 2 — RETATRUTIDE FLAGSHIP + amber CTA
+         *
+         * Black hero set: the vial photo is the dark-backdrop variant
+         * (hero-dark.png, rendered via `pnpm products --only reta --dark`).
+         * The pane bg is pure ink with a faint amber halo; a bottom
+         * fade-to-cream pseudo (.mob-heropx-fadeout) bridges into the
+         * cream catalog section below, so the dark → light handoff reads
+         * as intentional rather than as a hard cut. */}
         <section className="mob-heropx-pane mob-heropx-2" aria-label="Featured: Retatrutide">
           <div className="mob-heropx-bg mob-heropx-bg-vial" aria-hidden="true">
             <div className="mob-heropx-vial-glow" />
             <div className="mob-heropx-vial-wrap">
               {featured ? (
                 <Image
-                  src={`/images/products/source/purepep-vial-${featured.slug}-v1.0.jpg`}
+                  src={`/images/products/source/purepep-vial-${featured.slug}-v1.0-dark.jpg`}
                   alt={`${featured.compound} vial`}
                   fill
                   priority
@@ -170,6 +177,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
               ) : null}
             </div>
             <div className="mob-heropx-brand-watermark" aria-hidden="true">PUREPEP</div>
+            <div className="mob-heropx-fadeout" aria-hidden="true" />
           </div>
           <div className="mob-heropx-content mob-heropx-content-2">
             <div className="mob-heropx-eyebrow">
