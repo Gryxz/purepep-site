@@ -6,6 +6,7 @@ import { useCartStore } from "@/lib/cart-store";
 import { clsx } from "@/lib/clsx";
 import { trackProductView, trackAddToCart } from "@/lib/analytics";
 import type { Product, Category } from "@/data/products";
+import Image from "next/image";
 import { RetaVial } from "./RetaVial";
 import { RetaVialMini } from "./RetaVialMini";
 import { TrustBar } from "./TrustBar";
@@ -238,11 +239,14 @@ export function PDPHero({ product }: { product: Product }) {
         <section className="v3pdp-hero">
           <div className="v3pdp-hero-grid">
             <div className="v3pdp-photo-card">
-              <RetaVial
-                compound={product.compound}
-                dose={variant}
-                lot={product.lot}
-                storage={product.storage}
+              <Image
+                src={`/products/${product.slug}/hero.png`}
+                alt={`${product.compound} vial`}
+                fill
+                priority
+                sizes="(max-width:900px) 100vw, 50vw"
+                className="v3pdp-hero-img"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
               />
               <div className="v3pdp-photo-meta">
                 <span>{product.sku}</span>

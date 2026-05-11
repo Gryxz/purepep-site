@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Product, Category } from "@/data/products";
 import { useCartStore } from "@/lib/cart-store";
 import { trackProductView, trackAddToCart } from "@/lib/analytics";
+import Image from "next/image";
 import { MobileVial } from "./MobileVial";
 import { MobileFooter } from "./MobileFooter";
 
@@ -103,13 +104,14 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
 
       {/* Product image */}
       <div className="mob-pdp-img">
-        <MobileVial
-          size="lg"
-          compound={product.compound}
-          fullName={product.name}
-          mass={variant}
-          brand="PurePep"
-          purity="≥99.5% Purity"
+        <Image
+          src={`/products/${product.slug}/hero.png`}
+          alt={`${product.compound} vial`}
+          fill
+          priority
+          sizes="100vw"
+          className="mob-pdp-hero-img"
+          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
         />
       </div>
 

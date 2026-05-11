@@ -3,6 +3,7 @@
 
 import { useEffect, useRef } from "react";
 import type { Product } from "@/data/products";
+import Image from "next/image";
 import { MobileVial } from "./MobileVial";
 import { MobileFooter } from "./MobileFooter";
 
@@ -157,12 +158,14 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             <div className="mob-heropx-vial-glow" />
             <div className="mob-heropx-vial-wrap">
               {featured ? (
-                <MobileVial
-                  size="lg"
-                  compound={featured.compound}
-                  mass={featured.dose}
-                  fullName={featured.name}
-                  purity="≥99.5%"
+                <Image
+                  src={`/products/${featured.slug}/hero.png`}
+                  alt={`${featured.compound} vial`}
+                  fill
+                  priority
+                  sizes="100vw"
+                  className="mob-hero-vial-img"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                 />
               ) : null}
             </div>
@@ -243,11 +246,13 @@ export function MobileHomePage({ products }: { products: Product[] }) {
                   <span className="sd" />
                   {p.stock === "low" ? "Low stock" : "In stock"}
                 </span>
-                <MobileVial
-                  size="md"
-                  compound={p.compound}
-                  mass={p.dose}
-                  purity="≥99.5%"
+                <Image
+                  src={`/products/${p.slug}/hero.png`}
+                  alt={`${p.compound} vial`}
+                  fill
+                  sizes="50vw"
+                  className="mob-pcard-hero-img"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                 />
               </div>
               <div className="mob-pcard-body">

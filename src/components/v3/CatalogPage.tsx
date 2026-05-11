@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { clsx } from "@/lib/clsx";
 import type { Product, Category } from "@/data/products";
+import Image from "next/image";
 import { RetaVial } from "./RetaVial";
 import { TrustBar } from "./TrustBar";
 
@@ -231,7 +232,14 @@ function FeaturedSlide({ product }: { product: Product }) {
   return (
     <div className="v3cat-featured-slide">
       <div className="v3cat-featured-photo">
-        <RetaVial compound={product.compound} dose={product.dose} lot={product.lot} storage={product.storage} />
+        <Image
+          src={`/products/${product.slug}/hero.png`}
+          alt={`${product.compound} vial`}
+          fill
+          sizes="(max-width:900px) 100vw, 40vw"
+          className="v3-product-hero-img"
+          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+        />
         <div className="v3-tile-shadow" />
       </div>
       <div className="v3cat-featured-info">
@@ -280,7 +288,14 @@ function ProductTile({ product }: { product: Product }) {
   return (
     <Link href={`/shop/${product.slug}`} className="v3-tile">
       <div className="v3-tile-photo">
-        <RetaVial compound={product.compound} dose={product.dose} lot={product.lot} storage={product.storage} />
+        <Image
+          src={`/products/${product.slug}/hero.png`}
+          alt={`${product.compound} vial`}
+          fill
+          sizes="(max-width:600px) 50vw, 25vw"
+          className="v3-product-hero-img"
+          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+        />
         <div className="v3-tile-shadow" />
       </div>
       <div className="v3-tile-content">

@@ -3,6 +3,7 @@
 
 import { useMemo, useState } from "react";
 import type { Product, Category } from "@/data/products";
+import Image from "next/image";
 import { MobileVial } from "./MobileVial";
 import { MobileFooter } from "./MobileFooter";
 
@@ -126,7 +127,14 @@ export function MobileShopPage({ products }: { products: Product[] }) {
                 <span className="sd" />
                 {p.stock === "low" ? "Low stock" : "In stock"}
               </span>
-              <MobileVial size="md" compound={p.compound} mass={p.dose} purity="≥99.5%" />
+              <Image
+                src={`/products/${p.slug}/hero.png`}
+                alt={`${p.compound} vial`}
+                fill
+                sizes="50vw"
+                className="mob-pcard-hero-img"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+              />
             </div>
             <div className="mob-pcard-body">
               <div className="mob-pname">{p.name}</div>

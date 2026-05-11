@@ -8504,12 +8504,11 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-vial-wrap {
-  /* Hidden until real product photography lands — the CSS-rendered
-     placeholder vial overlapping the centered headline + CTA cluster
-     looked cluttered.  Pane 2 reads cleanly as: dark bg + amber halo
-     + centered text + amber CTA.  Re-enable (display: block) once
-     AI-generated vial photos are wired into a background-image. */
-  display: none;
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
 }
 
 .mob-heropx-brand-watermark {
@@ -8998,6 +8997,63 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   background: var(--m-ink);
   border-radius: 3px;
   box-shadow: 0 1px 4px rgb(0 0 0 / 25%);
+}
+
+/* ─── Hero product image — AI-rendered vial photos ─────────────────────── */
+
+/* v3 desktop — PDP hero card (aspect-ratio 4/5, centered) */
+.v3pdp-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 1;
+}
+
+/* v3 desktop — catalog tile + homepage tile (aspect-ratio 1/1) */
+.v3-product-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 1;
+}
+
+/* mobile — PDP image (aspect-ratio 1/1, margin 0 20px) */
+.mob-pdp-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 1;
+}
+
+/* mobile — product card image (aspect-ratio 1/1) */
+.mob-pcard-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 1;
+}
+
+/* mobile — homepage hero vial stage */
+.mob-hero-vial-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  z-index: 1;
 }
 
 

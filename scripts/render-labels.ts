@@ -4,16 +4,14 @@
  * Pipeline: JSX (src/lib/labels/Label.tsx) → satori → SVG → resvg-js
  * → PNG → public/brand/labels/{slug}.png.
  *
- * Fonts (IBM Plex Mono Regular + Bold) are fetched once from Google
- * Fonts and cached in scripts/.fonts-cache/ so repeated runs don't
- * round-trip the network.
- *
  * Run:
- *   pnpm labels                    # render all
- *   pnpm labels --slug reta        # render a single SKU
+ *   pnpm labels                          # render all (production)
+ *   pnpm labels --slug reta              # render one (production)
+ *   pnpm labels --photography            # render all (τ glyph, for AI photography)
+ *   pnpm labels --photography --slug bpc-157  # render one photography label
  *
- * Add a new SKU to src/lib/labels/skus.ts → run `pnpm labels` →
- * label drops in.
+ * Production labels  → public/brand/labels/{slug}.png
+ * Photography labels → public/products/{slug}/label-photo.png
  */
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -26,13 +24,9 @@ import { LABEL_SKUS, type LabelSku } from "../src/lib/labels/skus";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, "..");
-const OUT_DIR = join(REPO_ROOT, "public", "brand", "labels");
+const PROD_OUT_DIR = join(REPO_ROOT, "public", "brand", "labels");
+const PHOTO_OUT_DIR = join(REPO_ROOT, "public", "products");
 
-// IBM Plex Mono fonts — sourced from the @fontsource/ibm-plex-mono
-// devDep already in node_modules.  Satori accepts TTF / OTF / WOFF
-// (not WOFF2 — must be decompressed first); fontsource ships WOFF
-// alongside WOFF2, so we read those directly from disk.  No network
-// required at script runtime — fully deterministic.
 const FONT_PACKAGE_DIR = join(REPO_ROOT, "node_modules", "@fontsource", "ibm-plex-mono", "files");
 const FONT_PATHS = {
   "IBM Plex Mono Regular": join(FONT_PACKAGE_DIR, "ibm-plex-mono-latin-400-normal.woff"),
@@ -50,26 +44,38 @@ async function loadFonts() {
   ];
 }
 
-async function renderOne(sku: LabelSku, fonts: Awaited<ReturnType<typeof loadFonts>>) {
+async function renderOne(
+  sku: LabelSku,
+  fonts: Awaited<ReturnType<typeof loadFonts>>,
+  photography: boolean,
+) {
   const width = 1080;
   const height = 360;
-  // satori takes JSX-as-data — call Label() to get the React element
-  const element = Label({ sku, width, height });
+  const element = Label({ sku, width, height, photography });
   const svg = await satori(element, { width, height, fonts });
   const png = new Resvg(svg, { fitTo: { mode: "width", value: width } })
     .render()
     .asPng();
-  const out = join(OUT_DIR, `${sku.slug}.png`);
+
+  let out: string;
+  if (photography) {
+    const dir = join(PHOTO_OUT_DIR, sku.slug);
+    await mkdir(dir, { recursive: true });
+    out = join(dir, "label-photo.png");
+  } else {
+    await mkdir(PROD_OUT_DIR, { recursive: true });
+    out = join(PROD_OUT_DIR, `${sku.slug}.png`);
+  }
+
   await writeFile(out, png);
-  console.log(`  ✓ ${sku.slug.padEnd(8)} → ${out.replace(REPO_ROOT + "/", "")}`);
+  console.log(`  ✓ ${sku.slug.padEnd(10)} → ${out.replace(REPO_ROOT + "/", "")}`);
 }
 
 async function main() {
-  await mkdir(OUT_DIR, { recursive: true });
-
-  // CLI: --slug reta picks one
-  const slugArgIdx = process.argv.indexOf("--slug");
-  const onlySlug = slugArgIdx >= 0 ? process.argv[slugArgIdx + 1] : null;
+  const argv = process.argv.slice(2);
+  const photography = argv.includes("--photography");
+  const slugIdx = argv.indexOf("--slug");
+  const onlySlug = slugIdx >= 0 ? argv[slugIdx + 1] : null;
 
   const queue = onlySlug
     ? LABEL_SKUS.filter((s) => s.slug === onlySlug)
@@ -79,14 +85,16 @@ async function main() {
     throw new Error(`no SKU matches --slug ${onlySlug}`);
   }
 
-  console.log(`PurePep label render — ${queue.length} SKU${queue.length > 1 ? "s" : ""}`);
+  const mode = photography ? "photography (τ glyph)" : "production";
+  console.log(`PurePep label render [${mode}] — ${queue.length} SKU${queue.length > 1 ? "s" : ""}`);
   console.log("loading fonts…");
   const fonts = await loadFonts();
   console.log("rendering…");
   for (const sku of queue) {
-    await renderOne(sku, fonts);
+    await renderOne(sku, fonts, photography);
   }
-  console.log(`done — ${queue.length} label${queue.length > 1 ? "s" : ""} written to ${OUT_DIR.replace(REPO_ROOT + "/", "")}`);
+  const outBase = photography ? "public/products/{slug}/label-photo.png" : "public/brand/labels/";
+  console.log(`done — ${queue.length} label${queue.length > 1 ? "s" : ""} → ${outBase}`);
 }
 
 main().catch((err) => {

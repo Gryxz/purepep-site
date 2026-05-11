@@ -17,6 +17,7 @@
     "fence": "tsx scripts/check-tokens-fence.ts",
     "inspect:hero": "tsx scripts/inspect-hero.ts",
     "labels": "tsx scripts/render-labels.ts",
+    "products": "tsx scripts/render-product-photos.ts",
     "test": "vitest run",
     "prepare": "husky"
   },
@@ -27,6 +28,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sanitize-html": "^2.17.3",
+    "sharp": "^0.34.5",
     "zustand": "^5.0.12"
   },
   "devDependencies": {

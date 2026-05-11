@@ -28,15 +28,23 @@ import * as React from "react";
 import type { LabelSku } from "./skus";
 
 const INK = "#0f1419"; // dark navy / near-black, the universal ink color
+const CREAM = "#FAF7F0"; // label cream — glyph fill on ink block
 const COMPLIANCE_TEXT = "FOR RESEARCH USE ONLY · NOT FOR HUMAN CONSUMPTION";
 
 export interface LabelProps {
   sku: LabelSku;
   width?: number;
   height?: number;
+  /**
+   * When true, replaces the dose pill with the canonical τ glyph marker.
+   * Used for AI product photography labels — keeps the inset block visually
+   * consistent (same ink block, same position, same weight) without exposing
+   * a specific dose, since photography labels are dose-agnostic.
+   */
+  photography?: boolean;
 }
 
-export function Label({ sku, width = 1080, height = 360 }: LabelProps) {
+export function Label({ sku, width = 1080, height = 360, photography = false }: LabelProps) {
   const subline = sku.fullName
     ? `${sku.fullName} · CAS ${sku.cas}`
     : `CAS ${sku.cas}`;
@@ -125,24 +133,52 @@ export function Label({ sku, width = 1080, height = 360 }: LabelProps) {
           >
             {sku.abbreviation}
           </div>
-          {/* Dose pill — dark rounded rect, white mono */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "10px 22px",
-              background: INK,
-              color: sku.labelBg,
-              borderRadius: 8,
-              fontSize: 36,
-              fontWeight: 700,
-              letterSpacing: "0.04em",
-              minWidth: 130,
-            }}
-          >
-            {sku.dose}
-          </div>
+          {/* Dose pill (production) or τ glyph block (photography) */}
+          {photography ? (
+            /* τ glyph — same ink block, same visual weight as dose pill,
+               cream glyph on ink. SVG rects mirror docs/design-v3/project/assets/glyph.svg */
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 130,
+                height: 70,
+                background: INK,
+                borderRadius: 8,
+              }}
+            >
+              <svg
+                viewBox="0 0 60 72"
+                width={44}
+                height={52}
+                style={{ fill: CREAM }}
+              >
+                <rect x="4" y="4" width="22" height="64" />
+                <rect x="26" y="22" width="8" height="2" />
+                <rect x="26" y="29" width="8" height="2" />
+                <rect x="34" y="4" width="22" height="36" />
+              </svg>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "10px 22px",
+                background: INK,
+                color: sku.labelBg,
+                borderRadius: 8,
+                fontSize: 36,
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                minWidth: 130,
+              }}
+            >
+              {sku.dose}
+            </div>
+          )}
         </div>
 
         {/* Sub-line — full chemical name + CAS, small mono regular */}

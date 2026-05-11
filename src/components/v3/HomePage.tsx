@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { clsx } from "@/lib/clsx";
 import { padded2, plural } from "@/lib/text";
 import type { Product } from "@/data/products";
+import Image from "next/image";
 import { RetaVial } from "./RetaVial";
 import { LabelCropSvg } from "./LabelCropSvg";
 
@@ -65,11 +66,14 @@ export function HomePage({ products }: { products: Product[] }) {
               {featured ? `01 / ${padded2(products.length)} — ${featured.compound}` : "Research grade"}
             </div>
             {featured && (
-              <RetaVial
-                compound={featured.compound}
-                dose={featured.dose}
-                lot={featured.lot}
-                storage={featured.storage}
+              <Image
+                src={`/products/${featured.slug}/hero.png`}
+                alt={`${featured.compound} vial`}
+                fill
+                priority
+                sizes="(max-width:900px) 100vw, 55vw"
+                className="v3-product-hero-img"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
               />
             )}
             <div className="v3home-corner bl">Lyophilized · Research use only</div>
@@ -397,7 +401,14 @@ function ProductTile({ product }: { product: Product }) {
   return (
     <a href={`/shop/${product.slug}`} className="v3-tile">
       <div className="v3-tile-photo">
-        <RetaVial compound={product.compound} dose={product.dose} lot={product.lot} storage={product.storage} />
+        <Image
+          src={`/products/${product.slug}/hero.png`}
+          alt={`${product.compound} vial`}
+          fill
+          sizes="(max-width:600px) 50vw, 25vw"
+          className="v3-product-hero-img"
+          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+        />
         <div className="v3-tile-shadow" />
       </div>
       <div className="v3-tile-content">
