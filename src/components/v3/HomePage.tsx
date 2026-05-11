@@ -399,7 +399,7 @@ function ProductTile({ product }: { product: Product }) {
     <a href={`/shop/${product.slug}`} className="v3-tile">
       <div className="v3-tile-photo">
         <Image
-          src={`/products/${product.slug}/hero.png`}
+          src={`/images/products/source/purepep-vial-${product.slug}-v1.0.jpg`}
           alt={`${product.compound} vial`}
           fill
           sizes="(max-width:600px) 50vw, 25vw"

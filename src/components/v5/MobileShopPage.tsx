@@ -128,7 +128,7 @@ export function MobileShopPage({ products }: { products: Product[] }) {
                 {p.stock === "low" ? "Low stock" : "In stock"}
               </span>
               <Image
-                src={`/products/${p.slug}/hero.png`}
+                src={`/images/products/source/purepep-vial-${p.slug}-v1.0.jpg`}
                 alt={`${p.compound} vial`}
                 fill
                 sizes="50vw"

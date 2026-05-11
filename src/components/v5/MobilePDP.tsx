@@ -105,7 +105,7 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
       {/* Product image */}
       <div className="mob-pdp-img">
         <Image
-          src={`/products/${product.slug}/hero.png`}
+          src={`/images/products/source/purepep-vial-${product.slug}-v1.0.jpg`}
           alt={`${product.compound} vial`}
           fill
           priority

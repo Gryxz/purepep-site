@@ -159,7 +159,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             <div className="mob-heropx-vial-wrap">
               {featured ? (
                 <Image
-                  src={`/products/${featured.slug}/hero.png`}
+                  src={`/images/products/source/purepep-vial-${featured.slug}-v1.0.jpg`}
                   alt={`${featured.compound} vial`}
                   fill
                   priority
@@ -247,7 +247,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
                   {p.stock === "low" ? "Low stock" : "In stock"}
                 </span>
                 <Image
-                  src={`/products/${p.slug}/hero.png`}
+                  src={`/images/products/source/purepep-vial-${p.slug}-v1.0.jpg`}
                   alt={`${p.compound} vial`}
                   fill
                   sizes="50vw"
