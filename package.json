@@ -18,6 +18,7 @@
     "inspect:hero": "tsx scripts/inspect-hero.ts",
     "labels": "tsx scripts/render-labels.ts",
     "products": "tsx scripts/render-product-photos.ts",
+    "vial-cutout": "tsx scripts/render-vial-cutout.ts",
     "test": "vitest run",
     "prepare": "husky"
   },

@@ -8462,103 +8462,58 @@ a.v3-pill-ghost:hover {
     inset 0 0 80px rgb(255 220 120 / 3%);
 }
 
-/* PANE 2 — Retatrutide flagship hero, BLACK SET.
+/* PANE 2 — Retatrutide flagship hero, CUTOUT VIAL ON DARK SET.
  *
- * The vial photograph is the dark-backdrop variant rendered via
- * `pnpm products --only reta --dark` → public/products/reta/hero-dark.png.
- * That image already carries its own matte-charcoal cyc and rim-light,
- * so the pane bg is just pure ink + a soft amber bloom at the vial's
- * shoulder height to give the composition warmth.  The photo itself is
- * laid in by the JSX <Image> inside .mob-heropx-vial-wrap (no CSS
- * background-image, which was the source of the bug — the old white-set
- * /hero/reta.jpg was bleeding through behind the text).
+ * Stack:
+ *   bg gradient (radial warm ink, this rule)
+ *     → amber bloom behind vial (.mob-heropx-vial-glow, z-index 0)
+ *     → transparent-bg vial PNG inside .mob-heropx-vial-wrap (z-index 1)
+ *     → content stack on top (z-index 2)
+ *     → bottom fade-to-cream (.mob-heropx-fadeout, z-index 3, sits below
+ *       content stack via specificity — see fadeout rule)
  *
- * Bottom-of-pane fade-to-cream lives in .mob-heropx-fadeout so the
- * black hero dissolves into the cream catalog section below as the
- * sticky pane unsticks. */
+ * The dark backdrop, amber halo, and drop-shadow are all CSS — the only
+ * dependency on the photo is the vial silhouette itself.  When the
+ * cutout PNG is missing, onError hides the <Image> and the pane reads
+ * as pure dark with the amber bloom + headline cluster intact. */
 .mob-heropx-bg-vial {
   background:
-    radial-gradient(ellipse 70% 60% at 50% 42%, rgb(200 140 30 / 14%) 0%, transparent 65%),
-    radial-gradient(ellipse 120% 90% at 50% 110%, rgb(0 0 0 / 80%) 0%, transparent 70%),
-    linear-gradient(180deg, #050505 0%, #0a0805 55%, #050402 100%);
+    radial-gradient(ellipse 90% 60% at 50% 30%, #1a1408 0%, #110d05 50%, #0a0800 100%);
 }
 
-/* Bottom scrim — sits ABOVE the photo, BELOW the content stack.
- * With the photo now on object-fit:cover the pane is fully filled by
- * the Reta vial photo and the cream cyc; this scrim ramps the lower
- * half from transparent → near-black so the headline / CTAs / spec
- * line read cleanly on top of it.  Shorter + less aggressive than the
- * earlier vignette so the vial itself remains the dominant element. */
-.mob-heropx-bg-vial::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    transparent 48%,
-    rgb(5 5 5 / 25%) 60%,
-    rgb(5 5 5 / 60%) 75%,
-    rgb(5 5 5 / 88%) 92%,
-    #050505 100%
-  );
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Vial photo: occupies the full pane behind the text overlay.  Re-shown
- * (the previous design hid it because the hero.png hadn't been wired up
- * yet); now we depend on the JSX <Image> to deliver the photo and on
- * onError to gracefully fail to the pure-black pane bg if hero-dark.png
- * is missing. */
+/* Vial wrap: the transparent-bg <Image> renders here.  Above the amber
+ * bloom but below the content stack.  Padding leaves breathing room
+ * around the vial so it sits centred in the pane rather than bleeding
+ * to the edges. */
 .mob-heropx-vial-wrap {
   display: block;
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 1;
   overflow: hidden;
   pointer-events: none;
+  padding: 10% 8% 22%;
+  /* The 22% bottom padding lifts the vial above the fade-out zone so
+   * the cap and label are visible while the base of the vial dissolves
+   * into the bottom darkness. */
 }
 
-/* Amber halo behind the vial — kept as a subtle bloom that survives
- * underneath the photo so the composition has warm rim-presence even
- * if the image fails to load. */
+/* Amber halo behind the vial — radial warm bloom centred near the
+ * vial's shoulder height for a soft golden glow.  Sits at z-index 0 so
+ * the vial PNG paints over it. */
 .mob-heropx-vial-glow {
   position: absolute;
-  top: 32%; left: 50%;
-  width: 90vw; height: 90vw;
+  top: 18%; left: 50%;
+  width: 95vw; height: 70vh;
   transform: translateX(-50%);
-  background: radial-gradient(circle at center, rgb(255 200 80 / 16%) 0%, rgb(220 150 30 / 6%) 25%, transparent 55%);
-  filter: blur(50px);
+  background: radial-gradient(circle at center, rgb(255 200 80 / 22%) 0%, rgb(220 150 30 / 8%) 28%, transparent 60%);
+  filter: blur(40px);
   pointer-events: none;
   z-index: 0;
 }
 
 /* PUREPEP watermark stays hidden — competes with the type stack. */
 .mob-heropx-brand-watermark { display: none; }
-
-/* Top-of-pane wash.  Pane 1 (lab ambience) sits beneath pane 2 during
- * the crossfade; any cream tones in lab.jpg's mid-region bleed through
- * the top of pane 2 while pane 2's opacity is still ramping up.  This
- * top-aligned dark gradient masks that bleed — strong black at the
- * pane's top edge, fading to transparent by ~28% down so the vial
- * photo underneath isn't muddied.  z-index 1 (above photo, below
- * content). */
-.mob-heropx-topfade {
-  position: absolute;
-  left: 0; right: 0;
-  top: 0;
-  height: 32%;
-  background: linear-gradient(
-    180deg,
-    #050505 0%,
-    rgb(8 8 8 / 88%) 30%,
-    rgb(8 8 8 / 45%) 60%,
-    rgb(5 5 5 / 0%) 100%
-  );
-  z-index: 1;
-  pointer-events: none;
-}
 
 /* Dark → cream dissolve at the very bottom edge of pane 2.  Height
  * deliberately short (≈12%) so the gradient sits BELOW the text stack
@@ -9158,11 +9113,18 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   z-index: 1;
 }
 
-/* Reserved class for the flagship hero pane image — kept so the JSX
- * doesn't need a structural change when we want to apply any future
- * treatment to the dark-hero photo.  Currently a no-op: the photo
- * renders at full brightness and the .mob-heropx-bg-vial::after
- * bottom scrim provides text legibility from the lower half down. */
-.mob-hero-vial-img-dark { /* intentionally empty */ }
+/* Cutout treatment — transparent-bg vial PNG.  Drop-shadow stack
+ * mirrors the reference HTML's hero glow: a wide amber bloom for
+ * warmth + a tighter black shadow grounding the vial in the scene.
+ * object-fit:contain so the full vial fits inside the padded wrap
+ * (cap + base both visible) and the transparent corners reveal the
+ * dark pane backdrop instead of a cream cyc. */
+.mob-hero-vial-img-cutout {
+  object-fit: contain;
+  object-position: center;
+  filter:
+    drop-shadow(0 32px 64px rgb(220 152 20 / 22%))
+    drop-shadow(0 8px 24px rgb(0 0 0 / 70%));
+}
 
 
