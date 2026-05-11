@@ -152,9 +152,23 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           </div>
         </section>
 
-        {/* Pane 2 — RETATRUTIDE FLAGSHIP + amber CTA */}
+        {/* Pane 2 — RETATRUTIDE FLAGSHIP + amber CTA
+         *
+         * Black hero set.  Uses the existing light hero photo
+         * (purepep-vial-{slug}-v1.0.jpg) with a CSS filter applied via
+         * .mob-hero-vial-img-dark — brightness/saturation knocked down
+         * so the bright cream cyc reads as a near-black studio set.
+         * When the Higgsfield dark render lands at
+         * .../purepep-vial-{slug}-v1.0-dark.jpg, swap the src + drop
+         * the -dark className to surface the real photo.
+         *
+         * The pane bg is pure ink with a faint amber halo, and a top
+         * pseudo wash (.mob-heropx-topfade) blacks out any pane-1 lab
+         * tones that bleed through during the crossfade.  Bottom fade
+         * (.mob-heropx-fadeout) bridges into the cream catalog below. */}
         <section className="mob-heropx-pane mob-heropx-2" aria-label="Featured: Retatrutide">
           <div className="mob-heropx-bg mob-heropx-bg-vial" aria-hidden="true">
+            <div className="mob-heropx-topfade" aria-hidden="true" />
             <div className="mob-heropx-vial-glow" />
             <div className="mob-heropx-vial-wrap">
               {featured ? (
@@ -164,12 +178,13 @@ export function MobileHomePage({ products }: { products: Product[] }) {
                   fill
                   priority
                   sizes="100vw"
-                  className="mob-hero-vial-img"
+                  className="mob-hero-vial-img mob-hero-vial-img-dark"
                   onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                 />
               ) : null}
             </div>
             <div className="mob-heropx-brand-watermark" aria-hidden="true">PUREPEP</div>
+            <div className="mob-heropx-fadeout" aria-hidden="true" />
           </div>
           <div className="mob-heropx-content mob-heropx-content-2">
             <div className="mob-heropx-eyebrow">
