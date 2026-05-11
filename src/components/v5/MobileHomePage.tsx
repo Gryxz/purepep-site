@@ -154,24 +154,31 @@ export function MobileHomePage({ products }: { products: Product[] }) {
 
         {/* Pane 2 — RETATRUTIDE FLAGSHIP + amber CTA
          *
-         * Black hero set: the vial photo is the dark-backdrop variant
-         * (hero-dark.png, rendered via `pnpm products --only reta --dark`).
-         * The pane bg is pure ink with a faint amber halo; a bottom
-         * fade-to-cream pseudo (.mob-heropx-fadeout) bridges into the
-         * cream catalog section below, so the dark → light handoff reads
-         * as intentional rather than as a hard cut. */}
+         * Black hero set.  Uses the existing light hero photo
+         * (purepep-vial-{slug}-v1.0.jpg) with a CSS filter applied via
+         * .mob-hero-vial-img-dark — brightness/saturation knocked down
+         * so the bright cream cyc reads as a near-black studio set.
+         * When the Higgsfield dark render lands at
+         * .../purepep-vial-{slug}-v1.0-dark.jpg, swap the src + drop
+         * the -dark className to surface the real photo.
+         *
+         * The pane bg is pure ink with a faint amber halo, and a top
+         * pseudo wash (.mob-heropx-topfade) blacks out any pane-1 lab
+         * tones that bleed through during the crossfade.  Bottom fade
+         * (.mob-heropx-fadeout) bridges into the cream catalog below. */}
         <section className="mob-heropx-pane mob-heropx-2" aria-label="Featured: Retatrutide">
           <div className="mob-heropx-bg mob-heropx-bg-vial" aria-hidden="true">
+            <div className="mob-heropx-topfade" aria-hidden="true" />
             <div className="mob-heropx-vial-glow" />
             <div className="mob-heropx-vial-wrap">
               {featured ? (
                 <Image
-                  src={`/images/products/source/purepep-vial-${featured.slug}-v1.0-dark.jpg`}
+                  src={`/images/products/source/purepep-vial-${featured.slug}-v1.0.jpg`}
                   alt={`${featured.compound} vial`}
                   fill
                   priority
                   sizes="100vw"
-                  className="mob-hero-vial-img"
+                  className="mob-hero-vial-img mob-hero-vial-img-dark"
                   onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                 />
               ) : null}
