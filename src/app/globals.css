@@ -8642,9 +8642,15 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-cta {
+  /* Primary CTA — flips to mono so the three pane-2 CTAs share one
+   * typographic system (mono, 0.16em tracking, 600 weight, 12.5px,
+   * UPPERCASE).  The amber gradient + shadow stack still does the
+   * hierarchy work; the typography is the unification glue. */
   width: 100%;
   padding: 17px 24px;
-  font-size: 13.5px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
   letter-spacing: 0.16em;
 }
 
@@ -8662,8 +8668,8 @@ a.v3-pill-ghost:hover {
   padding: 15px 24px;
   margin-top: 4px;
   font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 12.5px;
+  font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--m-ink);
@@ -8680,20 +8686,29 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-heropx-pair-link {
+  /* Tertiary CTA — same mono/UPPERCASE/0.16em typography family as
+   * the two primary buttons above so the cluster reads as ONE
+   * cohesive action group.  Sits unframed (no pill) so the hierarchy
+   * is still clear: Shop (filled) > Browse (pill) > Often Stacked
+   * (text).  Outlined chip bg gives it enough presence to stop
+   * disappearing on the warm radial backdrop. */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   margin-top: 6px;
-  padding: 8px 14px;
+  padding: 9px 16px;
   font-family: var(--font-mono);
-  font-size: clamp(10px, 2.6vw, var(--t-eyebrow));
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--m-amber-cta);
+  color: #F0B830;
+  background: rgb(220 152 20 / 8%);
+  border: 1px solid rgb(220 152 20 / 28%);
+  border-radius: var(--m-rf);
   text-decoration: none;
-  transition: color 0.15s, transform 0.12s;
+  transition: color 0.15s, background 0.15s, transform 0.12s;
 }
 
 .mob-heropx-pair-link strong {
@@ -8704,11 +8719,12 @@ a.v3-pill-ghost:hover {
 
 .mob-heropx-pair-link svg {
   margin-left: 2px;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .mob-heropx-pair-link:active {
   color: #FFD97A;
+  background: rgb(220 152 20 / 14%);
   transform: translateY(1px);
 }
 
@@ -9118,13 +9134,31 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
  * warmth + a tighter black shadow grounding the vial in the scene.
  * object-fit:contain so the full vial fits inside the padded wrap
  * (cap + base both visible) and the transparent corners reveal the
- * dark pane backdrop instead of a cream cyc. */
+ * dark pane backdrop instead of a cream cyc.
+ *
+ * Float animation: 5s ease-in-out infinite, ±6px translateY for a
+ * subtle "breathing" idle motion.  Combined with the amber drop-
+ * shadow it reads as the vial suspended in warm light rather than
+ * pasted flat on the backdrop.  Disabled under prefers-reduced-motion
+ * — the static drop-shadow + amber bloom still carries the dynamism
+ * for motion-sensitive users. */
 .mob-hero-vial-img-cutout {
   object-fit: contain;
   object-position: center;
   filter:
     drop-shadow(0 32px 64px rgb(220 152 20 / 22%))
     drop-shadow(0 8px 24px rgb(0 0 0 / 70%));
+  animation: mob-vial-float 5s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes mob-vial-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mob-hero-vial-img-cutout { animation: none; }
 }
 
 
