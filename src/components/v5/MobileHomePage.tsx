@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Product } from "@/data/products";
 import Image from "next/image";
 import { MobileVial } from "./MobileVial";
@@ -37,6 +37,15 @@ export function MobileHomePage({ products }: { products: Product[] }) {
     .filter((p) => p.type !== "stack")
     .slice(0, 8);
   const parallaxRef = useRef<HTMLDivElement | null>(null);
+  const pane2Ref = useRef<HTMLElement | null>(null);
+  // Pane-2 view trigger.  Flipped once by the IntersectionObserver below
+  // when pane 2 first becomes meaningfully visible; toggles the .is-in
+  // class on the section so the vial-entrance transition (translateY +
+  // opacity) plays.  Mount-triggered entrance was rejected because pane
+  // 2 is opacity-faded behind pane 1 on load — the user would never see
+  // the drop-in.  View-triggered fires it at the moment pane 2 is the
+  // user's focus.
+  const [pane2InView, setPane2InView] = useState(false);
 
   // Hero parallax — tracks scroll progress through the 2-viewport stack and
   // writes it into a CSS variable.  Pane 1 (lab + headline) fades out; pane
@@ -67,6 +76,17 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       const p = Math.max(0, Math.min(1, raw));
       el.style.setProperty("--mob-px-p", p.toFixed(4));
 
+      // Vial parallax progress — remaps the pane-2-fully-visible portion
+      // of the stick range (p 0.4 → 1.0) onto a 0 → 1 unitless scalar
+      // consumed by CSS as `--mob-vial-q`.  The vial wrapper then
+      // multiplies this against its lift (-90px) and opacity falloff
+      // (1 → 0.3).  Driver swapped from a framer-style page-scrollY[0,600]
+      // mapping to pane-2 stick progress so the lift engages only while
+      // the vial is in view — naive page-scrollY would have the vial
+      // 30%-faded before pane 2 is even visible on mobile.
+      const q = Math.max(0, Math.min(1, (p - 0.4) / 0.6));
+      el.style.setProperty("--mob-vial-q", q.toFixed(4));
+
       // Catalog lift removed.  Every scroll-driven transform on the
       // catalog (regardless of single-curve smoothness) was producing
       // perceived chop on iOS Safari — the section is tall and its
@@ -92,6 +112,30 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
+  }, []);
+
+  // Pane-2 entrance trigger — one-shot IntersectionObserver fires `is-in`
+  // when the second pane is ~15% visible.  Powers the vial drop-in
+  // transition (translateY(-120px) → 0, opacity 0 → 1, expo-out, 100ms
+  // delay) defined in globals.css against `.mob-heropx-2.is-in
+  // .mob-hero-vial-enter`.
+  useEffect(() => {
+    const el = pane2Ref.current;
+    if (!el || typeof window === "undefined") return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setPane2InView(true);
+            obs.disconnect();
+            break;
+          }
+        }
+      },
+      { threshold: 0.15 },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
 
   return (
@@ -141,12 +185,18 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             <p className="mob-heropx-sub">
               Lab-verified peptides for in vitro research. Lot-matched COA on every vial, tracked US shipping.
             </p>
-            <div className="mob-heropx-scroll-cue pp-animate-6" aria-hidden="true">
-              <span className="mob-scroll-dot" />
-              <span className="mob-scroll-track">
-                <span className="mob-scroll-fill" />
-              </span>
-            </div>
+          </div>
+          {/* Scroll indicator sits at viewport-bottom of pane 1, NOT inside
+              `.mob-heropx-content`.  Earlier placement was inside the
+              content box (max-width: 480px, height = sum of children) so
+              `bottom: 32px` landed mid-pane against the body copy.
+              Hoisting to the pane root anchors `bottom: 32px` against
+              the sticky 100vh pane edge — the correct cue position. */}
+          <div className="mob-heropx-scroll-cue pp-animate-6" aria-hidden="true">
+            <span className="mob-scroll-dot" />
+            <span className="mob-scroll-track">
+              <span className="mob-scroll-fill" />
+            </span>
           </div>
         </section>
 
@@ -165,21 +215,40 @@ export function MobileHomePage({ products }: { products: Product[] }) {
          *
          * Bottom fade (.mob-heropx-fadeout) bridges into the cream
          * catalog below. */}
-        <section className="mob-heropx-pane mob-heropx-2" aria-label="Featured: Retatrutide">
+        <section
+          ref={pane2Ref}
+          className={`mob-heropx-pane mob-heropx-2${pane2InView ? " is-in" : ""}`}
+          aria-label="Featured: Retatrutide"
+        >
           <div className="mob-heropx-bg mob-heropx-bg-vial" aria-hidden="true">
             <div className="mob-heropx-vial-glow" />
             <div className="mob-heropx-vial-wrap">
-              {featured ? (
-                <Image
-                  src={`/images/products/source/purepep-vial-${featured.slug}-v1.0-cutout.png`}
-                  alt={`${featured.compound} vial`}
-                  fill
-                  priority
-                  sizes="100vw"
-                  className="mob-hero-vial-img mob-hero-vial-img-cutout"
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                />
-              ) : null}
+              {/* Triple-nested transform wrappers — each animation owns
+                  its own element so the transforms compose multiplicatively
+                  rather than fighting for a single transform property:
+                    .mob-hero-vial-parallax  → scroll-driven translateY +
+                      opacity falloff (reads --mob-vial-q from the
+                      .mob-heropx scroll listener).
+                    .mob-hero-vial-enter     → one-shot drop-in
+                      (translateY(-120px) opacity 0 → 0/1, expo-out 900ms,
+                      100ms delay) on `.mob-heropx-2.is-in`.
+                    .mob-hero-vial-img-cutout → idle float keyframe
+                      (±6px translateY, 5s loop). */}
+              <div className="mob-hero-vial-parallax">
+                <div className="mob-hero-vial-enter">
+                  {featured ? (
+                    <Image
+                      src={`/images/products/source/purepep-vial-${featured.slug}-v1.0-cutout.png`}
+                      alt={`${featured.compound} vial`}
+                      fill
+                      priority
+                      sizes="100vw"
+                      className="mob-hero-vial-img mob-hero-vial-img-cutout"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                    />
+                  ) : null}
+                </div>
+              </div>
             </div>
             <div className="mob-heropx-fadeout" aria-hidden="true" />
           </div>

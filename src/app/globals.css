@@ -9153,6 +9153,73 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   .mob-hero-vial-img-cutout { animation: none; }
 }
 
+/* Vial parallax wrapper — outermost of the three composed transforms.
+ * Reads --mob-vial-q (0..1 unitless, written by the scroll listener in
+ * MobileHomePage.tsx and remapped from --mob-px-p over the
+ * pane-2-fully-visible portion of the stick range, i.e. p 0.4 → 1.0).
+ * Multiplies q against a -90px lift and a 1.0 → 0.3 opacity falloff so
+ * the vial scrolls up the pane and fades as the user travels through
+ * the parallax stick range. */
+.mob-hero-vial-parallax {
+  position: absolute;
+  inset: 0;
+  transform: translateY(calc(var(--mob-vial-q, 0) * -90px));
+  opacity: calc(1 - var(--mob-vial-q, 0) * 0.7);
+  will-change: transform, opacity;
+}
+
+/* Vial entrance — middle wrapper.  Rest state holds the vial 120px
+ * above its final position at opacity 0; the .is-in class on the
+ * parent pane (toggled by the IntersectionObserver in MobileHomePage)
+ * flips it to its settled position with expo-out easing.  900ms
+ * duration + 100ms delay matches the original framer spec.
+ * cubic-bezier(0.22, 1, 0.36, 1) is the "ease-out-expo" curve. */
+.mob-hero-vial-enter {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(-120px);
+  transition:
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1) 100ms,
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
+  will-change: transform, opacity;
+}
+.mob-heropx-2.is-in .mob-hero-vial-enter {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mob-hero-vial-enter {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Glow pulse — ambient radial behind the vial breathes on a 5s loop.
+ * scale 1 → 1.08 + opacity 0.85 → 1 gives the warm-light "breathing"
+ * depth cue without competing with the vial.  Note: the keyframe must
+ * preserve the existing translateX(-50%) centring transform that
+ * .mob-heropx-vial-glow uses for horizontal centring. */
+.mob-heropx-vial-glow {
+  animation: mob-glow-pulse 5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes mob-glow-pulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.08);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mob-heropx-vial-glow { animation: none; }
+}
+
 /* Hero text entrance stagger — page-load cascade across the hero
  * cluster (eyebrow → headline → primary CTA → ghost CTA → mechanism
  * tags → scroll indicator).  CSS-only, no JS, no library.  Each
