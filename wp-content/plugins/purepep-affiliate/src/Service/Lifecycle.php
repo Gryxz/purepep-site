@@ -8,8 +8,10 @@ use PurePep\Affiliate\Repository\CommissionsRepository;
 
 final class Lifecycle
 {
-    public function __construct(private CommissionsRepository $commissions)
-    {
+    public function __construct(
+        private CommissionsRepository $commissions,
+        private AnalyticsService $analytics,
+    ) {
     }
 
     /**
@@ -36,7 +38,9 @@ final class Lifecycle
         if ($row === null || $row['status'] !== 'pending') {
             return;
         }
-        $this->commissions->approve((int) $row['id']);
+        if ($this->commissions->approve((int) $row['id'])) {
+            $this->analytics->captureCommissionStatusChange($row, 'approved');
+        }
     }
 
     public function onRefunded(int $orderId): void
@@ -48,7 +52,9 @@ final class Lifecycle
         if (!in_array($row['status'], ['pending', 'approved'], true)) {
             return;
         }
-        $this->commissions->reverse((int) $row['id'], 'order_refunded');
+        if ($this->commissions->reverse((int) $row['id'], 'order_refunded')) {
+            $this->analytics->captureCommissionStatusChange($row, 'reversed', 'order_refunded');
+        }
     }
 
     public function onCancelled(int $orderId): void
@@ -60,6 +66,8 @@ final class Lifecycle
         if (!in_array($row['status'], ['pending', 'approved'], true)) {
             return;
         }
-        $this->commissions->reverse((int) $row['id'], 'order_cancelled');
+        if ($this->commissions->reverse((int) $row['id'], 'order_cancelled')) {
+            $this->analytics->captureCommissionStatusChange($row, 'reversed', 'order_cancelled');
+        }
     }
 }

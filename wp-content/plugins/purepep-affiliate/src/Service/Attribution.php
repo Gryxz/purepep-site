@@ -20,6 +20,7 @@ final class Attribution
         private CodesRepository $codes,
         private CommissionsRepository $commissions,
         private CommissionCalculator $calculator,
+        private AnalyticsService $analytics,
     ) {
     }
 
@@ -109,6 +110,16 @@ final class Attribution
         $order->update_meta_data('_pp_aff_source', $source);
         $order->update_meta_data('_pp_aff_commission_id', $commissionId);
         $order->save();
+
+        $this->analytics->capture('commission_created', $affiliateUserId, [
+            'commission_id' => $commissionId,
+            'code' => (string) $codeRow['code'],
+            'order_id' => $orderId,
+            'source' => $source,
+            'subtotal_basis_cents' => $basis,
+            'commission_cents' => $commissionCents,
+            'currency' => strtoupper($currency),
+        ]);
 
         return $commissionId;
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PurePep\Affiliate\Woo;
 
 use PurePep\Affiliate\Repository\CodesRepository;
+use PurePep\Affiliate\Service\AnalyticsService;
 use PurePep\Affiliate\Support\CodeGenerator;
 use PurePep\Affiliate\Support\Cookie;
 
@@ -14,8 +15,10 @@ use PurePep\Affiliate\Support\Cookie;
  */
 final class LandingHandler
 {
-    public function __construct(private CodesRepository $codes)
-    {
+    public function __construct(
+        private CodesRepository $codes,
+        private AnalyticsService $analytics,
+    ) {
     }
 
     public function register(): void
@@ -41,5 +44,9 @@ final class LandingHandler
             return;
         }
         Cookie::set($code);
+        $this->analytics->capture('affiliate_link_landed', (int) $row['user_id'], [
+            'code' => $code,
+            'source' => 'query_param',
+        ]);
     }
 }

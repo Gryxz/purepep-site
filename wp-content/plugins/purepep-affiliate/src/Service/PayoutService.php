@@ -13,6 +13,7 @@ final class PayoutService
     public function __construct(
         private CommissionsRepository $commissions,
         private PayoutsRepository $payouts,
+        private AnalyticsService $analytics,
     ) {
     }
 
@@ -55,7 +56,15 @@ final class PayoutService
             );
         }
 
-        return $this->payouts->create($userId, $amount);
+        $payoutId = $this->payouts->create($userId, $amount);
+
+        $this->analytics->capture('payout_requested', $userId, [
+            'payout_id' => $payoutId,
+            'amount_cents' => $amount,
+            'currency' => 'USD',
+        ]);
+
+        return $payoutId;
     }
 
     public function markPaid(int $payoutId, int $adminUserId, ?string $adminNote): true|WP_Error
@@ -82,6 +91,11 @@ final class PayoutService
                 ['status' => 500]
             );
         }
+        $this->analytics->capture('payout_paid', (int) $row['user_id'], [
+            'payout_id' => $payoutId,
+            'amount_cents' => (int) $row['amount_cents'],
+            'admin_user_id' => $adminUserId,
+        ]);
         return true;
     }
 
@@ -116,6 +130,11 @@ final class PayoutService
                 ['status' => 500]
             );
         }
+        $this->analytics->capture('payout_rejected', (int) $row['user_id'], [
+            'payout_id' => $payoutId,
+            'admin_note' => $adminNote,
+            'admin_user_id' => $adminUserId,
+        ]);
         return true;
     }
 }

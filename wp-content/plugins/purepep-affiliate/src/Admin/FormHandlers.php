@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PurePep\Affiliate\Admin;
 
 use PurePep\Affiliate\Repository\CommissionsRepository;
+use PurePep\Affiliate\Service\AnalyticsService;
 use PurePep\Affiliate\Service\PayoutService;
 use PurePep\Affiliate\Support\Capabilities;
 
@@ -13,6 +14,7 @@ final class FormHandlers
     public function __construct(
         private PayoutService $payoutService,
         private CommissionsRepository $commissions,
+        private AnalyticsService $analytics,
     ) {
     }
 
@@ -80,7 +82,15 @@ final class FormHandlers
             return;
         }
 
+        $row = $this->commissions->findById($commissionId);
+        if ($row === null) {
+            $this->redirectBackToCommissions('failed');
+            return;
+        }
         $ok = $this->commissions->reverse($commissionId, $reason);
+        if ($ok) {
+            $this->analytics->captureCommissionStatusChange($row, 'reversed', $reason);
+        }
         $this->redirectBackToCommissions($ok ? 'reversed' : 'failed');
     }
 

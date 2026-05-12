@@ -395,6 +395,24 @@ Attribution priority: submitted field (if valid) > `pp_ref` cookie (if valid). S
 
 ---
 
+## Server-side analytics events
+
+When the WordPress installation defines `PP_POSTHOG_API_KEY` (and optionally `PP_POSTHOG_HOST`) in `wp-config.php` and `composer install` has been run, the plugin emits the following PostHog events from PHP. All events are best-effort: capture failures are logged via `error_log` and never propagate. The `distinct_id` is always the affiliate's WP `user_id`.
+
+If the constants are missing or the `posthog/posthog-php` package is absent, every capture is a silent no-op — the rest of the plugin behaves identically.
+
+| Event | Fired when | distinct_id | Properties |
+|---|---|---|---|
+| `affiliate_link_landed` | A front-end request lands with `?ref=CODE` and the code is active | code owner's user_id | `code` (string), `source` (always `"query_param"`) |
+| `affiliate_code_regenerated` | `POST /me/code/regenerate` succeeds | requesting user_id | `old_code` (string or null on first generation), `new_code` (string) |
+| `commission_created` | A new commission row is inserted during checkout attribution | affiliate user_id | `commission_id`, `code`, `order_id`, `source` (`"field"` or `"cookie"`), `subtotal_basis_cents`, `commission_cents`, `currency` |
+| `commission_status_changed` | A commission transitions `pending`→`approved`, `pending`→`reversed`, or `approved`→`reversed` — from any path (lifecycle hooks or admin reverse) | commissions.user_id | `commission_id`, `order_id`, `from_status`, `to_status`, `reason` (only when `to_status === "reversed"`; values include `order_refunded`, `order_cancelled`, or an admin-supplied reason) |
+| `payout_requested` | `POST /me/payouts` succeeds | requesting user_id | `payout_id`, `amount_cents`, `currency` |
+| `payout_paid` | `POST /admin/payouts/{id}/mark-paid` succeeds | payout owner user_id | `payout_id`, `amount_cents`, `admin_user_id` |
+| `payout_rejected` | `POST /admin/payouts/{id}/reject` succeeds | payout owner user_id | `payout_id`, `admin_note`, `admin_user_id` |
+
+Events are queued by the PostHog PHP SDK and flushed on the WordPress `shutdown` action.
+
 ## Errors
 
 Every `code` value the API may return:

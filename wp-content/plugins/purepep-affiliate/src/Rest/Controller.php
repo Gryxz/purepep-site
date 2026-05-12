@@ -7,6 +7,7 @@ namespace PurePep\Affiliate\Rest;
 use PurePep\Affiliate\Repository\CodesRepository;
 use PurePep\Affiliate\Repository\CommissionsRepository;
 use PurePep\Affiliate\Repository\PayoutsRepository;
+use PurePep\Affiliate\Service\AnalyticsService;
 use PurePep\Affiliate\Service\PayoutService;
 
 final class Controller
@@ -20,17 +21,18 @@ final class Controller
     ) {
     }
 
-    public static function make(): self
+    public static function make(?AnalyticsService $analytics = null): self
     {
+        $analytics ??= AnalyticsService::fromConfig();
         $codes = new CodesRepository();
         $commissions = new CommissionsRepository();
         $payouts = new PayoutsRepository();
-        $payoutService = new PayoutService($commissions, $payouts);
+        $payoutService = new PayoutService($commissions, $payouts, $analytics);
 
         return new self(
-            new MeController($codes, $commissions, $payouts, $payoutService),
+            new MeController($codes, $commissions, $payouts, $payoutService, $analytics),
             new PublicController($codes),
-            new AdminController($commissions, $payouts, $payoutService),
+            new AdminController($commissions, $payouts, $payoutService, $analytics),
         );
     }
 

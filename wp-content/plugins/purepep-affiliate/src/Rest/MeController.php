@@ -7,6 +7,7 @@ namespace PurePep\Affiliate\Rest;
 use PurePep\Affiliate\Repository\CodesRepository;
 use PurePep\Affiliate\Repository\CommissionsRepository;
 use PurePep\Affiliate\Repository\PayoutsRepository;
+use PurePep\Affiliate\Service\AnalyticsService;
 use PurePep\Affiliate\Service\PayoutService;
 use PurePep\Affiliate\Support\Capabilities;
 use PurePep\Affiliate\Support\RateLimiter;
@@ -21,6 +22,7 @@ final class MeController
         private CommissionsRepository $commissions,
         private PayoutsRepository $payouts,
         private PayoutService $payoutService,
+        private AnalyticsService $analytics,
     ) {
     }
 
@@ -122,6 +124,9 @@ final class MeController
             );
         }
 
+        $oldRow = $this->codes->getActiveForUser($userId);
+        $oldCode = $oldRow !== null ? (string) $oldRow['code'] : null;
+
         try {
             $row = $this->codes->regenerateForUser($userId);
         } catch (\Throwable $e) {
@@ -131,6 +136,11 @@ final class MeController
                 ['status' => 500]
             );
         }
+
+        $this->analytics->capture('affiliate_code_regenerated', $userId, [
+            'old_code' => $oldCode,
+            'new_code' => (string) $row['code'],
+        ]);
 
         return new WP_REST_Response([
             'code' => [

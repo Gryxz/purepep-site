@@ -7,6 +7,7 @@ namespace PurePep\Affiliate\Rest;
 use PurePep\Affiliate\Repository\CommissionsRepository;
 use PurePep\Affiliate\Repository\PayoutsRepository;
 use PurePep\Affiliate\Schema;
+use PurePep\Affiliate\Service\AnalyticsService;
 use PurePep\Affiliate\Service\PayoutService;
 use PurePep\Affiliate\Support\Capabilities;
 use WP_Error;
@@ -19,6 +20,7 @@ final class AdminController
         private CommissionsRepository $commissions,
         private PayoutsRepository $payouts,
         private PayoutService $payoutService,
+        private AnalyticsService $analytics,
     ) {
     }
 
@@ -191,6 +193,7 @@ final class AdminController
                 ['status' => 422]
             );
         }
+        $this->analytics->captureCommissionStatusChange($row, 'reversed', $reason);
         return new WP_REST_Response(['ok' => true, 'id' => $id], 200);
     }
 

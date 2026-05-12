@@ -14,6 +14,7 @@ use PurePep\Affiliate\Repository\CodesRepository;
 use PurePep\Affiliate\Repository\CommissionsRepository;
 use PurePep\Affiliate\Repository\PayoutsRepository;
 use PurePep\Affiliate\Rest\Controller as RestController;
+use PurePep\Affiliate\Service\AnalyticsService;
 use PurePep\Affiliate\Service\Attribution;
 use PurePep\Affiliate\Service\CommissionCalculator;
 use PurePep\Affiliate\Service\Lifecycle;
@@ -46,19 +47,25 @@ final class Plugin
             return;
         }
 
+        $analytics = AnalyticsService::fromConfig();
+
         $codes = new CodesRepository();
         $commissions = new CommissionsRepository();
         $payouts = new PayoutsRepository();
         $calc = new CommissionCalculator();
-        $attribution = new Attribution($codes, $commissions, $calc);
-        $lifecycle = new Lifecycle($commissions);
-        $payoutService = new PayoutService($commissions, $payouts);
+        $attribution = new Attribution($codes, $commissions, $calc, $analytics);
+        $lifecycle = new Lifecycle($commissions, $analytics);
+        $payoutService = new PayoutService($commissions, $payouts, $analytics);
 
-        RestController::make()->register();
+        RestController::make($analytics)->register();
 
         (new CheckoutField($attribution))->register();
         (new OrderHooks($lifecycle, $attribution))->register();
-        (new LandingHandler($codes))->register();
+        (new LandingHandler($codes, $analytics))->register();
+
+        add_action('shutdown', static function () use ($analytics): void {
+            $analytics->flush();
+        });
 
         if (is_admin()) {
             $menu = new Menu(
@@ -68,7 +75,7 @@ final class Plugin
                 new SettingsPage(),
             );
             $menu->register();
-            (new FormHandlers($payoutService, $commissions))->register();
+            (new FormHandlers($payoutService, $commissions, $analytics))->register();
         }
     }
 

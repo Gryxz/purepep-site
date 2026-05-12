@@ -21,8 +21,18 @@ Custom WordPress plugin that powers the PurePep referral / affiliate program for
 ## Install / Activate
 
 1. Copy this folder to `wp-content/plugins/purepep-affiliate/`.
-2. Run `composer install --no-dev` inside the plugin folder (optional — a PSR-4 fallback autoloader is bundled).
-3. In the WP admin, go to **Plugins** and activate **PurePep Affiliate**.
+2. Run `composer install --no-dev` inside the plugin folder.
+   - Required to enable PostHog analytics (`posthog/posthog-php` is the only runtime dependency).
+   - If skipped, the plugin still works fully — analytics calls silently no-op.
+3. (Optional) Add the PostHog credentials to `wp-config.php` to enable server-side event capture:
+
+   ```php
+   define('PP_POSTHOG_API_KEY', 'phc_yEGTMMcv56r28gm5NUjWh8UqxRwvt8sRjDojq7XzDrWD');
+   define('PP_POSTHOG_HOST', 'https://eu.i.posthog.com');
+   ```
+
+   If either constant is missing or empty, the AnalyticsService self-disables. Every capture call is wrapped in `try/catch` and any failure is logged via `error_log` only — analytics never blocks business logic or throws into a request.
+4. In the WP admin, go to **Plugins** and activate **PurePep Affiliate**.
 
 On activation, the plugin runs `dbDelta()` to create three tables:
 
@@ -57,6 +67,12 @@ Default options are seeded (only if missing):
 ## REST API
 
 See [API.md](./API.md) for the full reference, cookie protocol, checkout-field contract, and error catalogue. Base URL: `/wp-json/purepep-affiliate/v1`.
+
+## Analytics
+
+When the PostHog constants are set, the plugin emits server-side events for every meaningful state change. See the **Server-side analytics events** section of [API.md](./API.md) for the full event catalogue (names, properties, and the trigger point in code).
+
+`distinct_id` is always the affiliate's WP `user_id` (not the buyer's). Events are fired only after the underlying DB transition has succeeded, so the event stream is a true ledger of state changes.
 
 ## Where future hooks would go (not wired in v1)
 
