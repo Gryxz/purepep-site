@@ -64,6 +64,12 @@ interface WcCategory {
   slug?: string;
 }
 
+interface WcImage {
+  id?: number;
+  src?: string;
+  alt?: string;
+}
+
 interface WcProduct {
   id: number;
   slug: string;
@@ -80,6 +86,7 @@ interface WcProduct {
   categories?: WcCategory[];
   attributes?: WcAttribute[];
   meta_data?: WcMeta[];
+  images?: WcImage[];
 }
 
 /** WC product variation — only the fields we actually consume. */
@@ -347,6 +354,15 @@ function toProduct(wc: WcProduct, variations?: WcVariation[]): Product {
   // "PUREPEP RETA · LYOPHILIZED", not "RETA · LYOPHILIZED".
   const displayName = wc.name.replace(/\s*[-–—]\s*PLACEHOLDER\s*$/i, "").trim();
 
+  // First WC product image becomes the hero photo on every render site
+  // via Product.imageUrl.  When undefined (no upload yet) the components
+  // fall back to the local convention path under public/images/products/
+  // source.  Keeps the WP-admin → live-site flow one upload away.
+  const firstImageSrc = (wc.images ?? []).find(
+    (img) => typeof img.src === "string" && img.src.length > 0,
+  )?.src;
+  const imageUrl = firstImageSrc && firstImageSrc.length > 0 ? firstImageSrc : undefined;
+
   return {
     slug: wc.slug,
     compound,
@@ -367,6 +383,7 @@ function toProduct(wc: WcProduct, variations?: WcVariation[]): Product {
     sku: wc.sku ?? "",
     wcId: wc.id,
     variantMap,
+    imageUrl,
   };
 }
 

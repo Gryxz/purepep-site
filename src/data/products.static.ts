@@ -80,6 +80,15 @@ export interface Product {
    * WooCommerce variations have been configured.
    */
   variantPrices?: Record<string, number>;
+  /**
+   * Hero product photograph URL.  Populated by `wc-api.ts → toProduct()`
+   * from the first WooCommerce product image (`images[0].src`).  Render
+   * sites consume as `product.imageUrl ?? local-fallback-path` so a WP
+   * admin upload immediately surfaces on the live site without code
+   * changes.  Undefined → falls back to the per-slug local convention
+   * at `/images/products/source/purepep-vial-{slug}-v1.0.jpg`.
+   */
+  imageUrl?: string;
 }
 
 export const PRODUCTS: Product[] = [

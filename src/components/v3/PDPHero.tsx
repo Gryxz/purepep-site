@@ -240,7 +240,7 @@ export function PDPHero({ product }: { product: Product }) {
           <div className="v3pdp-hero-grid">
             <div className="v3pdp-photo-card">
               <Image
-                src={`/images/products/source/purepep-vial-${product.slug}-v1.0.jpg`}
+                src={product.imageUrl ?? `/images/products/source/purepep-vial-${product.slug}-v1.0.jpg`}
                 alt={`${product.compound} vial`}
                 fill
                 priority
