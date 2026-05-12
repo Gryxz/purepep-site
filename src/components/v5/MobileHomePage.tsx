@@ -220,9 +220,12 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         </section>
       </div>
 
-      {/* Retatrutide research profile — sits between the hero parallax
-          stack and the catalog teaser.  Surfaces the four headline specs
-          + the often-stacked-with chip row before the grid below. */}
+      {/* Curated stacks promotion — sits between the hero parallax stack
+          and the catalog teaser.  Surfaces bundle stats (3 stacks · 2
+          vials each · top savings · COA) + a chip rail linking each
+          stack PDP plus a back-link to the Reta hero above.  Component
+          name retains the legacy "RetaSpotlight" prefix; rename out of
+          scope per the originating change request. */}
       <MobileRetaSpotlight products={products} />
 
       {/* Catalog teaser — eyebrow dropped (the section header is enough). */}
