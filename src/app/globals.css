@@ -5706,17 +5706,14 @@ a.v3-pill-ghost:hover {
 
 /* ── Catalog grid (shared with Shop page) ─────────────────────────── */
 .mob-catalog-section {
-  /* Top padding hosts the dark→bone gradient that smooths the seam out
-     of the hero parallax.  Gradient finishes by the time the
-     "The catalog" header begins so the header sits on full bone. */
+  /* Solid bone — the hero pane-2 .mob-heropx-fadeout already owns the
+   * dark → bone handoff on its bottom edge.  The previous
+   * dark-top-of-catalog gradient (#050505 → #1a1a1a → bone) was double-
+   * dipping that handoff and producing a visible near-black band at
+   * the seam between hero and catalog.  Bone-only here lets the
+   * fadeout land cleanly. */
   padding: 56px 0 40px;
-  background: linear-gradient(
-    180deg,
-    #050505 0%,
-    #1a1a1a 16px,
-    var(--m-bone) 56px,
-    var(--m-bone) 100%
-  );
+  background: var(--m-bone);
 
   /* JS-driven catalog lift removed (was producing perceived chop on
      iOS Safari regardless of curve).  Section now flows naturally
@@ -8728,29 +8725,65 @@ a.v3-pill-ghost:hover {
   transform: translateY(1px);
 }
 
+/* Scroll indicator — amber pulse dot + descending fill track.
+ *
+ * Two independent CSS animations, each on a dedicated child element:
+ *   - .mob-scroll-dot: scale/opacity pulse, 2s cycle
+ *   - .mob-scroll-fill: top:-100% → 100% sweep down a 1px track, 2s
+ *
+ * The container fades out as the parallax progresses past ~5% via the
+ * existing --mob-px-p variable so the cue disappears before the user
+ * is actually scrolling through the stack.  Pure CSS — no JS scroll
+ * listener beyond the one that already sets --mob-px-p. */
 .mob-heropx-scroll-cue {
   position: absolute;
   bottom: 32px; left: 50%;
   transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgb(250 247 240 / 45%);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
   pointer-events: none;
-
-  /* Fade with the pane it lives on. */
-  animation: mob-heropx-pulse 2.6s ease-in-out infinite;
+  opacity: calc(1 - clamp(0, var(--mob-px-p, 0) * 10, 1));
+  transition: opacity 0.15s linear;
 }
 
-@keyframes mob-heropx-pulse {
-  0%, 100% { transform: translate(-50%, 0); opacity: 0.45; }
-  50% { transform: translate(-50%, 6px); opacity: 0.85; }
+.mob-scroll-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--m-amber-cta);
+  animation: mob-scroll-pulse 2s ease-in-out infinite;
+}
+
+.mob-scroll-track {
+  position: relative;
+  display: block;
+  width: 1px; height: 28px;
+  background: rgb(255 255 255 / 15%);
+  overflow: hidden;
+  border-radius: 1px;
+}
+
+.mob-scroll-fill {
+  position: absolute;
+  top: -100%; left: 0;
+  width: 100%; height: 100%;
+  background: rgb(220 152 20 / 70%);
+  animation: mob-scroll-fill 2s ease-in-out infinite;
+}
+
+@keyframes mob-scroll-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.35); }
+}
+
+@keyframes mob-scroll-fill {
+  0%   { top: -100%; }
+  60%  { top: 100%; }
+  100% { top: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mob-heropx-scroll-cue { animation: none; }
+  .mob-scroll-dot,
+  .mob-scroll-fill { animation: none; }
+  .mob-scroll-fill { top: 0; }
 }
 
 /* Compact-mode (small phones) tweaks */
@@ -9159,6 +9192,214 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .mob-hero-vial-img-cutout { animation: none; }
+}
+
+/* ============================================================ */
+/* RETA Spotlight — research profile section between hero + catalog */
+/* ============================================================ */
+
+/* Section shell: bone backdrop, ink hairline top border so the seam
+ * with the hero fade-to-cream lands cleanly.  Reveal-on-view via the
+ * `.is-in` class set by the component's IntersectionObserver — child
+ * stagger driven by the inline --mob-stagger CSS var. */
+.mob-reta-spotlight {
+  position: relative;
+  background: var(--m-bone);
+  border-top: 1.5px solid var(--m-ink);
+  padding: 44px 20px 36px;
+}
+
+/* Default state: every staggered child sits 18px down + 0 opacity.
+ * .is-in flips them to rest position with a per-child delay derived
+ * from --mob-stagger (0..4).  450ms ease-out feels purposeful without
+ * dragging the page open. */
+.mob-reta-spotlight .mob-reta-eyebrow,
+.mob-reta-spotlight .mob-reta-h2,
+.mob-reta-spotlight .mob-reta-body,
+.mob-reta-spotlight .mob-reta-stat-grid,
+.mob-reta-spotlight .mob-reta-stack {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 450ms ease-out, transform 450ms ease-out;
+  transition-delay: calc(var(--mob-stagger, 0) * 90ms);
+}
+
+.mob-reta-spotlight.is-in .mob-reta-eyebrow,
+.mob-reta-spotlight.is-in .mob-reta-h2,
+.mob-reta-spotlight.is-in .mob-reta-body,
+.mob-reta-spotlight.is-in .mob-reta-stat-grid,
+.mob-reta-spotlight.is-in .mob-reta-stack {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mob-reta-spotlight .mob-reta-eyebrow,
+  .mob-reta-spotlight .mob-reta-h2,
+  .mob-reta-spotlight .mob-reta-body,
+  .mob-reta-spotlight .mob-reta-stat-grid,
+  .mob-reta-spotlight .mob-reta-stack {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Eyebrow — amber dot + mono uppercase label */
+.mob-reta-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.mob-reta-eyebrow .dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--m-amber-cta);
+  flex-shrink: 0;
+}
+.mob-reta-eyebrow span:last-child {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--m-ink);
+  opacity: 0.4;
+}
+
+/* Headline */
+.mob-reta-h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 26px;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  color: var(--m-ink);
+  margin-bottom: 8px;
+}
+
+/* Body copy */
+.mob-reta-body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgb(31 31 31 / 60%);
+  margin-bottom: 22px;
+}
+
+/* 2×2 stat grid — ink as the gap colour shows through 1.5px gaps to
+ * give the hairline divider look without per-cell borders.  Outer
+ * border + radius clip the corners so the grid reads as a single unit. */
+.mob-reta-stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5px;
+  background: var(--m-ink);
+  border: 1.5px solid var(--m-ink);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 26px;
+}
+.mob-reta-stat {
+  background: var(--m-bone);
+  padding: 16px 14px;
+}
+.mob-reta-stat-val {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 24px;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #A06F0A;
+}
+.mob-reta-stat-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(31 31 31 / 40%);
+  margin-top: 6px;
+}
+
+/* Often Stacked With — horizontal chip rail.  Bleeds full-width via
+ * negative -20px margins matching the section's 20px page-pad, then
+ * pads back in so the first chip starts at the same gutter as the
+ * stat grid above. */
+.mob-reta-stack-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.mob-reta-stack-label span:first-child {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(31 31 31 / 40%);
+}
+.mob-reta-stack-label .dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--m-amber-cta);
+  flex-shrink: 0;
+}
+
+.mob-reta-stack-rail {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin: 0 -20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.mob-reta-stack-rail::-webkit-scrollbar { display: none; }
+
+.mob-reta-stack-chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 13px;
+  background: var(--m-bone);
+  border: 1.5px solid var(--m-ink);
+  border-radius: 2px;
+  color: var(--m-ink);
+  text-decoration: none;
+  transition: background 0.15s, transform 0.12s;
+}
+.mob-reta-stack-chip:active {
+  background: var(--m-s1);
+  transform: translateY(1px);
+}
+.mob-reta-stack-text { display: flex; flex-direction: column; }
+.mob-reta-stack-name {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--m-ink);
+  line-height: 1.15;
+}
+.mob-reta-stack-sub {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(31 31 31 / 40%);
+  margin-top: 2px;
+}
+.mob-reta-stack-arrow {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: #A06F0A;
 }
 
 

@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import type { Product } from "@/data/products";
 import Image from "next/image";
 import { MobileVial } from "./MobileVial";
+import { MobileRetaSpotlight } from "./MobileRetaSpotlight";
 import { MobileFooter } from "./MobileFooter";
 
 /**
@@ -143,11 +144,10 @@ export function MobileHomePage({ products }: { products: Product[] }) {
               Lab-verified peptides for in vitro research. Lot-matched COA on every vial, tracked US shipping.
             </p>
             <div className="mob-heropx-scroll-cue" aria-hidden="true">
-              <span>Scroll</span>
-              <svg width="14" height="22" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 14 22">
-                <rect x="1" y="1" width="12" height="20" rx="6" />
-                <line x1="7" y1="6" x2="7" y2="11" strokeWidth="2" strokeLinecap="round" />
-              </svg>
+              <span className="mob-scroll-dot" />
+              <span className="mob-scroll-track">
+                <span className="mob-scroll-fill" />
+              </span>
             </div>
           </div>
         </section>
@@ -237,6 +237,10 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         </section>
       </div>
 
+      {/* Retatrutide research profile — sits between the hero parallax
+          stack and the catalog teaser.  Surfaces the four headline specs
+          + the often-stacked-with chip row before the grid below. */}
+      <MobileRetaSpotlight products={products} />
 
       {/* Catalog teaser — eyebrow dropped (the section header is enough). */}
       <section className="mob-catalog-section">
