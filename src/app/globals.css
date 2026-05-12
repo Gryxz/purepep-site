@@ -8317,14 +8317,16 @@ a.v3-pill-ghost:hover {
 .mob-heropx {
   position: relative;
 
-  /* Stack height = pane height (100vh) + scroll runway for the
-     parallax.  160vh gives panes 60vh of stick range — pane 2 reaches
-     full opacity early via the JS fade, then sits fully visible for
-     ~35vh of additional scroll before un-sticking.  Bg is #050505 so
-     the un-stick zone reads as one continuous dark surface that flows
-     into the catalog gradient. */
-  height: 160vh;
-  background: #050505;
+  /* Stack height tuned for "pane 2 ends → spotlight begins" with no
+   * visible runway gap.  Previous 160vh left ~60vh of #050505 below
+   * pane 2 after it un-stuck, reading as an empty black block before
+   * the spotlight section.  120vh = 20vh of stick range (enough for
+   * the JS crossfade to complete cleanly) and 0vh of post-stick
+   * runway.  Bg is bone so any residual sub-pixel slop at the seam
+   * blends into the spotlight section below rather than punching
+   * black through. */
+  height: 120vh;
+  background: var(--m-bone);
 }
 
 .mob-heropx-pane {
@@ -8685,10 +8687,10 @@ a.v3-pill-ghost:hover {
 .mob-heropx-pair-link {
   /* Tertiary CTA — same mono/UPPERCASE/0.16em typography family as
    * the two primary buttons above so the cluster reads as ONE
-   * cohesive action group.  Sits unframed (no pill) so the hierarchy
-   * is still clear: Shop (filled) > Browse (pill) > Often Stacked
-   * (text).  Outlined chip bg gives it enough presence to stop
-   * disappearing on the warm radial backdrop. */
+   * cohesive action group.  Lead-in text in DIM BONE (not amber) so
+   * "Often stacked with" stays legible against the amber-tinted
+   * radial backdrop; amber accent is carried by the chip bg + border
+   * + arrow icon instead of the body text, which was washing out. */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -8700,9 +8702,9 @@ a.v3-pill-ghost:hover {
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #F0B830;
-  background: rgb(220 152 20 / 8%);
-  border: 1px solid rgb(220 152 20 / 28%);
+  color: rgb(250 247 240 / 70%);
+  background: rgb(220 152 20 / 10%);
+  border: 1px solid rgb(220 152 20 / 36%);
   border-radius: var(--m-rf);
   text-decoration: none;
   transition: color 0.15s, background 0.15s, transform 0.12s;
@@ -8716,7 +8718,8 @@ a.v3-pill-ghost:hover {
 
 .mob-heropx-pair-link svg {
   margin-left: 2px;
-  opacity: 0.9;
+  color: #F0B830;
+  opacity: 1;
 }
 
 .mob-heropx-pair-link:active {
