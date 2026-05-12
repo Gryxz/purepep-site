@@ -141,7 +141,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             <p className="mob-heropx-sub">
               Lab-verified peptides for in vitro research. Lot-matched COA on every vial, tracked US shipping.
             </p>
-            <div className="mob-heropx-scroll-cue" aria-hidden="true">
+            <div className="mob-heropx-scroll-cue pp-animate-6" aria-hidden="true">
               <span className="mob-scroll-dot" />
               <span className="mob-scroll-track">
                 <span className="mob-scroll-fill" />
@@ -184,15 +184,15 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             <div className="mob-heropx-fadeout" aria-hidden="true" />
           </div>
           <div className="mob-heropx-content mob-heropx-content-2">
-            <div className="mob-heropx-eyebrow">
+            <div className="mob-heropx-eyebrow pp-animate-1">
               <span className="dot" />
               Flagship compound
             </div>
-            <h2 className="mob-heropx-h2">{featured?.name ?? "Retatrutide"} — our flagship compound</h2>
+            <h2 className="mob-heropx-h2 pp-animate-2">{featured?.name ?? "Retatrutide"} — our flagship compound</h2>
             <div className="mob-heropx-cta-block">
               <a
                 href={featured ? `/shop/${featured.slug}` : "/shop"}
-                className="mob-cta-amber-base mob-heropx-cta"
+                className="mob-cta-amber-base mob-heropx-cta pp-animate-3"
               >
                 {featured ? `Shop ${featured.name}` : "Shop the catalog"}
                 <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -200,7 +200,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </a>
-              <a href="/shop" className="mob-heropx-cta-ghost">
+              <a href="/shop" className="mob-heropx-cta-ghost pp-animate-4">
                 Browse catalog
                 <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <line x1="5" y1="12" x2="19" y2="12" />
@@ -213,7 +213,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
                 amber label area where amber-on-amber blended out. As a
                 post-CTA fine-print readout it reinforces the pharma
                 credibility note without competing with the headline. */}
-            <p className="mob-heropx-spec mob-heropx-spec-foot">
+            <p className="mob-heropx-spec mob-heropx-spec-foot pp-animate-5">
               {featured ? shortSpec(featured) : "Lab-verified · Lot-matched COA · Lyophilized"}
             </p>
           </div>

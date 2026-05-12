@@ -9153,6 +9153,52 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   .mob-hero-vial-img-cutout { animation: none; }
 }
 
+/* Hero text entrance stagger — page-load cascade across the hero
+ * cluster (eyebrow → headline → primary CTA → ghost CTA → mechanism
+ * tags → scroll indicator).  CSS-only, no JS, no library.  Each
+ * .pp-animate-N slot holds opacity 0 + translateY 18px as its rest
+ * state, then plays pp-fade-up once with `forwards` fill so the
+ * end state sticks (no layout shift, no repeat).  expo-out easing
+ * (cubic-bezier(0.22, 1, 0.36, 1)) gives the glass-settling feel. */
+@keyframes pp-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pp-animate-1,
+.pp-animate-2,
+.pp-animate-3,
+.pp-animate-4,
+.pp-animate-5,
+.pp-animate-6 {
+  opacity: 0;
+  animation: pp-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.pp-animate-1 { animation-delay: 0.10s; }
+.pp-animate-2 { animation-delay: 0.20s; }
+.pp-animate-3 { animation-delay: 0.30s; }
+.pp-animate-4 { animation-delay: 0.40s; }
+.pp-animate-5 { animation-delay: 0.50s; }
+.pp-animate-6 { animation-delay: 0.60s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-animate-1,
+  .pp-animate-2,
+  .pp-animate-3,
+  .pp-animate-4,
+  .pp-animate-5,
+  .pp-animate-6 {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 /* ============================================================ */
 /* RETA Spotlight — research profile section between hero + catalog */
 /* ============================================================ */
