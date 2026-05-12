@@ -36,8 +36,6 @@ export function MobileHomePage({ products }: { products: Product[] }) {
     .slice(1)
     .filter((p) => p.type !== "stack")
     .slice(0, 8);
-  // Bundles: just the stacks, surfaced separately above the catalog teaser.
-  const bundles = products.filter((p) => p.type === "stack");
   const parallaxRef = useRef<HTMLDivElement | null>(null);
 
   // Hero parallax — tracks scroll progress through the 2-viewport stack and
@@ -209,21 +207,6 @@ export function MobileHomePage({ products }: { products: Product[] }) {
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </a>
-              {bundles.length > 0 && featured && (() => {
-                const pairing =
-                  bundles.find((b) =>
-                    b.stackComponents?.some((c) => c.compound === featured.compound),
-                  ) ?? bundles[0]!;
-                return (
-                  <a href={`/shop/${pairing.slug}`} className="mob-heropx-pair-link">
-                    Often stacked with <strong>{pairing.name}</strong>
-                    <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                      <polyline points="12 5 19 12 12 19" />
-                    </svg>
-                  </a>
-                );
-              })()}
             </div>
             {/* Spec line moved below CTAs into the dark bottom zone of the
                 vial photo — was previously sandwiched against the lit
