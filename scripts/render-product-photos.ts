@@ -47,7 +47,9 @@ const SLUG_TO_PHOTOREF: Record<string, string> = {
   "bpc-157": "purepep-photoref-BPC-157-v1.6.png",
   "tb-500":  "purepep-photoref-TB-500-v1.6.png",
   "ghk-cu":  "purepep-photoref-GHK-Cu-v1.6.png",
-  "mots-c":  "purepep-photoref-MOTS-c-v1.6.png",
+  "mots-c":     "purepep-photoref-MOTS-c-v1.6.png",
+  "survo":      "",
+  "ipamorelin": "",
 };
 
 // Per-SKU color language — descriptive name drives AI color intent,
@@ -118,7 +120,111 @@ const SKU_COLORS: Record<string, ColorSpec> = {
     gradientBottom: "#BCD0CB",
     negative: "no warm tones, no yellow, no pink, no pure mint green, no pure powder blue, no grey, no white, no saturated dark background",
   },
+  "survo": {
+    labelHex:      "#D4874A",
+    labelDesc:     "rich warm amber label, hex #D4874A — the color of glucose-energy and metabolic fire, evoking glucagon activation",
+    gradientTop:   "#F0DEC8",
+    gradientBottom: "#D9BC96",
+    negative: "no cold tones, no blue, no lavender, no green, no cream-white, no grey, no pure yellow, no red, no saturated dark background",
+  },
+  "ipamorelin": {
+    labelHex:      "#8B6BAE",
+    labelDesc:     "deep amethyst violet label, hex #8B6BAE — pituitary-neural signaling, the clean precise GH pulse — large label text reads IPA only, NOT the full name",
+    gradientTop:   "#DDD0E8",
+    gradientBottom: "#C4B0D6",
+    negative: "no blue-dominant, no pink, no mauve, no lavender-pastel, no warm tones, no green, no white, no grey, no saturated dark background",
+  },
 };
+
+// ---------------------------------------------------------------------------
+// Chroma-key plate — solid #00E830 backdrop, no shadows, for compositing
+// ---------------------------------------------------------------------------
+
+function chromaKeyPrompt(sku: LabelSku): string {
+  return `Use the attached reference image (reta-10mg.jpg) — KEEP all brand \
+identity intact: aluminum crimp cap (silver, NOT colored), PurePep wordmark, \
+10 MG badge in upper-right corner of label, large bold sans-serif product \
+name, "FOR RESEARCH USE ONLY" black band, CAS number in monospace, white \
+crystalline powder fill at ~40% of vial. These brand elements MUST match \
+the reference exactly.
+
+Apply the second reference image as the label artwork on the vial. \
+Vial body: clear glass. Stopper: standard grey rubber. \
+Powder fill: white lyophilized, ~40% of vial height.
+
+BACKGROUND — chroma-key composition (critical):
+- Solid uniform NEON GREEN backdrop, hex #00E830 — fully saturated, no \
+gradient, no shading, no horizon line, no floor demarcation, no studio \
+sweep, no atmospheric perspective.
+- The green fills the ENTIRE frame except where the vial sits. Floor and \
+wall are the same flat green — no transition tone, no shadow blending.
+- NO drop shadow. NO contact shadow under the vial. NO ambient occlusion.
+
+VIAL POSITION: perfectly upright, 90° vertical, no tilt. Centered \
+horizontally. Generous negative space above and on both sides so the vial \
+is fully surrounded by green and can be cleanly chroma-keyed out.
+
+LIGHTING: clean editorial product lighting. Soft key from upper-front \
+camera-left, gentle fill from camera-right. The vial picks up the green \
+backdrop only minimally — keep it cleanly separated from the background.
+
+STYLE: editorial pharmaceutical product photograph, isolated on chroma-key \
+green for compositing. Treat this as a cutout plate for a downstream \
+compositor — the green is a tool, not a design choice.
+
+NEGATIVE: NO shadow of any kind under or beside the vial, NO colored cap \
+(aluminum silver only), NO gradient on the green (must be flat uniform \
+#00E830), NO atmosphere, NO fog, NO floor line, NO horizon, NO reflection \
+on the floor, NO green tint on the vial glass, NO additional props, NO \
+text overlay, NO watermark. The green backdrop must be pure and uniform — \
+anything that ramps the green darker or lighter creates chroma-key artifacts.
+
+SKU: ${sku.abbreviation}${sku.fullName ? ` — ${sku.fullName}` : ""}, \
+CAS ${sku.cas}.`;
+}
+
+async function renderChroma(sku: LabelSku, args: Args): Promise<void> {
+  const outPath = join(SOURCE_DIR, `purepep-vial-${sku.slug}-chroma-v1.0.jpg`);
+  if (existsSync(outPath) && !args.force) {
+    console.log(`${sku.slug} chroma → skip (exists, use --force to re-roll)`);
+    return;
+  }
+  mkdirSync(SOURCE_DIR, { recursive: true });
+  const prompt = chromaKeyPrompt(sku);
+  const photorefFile = SLUG_TO_PHOTOREF[sku.slug];
+  const refs: string[] = [REF_GEOMETRY];
+  if (photorefFile) {
+    const p = join(PHOTOREF_DIR, photorefFile);
+    if (existsSync(p)) refs.push(p);
+  }
+  const imageArgs = refs.flatMap((r) => ["--image", r]);
+  for (let attempt = 1; attempt <= args.maxAttempts; attempt++) {
+    console.log(`  [attempt ${attempt}/${args.maxAttempts}] ${sku.slug} chroma…`);
+    const t0 = Date.now();
+    const result = spawnSync(
+      "higgsfield",
+      ["product-photoshoot", "create", "--mode", "product_shot",
+        "--prompt", prompt, ...imageArgs, "--aspect_ratio", "2:3", "--json"],
+      { encoding: "utf8", stdio: "pipe", timeout: 600_000 },
+    );
+    if (result.status !== 0) {
+      const err = result.stderr + result.stdout;
+      if (err.includes("not_enough_credits")) { console.error("Out of credits."); process.exit(2); }
+      console.error(`    FAILED: ${result.stderr}`);
+      continue;
+    }
+    try {
+      const url = extractUrl(result.stdout, outPath);
+      await downloadAsJpeg(url, outPath);
+      const { size } = statSync(outPath);
+      console.log(`\n${sku.slug} chroma  ok   ${attempt}   ${(size / 1024).toFixed(0)} KB   ${((Date.now() - t0) / 1000).toFixed(1)}s`);
+      return;
+    } catch (err) {
+      console.error(`    FAILED: ${(err as Error).message}`);
+    }
+  }
+  console.error(`\n${sku.slug} chroma FAILED after ${args.maxAttempts} attempts`);
+}
 
 // ---------------------------------------------------------------------------
 // BAC Water — special 9th SKU, bone colorway, clear liquid
@@ -181,11 +287,13 @@ interface Args {
   noRef: boolean;       // skip all reference images (pure prompt generation)
   refImage: string | null; // override reference image path
   bac: boolean;         // render bac water as 9th SKU
+  chroma: boolean;      // render chroma-key plate(s)
+  vial: boolean;        // render vial-only hero (purepep-vial-{slug}-v1.0.jpg)
 }
 
 function parseArgs(): Args {
   const argv = process.argv.slice(2);
-  const args: Args = { force: false, only: null, maxAttempts: 5, noRef: false, refImage: null, bac: false };
+  const args: Args = { force: false, only: null, maxAttempts: 5, noRef: false, refImage: null, bac: false, chroma: false, vial: false };
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--force" || argv[i] === "-f") args.force = true;
     else if (argv[i] === "--only" && argv[i + 1]) args.only = argv[++i]!;
@@ -193,8 +301,10 @@ function parseArgs(): Args {
       args.maxAttempts = Math.max(1, parseInt(argv[++i]!, 10) || 5);
     }
     else if (argv[i] === "--no-ref") args.noRef = true;
+    else if (argv[i] === "--vial") args.vial = true;
     else if (argv[i] === "--ref" && argv[i + 1]) args.refImage = argv[++i]!;
     else if (argv[i] === "--bac") args.bac = true;
+    else if (argv[i] === "--chroma") args.chroma = true;
   }
   return args;
 }
@@ -581,9 +691,127 @@ async function renderBac(args: Args): Promise<void> {
   console.error(`\nbac FAILED after ${args.maxAttempts} attempts:\n  ${failReasons.join("\n  ")}`);
 }
 
+// ---------------------------------------------------------------------------
+// Vial-only hero render — purepep-vial-{slug}-v1.0.jpg
+// ---------------------------------------------------------------------------
+
+function vialHeroPrompt(sku: LabelSku): string {
+  const col = SKU_COLORS[sku.slug];
+  if (!col) throw new Error(`No color spec for slug: ${sku.slug}`);
+
+  return `Use the attached reference image (reta-10mg.jpg) as the EXACT \
+geometry lock — KEEP all brand identity intact: aluminum crimp cap (silver, \
+NOT colored), PurePep wordmark, 10 MG badge in upper-right corner of label, \
+large bold sans-serif product name, "FOR RESEARCH USE ONLY" black band, CAS \
+number in monospace, white crystalline powder fill at ~40% of vial. Every \
+brand element MUST match the reference exactly — same cap, same glass, same \
+label architecture, same powder fill height.
+
+Apply the second reference image as the label artwork on the vial.
+
+COLOR DIRECTIVE — THIS IS THE PRIMARY INSTRUCTION:
+Vial label: ${col.labelDesc}, hex ${col.labelHex} — deepest saturation in \
+the label zone.
+Backdrop upper: ${col.gradientTop} — significantly lighter than the label.
+Floor/base: ${col.gradientBottom} — the DEEPEST tone in the scene.
+DEPTH HIERARCHY (non-negotiable): label lightest → backdrop mid → floor \
+deepest. 15–20% lightness gap between each tier. No inversions.
+
+GEOMETRY: single vial, perfectly upright 90°, centered in frame, same angle \
+and crop as the reference image. Generous headroom above the cap.
+
+SCENE: seamless studio backdrop — a single surface sweeps from floor to back \
+wall, no visible crease or horizon line. The vial sits on the floor with a \
+soft contact shadow directly beneath it.
+
+LIGHTING: soft editorial product lighting. Key from upper-front camera-left, \
+gentle fill camera-right. Vial glass picks up subtle specular highlight. No \
+harsh shadows, no dramatic rim lighting.
+
+STYLE: editorial pharmaceutical product photograph. Clean, clinical, \
+research-grade. Aspect ratio 2:3 (portrait).
+
+NEGATIVE: ${col.negative}, NO card, NO secondary object, NO text overlay, \
+NO watermark, NO colored cap (aluminum silver only), NO neon backdrop.
+
+SKU: ${sku.abbreviation}${sku.fullName ? ` — ${sku.fullName}` : ""}, CAS ${sku.cas}.`;
+}
+
+async function renderVial(sku: LabelSku, args: Args): Promise<void> {
+  const outPath = join(SOURCE_DIR, `purepep-vial-${sku.slug}-v1.0.jpg`);
+  if (existsSync(outPath) && !args.force) {
+    console.log(`${sku.slug} vial → skip (exists, use --force to re-roll)`);
+    return;
+  }
+  mkdirSync(SOURCE_DIR, { recursive: true });
+  const prompt = vialHeroPrompt(sku);
+  const refs: string[] = [REF_GEOMETRY];
+  const photorefFile = SLUG_TO_PHOTOREF[sku.slug];
+  if (photorefFile) {
+    const p = join(PHOTOREF_DIR, photorefFile);
+    if (existsSync(p)) refs.push(p);
+  }
+  const imageArgs = refs.flatMap((r) => ["--image", r]);
+  const failReasons: string[] = [];
+  for (let attempt = 1; attempt <= args.maxAttempts; attempt++) {
+    console.log(`  [attempt ${attempt}/${args.maxAttempts}] ${sku.slug} vial…`);
+    const t0 = Date.now();
+    const result = spawnSync(
+      "higgsfield",
+      ["product-photoshoot", "create", "--mode", "product_shot",
+        "--prompt", prompt, ...imageArgs, "--aspect_ratio", "2:3", "--json"],
+      { encoding: "utf8", stdio: "pipe", timeout: 600_000 },
+    );
+    if (result.status !== 0) {
+      const err = result.stderr + result.stdout;
+      if (err.includes("not_enough_credits")) { console.error("Out of credits."); process.exit(2); }
+      const msg = result.stderr || "exit null";
+      failReasons.push(msg);
+      console.error(`    FAILED: ${msg}`);
+      continue;
+    }
+    try {
+      const url = extractUrl(result.stdout, outPath);
+      await downloadAsJpeg(url, outPath);
+      const { size } = statSync(outPath);
+      console.log(`\n${sku.slug}   ok   ${attempt}   ${(size / 1024).toFixed(0)} KB   ${((Date.now() - t0) / 1000).toFixed(1)}s`);
+      return;
+    } catch (err) {
+      const msg = (err as Error).message;
+      failReasons.push(msg);
+      console.error(`    FAILED: ${msg}`);
+    }
+  }
+  console.error(`\n${sku.slug} vial FAILED after ${args.maxAttempts} attempts:\n  ${failReasons.join("\n  ")}`);
+}
+
 async function main(): Promise<void> {
   const args = parseArgs();
   preflight();
+
+  // Vial-only hero renders
+  if (args.vial) {
+    const skus = args.only
+      ? LABEL_SKUS.filter((s) => s.slug === args.only)
+      : LABEL_SKUS;
+    if (args.only && skus.length === 0) { console.error(`Unknown slug: ${args.only}`); process.exit(1); }
+    console.log(`PurePep vial hero renders — ${skus.length} SKU(s)`);
+    if (args.force) console.log("  --force: re-rolling existing outputs");
+    for (const sku of skus) await renderVial(sku, args);
+    return;
+  }
+
+  // Chroma-key plates
+  if (args.chroma) {
+    const skus = args.only
+      ? LABEL_SKUS.filter((s) => s.slug === args.only)
+      : LABEL_SKUS;
+    if (args.only && skus.length === 0) { console.error(`Unknown slug: ${args.only}`); process.exit(1); }
+    console.log(`PurePep chroma-key plates — ${skus.length} SKU(s)`);
+    if (args.force) console.log("  --force: re-rolling existing outputs");
+    for (const sku of skus) await renderChroma(sku, args);
+    return;
+  }
 
   // BAC water — 9th SKU, separate render path
   if (args.bac) {

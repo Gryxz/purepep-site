@@ -233,7 +233,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: "ipamorelin",
-    compound: "IPAM",
+    compound: "IPA",
     name: "Ipamorelin",
     dose: "5 mg",
     variants: ["5 mg", "10 mg", "15 mg"],
