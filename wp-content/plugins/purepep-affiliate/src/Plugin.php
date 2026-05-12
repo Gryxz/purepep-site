@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PurePep\Affiliate;
 
+use PurePep\Affiliate\Rest\Controller as RestController;
+
 final class Plugin
 {
     private static ?self $instance = null;
@@ -28,7 +30,7 @@ final class Plugin
             return;
         }
 
-        // Hook wiring (REST, WC, admin) lands here in subsequent commits.
+        RestController::make()->register();
     }
 
     public function isEnabled(): bool
