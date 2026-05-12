@@ -8695,16 +8695,15 @@ a.v3-pill-ghost:hover {
  * is actually scrolling through the stack.  Pure CSS — no JS scroll
  * listener beyond the one that already sets --mob-px-p. */
 .mob-heropx-scroll-cue {
-  /* In-flow placement: the cue sits as the last flex child of
-     .mob-heropx-content, directly under .mob-heropx-sub.  Margin-top
-     provides the breathing room previously delivered by viewport-edge
-     anchoring.  Earlier rule used `position: absolute; bottom: 32px`
-     which, after we moved it back inside `.mob-heropx-content`, would
-     have anchored to the content-box bottom — landing on top of the
-     sub copy.  Inline flow is the right primitive once the cue is
-     conceptually part of the text stack. */
+  /* Anchored to pane-1 viewport floor — sits at the bottom of the
+     sticky 100vh pane, independent of the centred text cluster's
+     height.  Hoisted out of `.mob-heropx-content` (which has
+     content-box height) so the absolute positioning anchors against
+     the pane element, not the text cluster's bottom edge. */
+  position: absolute;
+  bottom: 32px; left: 50%;
+  transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 6px;
-  margin-top: 36px;
   pointer-events: none;
   opacity: calc(1 - clamp(0, var(--mob-px-p, 0) * 10, 1));
   transition: opacity 0.15s linear;
@@ -8756,7 +8755,7 @@ a.v3-pill-ghost:hover {
   .mob-heropx-h1 { font-size: 36px; }
   .mob-heropx-h2 { font-size: 28px; }
   .mob-heropx-eyebrow { padding: 5px 14px; font-size: 10px; margin-bottom: 22px; }
-  .mob-heropx-scroll-cue { margin-top: 26px; }
+  .mob-heropx-scroll-cue { bottom: 22px; }
 }
 
 /* ── Cookie banner slim variant ─────────────────────────────────── */
@@ -9299,6 +9298,24 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   background: var(--m-bone);
   border-top: 1.5px solid var(--m-ink);
   padding: 44px 20px 36px;
+
+  /* Seal the pane-2 → spotlight seam.
+   *
+   * .mob-heropx is 120vh, but both panes are 100vh sticky with pane 2
+   * at margin-top: -100vh.  In flow, pane 1 contributes 100vh and pane 2
+   * contributes 0vh, so the container has 20vh of empty space below
+   * pane 2's flow bottom (= container 100vh) before the container ends
+   * (= container 120vh).  Without correction, this reads as a ~20vh
+   * cream void between the un-stuck pane-2 cluster and the spotlight
+   * section.
+   *
+   * Pull the spotlight up by 20vh so its flow top lands at container
+   * 100vh — pane 2's flow bottom — flush against the dark→cream
+   * fadeout instead of 20vh below it.  Pane 2 has z-index: 2, the
+   * spotlight has z-index: auto, and pane 2's bg is opaque, so during
+   * the sticky range pane 2 covers the spotlight cleanly.  Once pane 2
+   * un-sticks, the ink hairline appears at the seam with no gap. */
+  margin-top: -20vh;
 }
 
 /* Default state: every staggered child sits 18px down + 0 opacity.

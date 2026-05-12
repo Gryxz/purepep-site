@@ -185,16 +185,19 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             <p className="mob-heropx-sub">
               Lab-verified peptides for in vitro research. Lot-matched COA on every vial, tracked US shipping.
             </p>
-            {/* Scroll indicator flows in the content stack directly below
-                the sub paragraph — sits with the type rather than pinned
-                to the viewport floor.  Spacing handled in CSS via
-                `margin-top` on `.mob-heropx-scroll-cue`. */}
-            <div className="mob-heropx-scroll-cue pp-animate-6" aria-hidden="true">
-              <span className="mob-scroll-dot" />
-              <span className="mob-scroll-track">
-                <span className="mob-scroll-fill" />
-              </span>
-            </div>
+          </div>
+          {/* Scroll indicator anchored to pane-1 viewport floor.  Lives
+              outside `.mob-heropx-content` (max-width 480px, content-
+              box height) so its `position: absolute; bottom: 32px` lands
+              against the sticky 100vh pane edge instead of the bottom
+              of the centred text cluster — placing the cue with the
+              text leaves an awkward cream band between it and the pane
+              floor. */}
+          <div className="mob-heropx-scroll-cue pp-animate-6" aria-hidden="true">
+            <span className="mob-scroll-dot" />
+            <span className="mob-scroll-track">
+              <span className="mob-scroll-fill" />
+            </span>
           </div>
         </section>
 
