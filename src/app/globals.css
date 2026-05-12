@@ -9108,6 +9108,20 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   z-index: 1;
 }
 
+/* PDP related-products carousel card hero — same treatment as the
+ * homepage catalog card hero (object-fit: contain, padded slot,
+ * z-index above the gradient bg but below the chips/pills). */
+.mob-more-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  padding: 3% 6%;
+  z-index: 1;
+}
+
 /* mobile — homepage hero vial stage
  *
  * object-fit:cover (not contain) so the photo fills the 100vh pane

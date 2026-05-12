@@ -6,7 +6,6 @@ import type { Product, Category } from "@/data/products";
 import { useCartStore } from "@/lib/cart-store";
 import { trackProductView, trackAddToCart } from "@/lib/analytics";
 import Image from "next/image";
-import { MobileVial } from "./MobileVial";
 import { MobileFooter } from "./MobileFooter";
 
 /**
@@ -320,7 +319,22 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
                       <span className="sd" />
                       {p.stock === "low" ? "Low stock" : "In stock"}
                     </span>
-                    <MobileVial size="md" compound={p.compound} mass={p.dose} purity="≥99.5%" />
+                    {/* Real product hero photo — same source the homepage
+                        catalog grid uses.  Previous render was a synthetic
+                        <MobileVial> SVG (generic "RETA / 10 mg / FOR RESEARCH
+                        USE ONLY" label illustration) which the user reported
+                        as broken: every card showed an identical mock vial.
+                        onError hides the <Image> if the photo is missing
+                        (e.g. Survodutide, which doesn't ship a hero yet) so
+                        the card stays usable with just the chips + body. */}
+                    <Image
+                      src={`/images/products/source/purepep-vial-${p.slug}-v1.0.jpg`}
+                      alt={`${p.compound} vial`}
+                      fill
+                      sizes="(max-width: 768px) 80vw, 280px"
+                      className="mob-more-hero-img"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                    />
                   </div>
                   <div className="mob-more-body">
                     <div className="mob-more-name">{p.name}</div>
