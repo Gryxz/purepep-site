@@ -134,6 +134,27 @@ const SKU_COLORS: Record<string, ColorSpec> = {
     gradientBottom: "#C4B0D6",
     negative: "no blue-dominant, no pink, no mauve, no lavender-pastel, no warm tones, no green, no white, no grey, no saturated dark background",
   },
+  "healing-stack": {
+    labelHex:      "#D9C4C8",
+    labelDesc:     "soft dusty mauve label, hex #D9C4C8 — BPC-157 + TB-500 healing duo",
+    gradientTop:   "#E8D0CC",
+    gradientBottom: "#C8A8A4",
+    negative: "no cool tones, no blue, no lavender, no white, no grey, no green, no saturated dark background",
+  },
+  "glp-stack": {
+    labelHex:      "#EDE0C8",
+    labelDesc:     "warm cream amber label, hex #EDE0C8 — RETA + CAGRI metabolic stack",
+    gradientTop:   "#F0E8D5",
+    gradientBottom: "#D8C8A8",
+    negative: "no cool tones, no blue, no lavender, no white, no grey, no green, no pink, no saturated dark background",
+  },
+  "recovery-stack": {
+    labelHex:      "#C8BCD8",
+    labelDesc:     "soft cool lavender-mauve label, hex #C8BCD8 — BPC-157 + Ipamorelin recovery stack",
+    gradientTop:   "#D8C8DC",
+    gradientBottom: "#B8A0C0",
+    negative: "no warm tones, no orange, no peach, no white, no grey, no green, no pure blue, no saturated dark background",
+  },
 };
 
 // ---------------------------------------------------------------------------
