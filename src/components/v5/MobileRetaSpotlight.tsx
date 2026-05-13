@@ -4,21 +4,21 @@ import { useEffect, useRef, useState } from "react";
 import type { Product } from "@/data/products";
 
 /**
- * v5 mobile — Retatrutide research-profile spotlight section.
+ * v5 mobile — Curated stacks promotion section.
  *
- * Sits between the hero parallax stack and the catalog teaser.  Surfaces
- * the four headline specs (quantity, purity, receptor targets, COA) in
- * a 2×2 hairline grid and a horizontal "Often Stacked With" chip row.
+ * Sits between the hero parallax stack and the catalog teaser.  Promotes
+ * the multi-peptide bundle catalog (3 stacks: GLP / Healing / Recovery)
+ * with a 2×2 hairline stat grid + a horizontal chip rail linking each
+ * stack's PDP plus a back-link to the Reta hero featured above.
+ *
+ * Component name + CSS class names retain the legacy "reta-spotlight"
+ * prefix (file rename out of scope per the originating change request:
+ * "layout is good just replace the values").
  *
  * Reveal-on-view: a single IntersectionObserver flips `inView`; the
  * .mob-reta-spotlight wrapper toggles a `is-in` class, and child CSS
  * transitions fade + lift each row with staggered delays.  Matches the
  * shell's existing pattern (vanilla useEffect + IO, no Framer Motion).
- *
- * Reta-specific by design — the section IS the Reta research profile.
- * If `featured` (props) isn't Reta, this component still renders the
- * Reta-keyed copy; the section is part of the homepage narrative, not
- * a per-SKU template.
  */
 export function MobileRetaSpotlight({ products }: { products: Product[] }) {
   const ref = useRef<HTMLElement | null>(null);
@@ -43,49 +43,54 @@ export function MobileRetaSpotlight({ products }: { products: Product[] }) {
     return () => obs.disconnect();
   }, []);
 
-  // Real Reta values pulled from the static fixture so the spotlight stays
-  // in sync if the data layer changes.  Fall back to canonical literals
-  // when the slug isn't present (CI builds with no WC credentials).
-  const reta = products.find((p) => p.slug === "reta");
-  const quantity = reta?.dose ?? "10 mg";
-  const purity = reta?.purity?.replace(/\s*\(.*\)$/, "") ?? "≥99.5%";
+  // Compute the top bundle savings across the live stack catalog so the
+  // headline figure stays in sync with products.static.ts pricing.  Falls
+  // back to 14 (the canonical GLP Stack savings: $288 → $274) when no
+  // stack data is present (CI builds with no WC credentials).
+  const stacks = products.filter((p) => p.type === "stack");
+  const topSavings = Math.max(
+    14,
+    ...stacks
+      .filter((p) => typeof p.regularPrice === "number" && p.regularPrice! > p.price)
+      .map((p) => Math.round(p.regularPrice! - p.price)),
+  );
 
   const stats: Array<{ value: string; label: string }> = [
-    { value: quantity,   label: "Quantity / Vial" },
-    { value: purity,     label: "Purity (HPLC)" },
-    { value: "3",        label: "Receptor Targets" },
-    { value: "COA",      label: "Lot-Level Testing" },
+    { value: "3",                  label: "Curated Stacks" },
+    { value: "2",                  label: "Vials Each" },
+    { value: `$${topSavings}`,     label: "Top Bundle Savings" },
+    { value: "COA",                label: "Lot-Level Testing" },
   ];
 
-  // Real /shop/{slug} routes from the static fixture.  Order matches the
-  // research profile: the bundle first, then the individual stack
-  // companions, then the in-class peer.
+  // Real /shop/{slug} routes from the static fixture.  Order: the three
+  // stacks first (the section's promo focus), then a back-link to the
+  // Reta hero featured in the parallax above.
   const stackChips: Array<{ name: string; sub: string; href: string }> = [
-    { name: "GLP Stack",   sub: "Bundle · Save", href: "/shop/glp-stack" },
-    { name: "BPC-157",     sub: "Peptide",        href: "/shop/bpc-157" },
-    { name: "TB-500",      sub: "Peptide",        href: "/shop/tb-500" },
-    { name: "Semaglutide", sub: "GLP-1",          href: "/shop/sema" },
+    { name: "GLP Stack",      sub: "Bundle · GLP-1",   href: "/shop/glp-stack" },
+    { name: "Healing Stack",  sub: "Bundle · Healing", href: "/shop/healing-stack" },
+    { name: "Recovery Stack", sub: "Bundle · Recovery", href: "/shop/recovery-stack" },
+    { name: "Retatrutide",    sub: "Solo · GLP-1",     href: "/shop/reta" },
   ];
 
   return (
     <section
       ref={ref}
       className={`mob-reta-spotlight${inView ? " is-in" : ""}`}
-      aria-label="Retatrutide research profile"
+      aria-label="Curated research stacks"
     >
       <div className="mob-reta-eyebrow" style={{ ["--mob-stagger" as string]: "0" }}>
         <span className="dot" />
-        <span>Research Profile</span>
+        <span>Curated Stacks</span>
       </div>
 
       <h2 className="mob-reta-h2" style={{ ["--mob-stagger" as string]: "1" }}>
-        Retatrutide
+        Curated research stacks
       </h2>
 
       <p className="mob-reta-body" style={{ ["--mob-stagger" as string]: "2" }}>
-        Triple agonist targeting GLP-1, GIP, and glucagon receptors.
-        Investigated in pre-clinical and Phase II research settings
-        for metabolic applications.
+        Two complementary compounds shipped as separately-sealed
+        lyophilized vials — never pre-mixed — under a single lot-matched
+        COA. Built for paired research protocols.
       </p>
 
       <div className="mob-reta-stat-grid" style={{ ["--mob-stagger" as string]: "3" }}>
@@ -99,7 +104,7 @@ export function MobileRetaSpotlight({ products }: { products: Product[] }) {
 
       <div className="mob-reta-stack" style={{ ["--mob-stagger" as string]: "4" }}>
         <div className="mob-reta-stack-label">
-          <span>Often Stacked With</span>
+          <span>Browse stacks</span>
           <span className="dot" />
         </div>
         <div className="mob-reta-stack-rail">
