@@ -288,6 +288,9 @@ function ProductTile({ product }: { product: Product }) {
   return (
     <Link href={`/shop/${product.slug}`} className="v3-tile">
       <div className="v3-tile-photo">
+        {product.type === "stack" && (
+          <span className="v3-tile-stack-badge">Bundle</span>
+        )}
         <Image
           src={product.imageUrl ?? `/images/products/source/purepep-vial-${product.slug}-v1.0.jpg`}
           alt={`${product.compound} vial`}

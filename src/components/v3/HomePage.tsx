@@ -6,6 +6,7 @@ import { clsx } from "@/lib/clsx";
 import { padded2, plural } from "@/lib/text";
 import type { Product } from "@/data/products";
 import Image from "next/image";
+import Link from "next/link";
 import { RetaVial } from "./RetaVial";
 import { LabelCropSvg } from "./LabelCropSvg";
 import { TestimonialsSection } from "./TestimonialsSection";
@@ -204,6 +205,55 @@ export function HomePage({ products }: { products: Product[] }) {
 
       {/* ───── Testimonials ───── */}
       <TestimonialsSection />
+
+      {/* ───── Best-selling bundles ───── */}
+      {(() => {
+        const stacks = products.filter((p) => p.type === "stack");
+        if (stacks.length === 0) return null;
+        return (
+          <section className="v3-section v3-bundles-section">
+            <div className="v3-container">
+              <div className="v3-section-head-row">
+                <div>
+                  <p className="v3-section-eyebrow">Research bundles</p>
+                  <h2 className="v3-section-headline">Best-selling stacks.</h2>
+                </div>
+                <a href="/shop" className="v3-pill v3-pill-primary v3-pill-sm">
+                  View all bundles <span className="arrow">→</span>
+                </a>
+              </div>
+              <div className="v3-bundles-grid">
+                {stacks.map((p) => (
+                  <Link key={p.slug} href={`/shop/${p.slug}`} className="v3-bundle-card">
+                    <div className="v3-bundle-photo">
+                      <span className="v3-bundle-badge">Bundle · Save</span>
+                      <Image
+                        src={`/images/products/source/purepep-vial-${p.slug}-v1.0.jpg`}
+                        alt={`${p.compound} bundle`}
+                        fill
+                        sizes="(max-width:900px) 100vw, 33vw"
+                        className="v3-product-hero-img"
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                      />
+                    </div>
+                    <div className="v3-bundle-info">
+                      <div className="v3-bundle-name">{p.name}</div>
+                      <div className="v3-bundle-components">{p.stackComponents?.map((c) => c.compound).join(" + ")}</div>
+                      <div className="v3-bundle-foot">
+                        <span className="v3-bundle-price">${Math.round(p.price)}</span>
+                        {p.regularPrice && p.regularPrice > p.price && (
+                          <span className="v3-bundle-was">${Math.round(p.regularPrice)}</span>
+                        )}
+                        <span className="v3-bundle-cta">View bundle →</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* ───── Catalog teaser rail + expand ───── */}
       <section className="v3-section" style={{ paddingTop: 0 }}>

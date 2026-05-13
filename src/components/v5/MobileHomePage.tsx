@@ -226,6 +226,48 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           + the often-stacked-with chip row before the grid below. */}
       <MobileRetaSpotlight products={products} />
 
+      {/* Best-selling bundles — 3 stacks, horizontal scroll rail. */}
+      {(() => {
+        const stacks = products.filter((p) => p.type === "stack");
+        if (stacks.length === 0) return null;
+        return (
+          <section className="mob-bundles-section">
+            <div className="mob-bundles-header">
+              <div className="mob-bundles-eyebrow"><span className="dot" />Best-selling bundles</div>
+              <a href="/shop" className="mob-bundles-see-all">View all →</a>
+            </div>
+            <div className="mob-bundles-rail">
+              {stacks.map((p) => (
+                <a key={p.slug} href={`/shop/${p.slug}`} className="mob-bundle-card">
+                  <div className="mob-bundle-img">
+                    <span className="mob-bundle-badge">Bundle · Save</span>
+                    <Image
+                      src={`/images/products/source/purepep-vial-${p.slug}-v1.0.jpg`}
+                      alt={`${p.compound} bundle vial`}
+                      fill
+                      sizes="75vw"
+                      className="mob-bundle-hero-img"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                    />
+                  </div>
+                  <div className="mob-bundle-body">
+                    <div className="mob-bundle-name">{p.name}</div>
+                    <div className="mob-bundle-desc">{p.stackComponents?.map((c) => c.compound).join(" + ")}</div>
+                    <div className="mob-bundle-foot">
+                      <span className="mob-bundle-price">${Math.round(p.price)}</span>
+                      {p.regularPrice && p.regularPrice > p.price && (
+                        <span className="mob-bundle-was">${Math.round(p.regularPrice)}</span>
+                      )}
+                      <span className="mob-bundle-arr">→</span>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        );
+      })()}
+
       {/* Catalog teaser — eyebrow dropped (the section header is enough). */}
       <section className="mob-catalog-section">
         <div className="mob-catalog-header">
