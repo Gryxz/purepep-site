@@ -6,7 +6,6 @@ import type { Product, Category } from "@/data/products";
 import { useCartStore } from "@/lib/cart-store";
 import { trackProductView, trackAddToCart } from "@/lib/analytics";
 import Image from "next/image";
-import { MobileVial } from "./MobileVial";
 import { MobileFooter } from "./MobileFooter";
 
 /**
@@ -320,7 +319,14 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
                       <span className="sd" />
                       {p.stock === "low" ? "Low stock" : "In stock"}
                     </span>
-                    <MobileVial size="md" compound={p.compound} mass={p.dose} purity="≥99.5%" />
+                    <Image
+                      src={p.imageUrl ?? `/images/products/source/purepep-vial-${p.slug}-v1.0.jpg`}
+                      alt={`${p.compound} vial`}
+                      fill
+                      sizes="40vw"
+                      className="mob-more-hero-img"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                    />
                   </div>
                   <div className="mob-more-body">
                     <div className="mob-more-name">{p.name}</div>

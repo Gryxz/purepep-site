@@ -6971,6 +6971,22 @@ a.v3-pill-ghost:hover {
   background: linear-gradient(160deg, var(--m-s1) 0%, var(--m-s3) 50%, var(--m-s2) 100%);
   display: flex; align-items: flex-end; justify-content: center;
   padding-bottom: 8%; position: relative;
+  overflow: hidden;
+}
+
+/* Hero photo inside .mob-more-img — same contain + padding treatment
+ * as the catalog tile so the vial reads at full visible height while
+ * the cream cyc edge of the v1.0 photo blends into the cell's own
+ * cream gradient.  Cat-pill + stock chip remain above via z-index. */
+.mob-more-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  padding: 4% 6%;
+  z-index: 1;
 }
 
 .mob-more-stock {
