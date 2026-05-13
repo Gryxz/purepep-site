@@ -8560,10 +8560,23 @@ a.v3-pill-ghost:hover {
 .mob-heropx-1 {
   z-index: 1;
 
+  /* Override the shared pane's flex-center vertical alignment for
+   * pane 1 only — anchor the eyebrow + headline + sub stack to the
+   * TOP of the pane so it sits right under the trust marquee instead
+   * of floating in the middle of a tall pane.  Pane 2 keeps the
+   * flex-center treatment because its content uses margin-top:auto
+   * to push the CTA cluster to the bottom over the vial photo.
+   *
+   * 32px top margin on the content gives breathing room below the
+   * trust marquee without crowding the eyebrow pill. */
+  justify-content: flex-start;
+
   /* Fade out aggressively — gone by progress 0.35 so pane 2 has the
      stage to itself for the remainder of the stick range. */
   opacity: calc(1 - clamp(0, var(--mob-px-p, 0) * 3, 1));
 }
+
+.mob-heropx-1 .mob-heropx-content { margin-top: 32px; }
 
 .mob-heropx-2 {
   z-index: 2;
