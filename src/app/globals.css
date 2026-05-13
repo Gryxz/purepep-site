@@ -8510,15 +8510,14 @@ a.v3-pill-ghost:hover {
 .mob-heropx {
   position: relative;
 
-  /* Stack height tuned for "pane 2 ends → spotlight begins" with no
-   * visible runway gap.  Previous 160vh left ~60vh of #050505 below
-   * pane 2 after it un-stuck, reading as an empty black block before
-   * the spotlight section.  120vh = 20vh of stick range (enough for
-   * the JS crossfade to complete cleanly) and 0vh of post-stick
-   * runway.  Bg is bone so any residual sub-pixel slop at the seam
-   * blends into the spotlight section below rather than punching
-   * black through. */
-  height: 120vh;
+  /* Stack height tuned to the absolute minimum the JS crossfade needs.
+   * 110vh = 10vh of stick range — the crossfade's --mob-px-p reaches
+   * progress 0.4 (full opacity for pane 2) at scroll 10vh per the JS
+   * formula `-rect.top / (vh * 0.25)`, so 10vh of runway is exactly
+   * enough.  Anything beyond that was extra dark gap before the
+   * spotlight section.  Bg is bone so any sub-pixel seam blends into
+   * the spotlight section's bone bg below. */
+  height: 110vh;
   background: var(--m-bone);
 }
 
@@ -9267,14 +9266,21 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   padding: 3% 14%;
 }
 
-/* mobile — PDP image (aspect-ratio 1/1, margin 0 20px) */
+/* mobile — PDP image (aspect-ratio 1/1, margin 0 20px)
+ *
+ * object-fit:contain (not cover) so the full vial — cap, label, AND
+ * powder base — sits inside the rounded square card.  cover with
+ * object-position:center top was anchoring the cap to the frame's
+ * top edge and clipping the powder fill off the bottom.  Padding
+ * gives breathing room so the vial doesn't crowd the card edges. */
 .mob-pdp-hero-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center top;
+  object-fit: contain;
+  object-position: center;
+  padding: 4% 8%;
   z-index: 1;
 }
 
