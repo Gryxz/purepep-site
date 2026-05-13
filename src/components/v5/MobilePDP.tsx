@@ -289,7 +289,16 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
         <div className="mob-paired-band">
           <h2 className="mob-paired-h2">Often paired with</h2>
           <a href={`/shop/${related[0].slug}`} className="mob-paired-card">
-            <div className="mob-paired-thumb">{related[0].compound[0]}</div>
+            <div className="mob-paired-thumb">
+              <Image
+                src={related[0].imageUrl ?? `/images/products/source/purepep-vial-${related[0].slug}-v1.0.jpg`}
+                alt={`${related[0].compound} vial`}
+                fill
+                sizes="60px"
+                className="mob-paired-thumb-img"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+              />
+            </div>
             <div className="mob-paired-info">
               <div className="mob-paired-name">{related[0].name} ({related[0].dose})</div>
               <div className="mob-paired-price">{formatPrice(related[0].price)}</div>
