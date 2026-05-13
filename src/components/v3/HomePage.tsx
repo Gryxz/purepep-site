@@ -8,6 +8,7 @@ import type { Product } from "@/data/products";
 import Image from "next/image";
 import { RetaVial } from "./RetaVial";
 import { LabelCropSvg } from "./LabelCropSvg";
+import { TestimonialsSection } from "./TestimonialsSection";
 
 /**
  * v3 Apple Swiss Homepage.
@@ -200,6 +201,9 @@ export function HomePage({ products }: { products: Product[] }) {
           </div>
         </div>
       </section>
+
+      {/* ───── Testimonials ───── */}
+      <TestimonialsSection />
 
       {/* ───── Catalog teaser rail + expand ───── */}
       <section className="v3-section" style={{ paddingTop: 0 }}>

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { MobileVial } from "./MobileVial";
 import { MobileRetaSpotlight } from "./MobileRetaSpotlight";
 import { MobileFooter } from "./MobileFooter";
+import { TestimonialsSection } from "../v3/TestimonialsSection";
 
 /**
  * v5 mobile homepage — ported 1:1 from
@@ -325,6 +326,9 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           </a>
         </div>
       </section>
+
+      {/* Testimonials — shared v3 component, adapts to narrow layout */}
+      <TestimonialsSection />
 
       {/* Process timeline — eyebrow dropped, declarative headline + tightened sub. */}
       <section className="mob-process" data-mob-section="dark">
