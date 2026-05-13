@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace PurePep\Affiliate\Admin;
 
+use PurePep\Affiliate\Repository\CodesRepository;
+use PurePep\Affiliate\Repository\CommissionsRepository;
+use PurePep\Affiliate\Repository\PayoutsRepository;
 use PurePep\Affiliate\Support\Capabilities;
 
 final class Menu
@@ -15,9 +18,9 @@ final class Menu
     public const SLUG_SETTINGS = 'purepep-affiliate-settings';
 
     public function __construct(
-        private AffiliatesListTable $affiliates,
-        private CommissionsListTable $commissions,
-        private PayoutsListTable $payouts,
+        private CodesRepository $codes,
+        private CommissionsRepository $commissions,
+        private PayoutsRepository $payouts,
         private SettingsPage $settings,
     ) {
     }
@@ -84,12 +87,14 @@ final class Menu
         if (!current_user_can(Capabilities::ADMIN_CAP)) {
             wp_die(esc_html__('Insufficient permissions.', 'purepep-affiliate'));
         }
+        self::loadListTableDeps();
+        $table = new AffiliatesListTable($this->codes, $this->commissions);
         echo '<div class="wrap"><h1>' . esc_html__('Affiliates', 'purepep-affiliate') . '</h1>';
-        $this->affiliates->prepare_items();
+        $table->prepare_items();
         echo '<form method="get">';
         echo '<input type="hidden" name="page" value="' . esc_attr(self::SLUG_AFFILIATES) . '" />';
-        $this->affiliates->search_box(__('Search', 'purepep-affiliate'), 'pp-aff-search');
-        $this->affiliates->display();
+        $table->search_box(__('Search', 'purepep-affiliate'), 'pp-aff-search');
+        $table->display();
         echo '</form></div>';
     }
 
@@ -98,11 +103,13 @@ final class Menu
         if (!current_user_can(Capabilities::ADMIN_CAP)) {
             wp_die(esc_html__('Insufficient permissions.', 'purepep-affiliate'));
         }
+        self::loadListTableDeps();
+        $table = new CommissionsListTable($this->commissions);
         echo '<div class="wrap"><h1>' . esc_html__('Commissions', 'purepep-affiliate') . '</h1>';
-        $this->commissions->prepare_items();
+        $table->prepare_items();
         echo '<form method="get">';
         echo '<input type="hidden" name="page" value="' . esc_attr(self::SLUG_COMMISSIONS) . '" />';
-        $this->commissions->display();
+        $table->display();
         echo '</form></div>';
     }
 
@@ -111,11 +118,29 @@ final class Menu
         if (!current_user_can(Capabilities::ADMIN_CAP)) {
             wp_die(esc_html__('Insufficient permissions.', 'purepep-affiliate'));
         }
+        self::loadListTableDeps();
+        $table = new PayoutsListTable($this->payouts);
         echo '<div class="wrap"><h1>' . esc_html__('Payouts', 'purepep-affiliate') . '</h1>';
-        $this->payouts->prepare_items();
+        $table->prepare_items();
         echo '<form method="get">';
         echo '<input type="hidden" name="page" value="' . esc_attr(self::SLUG_PAYOUTS) . '" />';
-        $this->payouts->display();
+        $table->display();
         echo '</form></div>';
+    }
+
+    /**
+     * WP_List_Table::__construct() calls convert_to_screen(), which lives in
+     * wp-admin/includes/screen.php. Page render callbacks fire after admin
+     * bootstrap normally loads both files, but guard explicitly so the plugin
+     * is resilient if invoked from an unusual admin context.
+     */
+    private static function loadListTableDeps(): void
+    {
+        if (!function_exists('convert_to_screen')) {
+            require_once ABSPATH . 'wp-admin/includes/screen.php';
+        }
+        if (!class_exists(\WP_List_Table::class)) {
+            require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+        }
     }
 }

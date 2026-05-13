@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace PurePep\Affiliate;
 
-use PurePep\Affiliate\Admin\AffiliatesListTable;
-use PurePep\Affiliate\Admin\CommissionsListTable;
 use PurePep\Affiliate\Admin\FormHandlers;
 use PurePep\Affiliate\Admin\Menu;
-use PurePep\Affiliate\Admin\PayoutsListTable;
 use PurePep\Affiliate\Admin\SettingsPage;
 use PurePep\Affiliate\Repository\CodesRepository;
 use PurePep\Affiliate\Repository\CommissionsRepository;
@@ -68,12 +65,7 @@ final class Plugin
         });
 
         if (is_admin()) {
-            $menu = new Menu(
-                new AffiliatesListTable($codes, $commissions),
-                new CommissionsListTable($commissions),
-                new PayoutsListTable($payouts),
-                new SettingsPage(),
-            );
+            $menu = new Menu($codes, $commissions, $payouts, new SettingsPage());
             $menu->register();
             (new FormHandlers($payoutService, $commissions, $analytics))->register();
         }

@@ -8,6 +8,9 @@ use PurePep\Affiliate\Repository\CommissionsRepository;
 use PurePep\Affiliate\Support\Money;
 use WP_List_Table;
 
+if (!function_exists('convert_to_screen')) {
+    require_once ABSPATH . 'wp-admin/includes/screen.php';
+}
 if (!class_exists(WP_List_Table::class)) {
     require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
