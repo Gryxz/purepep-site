@@ -1,100 +1,66 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import type { Product } from "@/data/products";
 import Image from "next/image";
-import { MobileVial } from "./MobileVial";
 import { MobileRetaSpotlight } from "./MobileRetaSpotlight";
 import { MobileFooter } from "./MobileFooter";
 
 /**
- * v5 mobile homepage — ported 1:1 from
- * docs/design-v3/mobile-mockups/Home.html.
+ * v5 mobile homepage.
  *
  * Sections:
- *   1. Trust strip (4 items)
- *   2. Hero (cinematic dark, layered amber gradient mesh + dot grid +
- *      corner ornaments + eyebrow pill + 42px H1 + deck + 2 CTAs +
- *      compliance badge)
- *   3. Spotlight — featured RETA product card (linked to /shop/reta)
- *   4. Catalog teaser — 2-col grid of remaining products
+ *   1. Trust strip
+ *   2. Hero — single 100vh dark pane with lab ambience photo, brand
+ *      promise headline + sub, scroll cue at the floor.
+ *   3. Curated stacks promotion (MobileRetaSpotlight) — bundle stats
+ *      + chip rail linking each stack PDP.
+ *   4. Catalog teaser — 2-col grid of every single-peptide product
+ *      including Retatrutide.
  *   5. Transparency — 3 stacked editorial cards
  *   6. Process — dark 4-step timeline "From order to lab"
  *   7. Referral — full-bleed amber framed card with stats
- *   8. Dark CTA — "Need a compound that isn't listed?"
+ *   8. Dark CTA
  *   9. MobileFooter
+ *
+ * History: previous revision featured Retatrutide as a flagship
+ * compound in a second parallax pane (vial cutout + "our flagship
+ * compound" headline + dedicated Shop Retatrutide CTA).  Direction
+ * change: Reta is treated as just another catalog product alongside
+ * the rest — no flagship treatment.  Pane 2 removed, Reta now
+ * surfaces in the catalog grid below.
  */
 export function MobileHomePage({ products }: { products: Product[] }) {
-  // Featured product is the first product (RETA in the canonical fixture).
-  // Fall back to undefined-safe so an empty catalog doesn't crash the page.
-  const featured = products[0];
-  // Catalog teaser: every single-peptide + BAC water (skip the featured RETA
-  // since it owns the hero, and skip stacks which get their own "Best selling
-  // bundles" section above the catalog).
+  // Catalog teaser: every single-peptide + BAC water.  Reta is now
+  // included (was previously sliced out because it owned the
+  // flagship hero pane).  Stacks are still excluded — they get their
+  // own promotion section (MobileRetaSpotlight).
   const rest = products
-    .slice(1)
     .filter((p) => p.type !== "stack")
     .slice(0, 8);
   const parallaxRef = useRef<HTMLDivElement | null>(null);
-  const pane2Ref = useRef<HTMLElement | null>(null);
-  // Pane-2 view trigger.  Flipped once by the IntersectionObserver below
-  // when pane 2 first becomes meaningfully visible; toggles the .is-in
-  // class on the section so the vial-entrance transition (translateY +
-  // opacity) plays.  Mount-triggered entrance was rejected because pane
-  // 2 is opacity-faded behind pane 1 on load — the user would never see
-  // the drop-in.  View-triggered fires it at the moment pane 2 is the
-  // user's focus.
-  const [pane2InView, setPane2InView] = useState(false);
 
-  // Hero parallax — tracks scroll progress through the 2-viewport stack and
-  // writes it into a CSS variable.  Pane 1 (lab + headline) fades out; pane
-  // 2 (vial + brand + amber CTA) fades in.  Multiplier 1.6 means the fade
-  // settles to fully-on/fully-off before the user reaches either edge of
-  // the stack — gives a clean "rest" state at top and bottom of the
-  // parallax instead of a continuous fade through the whole range.
+  // Hero scroll listener — writes `--mob-px-p` (0..1, scroll progress
+  // through the hero section) so the scroll cue can fade out as the
+  // user starts scrolling.  Previous revision drove a two-pane
+  // crossfade + a vial parallax via this same var; both are gone with
+  // the flagship pane.  Listener kept solely for the cue fade.
   useEffect(() => {
     const el = parallaxRef.current;
     if (!el) return;
     if (typeof window === "undefined") return;
 
-    // Cache vh between scroll events; only re-read on resize.  Reading
-    // window.innerHeight inside the per-frame update was forcing layout
-    // queries that don't need to happen 60×/sec.
+    // Cache vh between scroll events; only re-read on resize.
     let vh = window.innerHeight;
 
     let raf = 0;
     const update = () => {
       raf = 0;
       const rect = el.getBoundingClientRect();
-      // Stack is 160vh; panes stick for ~60vh of scroll.  Front-load the
-      // fade — divide by 0.25 * vh so progress hits 1 by ~25vh of
-      // scroll.  Combined with the CSS clamp() multipliers, pane 2
-      // reaches full opacity early and then sits fully on for the
-      // remaining ~35vh of stick range — "feature shows up longer".
       const raw = -rect.top / (vh * 0.25);
       const p = Math.max(0, Math.min(1, raw));
       el.style.setProperty("--mob-px-p", p.toFixed(4));
-
-      // Vial parallax progress — remaps the pane-2-fully-visible portion
-      // of the stick range (p 0.4 → 1.0) onto a 0 → 1 unitless scalar
-      // consumed by CSS as `--mob-vial-q`.  The vial wrapper then
-      // multiplies this against its lift (-90px) and opacity falloff
-      // (1 → 0.3).  Driver swapped from a framer-style page-scrollY[0,600]
-      // mapping to pane-2 stick progress so the lift engages only while
-      // the vial is in view — naive page-scrollY would have the vial
-      // 30%-faded before pane 2 is even visible on mobile.
-      const q = Math.max(0, Math.min(1, (p - 0.4) / 0.6));
-      el.style.setProperty("--mob-vial-q", q.toFixed(4));
-
-      // Catalog lift removed.  Every scroll-driven transform on the
-      // catalog (regardless of single-curve smoothness) was producing
-      // perceived chop on iOS Safari — the section is tall and its
-      // bone+gradient bg with the cards inside is expensive to
-      // recomposite each frame, even with translate3d / GPU hints.
-      // Pure natural scroll has no chop and the catalog still appears
-      // at the right time because the parallax stack ends right where
-      // the catalog begins.
     };
     const onScroll = () => {
       if (raf) return;
@@ -112,30 +78,6 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
-  }, []);
-
-  // Pane-2 entrance trigger — one-shot IntersectionObserver fires `is-in`
-  // when the second pane is ~15% visible.  Powers the vial drop-in
-  // transition (translateY(-120px) → 0, opacity 0 → 1, expo-out, 100ms
-  // delay) defined in globals.css against `.mob-heropx-2.is-in
-  // .mob-hero-vial-enter`.
-  useEffect(() => {
-    const el = pane2Ref.current;
-    if (!el || typeof window === "undefined") return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            setPane2InView(true);
-            obs.disconnect();
-            break;
-          }
-        }
-      },
-      { threshold: 0.15 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
   }, []);
 
   return (
@@ -157,19 +99,20 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         </div>
       </div>
 
-      {/* Hero parallax — 200vh container holding two stacked sticky
-          panes.  Pane 1 = lab ambience + headline; pane 2 = Retatrutide
-          vial + branding + amber CTA.  JS-driven crossfade via the
-          --mob-px-p CSS variable (0..1, scroll progress through stack).
-          The standalone .mob-spotlight section is gone — the second pane
-          IS the spotlight now, the CTA the user came for. */}
+      {/* Hero — single 100vh dark pane.  Lab ambience photo bg, brand
+          promise headline + sub centred, scroll cue at the viewport
+          floor.  Previously was a 120vh container with a second sticky
+          pane featuring Retatrutide as the flagship compound; that
+          pane is gone — Reta is now treated as just another catalog
+          product alongside the rest.  Container retains the
+          `.mob-heropx` class name so the existing CSS / scroll var
+          plumbing still applies. */}
       <div
         ref={parallaxRef}
         className="mob-heropx"
         data-mob-section="dark"
         style={{ ["--mob-px-p" as string]: "0" }}
       >
-        {/* Pane 1 — LAB AMBIENCE + brand promise */}
         <section className="mob-heropx-pane mob-heropx-1" aria-label="Hero: research-grade peptides">
           <div className="mob-heropx-bg mob-heropx-bg-lab" aria-hidden="true">
             <div className="mob-heropx-lab-grid" />
@@ -186,13 +129,10 @@ export function MobileHomePage({ products }: { products: Product[] }) {
               Lab-verified peptides for in vitro research. Lot-matched COA on every vial, tracked US shipping.
             </p>
           </div>
-          {/* Scroll indicator anchored to pane-1 viewport floor.  Lives
-              outside `.mob-heropx-content` (max-width 480px, content-
-              box height) so its `position: absolute; bottom: 32px` lands
-              against the sticky 100vh pane edge instead of the bottom
-              of the centred text cluster — placing the cue with the
-              text leaves an awkward cream band between it and the pane
-              floor. */}
+          {/* Scroll indicator anchored to viewport floor — outside
+              `.mob-heropx-content` (content-box height) so its
+              `position: absolute; bottom: 32px` lands against the
+              100vh hero edge rather than the centred text cluster. */}
           <div className="mob-heropx-scroll-cue pp-animate-6" aria-hidden="true">
             <span className="mob-scroll-dot" />
             <span className="mob-scroll-track">
@@ -200,102 +140,13 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             </span>
           </div>
         </section>
-
-        {/* Pane 2 — RETATRUTIDE FLAGSHIP + amber CTA
-         *
-         * Cutout treatment: vial photo is a TRANSPARENT-BG PNG
-         * (purepep-vial-{slug}-v1.0-cutout.png, generated by
-         * `pnpm vial-cutout --only reta`) so the vial floats directly
-         * on the pane's dark radial-gradient backdrop with no cream
-         * cyc to clash against.  Amber drop-shadow lives in CSS on
-         * .mob-hero-vial-img-cutout for the warm halo underneath.
-         *
-         * If the cutout PNG isn't there yet, onError hides it and the
-         * pane reads as a pure-dark backdrop with the headline + CTA
-         * cluster — still a strict improvement over the old void.
-         *
-         * Bottom fade (.mob-heropx-fadeout) bridges into the cream
-         * catalog below. */}
-        <section
-          ref={pane2Ref}
-          className={`mob-heropx-pane mob-heropx-2${pane2InView ? " is-in" : ""}`}
-          aria-label="Featured: Retatrutide"
-        >
-          <div className="mob-heropx-bg mob-heropx-bg-vial" aria-hidden="true">
-            <div className="mob-heropx-vial-glow" />
-            <div className="mob-heropx-vial-wrap">
-              {/* Triple-nested transform wrappers — each animation owns
-                  its own element so the transforms compose multiplicatively
-                  rather than fighting for a single transform property:
-                    .mob-hero-vial-parallax  → scroll-driven translateY +
-                      opacity falloff (reads --mob-vial-q from the
-                      .mob-heropx scroll listener).
-                    .mob-hero-vial-enter     → one-shot drop-in
-                      (translateY(-120px) opacity 0 → 0/1, expo-out 900ms,
-                      100ms delay) on `.mob-heropx-2.is-in`.
-                    .mob-hero-vial-img-cutout → idle float keyframe
-                      (±6px translateY, 5s loop). */}
-              <div className="mob-hero-vial-parallax">
-                <div className="mob-hero-vial-enter">
-                  {featured ? (
-                    <Image
-                      src={`/images/products/source/purepep-vial-${featured.slug}-v1.0-cutout.png`}
-                      alt={`${featured.compound} vial`}
-                      fill
-                      priority
-                      sizes="100vw"
-                      className="mob-hero-vial-img mob-hero-vial-img-cutout"
-                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                    />
-                  ) : null}
-                </div>
-              </div>
-            </div>
-            <div className="mob-heropx-fadeout" aria-hidden="true" />
-          </div>
-          <div className="mob-heropx-content mob-heropx-content-2">
-            <div className="mob-heropx-eyebrow pp-animate-1">
-              <span className="dot" />
-              Flagship compound
-            </div>
-            <h2 className="mob-heropx-h2 pp-animate-2">{featured?.name ?? "Retatrutide"} — our flagship compound</h2>
-            <div className="mob-heropx-cta-block">
-              <a
-                href={featured ? `/shop/${featured.slug}` : "/shop"}
-                className="mob-cta-amber-base mob-heropx-cta pp-animate-3"
-              >
-                {featured ? `Shop ${featured.name}` : "Shop the catalog"}
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </a>
-              <a href="/shop" className="mob-heropx-cta-ghost pp-animate-4">
-                Browse catalog
-                <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </a>
-            </div>
-            {/* Spec line moved below CTAs into the dark bottom zone of the
-                vial photo — was previously sandwiched against the lit
-                amber label area where amber-on-amber blended out. As a
-                post-CTA fine-print readout it reinforces the pharma
-                credibility note without competing with the headline. */}
-            <p className="mob-heropx-spec mob-heropx-spec-foot pp-animate-5">
-              {featured ? shortSpec(featured) : "Lab-verified · Lot-matched COA · Lyophilized"}
-            </p>
-          </div>
-        </section>
       </div>
 
-      {/* Curated stacks promotion — sits between the hero parallax stack
-          and the catalog teaser.  Surfaces bundle stats (3 stacks · 2
-          vials each · top savings · COA) + a chip rail linking each
-          stack PDP plus a back-link to the Reta hero above.  Component
-          name retains the legacy "RetaSpotlight" prefix; rename out of
-          scope per the originating change request. */}
+      {/* Curated stacks promotion — sits between the hero and the
+          catalog teaser.  Surfaces bundle stats (3 stacks · 2 vials
+          each · top savings · COA) + a chip rail linking each stack
+          PDP plus a back-link to the Reta PDP.  Component name retains
+          the legacy "RetaSpotlight" prefix; rename out of scope. */}
       <MobileRetaSpotlight products={products} />
 
       {/* Catalog teaser — eyebrow dropped (the section header is enough). */}
@@ -527,22 +378,4 @@ function categoryShort(c: Product["category"]): string {
 function shortDesc(p: Product): string {
   const first = p.description.split(".")[0] ?? p.name;
   return first.length > 60 ? first.slice(0, 57) + "..." : first + ".";
-}
-
-/** Compact technical spec line: receptor profile + structure + form. */
-function shortSpec(p: Product): string {
-  const knownSpec: Record<string, string> = {
-    RETA: "Triple GLP-1 / GIP / glucagon agonist",
-    SEMA: "GLP-1 receptor agonist · 31 amino acids · Lyophilized",
-    TIRZ: "Dual GLP-1 / GIP agonist · 39 amino acids · Lyophilized",
-    CAGRI: "Long-acting amylin analogue · Lyophilized",
-    SURVO: "Dual GLP-1 / glucagon agonist · Lyophilized",
-    BPC: "Pentadecapeptide · 15 amino acids · Lyophilized",
-    "BPC-157": "Pentadecapeptide · 15 amino acids · Lyophilized",
-    "TB-500": "Thymosin β-4 fragment · 17 amino acids · Lyophilized",
-    TB500: "Thymosin β-4 fragment · 17 amino acids · Lyophilized",
-    IPAM: "GH secretagogue pentapeptide · Lyophilized",
-    BACW: "0.9% benzyl alcohol bacteriostatic water · Sterile-filtered",
-  };
-  return knownSpec[p.compound] ?? `${p.purity.replace(/\s*\(.*\)$/, "")} · Lyophilized`;
 }

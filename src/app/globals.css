@@ -8329,15 +8329,13 @@ a.v3-pill-ghost:hover {
 .mob-heropx {
   position: relative;
 
-  /* Stack height tuned for "pane 2 ends → spotlight begins" with no
-   * visible runway gap.  Previous 160vh left ~60vh of #050505 below
-   * pane 2 after it un-stuck, reading as an empty black block before
-   * the spotlight section.  120vh = 20vh of stick range (enough for
-   * the JS crossfade to complete cleanly) and 0vh of post-stick
-   * runway.  Bg is bone so any residual sub-pixel slop at the seam
-   * blends into the spotlight section below rather than punching
-   * black through. */
-  height: 120vh;
+  /* Single-pane hero — previously held a two-pane sticky stack (pane
+   * 1 lab ambience, pane 2 Retatrutide flagship) at 120vh.  Pane 2
+   * was removed when Reta was demoted from flagship to "just another
+   * catalog product"; the container collapses to 100vh so the
+   * spotlight section below begins at the hero floor without a
+   * leftover cream runway. */
+  height: 100vh;
   background: var(--m-bone);
 }
 
@@ -8379,10 +8377,8 @@ a.v3-pill-ghost:hover {
 
 .mob-heropx-1 {
   z-index: 1;
-
-  /* Fade out aggressively — gone by progress 0.35 so pane 2 has the
-     stage to itself for the remainder of the stick range. */
-  opacity: calc(1 - clamp(0, var(--mob-px-p, 0) * 3, 1));
+  /* Progress-tied opacity removed when pane 2 was dropped — pane 1
+   * is now the only hero pane and stays fully opaque throughout. */
 }
 
 .mob-heropx-2 {
@@ -9310,24 +9306,9 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   background: var(--m-bone);
   border-top: 1.5px solid var(--m-ink);
   padding: 44px 20px 36px;
-
-  /* Seal the pane-2 → spotlight seam.
-   *
-   * .mob-heropx is 120vh, but both panes are 100vh sticky with pane 2
-   * at margin-top: -100vh.  In flow, pane 1 contributes 100vh and pane 2
-   * contributes 0vh, so the container has 20vh of empty space below
-   * pane 2's flow bottom (= container 100vh) before the container ends
-   * (= container 120vh).  Without correction, this reads as a ~20vh
-   * cream void between the un-stuck pane-2 cluster and the spotlight
-   * section.
-   *
-   * Pull the spotlight up by 20vh so its flow top lands at container
-   * 100vh — pane 2's flow bottom — flush against the dark→cream
-   * fadeout instead of 20vh below it.  Pane 2 has z-index: 2, the
-   * spotlight has z-index: auto, and pane 2's bg is opaque, so during
-   * the sticky range pane 2 covers the spotlight cleanly.  Once pane 2
-   * un-sticks, the ink hairline appears at the seam with no gap. */
-  margin-top: -20vh;
+  /* No negative margin needed — `.mob-heropx` collapsed to 100vh when
+   * pane 2 was dropped, so there's no leftover container runway
+   * between the hero and the spotlight. */
 }
 
 /* Default state: every staggered child sits 18px down + 0 opacity.
