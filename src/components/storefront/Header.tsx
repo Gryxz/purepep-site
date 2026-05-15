@@ -103,8 +103,10 @@ function NavAffiliatesDropdown({ active = false }: { active?: boolean }) {
           role="menu"
           className="absolute left-1/2 top-[calc(100%+2px)] z-40 min-w-[260px] -translate-x-1/2 rounded-[2px] border border-ink bg-bone"
         >
-          <DropdownRow href="/affiliates">Join the program →</DropdownRow>
+          <DropdownRow href="/referral">Refer a colleague →</DropdownRow>
+          <DropdownRow href="/affiliates" divider>Affiliate program →</DropdownRow>
           <DropdownRow href="/affiliates/dashboard" divider>Affiliate dashboard →</DropdownRow>
+          <DropdownRow href="/referral/dashboard" divider>Referral dashboard →</DropdownRow>
         </div>
       )}
     </div>
@@ -122,6 +124,8 @@ const MOBILE_NAV_LINKS = [
   { label: "Quality", href: "/quality" },
   { label: "Documentation", href: "/documentation" },
   { label: "Affiliates", href: "/affiliates" },
+  { label: "Refer a colleague", href: "/referral" },
+  { label: "Referral dashboard", href: "/referral/dashboard" },
   { label: "Affiliate dashboard", href: "/affiliates/dashboard" },
   { label: "Account", href: "#" },
 ];

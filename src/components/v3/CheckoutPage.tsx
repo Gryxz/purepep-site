@@ -54,6 +54,33 @@ export function CheckoutPage() {
   const [payTab, setPayTab] = useState<PayTab>("card");
   const [summaryOpen, setSummaryOpen] = useState(true);
 
+  // Referral / promo code
+  const [promoOpen, setPromoOpen] = useState(false);
+  const [promoInput, setPromoInput] = useState("");
+  const [promoApplied, setPromoApplied] = useState<string | null>(null);
+  const [promoDiscount, setPromoDiscount] = useState(0);
+  const [promoError, setPromoError] = useState<string | null>(null);
+
+  function applyPromo() {
+    const code = promoInput.trim().toUpperCase();
+    if (!code) return;
+    // Referral codes: PP-REF-XXXX pattern → $25 off
+    if (/^PP-REF-[A-Z0-9]{4,}$/.test(code) || code === "PP-REF-XXXX") {
+      setPromoApplied(code);
+      setPromoDiscount(25);
+      setPromoError(null);
+    } else {
+      setPromoError("Code not recognized. Check your referral link or try again.");
+    }
+  }
+
+  function removePromo() {
+    setPromoApplied(null);
+    setPromoDiscount(0);
+    setPromoInput("");
+    setPromoError(null);
+  }
+
   // Form state — all controlled
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -103,7 +130,7 @@ export function CheckoutPage() {
   const shippingCost =
     shipping === "express" ? EXPRESS_PRICE : sub >= FREE_SHIP_THRESHOLD ? 0 : STANDARD_BELOW_THRESHOLD;
   const standardLabel = sub >= FREE_SHIP_THRESHOLD ? "Free" : `$${STANDARD_BELOW_THRESHOLD.toFixed(2)}`;
-  const total = sub + shippingCost;
+  const total = Math.max(0, sub + shippingCost - promoDiscount);
   const empty = items.length === 0;
 
   function formatCard(v: string) {
@@ -228,6 +255,44 @@ export function CheckoutPage() {
                   {shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}
                 </span>
               </div>
+
+              {/* Referral / promo code */}
+              {promoApplied ? (
+                <div className="v3chk-order-row v3chk-promo-applied">
+                  <span className="v3chk-order-k v3chk-promo-code-label">
+                    <span className="v3chk-promo-dot" />
+                    Referral: {promoApplied}
+                    <button type="button" className="v3chk-promo-remove" onClick={removePromo} aria-label="Remove promo code">×</button>
+                  </span>
+                  <span className="v3chk-order-v v3chk-promo-savings">−${promoDiscount.toFixed(2)}</span>
+                </div>
+              ) : (
+                <div className="v3chk-promo-toggle-wrap">
+                  {!promoOpen ? (
+                    <button type="button" className="v3chk-promo-toggle" onClick={() => setPromoOpen(true)}>
+                      Have a referral or promo code?
+                    </button>
+                  ) : (
+                    <div className="v3chk-promo-row">
+                      <input
+                        type="text"
+                        className="v3chk-promo-input"
+                        placeholder="PP-REF-XXXX"
+                        value={promoInput}
+                        onChange={(e) => { setPromoInput(e.target.value.toUpperCase()); setPromoError(null); }}
+                        onKeyDown={(e) => e.key === "Enter" && applyPromo()}
+                        autoFocus
+                        aria-label="Promo or referral code"
+                      />
+                      <button type="button" className="v3chk-promo-apply" onClick={applyPromo}>
+                        Apply
+                      </button>
+                    </div>
+                  )}
+                  {promoError && <p className="v3chk-promo-error">{promoError}</p>}
+                </div>
+              )}
+
               <div className="v3chk-order-total">
                 <span className="v3chk-order-tk">Total</span>
                 <span className="v3chk-order-tv">${total.toFixed(2)}</span>

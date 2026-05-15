@@ -446,8 +446,8 @@ export function MobileHomePage({ products }: { products: Product[] }) {
                 <div className="mob-r-stat-label">Referrals<br />no cap</div>
               </div>
             </div>
-            <a href="/affiliates" className="mob-ref-cta">
-              Join the program
+            <a href="/referral" className="mob-ref-cta">
+              Get your referral link
               <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />

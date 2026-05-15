@@ -9796,4 +9796,190 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   color: #A06F0A;
 }
 
+/* ── Desktop referral teaser (v3 homepage) ──────────────────────── */
+.v3-referral-teaser {
+  background: var(--v3-surface-1);
+  border-top: 1.5px solid var(--v3-hairline);
+}
+
+.v3-ref-teaser-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  padding: 16px 0;
+}
+
+@media (max-width: 768px) {
+  .v3-ref-teaser-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+.v3-ref-teaser-h {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.2vw, 42px);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  color: var(--v3-ink);
+  margin: 12px 0 16px;
+  text-wrap: balance;
+}
+
+.v3-ref-teaser-body {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--v3-ink-60);
+  margin-bottom: 24px;
+  max-width: 480px;
+}
+
+.v3-ref-teaser-ctas { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+.v3-ref-teaser-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--v3-hairline);
+  border: 1.5px solid var(--v3-hairline);
+}
+
+@media (max-width: 768px) {
+  .v3-ref-teaser-stats { grid-template-columns: repeat(3, 1fr); }
+}
+
+.v3-ref-stat {
+  background: var(--v3-bg);
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.v3-ref-stat-num {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--v3-ink);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.v3-ref-stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--v3-ink-60);
+  line-height: 1.4;
+}
+
+/* ── Checkout: referral / promo code ────────────────────────────────── */
+.v3chk-promo-toggle-wrap {
+  padding: 10px 0 6px;
+  border-top: 1px solid var(--pp-line);
+}
+
+.v3chk-promo-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pp-ink-muted);
+  padding: 4px 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+
+.v3chk-promo-toggle:hover { color: var(--pp-ink); }
+
+.v3chk-promo-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-top: 8px;
+}
+
+.v3chk-promo-input {
+  flex: 1;
+  height: 42px;
+  border: 1.5px solid var(--pp-ink);
+  border-right: none;
+  background: var(--pp-bone);
+  padding: 0 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--pp-ink);
+  outline: none;
+}
+
+.v3chk-promo-input:focus { border-color: var(--pp-ink); }
+
+.v3chk-promo-apply {
+  height: 42px;
+  padding: 0 16px;
+  border: 1.5px solid var(--pp-ink);
+  background: var(--pp-ink);
+  color: var(--pp-bone);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.v3chk-promo-apply:hover { background: var(--pp-ink-muted); }
+
+.v3chk-promo-error {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--pp-alert);
+  margin: 6px 0 0;
+  letter-spacing: 0.06em;
+}
+
+/* Applied promo row */
+.v3chk-promo-applied { border-top: 1px solid var(--pp-line); padding-top: 10px; }
+
+.v3chk-promo-code-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.v3chk-promo-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pp-emerald);
+  flex-shrink: 0;
+}
+
+.v3chk-promo-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--pp-ink-muted);
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 0.12s;
+}
+
+.v3chk-promo-remove:hover { color: var(--pp-alert); }
+
+.v3chk-promo-savings {
+  color: var(--pp-emerald) !important;
+  font-weight: 700;
+}
+
 

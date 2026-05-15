@@ -54,13 +54,39 @@ export function MobileCheckout() {
   const [submitting, setSubmitting] = useState(false);
   const [orderError, setOrderError] = useState<string | null>(null);
 
+  // Referral / promo code
+  const [promoOpen, setPromoOpen] = useState(false);
+  const [promoInput, setPromoInput] = useState("");
+  const [promoApplied, setPromoApplied] = useState<string | null>(null);
+  const [promoDiscount, setPromoDiscount] = useState(0);
+  const [promoError, setPromoError] = useState<string | null>(null);
+
+  function applyPromo() {
+    const code = promoInput.trim().toUpperCase();
+    if (!code) return;
+    if (/^PP-REF-[A-Z0-9]{4,}$/.test(code) || code === "PP-REF-XXXX") {
+      setPromoApplied(code);
+      setPromoDiscount(25);
+      setPromoError(null);
+    } else {
+      setPromoError("Code not recognized.");
+    }
+  }
+
+  function removePromo() {
+    setPromoApplied(null);
+    setPromoDiscount(0);
+    setPromoInput("");
+    setPromoError(null);
+  }
+
   const sub = subtotal();
   const shipCost = shipping === "express"
     ? EXPRESS_SHIP_COST
     : sub >= FREE_SHIP_THRESHOLD
     ? 0
     : STANDARD_SHIP_COST_BELOW_THRESHOLD;
-  const total = sub + shipCost;
+  const total = Math.max(0, sub + shipCost - promoDiscount);
   const standardLabel = sub >= FREE_SHIP_THRESHOLD ? "Free" : `$${STANDARD_SHIP_COST_BELOW_THRESHOLD.toFixed(2)}`;
 
   // Card formatters
@@ -191,6 +217,43 @@ export function MobileCheckout() {
                 {shipCost === 0 ? "Free" : `$${shipCost.toFixed(2)}`}
               </span>
             </div>
+
+            {/* Referral / promo code */}
+            {promoApplied ? (
+              <div className="mob-order-row" style={{ borderTop: "1px solid var(--m-rule)", paddingTop: 8, marginTop: 4 }}>
+                <span className="ok" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--m-emerald)", flexShrink: 0, display: "inline-block" }} />
+                  Referral: {promoApplied}
+                  <button type="button" onClick={removePromo} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "var(--m-ink-mute)", padding: "0 2px", lineHeight: 1 }}>×</button>
+                </span>
+                <span className="ov" style={{ color: "var(--m-emerald)", fontWeight: 700 }}>−${promoDiscount.toFixed(2)}</span>
+              </div>
+            ) : (
+              <div style={{ borderTop: "1px solid var(--m-rule)", paddingTop: 8, marginTop: 4 }}>
+                {!promoOpen ? (
+                  <button type="button" onClick={() => setPromoOpen(true)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--m-ink-mute)", textDecoration: "underline", textUnderlineOffset: 3, padding: "4px 0" }}>
+                    Have a referral or promo code?
+                  </button>
+                ) : (
+                  <div style={{ display: "flex", gap: 0 }}>
+                    <input
+                      type="text"
+                      placeholder="PP-REF-XXXX"
+                      value={promoInput}
+                      onChange={(e) => { setPromoInput(e.target.value.toUpperCase()); setPromoError(null); }}
+                      onKeyDown={(e) => e.key === "Enter" && applyPromo()}
+                      autoFocus
+                      style={{ flex: 1, height: 40, border: "1.5px solid var(--m-ink)", borderRight: "none", background: "var(--m-bone)", padding: "0 10px", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.06em", color: "var(--m-ink)", outline: "none" }}
+                    />
+                    <button type="button" onClick={applyPromo} style={{ height: 40, padding: "0 14px", border: "1.5px solid var(--m-ink)", background: "var(--m-ink)", color: "var(--m-bone)", fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", cursor: "pointer", flexShrink: 0 }}>
+                      Apply
+                    </button>
+                  </div>
+                )}
+                {promoError && <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--m-alert)", margin: "5px 0 0", letterSpacing: "0.06em" }}>{promoError}</p>}
+              </div>
+            )}
+
             <div className="mob-sum-row-total">
               <span className="tk">Total</span>
               <span className="tv">${total.toFixed(2)}</span>
