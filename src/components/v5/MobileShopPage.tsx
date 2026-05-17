@@ -9,6 +9,12 @@ import {
   visibleFilters,
   type FilterKey,
 } from "@/data/catalog-filters";
+import {
+  stockLabel,
+  STACK_BADGE_LABEL,
+  CATALOG_RUO_FOOTNOTE,
+  CATALOG_REQUEST_CTA,
+} from "@/content/catalog";
 import Image from "next/image";
 import { MobileVial } from "./MobileVial";
 import { MobileFooter } from "./MobileFooter";
@@ -108,14 +114,18 @@ export function MobileShopPage({ products }: { products: Product[] }) {
           <a key={p.slug} href={`/shop/${p.slug}`} className="mob-pcard">
             <div className="mob-pcard-img">
               {p.type === "stack" ? (
-                <span className="mob-card-stack-ribbon">Stack</span>
+                <span className="mob-card-stack-ribbon">{STACK_BADGE_LABEL}</span>
               ) : p.regularPrice && p.regularPrice > p.price ? (
                 <span className="mob-card-sale-ribbon">Sale</span>
               ) : null}
               <span className="mob-cat-pill">{categoryShort(p.category)}</span>
-              <span className={`mob-stock-chip ${p.stock === "low" ? "is-low" : "is-in"}`}>
+              <span
+                className={`mob-stock-chip ${
+                  p.stock === "low" ? "is-low" : p.stock === "out" ? "is-out" : "is-in"
+                }`}
+              >
                 <span className="sd" />
-                {p.stock === "low" ? "Low stock" : "In stock"}
+                {stockLabel(p.stock)}
               </span>
               <Image
                 src={p.imageUrl ?? `/images/products/source/purepep-vial-${p.slug}-v1.0.jpg`}
@@ -137,6 +147,8 @@ export function MobileShopPage({ products }: { products: Product[] }) {
           </a>
         ))}
       </div>
+
+      <div className="mob-cat-footnote">{CATALOG_RUO_FOOTNOTE}</div>
 
       {/* 2x2 trust band */}
       <section className="mob-trust-band-section">
@@ -187,18 +199,20 @@ export function MobileShopPage({ products }: { products: Product[] }) {
 
       {/* Dark CTA */}
       <section className="mob-dcta" data-mob-section="dark">
-        <div className="mob-dcta-eyebrow">For research teams</div>
-        <h2 className="mob-dcta-h">Don&apos;t see what you need?</h2>
-        <p className="mob-dcta-body">
-          We source and synthesize additional peptides for labs and repeat buyers. Send us your spec —
-          we respond within one business day.
-        </p>
-        <a href="/legal/contact" className="mob-cta-amber-base mob-dcta-btn">
-          Request a quote
+        <div className="mob-dcta-eyebrow">{CATALOG_REQUEST_CTA.eyebrow}</div>
+        <h2 className="mob-dcta-h">
+          {CATALOG_REQUEST_CTA.headlineLead} {CATALOG_REQUEST_CTA.headlineEmphasis}
+        </h2>
+        <p className="mob-dcta-body">{CATALOG_REQUEST_CTA.body}</p>
+        <a href={CATALOG_REQUEST_CTA.primary.href} className="mob-cta-amber-base mob-dcta-btn">
+          {CATALOG_REQUEST_CTA.primary.label}
           <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />
           </svg>
+        </a>
+        <a href={CATALOG_REQUEST_CTA.secondary.href} className="mob-dcta-link">
+          {CATALOG_REQUEST_CTA.secondary.label}
         </a>
       </section>
 

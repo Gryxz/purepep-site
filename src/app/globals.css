@@ -1953,7 +1953,8 @@ a.v3-pill-ghost:hover {
   font-weight: 500;
   color: var(--v3-ink-60);
 }
-.v3-tile-stack-badge {
+.v3-tile-stack-badge,
+.v3-tile-sale-badge {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -1968,6 +1969,7 @@ a.v3-pill-ghost:hover {
   padding: 3px 8px;
   border-radius: 2px;
 }
+.v3-tile-sale-badge { left: auto; right: 10px; }
 
 /* ── Mobile bundles section ────────────────────────── */
 .mob-bundles-section {
@@ -6154,6 +6156,8 @@ a.v3-pill-ghost:hover {
 .mob-stock-chip.is-in .sd { background: var(--m-emerald); }
 .mob-stock-chip.is-low { color: var(--m-alert); }
 .mob-stock-chip.is-low .sd { background: var(--m-alert); animation: mob-pdot 2s ease-in-out infinite; }
+.mob-stock-chip.is-out { color: var(--m-ink-mute); }
+.mob-stock-chip.is-out .sd { background: var(--m-ink-mute); }
 
 @keyframes mob-pdot { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
 
@@ -6621,6 +6625,25 @@ a.v3-pill-ghost:hover {
 }
 .mob-dcta-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
 .mob-dcta-btn:active { transform: translateY(1px); filter: brightness(0.94); }
+
+.mob-dcta-link {
+  display: inline-block;
+  margin-top: 14px;
+  color: var(--m-bone);
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.mob-cat-footnote {
+  padding: 20px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 0.10em;
+  color: var(--m-ink-mute);
+}
 
 /* ── Footer ──────────────────────────────────────────────────────── */
 .mob-foot {

@@ -11,6 +11,12 @@ import {
   visibleFilters,
   type FilterKey,
 } from "@/data/catalog-filters";
+import {
+  stockLabel,
+  STACK_BADGE_LABEL,
+  CATALOG_RUO_FOOTNOTE,
+  CATALOG_REQUEST_CTA,
+} from "@/content/catalog";
 import Image from "next/image";
 import { RetaVial } from "./RetaVial";
 import { TrustBar } from "./TrustBar";
@@ -209,27 +215,22 @@ export function CatalogPage({ products }: { products: Product[] }) {
         </section>
 
         <hr className="v3cat-footnote-divider" />
-        <div className="v3cat-footnote">
-          All products sold for laboratory research use only · Not for human or animal consumption
-        </div>
+        <div className="v3cat-footnote">{CATALOG_RUO_FOOTNOTE}</div>
       </main>
 
       {/* ── For Research Teams CTA ── */}
       <div className="v3-dark-cta">
-        <div className="v3-dark-cta-eyebrow">For Research Teams</div>
+        <div className="v3-dark-cta-eyebrow">{CATALOG_REQUEST_CTA.eyebrow}</div>
         <h2 className="v3-dark-cta-h">
-          Need a compound <em>that isn&apos;t listed?</em>
+          {CATALOG_REQUEST_CTA.headlineLead} <em>{CATALOG_REQUEST_CTA.headlineEmphasis}</em>
         </h2>
-        <p className="v3-dark-cta-body">
-          We regularly source and synthesize additional peptides for labs and repeat buyers. Reach out with your
-          spec — we&apos;ll get back within one business day.
-        </p>
+        <p className="v3-dark-cta-body">{CATALOG_REQUEST_CTA.body}</p>
         <div className="v3-dark-cta-btns">
-          <a href="/legal/contact" className="v3-dark-cta-btn-primary">
-            Request a quote →
+          <a href={CATALOG_REQUEST_CTA.primary.href} className="v3-dark-cta-btn-primary">
+            {CATALOG_REQUEST_CTA.primary.label} →
           </a>
-          <a href="/documentation" className="v3-dark-cta-btn-secondary">
-            View all COAs
+          <a href={CATALOG_REQUEST_CTA.secondary.href} className="v3-dark-cta-btn-secondary">
+            {CATALOG_REQUEST_CTA.secondary.label}
           </a>
         </div>
       </div>
@@ -296,9 +297,11 @@ function ProductTile({ product }: { product: Product }) {
   return (
     <Link href={`/shop/${product.slug}`} className="v3-tile">
       <div className="v3-tile-photo">
-        {product.type === "stack" && (
-          <span className="v3-tile-stack-badge">Bundle</span>
-        )}
+        {product.type === "stack" ? (
+          <span className="v3-tile-stack-badge">{STACK_BADGE_LABEL}</span>
+        ) : product.regularPrice && product.regularPrice > product.price ? (
+          <span className="v3-tile-sale-badge">Sale</span>
+        ) : null}
         <Image
           src={product.imageUrl ?? `/images/products/source/purepep-vial-${product.slug}-v1.0.jpg`}
           alt={`${product.compound} vial`}
@@ -340,20 +343,20 @@ function ProductTile({ product }: { product: Product }) {
 
 function StockPill({ product }: { product: Product }) {
   if (product.stock === "out") {
-    return <span className="v3-stock is-wait">Waitlist</span>;
+    return <span className="v3-stock is-wait">{stockLabel(product.stock)}</span>;
   }
   if (product.stock === "low") {
     return (
       <span className="v3-stock is-low">
         <span className="dot" />
-        Low stock
+        {stockLabel(product.stock)}
       </span>
     );
   }
   return (
     <span className="v3-stock">
       <span className="dot" />
-      In stock
+      {stockLabel(product.stock)}
     </span>
   );
 }
