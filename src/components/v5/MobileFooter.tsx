@@ -12,6 +12,7 @@ export function MobileFooter() {
         <div className="mob-foot-h">Catalog</div>
         <a href="/shop" className="mob-foot-link">Shop all peptides</a>
         <a href="/documentation" className="mob-foot-link">View all COAs</a>
+        <a href="/faq" className="mob-foot-link">FAQ</a>
         <a href="/affiliates" className="mob-foot-link">Affiliate program</a>
       </div>
       <div className="mob-foot-section">
@@ -20,6 +21,7 @@ export function MobileFooter() {
         <a href="/legal/refund-policy" className="mob-foot-link">Refund Policy</a>
         <a href="/legal/shipping-policy" className="mob-foot-link">Shipping Policy</a>
         <a href="/legal/privacy-policy" className="mob-foot-link">Privacy Policy</a>
+        <a href="/legal/disclaimer" className="mob-foot-link">Disclaimer</a>
       </div>
       <div className="mob-foot-section">
         <div className="mob-foot-h">Contact</div>

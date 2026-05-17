@@ -314,6 +314,150 @@ button { font-family: inherit; }
 }
 
 /* ===========================================================================
+   Prose pages — /legal/[slug] (WP policy mirror) + /faq.  Single shared
+   layout, so styling once gives mobile + desktop parity by construction.
+   =========================================================================== */
+.legal-page {
+  background: var(--pp-bone);
+  padding: 56px 0 96px;
+}
+
+@media (max-width: 640px) {
+  .legal-page { padding: 36px 0 64px; }
+}
+
+.legal-container {
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+@media (width >= 640px) {
+  .legal-container { padding-inline: var(--gutter); }
+}
+
+.legal-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--pp-ink-muted);
+  margin: 0 0 16px;
+}
+
+.legal-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(30px, 5vw, 48px);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-display);
+  color: var(--pp-ink);
+  margin: 0;
+}
+
+.legal-modified {
+  margin: 12px 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  color: var(--pp-ink-muted);
+}
+
+.legal-body {
+  margin-top: 40px;
+  border-top: var(--bw) solid var(--pp-ink);
+  padding-top: 40px;
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  line-height: var(--lh-relaxed);
+  color: var(--pp-ink);
+}
+
+.legal-body > :first-child { margin-top: 0; }
+
+.legal-body h2,
+.legal-body h3,
+.legal-body h4 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  color: var(--pp-ink);
+  letter-spacing: var(--tracking-heading);
+  line-height: var(--lh-snug);
+  margin: 40px 0 12px;
+}
+
+.legal-body h2 { font-size: var(--t-h3); }
+.legal-body h3 { font-size: var(--t-body-l); }
+.legal-body h4 { font-size: var(--t-body); text-transform: uppercase; letter-spacing: var(--tracking-eyebrow); }
+
+.legal-body p { margin: 0 0 16px; }
+
+.legal-body ul,
+.legal-body ol { margin: 0 0 16px; padding-left: 22px; }
+
+.legal-body li { margin: 0 0 8px; }
+
+.legal-body a {
+  color: var(--pp-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.legal-body a:hover { color: var(--pp-ink-muted); }
+
+.legal-body blockquote {
+  margin: 0 0 16px;
+  padding: 12px 20px;
+  border-left: var(--bw) solid var(--pp-ink);
+  background: var(--pp-surface);
+  color: var(--pp-ink);
+}
+
+.legal-body hr {
+  border: 0;
+  border-top: var(--bw) solid var(--pp-line);
+  margin: 32px 0;
+}
+
+.legal-body code,
+.legal-body pre {
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+}
+
+.legal-body pre {
+  background: var(--pp-surface);
+  padding: 16px;
+  overflow-x: auto;
+  border: var(--bw) solid var(--pp-line);
+}
+
+.legal-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 16px;
+  font-size: var(--t-body-s);
+}
+
+.legal-body th,
+.legal-body td {
+  border: var(--bw) solid var(--pp-line);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.legal-body th {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-size: var(--t-eyebrow);
+  background: var(--pp-surface);
+}
+
+/* ===========================================================================
    v3 Apple Swiss — design tokens
    ---------------------------------------------------------------------------
    Scoped to src/app/globals.css per the project's local-extension convention:
@@ -2654,6 +2798,16 @@ a.v3-pill-ghost:hover {
 }
 .v3qual-hero-links a:hover { border-bottom-color: var(--v3-accent); color: var(--v3-accent); }
 
+.v3qual-hero-links .is-pending {
+  font-family: var(--font-mono);
+  font-size: 12px; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--v3-ink-muted);
+  border-bottom: 1px solid var(--v3-hair-strong);
+  padding-bottom: 4px;
+  cursor: not-allowed;
+}
+
 .v3qual-hero-foot {
   border-top: 1px solid var(--v3-ink);
   padding-top: 14px;
@@ -3136,6 +3290,11 @@ a.v3-pill-ghost:hover {
 
 .v3doc-link:hover {
   color: var(--v3-accent-hover);
+}
+
+.v3doc-link.is-pending {
+  color: var(--v3-ink-muted);
+  cursor: not-allowed;
 }
 
 /* ===========================================================================

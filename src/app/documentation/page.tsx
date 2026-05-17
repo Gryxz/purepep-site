@@ -45,7 +45,7 @@ export default function DocumentationPage() {
             below — single PDF per lot, single source of truth.
           </p>
           <div className="v3qual-hero-links">
-            <a href="#">Sample COA (PDF)</a>
+            <span className="is-pending" aria-disabled="true">Sample COA — pending</span>
             <Link href="/quality">Methods overview</Link>
             <Link href="/researcher-access">Researcher access</Link>
           </div>
@@ -78,9 +78,15 @@ export default function DocumentationPage() {
                 <span className="compound">{row.compound}</span>
                 <span className="lot">{row.lot}</span>
                 <span className="released">{row.released}</span>
-                <a href={row.href} className="v3doc-link">
-                  COA (PDF) →
-                </a>
+                {row.href === "#" ? (
+                  <span className="v3doc-link is-pending" aria-disabled="true">
+                    COA pending
+                  </span>
+                ) : (
+                  <a href={row.href} className="v3doc-link">
+                    COA (PDF) →
+                  </a>
+                )}
               </div>
             ))}
           </div>

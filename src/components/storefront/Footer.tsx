@@ -131,10 +131,11 @@ export function Footer({
           <FootCol
             title="Quality"
             items={[
-              { label: "Certificates of analysis" },
-              { label: "Lab partners" },
-              { label: "Cold-chain shipping" },
-              { label: "Lot traceability" },
+              { label: "Certificates of analysis", href: "/documentation" },
+              { label: "FAQ", href: "/faq" },
+              { label: "Methods & lab partners", href: "/quality#methods" },
+              { label: "Cold-chain shipping", href: "/legal/shipping-policy" },
+              { label: "Lot traceability", href: "/documentation#lots" },
             ]}
           />
           <FootCol
