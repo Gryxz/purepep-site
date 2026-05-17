@@ -1,32 +1,37 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { clsx } from "@/lib/clsx";
-import type { Product, Category } from "@/data/products";
+import type { Product } from "@/data/products";
+import {
+  CATALOG_FILTERS,
+  filterCounts,
+  visibleFilters,
+  type FilterKey,
+} from "@/data/catalog-filters";
 import Image from "next/image";
 import { RetaVial } from "./RetaVial";
 import { TrustBar } from "./TrustBar";
 
-type ChipKey = "all" | "glp1" | "growth" | "repair" | "cosmetic" | "blends";
-
-const CHIPS: { key: ChipKey; label: string; categories: Category[] | "all" }[] = [
-  { key: "all",      label: "All",             categories: "all" },
-  { key: "glp1",     label: "GLP-1",           categories: ["Incretin mimetics"] },
-  { key: "growth",   label: "Growth",          categories: ["GH secretagogues"] },
-  { key: "repair",   label: "Repair",          categories: ["Healing"] },
-  { key: "cosmetic", label: "Cosmetic",        categories: ["Healing"] },
-  { key: "blends",   label: "Research blends", categories: ["Metabolic", "Cognition"] },
-];
-
 export function CatalogPage({ products }: { products: Product[] }) {
-  const [chip, setChip] = useState<ChipKey>("all");
+  const [chip, setChip] = useState<FilterKey>("all");
   const [slide, setSlide] = useState(0);
   const railRef = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState({ width: 33, left: 0 });
 
-  const featured = products.slice(0, 3);
+  const counts = useMemo(() => filterCounts(products), [products]);
+  const chips = useMemo(() => visibleFilters(counts), [counts]);
+  const activeChip =
+    chips.find((c) => c.key === chip) ??
+    CATALOG_FILTERS.find((c) => c.key === "all")!;
+
+  const visible = useMemo(
+    () => products.filter((p) => activeChip.match(p.category)),
+    [products, activeChip],
+  );
+  const featured = visible.slice(0, 3);
 
   useEffect(() => {
     const el = railRef.current;
@@ -77,16 +82,19 @@ export function CatalogPage({ products }: { products: Product[] }) {
         {/* ── Filter / sort ── */}
         <div className="v3cat-filterbar">
           <div className="v3cat-chips" role="tablist" aria-label="Filter peptides">
-            {CHIPS.map((c) => (
+            {chips.map((c) => (
               <button
                 key={c.key}
                 type="button"
                 role="tab"
-                aria-selected={chip === c.key}
-                className={clsx("v3cat-chip", chip === c.key && "is-active")}
-                onClick={() => setChip(c.key)}
+                aria-selected={activeChip.key === c.key}
+                className={clsx("v3cat-chip", activeChip.key === c.key && "is-active")}
+                onClick={() => {
+                  setChip(c.key);
+                  setSlide(0);
+                }}
               >
-                {c.label}
+                {c.label} <span className="ct">{counts[c.key]}</span>
               </button>
             ))}
           </div>
@@ -158,7 +166,8 @@ export function CatalogPage({ products }: { products: Product[] }) {
             <p className="v3-section-eyebrow">All peptides</p>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 20 }}>
               <span className="v3cat-section-aside">
-                ← Scroll horizontally · {String(products.length).padStart(2, "0")} products
+                ← Scroll horizontally · {String(visible.length).padStart(2, "0")} of{" "}
+                {String(products.length).padStart(2, "0")} products
               </span>
               <div style={{ display: "inline-flex", gap: 8 }}>
                 <button
@@ -186,7 +195,7 @@ export function CatalogPage({ products }: { products: Product[] }) {
           </div>
           <div className="v3-rail-viewport" ref={railRef}>
             <div className="v3-rail-track">
-              {products.map((p) => (
+              {visible.map((p) => (
                 <ProductTile key={p.slug} product={p} />
               ))}
             </div>

@@ -3,6 +3,12 @@
 
 import { useMemo, useState } from "react";
 import type { Product, Category } from "@/data/products";
+import {
+  CATALOG_FILTERS,
+  filterCounts,
+  visibleFilters,
+  type FilterKey,
+} from "@/data/catalog-filters";
 import Image from "next/image";
 import { MobileVial } from "./MobileVial";
 import { MobileFooter } from "./MobileFooter";
@@ -15,46 +21,30 @@ import { MobileFooter } from "./MobileFooter";
  *   1. Trust strip (5 items)
  *   2. Centered "Shop All Peptides" title
  *   3. Search pill (visual placeholder, non-functional per mockup)
- *   4. Filter chips (All / GLP-1 / Growth / Healing) — live filtering
+ *   4. Filter chips — shared with desktop via @/data/catalog-filters
  *   5. Count row "Showing N of M"
  *   6. 2-col product grid
  *   7. 2x2 trust band (HPLC / Domestic / Secure / Research-use)
  *   8. Dark CTA — "Need a compound that isn't listed?"
  *   9. MobileFooter
  */
-type FilterKey = "all" | "glp1" | "growth" | "healing";
-
-interface ChipDef {
-  key: FilterKey;
-  label: string;
-  match: (c: Category) => boolean;
-}
-
-const CHIPS: ChipDef[] = [
-  { key: "all",     label: "All",            match: () => true },
-  { key: "glp1",    label: "GLP-1 & Metabolic", match: (c) => c === "Incretin mimetics" || c === "Metabolic" },
-  { key: "growth",  label: "Growth Hormone", match: (c) => c === "GH secretagogues" },
-  { key: "healing", label: "Healing",        match: (c) => c === "Healing" },
-];
 
 export function MobileShopPage({ products }: { products: Product[] }) {
   const [filter, setFilter] = useState<FilterKey>("all");
-  const chipDef = CHIPS.find((c) => c.key === filter)!;
+
+  const counts = useMemo(() => filterCounts(products), [products]);
+  const chips = useMemo(() => visibleFilters(counts), [counts]);
+
+  // If the active filter's chip is no longer rendered (zero products),
+  // fall back to "all" so the grid never reads empty unexpectedly.
+  const activeChip =
+    chips.find((c) => c.key === filter) ??
+    CATALOG_FILTERS.find((c) => c.key === "all")!;
 
   const visible = useMemo(
-    () => products.filter((p) => chipDef.match(p.category)),
-    [products, chipDef],
+    () => products.filter((p) => activeChip.match(p.category)),
+    [products, activeChip],
   );
-
-  const counts = useMemo(() => {
-    const map: Record<FilterKey, number> = { all: 0, glp1: 0, growth: 0, healing: 0 };
-    for (const p of products) {
-      for (const c of CHIPS) {
-        if (c.match(p.category)) map[c.key]++;
-      }
-    }
-    return map;
-  }, [products]);
 
   return (
     <div className="mob-app mob-shop">
@@ -92,16 +82,16 @@ export function MobileShopPage({ products }: { products: Product[] }) {
 
       {/* Filter chips */}
       <div className="mob-filter-row" role="tablist" aria-label="Filter by category">
-        {CHIPS.map((c) => (
+        {chips.map((c) => (
           <button
             key={c.key}
             type="button"
             role="tab"
-            aria-selected={filter === c.key}
+            aria-selected={activeChip.key === c.key}
             onClick={() => setFilter(c.key)}
-            className={`mob-fchip${filter === c.key ? " is-active" : ""}`}
+            className={`mob-fchip${activeChip.key === c.key ? " is-active" : ""}`}
           >
-            {c.label} <span className="ct">{counts[c.key]}</span>
+            {c.shortLabel} <span className="ct">{counts[c.key]}</span>
           </button>
         ))}
       </div>
