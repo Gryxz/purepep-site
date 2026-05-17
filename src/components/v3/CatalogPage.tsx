@@ -310,16 +310,6 @@ function ProductTile({ product }: { product: Product }) {
         </div>
         <h3 className="v3-tile-name">{product.name}</h3>
         <p className="v3-tile-sub">{product.description.split(".")[0]}.</p>
-        <div className="v3-mini-spec">
-          <div>
-            <div className="lbl">Purity</div>
-            <div className="val">{product.purity.replace(/\s*\(.*\)$/, "")}</div>
-          </div>
-          <div>
-            <div className="lbl">Net mass</div>
-            <div className="val">{product.dose}</div>
-          </div>
-        </div>
         <div className="v3-action-row">
           <div>
             <div className="v3-tile-price">${Math.round(product.price)}</div>

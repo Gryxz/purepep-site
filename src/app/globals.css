@@ -1488,26 +1488,6 @@ a.v3-pill-ghost:hover {
   overflow: hidden;
 }
 
-.v3-mini-spec {
-  margin-top: 2px; padding-top: 10px;
-  border-top: 1.5px solid var(--v3-ink);
-  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-}
-
-.v3-mini-spec .lbl {
-  font-family: var(--font-mono);
-  font-size: 9.5px; font-weight: 500;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: rgb(31 31 31 / 50%);
-  margin-bottom: 2px;
-}
-
-.v3-mini-spec .val {
-  font-family: var(--font-sans); font-weight: 900;
-  font-size: 13px; color: var(--v3-ink);
-  letter-spacing: -0.005em;
-}
-
 .v3-action-row {
   margin-top: auto; padding-top: 10px;
   display: flex; align-items: flex-end; justify-content: space-between; gap: 10px;
