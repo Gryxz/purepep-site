@@ -13,6 +13,7 @@ interface Testimonial {
   metric: string;
   metricLabel: string;
   avatarSrc: string;
+  transformSrc: string;
 }
 
 const TESTIMONIALS: Testimonial[] = [
@@ -27,6 +28,7 @@ const TESTIMONIALS: Testimonial[] = [
     metric: "−38 lbs",
     metricLabel: "16-week result",
     avatarSrc: "/images/testimonials/avatar-1.jpg",
+    transformSrc: "/images/testimonials/transform-1.jpg",
   },
   {
     id: "t2",
@@ -39,6 +41,7 @@ const TESTIMONIALS: Testimonial[] = [
     metric: "−29 lbs",
     metricLabel: "12-week result",
     avatarSrc: "/images/testimonials/avatar-2.jpg",
+    transformSrc: "/images/testimonials/transform-2.jpg",
   },
   {
     id: "t3",
@@ -51,6 +54,7 @@ const TESTIMONIALS: Testimonial[] = [
     metric: "−44 lbs",
     metricLabel: "20-week result",
     avatarSrc: "/images/testimonials/avatar-3.jpg",
+    transformSrc: "/images/testimonials/transform-3.jpg",
   },
 ];
 
@@ -89,7 +93,22 @@ export function TestimonialsSection() {
 
         {/* Main card */}
         <div className="v3-test-card">
+          {/* AI-generated transformation image */}
           <div className="v3-test-visual">
+            <div className="v3-test-transform-wrap">
+              <Image
+                key={t.id}
+                src={t.transformSrc}
+                alt={`${t.name} transformation — ${t.compound} ${t.duration}`}
+                fill
+                sizes="(max-width: 768px) 100vw, 45vw"
+                className="v3-test-transform-img"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.opacity = "0";
+                }}
+              />
+              <div className="v3-test-transform-overlay" aria-hidden="true" />
+            </div>
             <div className="v3-test-metric">
               <div className="v3-test-metric-num">{t.metric}</div>
               <div className="v3-test-metric-lbl">{t.metricLabel}</div>
@@ -126,7 +145,7 @@ export function TestimonialsSection() {
             </div>
 
             <p className="v3-test-disclaimer">
-              Individual research results may vary.
+              AI-generated transformation imagery. Individual research results may vary.
               Not for human consumption · Research use only.
             </p>
           </div>

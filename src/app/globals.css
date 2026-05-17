@@ -1420,7 +1420,7 @@ a.v3-pill-ghost:hover {
 
 .v3-tile-photo {
   position: relative;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   background: var(--v3-surface-2);
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
@@ -1430,13 +1430,13 @@ a.v3-pill-ghost:hover {
 .v3-tile-photo .v3pdp-vial {
   position: relative; z-index: 1;
   width: auto;
-  height: 82%;
-  max-width: 62%;
+  height: 86%;
+  max-width: 54%;
 }
 
 .v3-tile-content {
-  padding: 22px;
-  display: flex; flex-direction: column; gap: 12px; flex: 1;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 9px; flex: 1;
 }
 
 .v3-meta-row {
@@ -1473,14 +1473,14 @@ a.v3-pill-ghost:hover {
 
 .v3-tile-name {
   font-family: var(--font-sans); font-weight: 900;
-  font-size: 20px; line-height: 1.15;
+  font-size: 16px; line-height: 1.15;
   letter-spacing: -0.015em; color: var(--v3-ink);
   margin: 0;
 }
 
 .v3-tile-sub {
   margin: 0;
-  font-size: 14px; line-height: 1.5;
+  font-size: 12.5px; line-height: 1.45;
   color: var(--v3-ink-70);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -1489,42 +1489,42 @@ a.v3-pill-ghost:hover {
 }
 
 .v3-mini-spec {
-  margin-top: 4px; padding-top: 14px;
+  margin-top: 2px; padding-top: 10px;
   border-top: 1.5px solid var(--v3-ink);
-  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
 }
 
 .v3-mini-spec .lbl {
   font-family: var(--font-mono);
-  font-size: 10.5px; font-weight: 500;
-  letter-spacing: 0.14em; text-transform: uppercase;
+  font-size: 9.5px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
   color: rgb(31 31 31 / 50%);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .v3-mini-spec .val {
   font-family: var(--font-sans); font-weight: 900;
-  font-size: 14px; color: var(--v3-ink);
+  font-size: 13px; color: var(--v3-ink);
   letter-spacing: -0.005em;
 }
 
 .v3-action-row {
-  margin-top: auto; padding-top: 14px;
-  display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
+  margin-top: auto; padding-top: 10px;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 10px;
 }
 
 .v3-tile-price {
   font-family: var(--font-sans); font-weight: 900;
-  font-size: 22px; letter-spacing: -0.02em;
+  font-size: 18px; letter-spacing: -0.02em;
   color: var(--v3-ink); line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
 .v3-price-from {
-  margin-top: 6px;
+  margin-top: 4px;
   font-family: var(--font-mono);
-  font-size: 10px; font-weight: 500;
-  letter-spacing: 0.14em; text-transform: uppercase;
+  font-size: 9.5px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
   color: rgb(31 31 31 / 50%);
 }
 
@@ -1532,10 +1532,10 @@ a.v3-pill-ghost:hover {
   display: inline-flex; align-items: center; gap: 6px;
   background: var(--v3-accent); color: var(--v3-accent-ink);
   border: none; cursor: pointer;
-  padding: 10px 16px 10px 18px;
+  padding: 8px 13px 8px 15px;
   border-radius: 2px;
   font-family: var(--font-sans); font-weight: 700;
-  font-size: 13px; letter-spacing: -0.005em;
+  font-size: 12px; letter-spacing: -0.005em;
   text-decoration: none;
 }
 .v3-view-pill:hover { background: var(--v3-accent-hover); }
@@ -1568,10 +1568,15 @@ a.v3-pill-ghost:hover {
 /* Desktop: real product grid, not a mobile scroll carousel. */
 .v3-rail-track {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
 }
 .v3-rail-track > .v3-tile { width: auto; }
+
+/* Narrow desktop / large tablet: 3-up so tiles don't get cramped. */
+@media (min-width: 1025px) and (max-width: 1279px) {
+  .v3-rail-track { grid-template-columns: repeat(3, 1fr); }
+}
 
 /* Tablet / mobile: revert to the horizontal scroll rail. */
 @media (max-width: 1024px) {
@@ -1770,17 +1775,28 @@ a.v3-pill-ghost:hover {
 .v3-test-visual {
   position: relative;
   background: var(--v3-ink);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 48px;
-  min-height: 320px;
+}
+.v3-test-transform-wrap {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
 }
 @media (max-width: 900px) {
-  .v3-test-visual { min-height: 0; aspect-ratio: 16/9; }
+  .v3-test-transform-wrap { aspect-ratio: 16/9; }
+}
+.v3-test-transform-img {
+  object-fit: cover;
+  object-position: center top;
+}
+.v3-test-transform-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(31,31,31,0.7) 100%);
 }
 .v3-test-metric {
-  text-align: center;
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
 }
 .v3-test-metric-num {
   font-size: 40px;

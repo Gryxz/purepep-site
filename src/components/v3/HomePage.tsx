@@ -7,29 +7,27 @@ import { padded2, plural } from "@/lib/text";
 import type { Product } from "@/data/products";
 import Image from "next/image";
 import Link from "next/link";
-import { RetaVial } from "./RetaVial";
 import { LabelCropSvg } from "./LabelCropSvg";
 import { TestimonialsSection } from "./TestimonialsSection";
 
 /**
  * v3 Apple Swiss Homepage.
  *
- * Sections (from docs/design-v3/project/Homepage - Apple Swiss.html):
- *   1. Cinematic vial hero (55/45 desktop, stacked mobile)
+ * Sections (conversion-ordered — product grid leads):
+ *   1. Catalog — section head row + product grid (rail ≤1024)
  *   2. Featured compound band — 60/40 grid with label-crop visual
- *   3. Stat grid — Specifications we publish (4-up)
- *   4. Catalog teaser — section head row, horizontal product rail with snap +
- *      progress fill, expand tab that toggles a 3-col grid of all 9 products
- *   5. From-order-to-lab timeline (reuses .v3pdp-timeline classes)
- *   6. Documentation strip (3-card band on surface-4)
- *   7. Closing CTA
+ *   3. Stat grid — Specifications we publish
+ *   4. Testimonials
+ *   5. Best-selling bundles
+ *   6. From-order-to-lab timeline (reuses .v3pdp-timeline classes)
+ *   7. Documentation strip
+ *   8. Referral teaser
+ *   9. Closing CTA
  */
 export function HomePage({ products }: { products: Product[] }) {
   const featured = products[0];
   const railRef = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState({ width: 33, left: 0 });
-  const [expanded, setExpanded] = useState(false);
-  const expandRegionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const el = railRef.current;
@@ -60,64 +58,82 @@ export function HomePage({ products }: { products: Product[] }) {
 
   return (
     <div className="v3-shop">
-      {/* ───── Cinematic Hero ───── */}
-      <section className="v3home-hero">
-        <div className="v3home-hero-grid">
-          <div className="v3home-hero-stage">
-            <div className="v3home-corner tl">
-              {featured ? `01 / ${padded2(products.length)} — ${featured.compound}` : "Research grade"}
+      {/* ───── Catalog (lead section) ───── */}
+      <section className="v3-section">
+        <div className="v3-container">
+          <div className="v3-section-head-row">
+            <div>
+              <p className="v3-section-eyebrow">Catalog</p>
+              <h2 className="v3-section-headline">
+                {plural(products.length, "compound")}.
+                <br />
+                One standard.
+              </h2>
             </div>
-            {featured && (
-              <RetaVial
-                compound={featured.compound}
-                dose={featured.dose}
-                lot={featured.lot}
-                storage={featured.storage}
-              />
-            )}
-            <div className="v3home-corner bl">Lyophilized · Research use only</div>
+            <a href="/shop" className="v3-pill v3-pill-primary v3-pill-sm">
+              See all {plural(products.length, "peptide")} <span className="arrow">→</span>
+            </a>
           </div>
 
-          <div className="v3home-hero-info">
-            <p className="v3home-hero-eyebrow">Research-grade peptides</p>
-            <h1 className="v3home-hero-headline">
-              Specifications,
-              <br />
-              not slogans.
-            </h1>
-            <p className="v3home-hero-deck">
-              Every lot ships with a matched Certificate of Analysis. Purity by HPLC. Identity by mass spectrometry.
-              Endotoxin by LAL. That is the entire pitch.
-            </p>
-            <div className="v3home-hero-cta-row">
-              <a href="/shop" className="v3-pill v3-pill-primary">
-                Browse the catalog <span className="arrow">→</span>
-              </a>
-              <a href="/quality" className="v3-pill v3-pill-ghost">
-                Read a sample COA
-              </a>
+          <div
+            style={{
+              marginTop: 28,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 20,
+              flexWrap: "wrap",
+            }}
+          >
+            <span
+              className="v3-rail-hint"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+                color: "var(--v3-ink-60)",
+              }}
+            >
+              ← Scroll horizontally · {String(products.length).padStart(2, "0")} products
+            </span>
+            <div style={{ display: "inline-flex", gap: 8 }}>
+              <button
+                type="button"
+                className="v3-arrow-btn is-sm"
+                aria-label="Scroll rail left"
+                onClick={() => railStep(-1)}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m15 6-6 6 6 6" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className="v3-arrow-btn is-sm"
+                aria-label="Scroll rail right"
+                onClick={() => railStep(1)}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 6 6 6-6 6" />
+                </svg>
+              </button>
             </div>
+          </div>
 
-            <div className="v3home-hero-data">
-              <div>
-                <div className="lbl">Purity</div>
-                <div className="val">≥99.5%</div>
-              </div>
-              <div>
-                <div className="lbl">Mass</div>
-                <div className="val">≤0.5 Da</div>
-              </div>
-              <div>
-                <div className="lbl">Endotoxin</div>
-                <div className="val">&lt;1.0 EU/mg</div>
-              </div>
-              <div>
-                <div className="lbl">Lots</div>
-                <div className="val">LAL-tested</div>
-              </div>
+          <div className="v3-rail-viewport" ref={railRef}>
+            <div className="v3-rail-track">
+              {products.map((p) => (
+                <ProductTile key={p.slug} product={p} />
+              ))}
             </div>
-
-            <div className="v3home-hero-stamp">Sample COA released 2026-04-12</div>
+          </div>
+          <div className="v3-rail-progress-track">
+            <div
+              className="v3-rail-progress-fill"
+              style={{ width: `${progress.width}%`, left: `${progress.left}%` }}
+            />
           </div>
         </div>
       </section>
@@ -247,115 +263,6 @@ export function HomePage({ products }: { products: Product[] }) {
           </section>
         );
       })()}
-
-      {/* ───── Catalog teaser rail + expand ───── */}
-      <section className="v3-section" style={{ paddingTop: 0 }}>
-        <div className="v3-container">
-          <div className="v3-section-head-row">
-            <div>
-              <p className="v3-section-eyebrow">Catalog</p>
-              <h2 className="v3-section-headline">
-                {plural(products.length, "compound")}.
-                <br />
-                One standard.
-              </h2>
-            </div>
-            <a href="/shop" className="v3-pill v3-pill-primary v3-pill-sm">
-              See all {plural(products.length, "peptide")} <span className="arrow">→</span>
-            </a>
-          </div>
-
-          <div
-            style={{
-              marginTop: 36,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 20,
-              flexWrap: "wrap",
-            }}
-          >
-            <span
-              className="v3-rail-hint"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 11,
-                fontWeight: 500,
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-                color: "var(--v3-ink-60)",
-              }}
-            >
-              ← Scroll horizontally · {String(products.length).padStart(2, "0")} products
-            </span>
-            <div style={{ display: "inline-flex", gap: 8 }}>
-              <button
-                type="button"
-                className="v3-arrow-btn is-sm"
-                aria-label="Scroll rail left"
-                onClick={() => railStep(-1)}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m15 6-6 6 6 6" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                className="v3-arrow-btn is-sm"
-                aria-label="Scroll rail right"
-                onClick={() => railStep(1)}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m9 6 6 6-6 6" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div className="v3-rail-viewport" ref={railRef}>
-            <div className="v3-rail-track">
-              {products.map((p) => (
-                <ProductTile key={p.slug} product={p} />
-              ))}
-            </div>
-          </div>
-          <div className="v3-rail-progress-track">
-            <div
-              className="v3-rail-progress-fill"
-              style={{ width: `${progress.width}%`, left: `${progress.left}%` }}
-            />
-          </div>
-
-          <button
-            type="button"
-            className={clsx("v3-expand-tab", expanded && "is-open")}
-            aria-expanded={expanded}
-            onClick={() => {
-              setExpanded((e) => !e);
-              const el = expandRegionRef.current;
-              if (el) {
-                if (!expanded) el.style.maxHeight = el.scrollHeight + "px";
-                else el.style.maxHeight = "0px";
-              }
-            }}
-          >
-            <span>{expanded ? "Collapse" : `Expand all 0${products.length}`}</span>
-            <span aria-hidden="true">·</span>
-            <span className="chev" aria-hidden="true">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </span>
-          </button>
-          <div className="v3-expand-region" ref={expandRegionRef}>
-            <div className="v3-expand-grid">
-              {products.map((p) => (
-                <ProductTile key={p.slug} product={p} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ───── From order to lab timeline ───── */}
       <section className="v3-section" style={{ paddingTop: 0 }}>
