@@ -192,13 +192,6 @@ export function HomePage({ products }: { products: Product[] }) {
                 Limulus Amebocyte Lysate (LAL) assay per lot. Results included in downloadable Certificate of Analysis.
               </div>
             </div>
-            <div className="v3-stat-card">
-              <div className="v3-stat-num is-placeholder">[TBD]</div>
-              <div className="v3-stat-label">Research Accounts Served</div>
-              <div className="v3-stat-source">
-                Operational scale stat — exact figure to be committed by PurePep at launch.
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -283,6 +276,7 @@ export function HomePage({ products }: { products: Product[] }) {
             }}
           >
             <span
+              className="v3-rail-hint"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: 11,
@@ -491,7 +485,6 @@ function ProductTile({ product }: { product: Product }) {
           className="v3-product-hero-img"
           onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
         />
-        <div className="v3-tile-shadow" />
       </div>
       <div className="v3-tile-content">
         <div className="v3-meta-row">

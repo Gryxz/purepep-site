@@ -240,7 +240,6 @@ function FeaturedSlide({ product }: { product: Product }) {
           className="v3-product-hero-img"
           onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
         />
-        <div className="v3-tile-shadow" />
       </div>
       <div className="v3cat-featured-info">
         <div className="v3-meta-row">
@@ -299,7 +298,6 @@ function ProductTile({ product }: { product: Product }) {
           className="v3-product-hero-img"
           onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
         />
-        <div className="v3-tile-shadow" />
       </div>
       <div className="v3-tile-content">
         <div className="v3-meta-row">

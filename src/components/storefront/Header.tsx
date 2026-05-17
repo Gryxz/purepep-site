@@ -40,7 +40,7 @@ function NavLink({ children, href = "#", active = false }: { children: React.Rea
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={clsx(
-        "pb-px font-sans text-[14px] font-medium leading-none tracking-[-0.005em] text-ink no-underline transition-colors",
+        "pb-px font-sans text-[14px] font-medium leading-none tracking-[-0.005em] text-ink no-underline",
         active || hovered ? "border-b border-ink" : "border-b border-transparent",
       )}
     >
