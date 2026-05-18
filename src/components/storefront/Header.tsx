@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
 import { Lockup, Icon, Eyebrow } from "./primitives";
 import { clsx } from "@/lib/clsx";
-import { RETA_HREF, ACCOUNT_HREF } from "@/content/nav";
+import { ACCOUNT_HREF } from "@/content/nav";
 
 function UtilityStrip() {
   const items = ["For research use only", "21+ qualified researchers", "All sales final"];
@@ -116,7 +116,6 @@ function NavAffiliatesDropdown({ active = false }: { active?: boolean }) {
 
 const MOBILE_NAV_LINKS = [
   { label: "Catalog", href: "/shop" },
-  { label: "RETA", href: RETA_HREF },
   { label: "Quality", href: "/quality" },
   { label: "Documentation", href: "/documentation" },
   { label: "Affiliates", href: "/affiliates" },
@@ -150,7 +149,6 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
           /* Desktop nav — hidden on mobile */
           <nav className="hidden items-center justify-center gap-7 md:flex">
             <NavLink href="/shop">Catalog</NavLink>
-            <NavLink href={RETA_HREF}>RETA</NavLink>
             <NavLink href="/quality">Quality</NavLink>
             <NavLink href="/documentation">Documentation</NavLink>
             <NavAffiliatesDropdown />
@@ -162,22 +160,6 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
           <Eyebrow className="text-ink">Secure checkout</Eyebrow>
         ) : (
           <div className="flex items-center gap-2 md:gap-[18px]">
-            {/* Search — desktop only */}
-            <button
-              type="button"
-              aria-label="Search"
-              className="hidden cursor-pointer items-center justify-center border-none bg-transparent p-1.5 text-ink md:inline-flex"
-            >
-              <Icon name="search" size={18} />
-            </button>
-            {/* Account — desktop only */}
-            <button
-              type="button"
-              aria-label="Account"
-              className="hidden cursor-pointer items-center justify-center border-none bg-transparent p-1.5 text-ink md:inline-flex"
-            >
-              <Icon name="user" size={18} />
-            </button>
             {/* Cart — desktop: bordered label; mobile: icon + amber badge */}
             <button
               type="button"

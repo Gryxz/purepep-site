@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { RETA_HREF, ACCOUNT_HREF } from "@/content/nav";
+import { ACCOUNT_HREF } from "@/content/nav";
 
 interface Props {
   open: boolean;
@@ -70,10 +70,6 @@ export function MoreMenu({ open, onClose }: Props) {
             <div className="mob-more-eyebrow">Navigation</div>
             <a href="/shop" className="mob-more-link" onClick={onClose}>
               <span>Shop all peptides</span>
-              <span className="arr">→</span>
-            </a>
-            <a href={RETA_HREF} className="mob-more-link" onClick={onClose}>
-              <span>RETA — flagship compound</span>
               <span className="arr">→</span>
             </a>
             <a href="/quality" className="mob-more-link" onClick={onClose}>
