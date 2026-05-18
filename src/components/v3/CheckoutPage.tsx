@@ -7,6 +7,7 @@ import { clsx } from "@/lib/clsx";
 import { useCartStore } from "@/lib/cart-store";
 import { placeWcOrder, type WcOrderResult } from "@/lib/wc-store-api";
 import { trackBeginCheckout } from "@/lib/analytics";
+import { FREE_SHIP_THRESHOLD } from "@/content/cart";
 
 /**
  * v3 Apple Swiss Checkout page (mobile-first).
@@ -26,7 +27,6 @@ import { trackBeginCheckout } from "@/lib/analytics";
  * previous CheckoutShell, with payment_method `bacs` (only enabled gateway).
  */
 
-const FREE_SHIP_THRESHOLD = 200;
 const EXPRESS_PRICE = 24;
 const STANDARD_BELOW_THRESHOLD = 8;
 

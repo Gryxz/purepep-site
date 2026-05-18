@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { RetaVialMini } from "@/components/v3/RetaVialMini";
-
-const FREE_SHIP_THRESHOLD = 200;
+import {
+  FREE_SHIP_THRESHOLD,
+  CART_EMPTY_TITLE,
+  CART_EMPTY_SUB,
+} from "@/content/cart";
 
 export function CartDrawer() {
   const { items, isOpen, closeCart, updateQty, removeItem, subtotal, totalItems } =
@@ -106,8 +109,8 @@ export function CartDrawer() {
         <div className="v3drawer-items">
           {items.length === 0 ? (
             <div className="v3drawer-empty">
-              <p className="v3drawer-empty-title">Cart is empty</p>
-              <p className="v3drawer-empty-sub">Add a vial to get started.</p>
+              <p className="v3drawer-empty-title">{CART_EMPTY_TITLE}</p>
+              <p className="v3drawer-empty-sub">{CART_EMPTY_SUB}</p>
             </div>
           ) : (
             items.map((item) => {

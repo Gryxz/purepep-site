@@ -15,6 +15,7 @@
     "lint:fix": "next lint --fix && stylelint \"src/**/*.css\" --fix",
     "format": "prettier --write .",
     "fence": "tsx scripts/check-tokens-fence.ts",
+    "wc:audit": "tsx scripts/wc-product-audit.ts",
     "inspect:hero": "tsx scripts/inspect-hero.ts",
     "labels": "tsx scripts/render-labels.ts",
     "products": "tsx scripts/render-product-photos.ts",

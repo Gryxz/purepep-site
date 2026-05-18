@@ -6,8 +6,12 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
 import { getProduct } from "@/data/products.static";
 import { MobileVial } from "./MobileVial";
+import {
+  FREE_SHIP_THRESHOLD,
+  CART_EMPTY_TITLE,
+  CART_EMPTY_SUB,
+} from "@/content/cart";
 
-const FREE_SHIP_THRESHOLD = 200;
 const UPSELL_SLUG = "bpc-157";
 
 /**
@@ -106,8 +110,8 @@ export function MobileCartPage() {
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
             </svg>
           </div>
-          <div className="mob-cart-empty-h">Your cart is empty</div>
-          <div className="mob-cart-empty-p">Add a compound from the catalog to get started.</div>
+          <div className="mob-cart-empty-h">{CART_EMPTY_TITLE}</div>
+          <div className="mob-cart-empty-p">{CART_EMPTY_SUB}</div>
           <a href="/shop" className="mob-cta-view" style={{ marginTop: 12, maxWidth: 280 }}>Browse catalog →</a>
         </div>
       ) : (

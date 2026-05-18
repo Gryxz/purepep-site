@@ -8,8 +8,11 @@ import type { Product } from "@/data/products";
 import { RetaVialMini } from "@/components/v3/RetaVialMini";
 import { TrustBar } from "@/components/v3/TrustBar";
 import { BackButton } from "@/components/ui/BackButton";
-
-const FREE_SHIP_THRESHOLD = 200;
+import {
+  FREE_SHIP_THRESHOLD,
+  CART_EMPTY_TITLE,
+  CART_EMPTY_SUB,
+} from "@/content/cart";
 
 const UPSELL: {
   slug: string;
@@ -104,8 +107,8 @@ export function CartPage({ products }: { products: Product[] }) {
 
         {empty ? (
           <div className="v3cart-empty">
-            <p className="v3cart-empty-title">Cart is empty</p>
-            <p className="v3cart-empty-sub">Add a vial to get started.</p>
+            <p className="v3cart-empty-title">{CART_EMPTY_TITLE}</p>
+            <p className="v3cart-empty-sub">{CART_EMPTY_SUB}</p>
             <Link href="/shop" className="v3cart-empty-cta">
               Browse the catalog →
             </Link>

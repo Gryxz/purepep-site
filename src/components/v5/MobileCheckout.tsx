@@ -5,8 +5,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
 import { placeWcOrder } from "@/lib/wc-store-api";
+import { FREE_SHIP_THRESHOLD } from "@/content/cart";
 
-const FREE_SHIP_THRESHOLD = 200;
 const EXPRESS_SHIP_COST = 24;
 const STANDARD_SHIP_COST_BELOW_THRESHOLD = 8;
 
