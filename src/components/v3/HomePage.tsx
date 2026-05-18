@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LabelCropSvg } from "./LabelCropSvg";
 import { TestimonialsSection } from "./TestimonialsSection";
+import { REFERRAL } from "@/content/referral";
 
 /**
  * v3 Apple Swiss Homepage.
@@ -331,27 +332,26 @@ export function HomePage({ products }: { products: Product[] }) {
         <div className="v3-container">
           <div className="v3-ref-teaser-grid">
             <div className="v3-ref-teaser-left">
-              <p className="v3-section-eyebrow">Researcher referral</p>
-              <h2 className="v3-ref-teaser-h">Refer a colleague. Both of you save $25.</h2>
-              <p className="v3-ref-teaser-body">Share your personal referral link. Your colleague gets $25 off their first order. You receive $25 store credit when their order ships.</p>
+              <p className="v3-section-eyebrow">{REFERRAL.eyebrow}</p>
+              <h2 className="v3-ref-teaser-h">{REFERRAL.headline}</h2>
+              <p className="v3-ref-teaser-body">{REFERRAL.body}</p>
               <div className="v3-ref-teaser-ctas">
-                <a href="/referral" className="v3-pill v3-pill-primary">Get your referral link <span className="arrow">→</span></a>
-                <a href="/referral" className="v3-pill v3-pill-ghost">Learn about the program</a>
+                <a href={REFERRAL.primary.href} className="v3-pill v3-pill-primary">
+                  {REFERRAL.primary.label} <span className="arrow">→</span>
+                </a>
+                <a href={REFERRAL.secondary.href} className="v3-pill v3-pill-ghost">
+                  {REFERRAL.secondary.label}
+                </a>
               </div>
+              <p className="v3-ref-teaser-fine">{REFERRAL.terms}</p>
             </div>
             <div className="v3-ref-teaser-stats">
-              <div className="v3-ref-stat">
-                <div className="v3-ref-stat-num">$25</div>
-                <div className="v3-ref-stat-label">Off their first order</div>
-              </div>
-              <div className="v3-ref-stat">
-                <div className="v3-ref-stat-num">$25</div>
-                <div className="v3-ref-stat-label">Credit to your account</div>
-              </div>
-              <div className="v3-ref-stat">
-                <div className="v3-ref-stat-num">∞</div>
-                <div className="v3-ref-stat-label">No referral cap</div>
-              </div>
+              {REFERRAL.stats.map((s) => (
+                <div key={s.label} className="v3-ref-stat">
+                  <div className="v3-ref-stat-num">{s.value}</div>
+                  <div className="v3-ref-stat-label">{s.label}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

@@ -6,7 +6,7 @@
  * compliance strings and stock-state labels stay identical — content
  * parity by construction. Each surface keeps its own layout/styling.
  */
-import type { StockState } from "@/data/products";
+import type { Product, Category, StockState } from "@/data/products";
 
 /** Stock pill label — identical text on both catalogs (styling per side). */
 export function stockLabel(stock: StockState): string {
@@ -18,6 +18,28 @@ export function stockLabel(stock: StockState): string {
     case "in":
       return "In stock";
   }
+}
+
+/** Short category label for product-card pills (shared by every mobile grid). */
+export function categoryShort(c: Category): string {
+  switch (c) {
+    case "Incretin mimetics":
+      return "GLP-1";
+    case "GH secretagogues":
+      return "Growth";
+    case "Healing":
+      return "Healing";
+    case "Cognition":
+      return "Cognition";
+    case "Metabolic":
+      return "Metabolic";
+  }
+}
+
+/** First sentence of the description, capped so it fits a card. */
+export function shortDesc(p: Product): string {
+  const first = p.description.split(".")[0] ?? p.name;
+  return first.length > 60 ? first.slice(0, 57) + "..." : first + ".";
 }
 
 /** "Request a compound" CTA block — rendered identically on both. */

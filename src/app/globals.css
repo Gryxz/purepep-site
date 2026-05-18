@@ -9979,6 +9979,14 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   max-width: 480px;
 }
 
+.v3-ref-teaser-fine {
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--v3-ink-60);
+}
+
 .v3-ref-teaser-ctas { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 
 .v3-ref-teaser-stats {

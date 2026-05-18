@@ -8,6 +8,14 @@ import { MobileVial } from "./MobileVial";
 import { MobileRetaSpotlight } from "./MobileRetaSpotlight";
 import { MobileFooter } from "./MobileFooter";
 import { TestimonialsSection } from "../v3/TestimonialsSection";
+import {
+  stockLabel,
+  STACK_BADGE_LABEL,
+  categoryShort,
+  shortDesc,
+  CATALOG_REQUEST_CTA,
+} from "@/content/catalog";
+import { REFERRAL } from "@/content/referral";
 
 /**
  * v5 mobile homepage — ported 1:1 from
@@ -281,14 +289,18 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             <a key={p.slug} href={`/shop/${p.slug}`} className="mob-pcard">
               <div className="mob-pcard-img">
                 {p.type === "stack" ? (
-                  <span className="mob-card-stack-ribbon">Stack</span>
+                  <span className="mob-card-stack-ribbon">{STACK_BADGE_LABEL}</span>
                 ) : p.regularPrice && p.regularPrice > p.price ? (
                   <span className="mob-card-sale-ribbon">Sale</span>
                 ) : null}
                 <span className="mob-cat-pill">{categoryShort(p.category)}</span>
-                <span className={`mob-stock-chip ${p.stock === "low" ? "is-low" : "is-in"}`}>
+                <span
+                  className={`mob-stock-chip ${
+                    p.stock === "low" ? "is-low" : p.stock === "out" ? "is-out" : "is-in"
+                  }`}
+                >
                   <span className="sd" />
-                  {p.stock === "low" ? "Low stock" : "In stock"}
+                  {stockLabel(p.stock)}
                 </span>
                 <Image
                   src={`/images/products/source/purepep-vial-${p.slug}-v1.0.jpg`}
@@ -428,46 +440,37 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       <section className="mob-referral">
         <div className="mob-ref-frame">
           <div className="mob-ref-content">
-            <h2 className="mob-ref-h">Refer a colleague, earn store credit</h2>
-            <p className="mob-ref-sub">
-              For labs and verified researchers. Share your code, both sides save — no caps, stack indefinitely.
-            </p>
+            <h2 className="mob-ref-h">{REFERRAL.headline}</h2>
+            <p className="mob-ref-sub">{REFERRAL.body}</p>
             <div className="mob-ref-stats">
-              <div className="mob-r-stat">
-                <div className="mob-r-stat-num">$25</div>
-                <div className="mob-r-stat-label">Off their<br />first order</div>
-              </div>
-              <div className="mob-r-stat">
-                <div className="mob-r-stat-num">$25</div>
-                <div className="mob-r-stat-label">Credit when<br />they receive</div>
-              </div>
-              <div className="mob-r-stat">
-                <div className="mob-r-stat-num">∞</div>
-                <div className="mob-r-stat-label">Referrals<br />no cap</div>
-              </div>
+              {REFERRAL.stats.map((s) => (
+                <div key={s.label} className="mob-r-stat">
+                  <div className="mob-r-stat-num">{s.value}</div>
+                  <div className="mob-r-stat-label">{s.label}</div>
+                </div>
+              ))}
             </div>
-            <a href="/referral" className="mob-ref-cta">
-              Get your referral link
+            <a href={REFERRAL.primary.href} className="mob-ref-cta">
+              {REFERRAL.primary.label}
               <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
               </svg>
             </a>
-            <span className="mob-ref-fine">Min. order $150 · Credit applied 7 days after delivery confirmation.</span>
+            <span className="mob-ref-fine">{REFERRAL.terms}</span>
           </div>
         </div>
       </section>
 
       {/* Dark CTA — declarative headline + tightened body. */}
       <section className="mob-dcta" data-mob-section="dark">
-        <div className="mob-dcta-eyebrow">For research teams</div>
-        <h2 className="mob-dcta-h">Don&apos;t see what you need?</h2>
-        <p className="mob-dcta-body">
-          We source and synthesize additional peptides for labs and repeat buyers. Send us your spec —
-          we respond within one business day.
-        </p>
-        <a href="/legal/contact" className="mob-cta-amber-base mob-dcta-btn">
-          Request a quote
+        <div className="mob-dcta-eyebrow">{CATALOG_REQUEST_CTA.eyebrow}</div>
+        <h2 className="mob-dcta-h">
+          {CATALOG_REQUEST_CTA.headlineLead} {CATALOG_REQUEST_CTA.headlineEmphasis}
+        </h2>
+        <p className="mob-dcta-body">{CATALOG_REQUEST_CTA.body}</p>
+        <a href={CATALOG_REQUEST_CTA.primary.href} className="mob-cta-amber-base mob-dcta-btn">
+          {CATALOG_REQUEST_CTA.primary.label}
           <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />
@@ -478,28 +481,6 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       <MobileFooter />
     </div>
   );
-}
-
-/** Map full Category to the short pill label seen on cards. */
-function categoryShort(c: Product["category"]): string {
-  switch (c) {
-    case "Incretin mimetics":
-      return "GLP-1";
-    case "GH secretagogues":
-      return "Growth";
-    case "Healing":
-      return "Healing";
-    case "Cognition":
-      return "Cognition";
-    case "Metabolic":
-      return "Metabolic";
-  }
-}
-
-/** First sentence of description, capped to ~50 chars to fit the card. */
-function shortDesc(p: Product): string {
-  const first = p.description.split(".")[0] ?? p.name;
-  return first.length > 60 ? first.slice(0, 57) + "..." : first + ".";
 }
 
 /** Compact technical spec line: receptor profile + structure + form. */

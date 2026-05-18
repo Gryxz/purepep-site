@@ -2,7 +2,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Product, Category } from "@/data/products";
+import type { Product } from "@/data/products";
 import {
   CATALOG_FILTERS,
   filterCounts,
@@ -14,6 +14,8 @@ import {
   STACK_BADGE_LABEL,
   CATALOG_RUO_FOOTNOTE,
   CATALOG_REQUEST_CTA,
+  categoryShort,
+  shortDesc,
 } from "@/content/catalog";
 import Image from "next/image";
 import { MobileVial } from "./MobileVial";
@@ -219,19 +221,4 @@ export function MobileShopPage({ products }: { products: Product[] }) {
       <MobileFooter />
     </div>
   );
-}
-
-function categoryShort(c: Category): string {
-  switch (c) {
-    case "Incretin mimetics": return "GLP-1";
-    case "GH secretagogues":  return "Growth";
-    case "Healing":           return "Healing";
-    case "Cognition":         return "Cognition";
-    case "Metabolic":         return "Metabolic";
-  }
-}
-
-function shortDesc(p: Product): string {
-  const first = p.description.split(".")[0] ?? p.name;
-  return first.length > 60 ? first.slice(0, 57) + "..." : first + ".";
 }
