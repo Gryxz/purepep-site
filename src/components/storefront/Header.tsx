@@ -148,6 +148,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
         {!minimal && (
           /* Desktop nav — hidden on mobile */
           <nav className="hidden items-center justify-center gap-7 md:flex">
+            <NavLink href="/">Home</NavLink>
             <NavLink href="/shop">Catalog</NavLink>
             <NavLink href="/quality">Quality</NavLink>
             <NavLink href="/documentation">Documentation</NavLink>
