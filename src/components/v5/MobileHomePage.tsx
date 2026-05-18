@@ -158,12 +158,31 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             <p className="mob-heropx-sub">
               Lab-verified peptides for in vitro research. Lot-matched COA on every vial, tracked US shipping.
             </p>
-            <div className="mob-heropx-scroll-cue" aria-hidden="true">
-              <span className="mob-scroll-dot" />
-              <span className="mob-scroll-track">
-                <span className="mob-scroll-fill" />
+            <a href="/shop" className="mob-hero-cta">
+              Shop the catalog
+              <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </a>
+          </div>
+          {/* Swiss-Chems-style product cluster anchored to the hero
+              floor — staggered transparent vial cutouts on the dark
+              backdrop.  Reta excluded (de-featured); generic catalogue
+              imagery only.  aria-hidden: decorative. */}
+          <div className="mob-hero-cluster" aria-hidden="true">
+            {["tirz", "sema", "cagri", "bpc-157"].map((slug, i) => (
+              <span key={slug} className={`mob-hero-cluster-vial v${i + 1}`}>
+                <Image
+                  src={`/images/products/source/purepep-vial-${slug}-v1.0-cutout.png`}
+                  alt=""
+                  fill
+                  sizes="40vw"
+                  className="mob-hero-cluster-img"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                />
               </span>
-            </div>
+            ))}
           </div>
         </section>
 

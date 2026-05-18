@@ -64,6 +64,40 @@ export function HomePage({ products }: { products: Product[] }) {
 
   return (
     <div className="v3-shop">
+      {/* ───── Swiss-Chems-style hero — dark, left copy + amber CTA,
+              right vial cluster.  Reta excluded from the cluster
+              (de-featured); generic catalogue imagery only. ───── */}
+      <section className="v3sc-hero" aria-label="Research-grade peptides">
+        <div className="v3-container v3sc-hero-grid">
+          <div className="v3sc-hero-info">
+            <p className="v3sc-hero-eyebrow">Research-grade peptides</p>
+            <h1 className="v3sc-hero-headline">The standard for research peptides.</h1>
+            <p className="v3sc-hero-deck">
+              Lab-verified peptides for in vitro research. Lot-matched COA on every vial, tracked US shipping.
+            </p>
+            <div className="v3sc-hero-cta-row">
+              <a href="/shop" className="v3-pill v3-pill-primary">
+                Shop the catalog <span className="arrow">→</span>
+              </a>
+            </div>
+          </div>
+          <div className="v3sc-hero-cluster" aria-hidden="true">
+            {["tirz", "sema", "cagri", "bpc-157"].map((slug, i) => (
+              <span key={slug} className={`v3sc-cluster-vial v${i + 1}`}>
+                <Image
+                  src={`/images/products/source/purepep-vial-${slug}-v1.0-cutout.png`}
+                  alt=""
+                  fill
+                  sizes="40vw"
+                  className="v3sc-cluster-img"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                />
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ───── Featured compound (lead section) ───── */}
       {/* Hidden for now — gated on RETA_FEATURE_ENABLED (false). */}
       {RETA_FEATURE_ENABLED && featured && (
