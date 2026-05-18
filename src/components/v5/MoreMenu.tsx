@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { RETA_HREF, ACCOUNT_HREF } from "@/content/nav";
 
 interface Props {
   open: boolean;
@@ -71,6 +72,10 @@ export function MoreMenu({ open, onClose }: Props) {
               <span>Shop all peptides</span>
               <span className="arr">→</span>
             </a>
+            <a href={RETA_HREF} className="mob-more-link" onClick={onClose}>
+              <span>RETA — flagship compound</span>
+              <span className="arr">→</span>
+            </a>
             <a href="/quality" className="mob-more-link" onClick={onClose}>
               <span>Quality &amp; testing</span>
               <span className="arr">→</span>
@@ -87,7 +92,7 @@ export function MoreMenu({ open, onClose }: Props) {
 
           <section className="mob-more-section">
             <div className="mob-more-eyebrow">Account</div>
-            <a href="/researcher-access" className="mob-more-link" onClick={onClose}>
+            <a href={ACCOUNT_HREF} className="mob-more-link" onClick={onClose}>
               <span>Researcher verification</span>
               <span className="arr">→</span>
             </a>
@@ -103,6 +108,10 @@ export function MoreMenu({ open, onClose }: Props) {
               <span>Contact us</span>
               <span className="arr">→</span>
             </a>
+            <a href="/faq" className="mob-more-link" onClick={onClose}>
+              <span>FAQ</span>
+              <span className="arr">→</span>
+            </a>
             <a href="/documentation" className="mob-more-link" onClick={onClose}>
               <span>View all COAs</span>
               <span className="arr">→</span>
@@ -116,6 +125,7 @@ export function MoreMenu({ open, onClose }: Props) {
               <a href="/legal/privacy-policy" onClick={onClose}>Privacy</a>
               <a href="/legal/refund-policy" onClick={onClose}>Refund</a>
               <a href="/legal/shipping-policy" onClick={onClose}>Shipping</a>
+              <a href="/legal/disclaimer" onClick={onClose}>Disclaimer</a>
             </div>
           </section>
         </div>

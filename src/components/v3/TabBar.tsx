@@ -3,6 +3,7 @@
 
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
+import { ACCOUNT_HREF } from "@/content/nav";
 
 function HomeIcon() {
   return (
@@ -79,7 +80,7 @@ export function TabBar() {
         </span>
         Cart
       </button>
-      <a href="#" className="v3-tab-btn">
+      <a href={ACCOUNT_HREF} className="v3-tab-btn">
         <UserIcon />
         Account
       </a>

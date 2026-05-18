@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
 import { Lockup, Icon, Eyebrow } from "./primitives";
 import { clsx } from "@/lib/clsx";
+import { RETA_HREF, ACCOUNT_HREF } from "@/content/nav";
 
 function UtilityStrip() {
   const items = ["For research use only", "21+ qualified researchers", "All sales final"];
@@ -113,11 +114,6 @@ function NavAffiliatesDropdown({ active = false }: { active?: boolean }) {
   );
 }
 
-// TODO: when the WC product slug is renamed from `purepep-reta-test` to
-// `reta` in WP admin, switch this href back to `/shop/reta`.  Header is
-// hard-pinned to the live WC slug to avoid a 404 today.
-const RETA_HREF = "/shop/purepep-reta-test";
-
 const MOBILE_NAV_LINKS = [
   { label: "Catalog", href: "/shop" },
   { label: "RETA", href: RETA_HREF },
@@ -127,7 +123,7 @@ const MOBILE_NAV_LINKS = [
   { label: "Refer a colleague", href: "/referral" },
   { label: "Referral dashboard", href: "/referral/dashboard" },
   { label: "Affiliate dashboard", href: "/affiliates/dashboard" },
-  { label: "Account", href: "#" },
+  { label: "Account", href: ACCOUNT_HREF },
 ];
 
 export function Header({ minimal = false }: { minimal?: boolean }) {
@@ -158,7 +154,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
             <NavLink href="/quality">Quality</NavLink>
             <NavLink href="/documentation">Documentation</NavLink>
             <NavAffiliatesDropdown />
-            <NavLink>Account</NavLink>
+            <NavLink href={ACCOUNT_HREF}>Account</NavLink>
           </nav>
         )}
 

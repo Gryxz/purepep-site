@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
 import { Lockup } from "@/components/storefront/primitives";
 import { MoreMenu } from "./MoreMenu";
+import { ACCOUNT_HREF } from "@/content/nav";
 
 /**
  * v5 mobile chrome — fixed glass header (logo + hamburger + cart) and
@@ -232,7 +233,7 @@ export function MobileShell() {
           Cart
         </button>
         <a
-          href="/researcher-access"
+          href={ACCOUNT_HREF}
           className={`mob-tab-btn${isAccount ? " is-active" : ""}`}
           aria-current={isAccount ? "page" : undefined}
         >
