@@ -31,6 +31,10 @@ import { MobileFooter } from "./MobileFooter";
  * the rest — no flagship treatment.  Pane 2 removed, Reta now
  * surfaces in the catalog grid below.
  */
+// Reta/stacks spotlight is disabled for now.  Flip to true to bring
+// back the MobileRetaSpotlight section between the hero and catalog.
+const RETA_FEATURE_ENABLED = false;
+
 export function MobileHomePage({ products }: { products: Product[] }) {
   // Catalog teaser: every single-peptide + BAC water.  Reta is now
   // included (was previously sliced out because it owned the
@@ -142,12 +146,12 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         </section>
       </div>
 
-      {/* Curated stacks promotion — sits between the hero and the
-          catalog teaser.  Surfaces bundle stats (3 stacks · 2 vials
-          each · top savings · COA) + a chip rail linking each stack
-          PDP plus a back-link to the Reta PDP.  Component name retains
-          the legacy "RetaSpotlight" prefix; rename out of scope. */}
-      <MobileRetaSpotlight products={products} />
+      {/* Reta/stacks spotlight hidden for now — gated on
+          RETA_FEATURE_ENABLED (set to false below).  Component +
+          props retained so re-enabling is a one-line flip.  (The
+          section originated as the "RESEARCH PROFILE / Retatrutide"
+          spotlight; later rewritten as a curated-stacks promo.) */}
+      {RETA_FEATURE_ENABLED && <MobileRetaSpotlight products={products} />}
 
       {/* Catalog teaser — eyebrow dropped (the section header is enough). */}
       <section className="mob-catalog-section">

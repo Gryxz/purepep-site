@@ -22,6 +22,12 @@ import { LabelCropSvg } from "./LabelCropSvg";
  *   6. Documentation strip (3-card band on surface-4)
  *   7. Closing CTA
  */
+// Reta flagship/featured treatment is disabled for now.  Flip to
+// true to bring back the homepage "Featured compound" band.  Keep
+// the gate (don't delete the JSX) so re-enabling is a one-line
+// change.
+const RETA_FEATURE_ENABLED = false;
+
 export function HomePage({ products }: { products: Product[] }) {
   const featured = products[0];
   const railRef = useRef<HTMLDivElement | null>(null);
@@ -121,7 +127,10 @@ export function HomePage({ products }: { products: Product[] }) {
       </section>
 
       {/* ───── Featured compound ───── */}
-      {featured && (
+      {/* Reta flagship band hidden for now — gated on
+          RETA_FEATURE_ENABLED (set to false above).  JSX retained so
+          re-enabling is a one-line flip, not a rebuild. */}
+      {RETA_FEATURE_ENABLED && featured && (
         <section className="v3home-featured-band">
           <div className="v3-container">
             <div className="v3home-featured-grid">

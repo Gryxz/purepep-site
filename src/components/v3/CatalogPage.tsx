@@ -20,13 +20,22 @@ const CHIPS: { key: ChipKey; label: string; categories: Category[] | "all" }[] =
   { key: "blends",   label: "Research blends", categories: ["Metabolic", "Cognition"] },
 ];
 
+// Reta flagship/featured treatment disabled for now.  Flip to true
+// to restore Reta as the lead slide in the catalog featured carousel.
+const RETA_FEATURE_ENABLED = false;
+
 export function CatalogPage({ products }: { products: Product[] }) {
   const [chip, setChip] = useState<ChipKey>("all");
   const [slide, setSlide] = useState(0);
   const railRef = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState({ width: 33, left: 0 });
 
-  const featured = products.slice(0, 3);
+  // Reta excluded from the featured carousel for now — see
+  // RETA_FEATURE_ENABLED.  When disabled, the carousel features the
+  // first 3 non-Reta products instead of products.slice(0, 3).
+  const featured = RETA_FEATURE_ENABLED
+    ? products.slice(0, 3)
+    : products.filter((p) => p.slug !== "reta").slice(0, 3);
 
   useEffect(() => {
     const el = railRef.current;
