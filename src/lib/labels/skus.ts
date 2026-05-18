@@ -140,6 +140,17 @@ export const LABEL_SKUS: LabelSku[] = [
     backdropUpper: "#DDD0E8",
     backdropShelf: "#C4B0D6",
   },
+  // ── Utility ───────────────────────────────────────────────────────────────
+  {
+    slug: "bac-water",
+    abbreviation: "BAC",
+    fullName: "Bacteriostatic Water",
+    cas: "—", // 0.9% benzyl alcohol diluent — no meaningful CAS
+    dose: "30 ML",
+    labelBg: "#faf7f0", // universal bone/utility colorway (Canon v1.2)
+    backdropUpper: "#ddd2bd",
+    backdropShelf: "#c7b89e",
+  },
   // ── Stacks ────────────────────────────────────────────────────────────────
   {
     slug: "healing-stack",
