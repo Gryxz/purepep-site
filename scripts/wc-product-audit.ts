@@ -67,16 +67,29 @@ function pickCategory(p: WcProduct): string {
     return "Incretin mimetics";
   if (any(cats, ["gh ", "growth", "secretagogue", "ipamorelin"]))
     return "GH secretagogues";
-  if (any(cats, ["heal", "repair", "bpc", "tb-500", "thymosin"]))
+  if (
+    any(cats, [
+      "heal",
+      "repair",
+      "bpc",
+      "tb-500",
+      "thymosin",
+      "ghk",
+      "copper",
+      "tripeptide",
+    ])
+  )
     return "Healing";
   if (any(cats, ["cogni", "nootropic", "selank", "semax"])) return "Cognition";
   if (any([name], ["reta", "sema", "tirz", "survo", "cagri"]))
     return "Incretin mimetics";
   if (any([name], ["ipamorelin", "ghrp", "sermorelin"]))
     return "GH secretagogues";
-  if (any([name], ["bpc", "tb-500", "thymosin"])) return "Healing";
+  if (any([name], ["bpc", "tb-500", "thymosin", "ghk", "copper"]))
+    return "Healing";
   if (any([name], ["selank", "semax", "noopept"])) return "Cognition";
-  return "Metabolic"; // ← fallback bucket; GHK-Cu lands here today
+  if (any([name], ["mots"])) return "Metabolic"; // explicit, not fallback
+  return "Metabolic"; // fallback bucket
 }
 
 async function fetchAll(): Promise<WcProduct[]> {

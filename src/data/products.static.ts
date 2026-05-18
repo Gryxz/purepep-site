@@ -262,6 +262,49 @@ export const PRODUCTS: Product[] = [
     purity: "≥ 99.0% (HPLC)",
     sku: "PP-IP-005",
   },
+  // GHK-Cu / MOTS-c: canon SKUs + product images that previously lived
+  // only on the WC backend. price / lot / sku below are PLACEHOLDERS —
+  // reconcile against the WC source of truth (pnpm wc:audit) before launch.
+  {
+    slug: "ghk-cu",
+    compound: "GHKCU",
+    name: "GHK-Cu",
+    dose: "50 mg",
+    variants: ["50 mg"],
+    cas: "49557-75-7",
+    price: 65.0, // PLACEHOLDER
+    priceLabel: "$65.00", // PLACEHOLDER
+    category: "Healing",
+    stock: "in",
+    description:
+      "GHK-Cu (copper tripeptide-1) is a naturally occurring copper-binding tripeptide studied in skin-remodeling and tissue-repair research.",
+    disclaimer:
+      "This is a lyophilized powder vial intended for research use — this is not a capsule or oral supplement.",
+    lot: "GH-0000-PLACEHOLDER", // PLACEHOLDER
+    storage: "2–8 °C, protect from light",
+    purity: "≥ 99.0% (HPLC)",
+    sku: "PP-GHKCU-050", // PLACEHOLDER
+  },
+  {
+    slug: "mots-c",
+    compound: "MOTSC",
+    name: "MOTS-c",
+    dose: "10 mg",
+    variants: ["10 mg"],
+    cas: "1627580-64-6",
+    price: 95.0, // PLACEHOLDER
+    priceLabel: "$95.00", // PLACEHOLDER
+    category: "Metabolic",
+    stock: "in",
+    description:
+      "MOTS-c is a 16-amino-acid mitochondrial-derived peptide studied in metabolic-regulation and exercise-physiology research.",
+    disclaimer:
+      "This is a lyophilized powder vial intended for research use — this is not a capsule or oral supplement.",
+    lot: "MO-0000-PLACEHOLDER", // PLACEHOLDER
+    storage: "2–8 °C, protect from light",
+    purity: "≥ 99.0% (HPLC)",
+    sku: "PP-MOTSC-010", // PLACEHOLDER
+  },
   {
     slug: "bac-water",
     compound: "BACW",

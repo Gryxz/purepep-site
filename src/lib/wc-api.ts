@@ -207,7 +207,18 @@ function pickCategory(wc: WcProduct): Category {
   if (matchesAny(catLower, ["gh ", "growth", "secretagogue", "ipamorelin"])) {
     return "GH secretagogues";
   }
-  if (matchesAny(catLower, ["heal", "repair", "bpc", "tb-500", "thymosin"])) {
+  if (
+    matchesAny(catLower, [
+      "heal",
+      "repair",
+      "bpc",
+      "tb-500",
+      "thymosin",
+      "ghk",
+      "copper",
+      "tripeptide",
+    ])
+  ) {
     return "Healing";
   }
   if (matchesAny(catLower, ["cogni", "nootropic", "selank", "semax"])) {
@@ -222,11 +233,19 @@ function pickCategory(wc: WcProduct): Category {
   if (matchesAny([nameLower], ["ipamorelin", "ghrp", "sermorelin"])) {
     return "GH secretagogues";
   }
-  if (matchesAny([nameLower], ["bpc", "tb-500", "thymosin"])) {
+  if (
+    matchesAny([nameLower], ["bpc", "tb-500", "thymosin", "ghk", "copper"])
+  ) {
     return "Healing";
   }
   if (matchesAny([nameLower], ["selank", "semax", "noopept"])) {
     return "Cognition";
+  }
+
+  // MOTS-c is metabolic — make it explicit so it's intentional, not just
+  // a side-effect of the fallback below.
+  if (matchesAny([nameLower], ["mots"])) {
+    return "Metabolic";
   }
 
   return "Metabolic";
