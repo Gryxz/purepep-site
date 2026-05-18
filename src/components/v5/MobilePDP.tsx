@@ -10,6 +10,7 @@ import { MobileFooter } from "./MobileFooter";
 import { formatPrice } from "@/lib/format";
 import { categoryShort, shortDesc } from "@/content/catalog";
 import { RESEARCH_USE_ATTESTATION } from "@/content/compliance";
+import { PRICING_TIERS, DEFAULT_TIER_INDEX } from "@/content/pricing";
 
 /**
  * v5 mobile PDP — ported 1:1 from
@@ -21,8 +22,9 @@ import { RESEARCH_USE_ATTESTATION } from "@/content/compliance";
  *  - trackAddToCart fires on Add to cart with computed total
  *  - product.variantMap drives per-dose price + WC variation id
  *
- * The mockup has no 1/3/5-vial tier toggle (mobile-simplified flow);
- * we keep the existing PDPHero tier system for desktop only.
+ * Bulk pricing uses the shared 1/3/5-vial tier ladder
+ * (@/content/pricing) — identical to desktop PDPHero so a 5-vial order
+ * costs the same on either device.
  */
 export function MobilePDP({ product, related }: { product: Product; related: Product[] }) {
   const { addItem, openCart } = useCartStore();
@@ -30,21 +32,24 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
     const i = product.variants.indexOf(product.dose);
     return i >= 0 ? i : 0;
   });
+  const [tierIdx, setTierIdx] = useState(DEFAULT_TIER_INDEX);
   const [qty, setQty] = useState(1);
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
+  const tier = PRICING_TIERS[tierIdx]!;
   const variant = product.variants[doseIdx] ?? product.dose;
   const variantEntry = product.variantMap?.[variant];
   // Price priority: WC variation map > static variantPrices > base price.
   // variantMap is populated when the upstream WC product is type:variable;
   // variantPrices is the static fallback so the UI still updates per
   // dose before WC variations are configured.
-  const unitPrice =
+  const basePrice =
     variantEntry?.price ??
     product.variantPrices?.[variant] ??
     product.price;
+  const unitPrice = basePrice * (1 - tier.discount);
   const effectiveWcId = variantEntry?.wcId ?? product.wcId;
-  const orderTotal = unitPrice * qty;
+  const orderTotal = unitPrice * tier.qty * qty;
   const isOut = product.stock === "out";
 
   // Fire product_view exactly once per slug change.
@@ -54,7 +59,8 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
 
   function handleAddToCart() {
     if (isOut) return;
-    for (let i = 0; i < qty; i++) {
+    const totalUnits = tier.qty * qty;
+    for (let i = 0; i < totalUnits; i++) {
       addItem({
         slug: product.slug,
         compound: product.compound,
@@ -65,7 +71,7 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
         wcId: effectiveWcId,
       });
     }
-    trackAddToCart(product, variant, qty, orderTotal, effectiveWcId);
+    trackAddToCart(product, variant, totalUnits, orderTotal, effectiveWcId);
     openCart();
   }
 
@@ -141,7 +147,7 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
           <span className="mob-pdp-price-big">{formatPrice(orderTotal)}</span>
           {product.regularPrice && product.regularPrice > product.price && (
             <span className="mob-pdp-price-strike">
-              {formatPrice(product.regularPrice * qty)}
+              {formatPrice(product.regularPrice * tier.qty * qty)}
             </span>
           )}
         </div>
@@ -180,6 +186,23 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
       {/* Variant card */}
       <div className="mob-variant-card">
         <div className="mob-variant-label">{product.name}</div>
+
+        <div className="mob-pdp-tiers" role="group" aria-label="Bulk pricing">
+          {PRICING_TIERS.map((t, i) => (
+            <button
+              key={t.qty}
+              type="button"
+              className={`mob-pdp-tier${tierIdx === i ? " is-active" : ""}`}
+              aria-pressed={tierIdx === i}
+              onClick={() => setTierIdx(i)}
+            >
+              {t.badge && <span className="mob-pdp-tier-badge">{t.badge}</span>}
+              <span className="mob-pdp-tier-qty">{t.label}</span>
+              <span className="mob-pdp-tier-save">{t.save}</span>
+            </button>
+          ))}
+        </div>
+
         <div className="mob-variant-select-wrap">
           <select
             className="mob-variant-select"

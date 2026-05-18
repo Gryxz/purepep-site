@@ -12,6 +12,7 @@ import { RetaVialMini } from "./RetaVialMini";
 import { TrustBar } from "./TrustBar";
 import { formatPrice } from "@/lib/format";
 import { RESEARCH_USE_ATTESTATION } from "@/content/compliance";
+import { PRICING_TIERS, DEFAULT_TIER_INDEX } from "@/content/pricing";
 
 const CATEGORY_LABEL: Record<Category, string> = {
   "Incretin mimetics": "GLP-1 Peptides",
@@ -36,12 +37,6 @@ const PDP_TRUST = ["99.5%+ Purity", "Third-Party Tested", "2–3 Day Shipping", 
  *     `!entry.isIntersecting && entry.boundingClientRect.top < 0`.
  *   • Hidden again when footer-sentinel enters viewport.
  */
-
-const TIERS = [
-  { qty: 1, discount: 0,    label: "1 vial",  sub: "single unit",     save: "No discount" },
-  { qty: 3, discount: 0.10, label: "3 vials", sub: "researcher pack", save: "Save 10%", badge: "Most popular" as const },
-  { qty: 5, discount: 0.20, label: "5 vials", sub: "lab pack",        save: "Save 20%" },
-];
 
 const STATS = [
   {
@@ -114,14 +109,14 @@ function StockPill({ stock, lowCount }: { stock: Product["stock"]; lowCount?: nu
 
 export function PDPHero({ product }: { product: Product }) {
   const { addItem, openCart } = useCartStore();
-  const [tierIdx, setTierIdx] = useState(1);
+  const [tierIdx, setTierIdx] = useState(DEFAULT_TIER_INDEX);
   const [doseIdx, setDoseIdx] = useState(() => {
     const i = product.variants.indexOf(product.dose);
     return i >= 0 ? i : 0;
   });
   const [qty, setQty] = useState(1);
 
-  const tier = TIERS[tierIdx]!;
+  const tier = PRICING_TIERS[tierIdx]!;
   const variant = product.variants[doseIdx] ?? product.dose;
 
   // Variable products: per-dose price + per-dose WC variation id come from
@@ -311,7 +306,7 @@ export function PDPHero({ product }: { product: Product }) {
 
             {/* Tier toggle */}
             <div className="v3pdp-tier-row" role="radiogroup" aria-label="Quantity tier">
-              {TIERS.map((t, i) => {
+              {PRICING_TIERS.map((t, i) => {
                 const tierUnit = basePrice * (1 - t.discount);
                 const tierSum = tierUnit * t.qty;
                 const active = tierIdx === i;
