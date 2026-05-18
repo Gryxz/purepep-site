@@ -34,15 +34,23 @@ import { REFERRAL } from "@/content/referral";
  *   8. Dark CTA — "Need a compound that isn't listed?"
  *   9. MobileFooter
  */
+// Reta flagship/spotlight treatment disabled for now.  Flip to true
+// to restore pane 2 (RETA flagship hero) + the MobileRetaSpotlight
+// section.  Gates retained (JSX not deleted) so re-enabling is a
+// one-line change; the .mob-heropx--solo CSS modifier collapses the
+// hero to a single pane while disabled.
+const RETA_FEATURE_ENABLED = false;
+
 export function MobileHomePage({ products }: { products: Product[] }) {
   // Featured product is the first product (RETA in the canonical fixture).
   // Fall back to undefined-safe so an empty catalog doesn't crash the page.
   const featured = products[0];
-  // Catalog teaser: every single-peptide + BAC water (skip the featured RETA
-  // since it owns the hero, and skip stacks which get their own "Best selling
-  // bundles" section above the catalog).
-  const rest = products
-    .slice(1)
+  // Catalog teaser: every single-peptide + BAC water.  When the Reta
+  // feature is disabled, Reta is no longer the flagship so it joins
+  // the grid as a normal product (include products[0]); otherwise it
+  // owns the hero and is skipped.  Stacks always excluded — they get
+  // the "Best-selling bundles" rail.
+  const rest = (RETA_FEATURE_ENABLED ? products.slice(1) : products)
     .filter((p) => p.type !== "stack")
     .slice(0, 8);
   const parallaxRef = useRef<HTMLDivElement | null>(null);
@@ -130,7 +138,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           IS the spotlight now, the CTA the user came for. */}
       <div
         ref={parallaxRef}
-        className="mob-heropx"
+        className={`mob-heropx${RETA_FEATURE_ENABLED ? "" : " mob-heropx--solo"}`}
         data-mob-section="dark"
         style={{ ["--mob-px-p" as string]: "0" }}
       >
@@ -174,6 +182,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
          *
          * Bottom fade (.mob-heropx-fadeout) bridges into the cream
          * catalog below. */}
+        {RETA_FEATURE_ENABLED && (
         <section className="mob-heropx-pane mob-heropx-2" aria-label="Featured: Retatrutide">
           <div className="mob-heropx-bg mob-heropx-bg-vial" aria-hidden="true">
             <div className="mob-heropx-vial-glow" />
@@ -227,12 +236,13 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             </p>
           </div>
         </section>
+        )}
       </div>
 
-      {/* Retatrutide research profile — sits between the hero parallax
-          stack and the catalog teaser.  Surfaces the four headline specs
-          + the often-stacked-with chip row before the grid below. */}
-      <MobileRetaSpotlight products={products} />
+      {/* Retatrutide research profile — hidden for now, gated on
+          RETA_FEATURE_ENABLED (false).  Component + props retained so
+          re-enabling is a one-line flip. */}
+      {RETA_FEATURE_ENABLED && <MobileRetaSpotlight products={products} />}
 
       {/* Best-selling bundles — 3 stacks, horizontal scroll rail. */}
       {(() => {

@@ -21,6 +21,10 @@ import Image from "next/image";
 import { RetaVial } from "./RetaVial";
 import { TrustBar } from "./TrustBar";
 
+// Reta flagship/featured treatment disabled for now.  Flip to true
+// to restore Reta as a lead slide in the featured carousel.
+const RETA_FEATURE_ENABLED = false;
+
 export function CatalogPage({ products }: { products: Product[] }) {
   const [chip, setChip] = useState<FilterKey>("all");
   const [slide, setSlide] = useState(0);
@@ -37,7 +41,11 @@ export function CatalogPage({ products }: { products: Product[] }) {
     () => products.filter((p) => activeChip.match(p.category)),
     [products, activeChip],
   );
-  const featured = visible.slice(0, 3);
+  // Reta excluded from the featured carousel for now — see
+  // RETA_FEATURE_ENABLED.  Reta still appears in the normal grid/rail.
+  const featured = (
+    RETA_FEATURE_ENABLED ? visible : visible.filter((p) => p.slug !== "reta")
+  ).slice(0, 3);
 
   useEffect(() => {
     const el = railRef.current;

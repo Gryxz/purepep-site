@@ -25,6 +25,11 @@ import { REFERRAL } from "@/content/referral";
  *   8. Referral teaser
  *   9. Closing CTA
  */
+// Reta flagship/featured treatment disabled for now.  Flip to true
+// to bring back the homepage "Featured compound" lead band.  Gate
+// retained (JSX not deleted) so re-enabling is a one-line change.
+const RETA_FEATURE_ENABLED = false;
+
 export function HomePage({ products }: { products: Product[] }) {
   const featured = products[0];
   const railRef = useRef<HTMLDivElement | null>(null);
@@ -60,7 +65,8 @@ export function HomePage({ products }: { products: Product[] }) {
   return (
     <div className="v3-shop">
       {/* ───── Featured compound (lead section) ───── */}
-      {featured && (
+      {/* Hidden for now — gated on RETA_FEATURE_ENABLED (false). */}
+      {RETA_FEATURE_ENABLED && featured && (
         <section className="v3home-featured-band">
           <div className="v3-container">
             <div className="v3home-featured-grid">

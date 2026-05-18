@@ -8947,6 +8947,16 @@ a.v3-pill-ghost:hover {
   background: var(--m-bone);
 }
 
+/* Solo-pane modifier — applied by MobileHomePage when the Reta
+ * flagship (pane 2) is gated off (RETA_FEATURE_ENABLED = false).
+ * Collapses the 110vh two-pane stack to a single 100vh hero and
+ * stops pane 1 fading out (no pane 2 to cross-fade into) so there's
+ * no empty dark runway before the next section.  Scoped to the
+ * modifier so the original two-pane rules are untouched — flipping
+ * the flag back restores the crossfade verbatim. */
+.mob-heropx--solo { height: 100vh; }
+.mob-heropx--solo .mob-heropx-1 { opacity: 1; }
+
 .mob-heropx-pane {
   position: sticky;
   top: 0;
