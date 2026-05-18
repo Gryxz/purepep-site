@@ -14,9 +14,9 @@ import { REFERRAL } from "@/content/referral";
 /**
  * v3 Apple Swiss Homepage.
  *
- * Sections (conversion-ordered — product grid leads):
- *   1. Catalog — section head row + product grid (rail ≤1024)
- *   2. Featured compound band — 60/40 grid with label-crop visual
+ * Sections:
+ *   1. Featured compound band — 60/40 grid with label-crop visual
+ *   2. Catalog — section head row + product grid (rail ≤1024)
  *   3. Stat grid — Specifications we publish
  *   4. Testimonials
  *   5. Best-selling bundles
@@ -59,7 +59,45 @@ export function HomePage({ products }: { products: Product[] }) {
 
   return (
     <div className="v3-shop">
-      {/* ───── Catalog (lead section) ───── */}
+      {/* ───── Featured compound (lead section) ───── */}
+      {featured && (
+        <section className="v3home-featured-band">
+          <div className="v3-container">
+            <div className="v3home-featured-grid">
+              <div>
+                <p className="v3-section-eyebrow">
+                  Featured · 01 / {padded2(products.length)}
+                </p>
+                <h2 className="v3home-featured-headline">
+                  {featured.name}. The current frontier for metabolic research.
+                </h2>
+                <p className="v3home-featured-body">
+                  Triple GLP-1 / GIP / glucagon agonist, 39-amino-acid peptide. Supplied as lyophilized powder in a
+                  stoppered glass vial. Available in 1, 3, and 5-vial configurations, each shipped with a lot-matched
+                  Certificate of Analysis.
+                </p>
+                <div className="v3home-featured-ctas">
+                  <a href={`/shop/${featured.slug}`} className="v3-pill v3-pill-primary">
+                    View {featured.name} <span className="arrow">→</span>
+                  </a>
+                  <a href="/shop" className="v3-pill v3-pill-ghost">
+                    Compare configurations
+                  </a>
+                </div>
+              </div>
+              <div className="v3home-label-crop" aria-label={`${featured.compound} label close-up`}>
+                <LabelCropSvg
+                  compound={featured.compound}
+                  dose={featured.dose}
+                  lot={featured.lot}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ───── Catalog ───── */}
       <section className="v3-section">
         <div className="v3-container">
           <div className="v3-section-head-row">
@@ -138,44 +176,6 @@ export function HomePage({ products }: { products: Product[] }) {
           </div>
         </div>
       </section>
-
-      {/* ───── Featured compound ───── */}
-      {featured && (
-        <section className="v3home-featured-band">
-          <div className="v3-container">
-            <div className="v3home-featured-grid">
-              <div>
-                <p className="v3-section-eyebrow">
-                  Featured · 01 / {padded2(products.length)}
-                </p>
-                <h2 className="v3home-featured-headline">
-                  {featured.name}. The current frontier for metabolic research.
-                </h2>
-                <p className="v3home-featured-body">
-                  Triple GLP-1 / GIP / glucagon agonist, 39-amino-acid peptide. Supplied as lyophilized powder in a
-                  stoppered glass vial. Available in 1, 3, and 5-vial configurations, each shipped with a lot-matched
-                  Certificate of Analysis.
-                </p>
-                <div className="v3home-featured-ctas">
-                  <a href={`/shop/${featured.slug}`} className="v3-pill v3-pill-primary">
-                    View {featured.name} <span className="arrow">→</span>
-                  </a>
-                  <a href="/shop" className="v3-pill v3-pill-ghost">
-                    Compare configurations
-                  </a>
-                </div>
-              </div>
-              <div className="v3home-label-crop" aria-label={`${featured.compound} label close-up`}>
-                <LabelCropSvg
-                  compound={featured.compound}
-                  dose={featured.dose}
-                  lot={featured.lot}
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ───── Proven & Tested ───── */}
       <section className="v3-section">
