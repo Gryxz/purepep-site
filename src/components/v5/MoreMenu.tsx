@@ -100,7 +100,7 @@ export function MoreMenu({ open, onClose }: Props) {
 
           <section className="mob-more-section">
             <div className="mob-more-eyebrow">Support</div>
-            <a href="/legal/contact" className="mob-more-link" onClick={onClose}>
+            <a href="/contact" className="mob-more-link" onClick={onClose}>
               <span>Contact us</span>
               <span className="arr">→</span>
             </a>

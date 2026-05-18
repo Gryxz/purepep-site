@@ -103,7 +103,7 @@ export function Footer({
           { label: "Privacy policy", href: "/legal/privacy-policy" },
           { label: "Shipping policy", href: "/legal/shipping-policy" },
           { label: "Disclaimer", href: "/legal/disclaimer" },
-          { label: "Contact", href: "/legal/contact" },
+          { label: "Contact", href: "/contact" },
         ];
 
   return (

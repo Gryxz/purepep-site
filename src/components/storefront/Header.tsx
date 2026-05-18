@@ -123,6 +123,7 @@ const MOBILE_NAV_LINKS = [
   { label: "Referral dashboard", href: "/referral/dashboard" },
   { label: "Affiliate dashboard", href: "/affiliates/dashboard" },
   { label: "Account", href: ACCOUNT_HREF },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function Header({ minimal = false }: { minimal?: boolean }) {
@@ -154,6 +155,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
             <NavLink href="/documentation">Documentation</NavLink>
             <NavAffiliatesDropdown />
             <NavLink href={ACCOUNT_HREF}>Account</NavLink>
+            <NavLink href="/contact">Contact</NavLink>
           </nav>
         )}
 
