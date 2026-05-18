@@ -265,7 +265,7 @@ export function ContactPage() {
                   <button
                     type="button"
                     onClick={() => copy(ticket.ref, "ref")}
-                    className="cursor-pointer border border-ink bg-transparent px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink hover:bg-surface-3"
+                    className="cursor-pointer rounded-full border border-ink bg-transparent px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink hover:bg-surface-3"
                   >
                     {copied === "ref" ? "Copied" : "Copy reference"}
                   </button>
@@ -278,7 +278,7 @@ export function ContactPage() {
                 <div className="mt-5 flex flex-wrap gap-3">
                   <a
                     href={mailtoFor(ticket.ref)}
-                    className="inline-flex items-center gap-2 border border-ink bg-amber px-4 py-2.5 font-sans text-[14px] font-bold text-ink no-underline hover:bg-amber-hover"
+                    className="inline-flex items-center gap-2 rounded-full border border-ink bg-amber px-5 py-2.5 font-sans text-[14px] font-bold text-ink no-underline hover:bg-amber-hover"
                   >
                     Reopen email <span aria-hidden="true">→</span>
                   </a>
@@ -290,7 +290,7 @@ export function ContactPage() {
                         "details",
                       )
                     }
-                    className="cursor-pointer border border-ink bg-transparent px-4 py-2.5 font-sans text-[14px] font-bold text-ink hover:bg-surface-3"
+                    className="cursor-pointer rounded-full border border-ink bg-transparent px-5 py-2.5 font-sans text-[14px] font-bold text-ink hover:bg-surface-3"
                   >
                     {copied === "details" ? "Copied" : "Copy ticket details"}
                   </button>
@@ -411,7 +411,7 @@ export function ContactPage() {
 
                 <button
                   type="submit"
-                  className="mt-6 inline-flex w-full cursor-pointer items-center justify-center gap-2 border border-ink bg-amber px-5 py-3 font-sans text-[15px] font-bold text-ink hover:bg-amber-hover sm:w-auto"
+                  className="mt-6 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-ink bg-amber px-7 py-3 font-sans text-[15px] font-bold text-ink hover:bg-amber-hover sm:w-auto"
                 >
                   Create support request <span aria-hidden="true">→</span>
                 </button>
