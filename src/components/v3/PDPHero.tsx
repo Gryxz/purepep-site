@@ -10,6 +10,8 @@ import Image from "next/image";
 import { RetaVial } from "./RetaVial";
 import { RetaVialMini } from "./RetaVialMini";
 import { TrustBar } from "./TrustBar";
+import { formatPrice } from "@/lib/format";
+import { RESEARCH_USE_ATTESTATION } from "@/content/compliance";
 
 const CATEGORY_LABEL: Record<Category, string> = {
   "Incretin mimetics": "GLP-1 Peptides",
@@ -84,10 +86,6 @@ const TIMELINE = [
     body: "Reconstitute with bacteriostatic water. Stable 30+ days refrigerated post-reconstitution.",
   },
 ];
-
-function formatPrice(n: number) {
-  return `$${n.toFixed(2)}`;
-}
 
 function StockPill({ stock, lowCount }: { stock: Product["stock"]; lowCount?: number }) {
   if (stock === "out") {
@@ -426,9 +424,7 @@ export function PDPHero({ product }: { product: Product }) {
 
             {/* Bankful compliance — research-use attestation under the CTA */}
             <p className="mx-auto mt-3 max-w-md text-center text-xs leading-relaxed text-ink/40">
-              For research use only. Not for human consumption, diagnostic, or
-              therapeutic use. Must be 21+. By purchasing you confirm you are a
-              qualified researcher.
+              {RESEARCH_USE_ATTESTATION}
             </p>
           </div>
 

@@ -2,11 +2,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Product, Category } from "@/data/products";
+import type { Product } from "@/data/products";
 import { useCartStore } from "@/lib/cart-store";
 import { trackProductView, trackAddToCart } from "@/lib/analytics";
 import Image from "next/image";
 import { MobileFooter } from "./MobileFooter";
+import { formatPrice } from "@/lib/format";
+import { categoryShort, shortDesc } from "@/content/catalog";
+import { RESEARCH_USE_ATTESTATION } from "@/content/compliance";
 
 /**
  * v5 mobile PDP — ported 1:1 from
@@ -124,9 +127,7 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
         <span className="sku-val">{product.sku}</span>
       </div>
 
-      <div className="mob-pdp-compliance">
-        For In Vitro Research Use Only — Not for Human or Veterinary Application.
-      </div>
+      <div className="mob-pdp-compliance">{RESEARCH_USE_ATTESTATION}</div>
 
       <div className="mob-pdp-rule" />
 
@@ -365,23 +366,4 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
       <MobileFooter />
     </div>
   );
-}
-
-function formatPrice(n: number): string {
-  return `$${n.toFixed(2)}`;
-}
-
-function categoryShort(c: Category): string {
-  switch (c) {
-    case "Incretin mimetics": return "GLP-1 Peptides";
-    case "GH secretagogues":  return "Growth Hormone";
-    case "Healing":           return "Healing";
-    case "Cognition":         return "Cognition";
-    case "Metabolic":         return "Metabolic";
-  }
-}
-
-function shortDesc(p: Product): string {
-  const first = p.description.split(".")[0] ?? p.name;
-  return first.length > 60 ? first.slice(0, 57) + "..." : first + ".";
 }
