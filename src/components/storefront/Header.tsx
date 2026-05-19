@@ -139,7 +139,11 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
           "layout-content grid items-center border-b border-ink py-4 md:py-5",
           minimal
             ? "grid-cols-[1fr_auto] gap-4"
-            : "grid-cols-[auto_minmax(0,1fr)_auto] gap-4 md:grid-cols-[auto_minmax(0,1fr)_auto] md:gap-8",
+            : // <xl the nav is display:none, so it's not a grid item —
+              // a 2-col [logo | actions] template keeps the cart +
+              // hamburger flush right (3-col left an empty col3 and
+              // shoved them to centre).  ≥xl: full 3-col with nav.
+              "grid-cols-[auto_1fr] gap-4 xl:grid-cols-[auto_minmax(0,1fr)_auto] xl:gap-8",
         )}
       >
         <Link href="/" className="inline-block no-underline">
@@ -166,7 +170,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
         {minimal ? (
           <Eyebrow className="text-ink">Secure checkout</Eyebrow>
         ) : (
-          <div className="flex items-center gap-2 md:gap-[18px]">
+          <div className="flex items-center justify-self-end gap-2 md:gap-[18px]">
             {/* Cart — desktop: bordered label; mobile: icon + amber badge */}
             <button
               type="button"

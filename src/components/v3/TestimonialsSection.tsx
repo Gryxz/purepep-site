@@ -143,11 +143,6 @@ export function TestimonialsSection() {
                 <div className="v3-test-role">{t.role}</div>
               </div>
             </div>
-
-            <p className="v3-test-disclaimer">
-              AI-generated transformation imagery. Individual research results may vary.
-              Not for human consumption · Research use only.
-            </p>
           </div>
         </div>
       </div>
