@@ -189,78 +189,33 @@ export function ContactPage() {
   }
 
   const inputBase =
-    "w-full rounded-2xl border border-ink bg-bone px-4 py-2.5 font-sans text-[14px] text-ink outline-none focus:border-amber";
+    "w-full rounded-xl border border-ink/15 bg-bone px-4 py-3 font-sans text-[15px] text-ink outline-none transition focus:border-amber focus:ring-2 focus:ring-amber/25";
   const labelBase =
-    "mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink";
-  const errBase = "mt-1 font-sans text-[12px] text-alert";
+    "mb-1.5 block font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-60";
+  const errBase = "mt-1.5 font-sans text-[12px] font-medium text-alert";
 
   return (
     <div className="bg-bone">
-      <div className="layout-content py-12 md:py-16">
-        {/* ── Header ── */}
-        <header className="max-w-[680px]">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-60">
-            Support
-          </p>
-          <h1 className="mt-3 font-sans text-[34px] font-extrabold leading-[1.08] tracking-[-0.02em] text-ink md:text-[44px]">
-            How can we help?
-          </h1>
-          <p className="mt-4 font-sans text-[15px] leading-relaxed text-ink-muted md:text-[16px]">
-            Open a support request and the PurePep research team will reply
-            within one business day. Order status, shipping, Certificates of
-            Analysis, returns, and account questions all go to{" "}
-            <a
-              href={`mailto:${SUPPORT_EMAIL}`}
-              className="font-medium text-ink underline decoration-amber underline-offset-2"
-            >
-              {SUPPORT_EMAIL}
-            </a>{" "}
-            or call{" "}
-            <a
-              href={`tel:${SUPPORT_PHONE_TEL}`}
-              className="font-medium text-ink underline decoration-amber underline-offset-2"
-            >
-              {SUPPORT_PHONE_DISPLAY}
-            </a>
-            .
-          </p>
-        </header>
+      <div className="layout-content pt-9 pb-28 md:pt-14 md:pb-20">
+        <div className="mx-auto max-w-[620px]">
+          {/* ── Header — compact, centred ── */}
+          <header className="text-center">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-amber">
+              Support
+            </p>
+            <h1 className="mt-3 font-sans text-[30px] font-extrabold leading-[1.1] tracking-[-0.02em] text-ink md:text-[40px]">
+              How can we help?
+            </h1>
+            <p className="mx-auto mt-3 max-w-[46ch] font-sans text-[14px] leading-relaxed text-ink-muted md:text-[15px]">
+              Open a request and the PurePep research team replies within one
+              business day.
+            </p>
+          </header>
 
-        {/* ── Quick help / deflection ── */}
-        <section className="mt-10">
-          <p className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-60">
-            Find an answer fast
-          </p>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {HELP_LINKS.map((h) => (
-              <Link
-                key={h.href}
-                href={h.href}
-                className="group flex flex-col rounded-md border border-ink bg-surface p-5 no-underline transition-colors hover:bg-surface-3"
-              >
-                <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-40">
-                  {h.num}
-                </span>
-                <span className="mt-2 font-sans text-[16px] font-bold text-ink">
-                  {h.title}
-                </span>
-                <span className="mt-1.5 font-sans text-[13px] leading-snug text-ink-muted">
-                  {h.body}
-                </span>
-                <span className="mt-3 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink">
-                  Open <span aria-hidden="true">→</span>
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Two-column: form + channel info ── */}
-        <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
-          {/* Form / success */}
-          <section>
+          {/* ── PRIMARY: support request portal ── */}
+          <section className="mt-8">
             {ticket ? (
-              <div className="rounded-md border border-ink bg-surface p-6 md:p-8">
+              <div className="rounded-2xl border border-ink/12 bg-surface p-5 shadow-sm md:p-7">
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald">
                   Request created
                 </p>
@@ -316,7 +271,7 @@ export function ContactPage() {
               <form
                 onSubmit={handleSubmit}
                 noValidate
-                className="rounded-md border border-ink bg-surface p-6 md:p-8"
+                className="rounded-2xl border border-ink/12 bg-surface p-5 shadow-sm md:p-7"
               >
                 <h2 className="font-sans text-[22px] font-extrabold tracking-[-0.01em] text-ink">
                   Open a support request
@@ -420,9 +375,9 @@ export function ContactPage() {
 
                 <button
                   type="submit"
-                  className="mt-6 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-ink bg-amber px-7 py-3 font-sans text-[15px] font-bold text-ink hover:bg-amber-hover sm:w-auto"
+                  className="mt-7 inline-flex w-full cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-2xl bg-amber px-6 py-4 font-sans text-[15px] font-bold text-ink shadow-sm transition hover:bg-amber-hover active:translate-y-px"
                 >
-                  Create support request <span aria-hidden="true">→</span>
+                  Send request <span aria-hidden="true">→</span>
                 </button>
                 <p className="mt-3 font-sans text-[12px] leading-relaxed text-ink-40">
                   Submitting opens a pre-filled email to {SUPPORT_EMAIL} and
@@ -440,7 +395,7 @@ export function ContactPage() {
                     (saved on this device)
                   </span>
                 </p>
-                <ul className="overflow-hidden rounded-md border border-line">
+                <ul className="overflow-hidden rounded-xl border border-ink/12">
                   {recent.map((r, i) => (
                     <li
                       key={r.ref}
@@ -468,57 +423,77 @@ export function ContactPage() {
             )}
           </section>
 
-          {/* Channel info */}
-          <aside className="lg:pt-1">
-            <div className="rounded-md border border-ink bg-bone p-5">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-60">
+          {/* ── Channel strip — compact, secondary ── */}
+          <section className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <a
+              href={`mailto:${SUPPORT_EMAIL}`}
+              className="rounded-xl border border-ink/12 bg-surface px-4 py-3.5 no-underline transition-colors hover:bg-surface-3"
+            >
+              <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-40">
                 Email
-              </p>
-              <a
-                href={`mailto:${SUPPORT_EMAIL}`}
-                className="mt-1 block font-sans text-[15px] font-bold text-ink no-underline"
-              >
+              </span>
+              <span className="mt-1 block font-sans text-[13.5px] font-bold text-ink">
                 {SUPPORT_EMAIL}
-              </a>
-
-              <p className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-60">
+              </span>
+            </a>
+            <a
+              href={`tel:${SUPPORT_PHONE_TEL}`}
+              className="rounded-xl border border-ink/12 bg-surface px-4 py-3.5 no-underline transition-colors hover:bg-surface-3"
+            >
+              <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-40">
                 Phone
-              </p>
-              <a
-                href={`tel:${SUPPORT_PHONE_TEL}`}
-                className="mt-1 block font-sans text-[15px] font-bold text-ink no-underline"
-              >
+              </span>
+              <span className="mt-1 block font-sans text-[13.5px] font-bold text-ink">
                 {SUPPORT_PHONE_DISPLAY}
-              </a>
-
-              <p className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-60">
-                Response time
-              </p>
-              <p className="mt-1 font-sans text-[14px] text-ink">
-                Within 1 business day
-              </p>
-
-              <p className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-60">
-                Support hours
-              </p>
-              <p className="mt-1 font-sans text-[14px] text-ink">
-                Mon–Fri · 9:00–17:00
-              </p>
-
-              <p className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-60">
-                Order issues
-              </p>
-              <p className="mt-1 font-sans text-[14px] leading-relaxed text-ink-muted">
-                Quote your order or lot number for the fastest resolution.
-                Tracking is in your confirmation email.
-              </p>
+              </span>
+            </a>
+            <div className="rounded-xl border border-ink/12 bg-surface px-4 py-3.5">
+              <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-40">
+                Hours
+              </span>
+              <span className="mt-1 block font-sans text-[13.5px] font-bold text-ink">
+                Mon–Fri · 9–17 · 1 business day
+              </span>
             </div>
+          </section>
 
-            <p className="mt-4 font-sans text-[12px] leading-relaxed text-ink-40">
-              PurePep peptides are sold strictly for in vitro laboratory
-              research. Not for human or veterinary use.
+          {/* ── Self-serve — demoted, last ── */}
+          <section className="mt-10">
+            <p className="mb-3 text-center font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-60">
+              Prefer to self-serve?
             </p>
-          </aside>
+            <div className="overflow-hidden rounded-xl border border-ink/12 bg-surface">
+              {HELP_LINKS.map((h, i) => (
+                <Link
+                  key={h.href}
+                  href={h.href}
+                  className={`flex items-center gap-4 px-4 py-3.5 no-underline transition-colors hover:bg-surface-3 ${
+                    i > 0 ? "border-t border-ink/10" : ""
+                  }`}
+                >
+                  <span className="font-mono text-[11px] font-semibold text-ink-40">
+                    {h.num}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-sans text-[14px] font-bold text-ink">
+                      {h.title}
+                    </span>
+                    <span className="block font-sans text-[12.5px] leading-snug text-ink-muted">
+                      {h.body}
+                    </span>
+                  </span>
+                  <span aria-hidden="true" className="font-sans text-[15px] text-ink-40">
+                    →
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <p className="mt-8 text-center font-sans text-[12px] leading-relaxed text-ink-40">
+            PurePep peptides are sold strictly for in vitro laboratory
+            research. Not for human or veterinary use.
+          </p>
         </div>
       </div>
     </div>
