@@ -147,8 +147,11 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
         </Link>
 
         {!minimal && (
-          /* Desktop nav — hidden on mobile */
-          <nav className="hidden items-center justify-center gap-7 md:flex">
+          /* Desktop nav — full horizontal nav only ≥1024px (lg), where
+             all 7 items fit beside the logo + cart.  Was md: (768px),
+             which made the nav collide with the logo in the 768–1024
+             band; below lg the hamburger handles navigation. */
+          <nav className="hidden items-center justify-center gap-7 lg:flex">
             <NavLink href="/">Home</NavLink>
             <NavLink href="/shop">Catalog</NavLink>
             <NavLink href="/quality">Quality</NavLink>
@@ -189,7 +192,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((o) => !o)}
-              className="inline-flex h-11 w-11 cursor-pointer items-center justify-center border-none bg-transparent text-ink md:hidden"
+              className="inline-flex h-11 w-11 cursor-pointer items-center justify-center border-none bg-transparent text-ink lg:hidden"
             >
               <Icon name={menuOpen ? "close" : "menu"} size={22} />
             </button>
@@ -199,7 +202,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
 
       {/* Mobile full-screen nav overlay */}
       {menuOpen && !minimal && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-bone md:hidden">
+        <div className="fixed inset-0 z-50 flex flex-col bg-bone lg:hidden">
           {/* Top bar */}
           <div className="flex items-center justify-between border-b border-ink px-4 py-4">
             <Link href="/" onClick={() => setMenuOpen(false)} className="inline-block no-underline">
