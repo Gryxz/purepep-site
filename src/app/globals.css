@@ -1748,6 +1748,33 @@ a.v3-pill-ghost:hover {
   .v3cat-section-aside { display: none; }
 }
 
+/* Homepage catalog — desktop carousel.  Scoped to .v3home-catalog so
+ * the shared .v3-rail-* rules stay a static grid everywhere else
+ * (notably the /shop "All peptides" rail).  Converts the desktop
+ * grid to a snap-scroll rail (~3.25 tiles visible) and re-shows the
+ * arrows + progress bar that the rule above hides on desktop. */
+@media (min-width: 1025px) {
+  .v3home-catalog .v3-rail-viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .v3home-catalog .v3-rail-viewport::-webkit-scrollbar { display: none; }
+  .v3home-catalog .v3-rail-track {
+    display: flex;
+    grid-template-columns: none;
+    gap: 24px;
+  }
+  .v3home-catalog .v3-rail-track > .v3-tile {
+    flex: 0 0 calc((100% - 2 * 24px) / 3.25);
+    width: auto;
+    scroll-snap-align: start;
+  }
+  .v3home-catalog .v3-rail-progress-track { display: block; }
+  .v3home-catalog .v3-arrow-btn.is-sm { display: inline-flex; }
+}
+
 /* ── Expand tab (homepage) ─────────────────────────── */
 .v3-expand-tab {
   margin-top: 32px;

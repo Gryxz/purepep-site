@@ -138,7 +138,9 @@ export function HomePage({ products }: { products: Product[] }) {
       )}
 
       {/* ───── Catalog ───── */}
-      <section className="v3-section">
+      {/* v3home-catalog scopes the desktop carousel override (the
+          shared .v3-rail-* grid stays a grid on /shop). */}
+      <section className="v3-section v3home-catalog">
         <div className="v3-container">
           <div className="v3-section-head-row">
             <div>
