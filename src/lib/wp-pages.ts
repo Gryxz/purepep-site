@@ -132,13 +132,26 @@ function humanize(slug: string): string {
 }
 
 function fallbackPage(slug: string): WpPage {
+  // The `contact` slug has a fully-featured in-repo portal at /contact —
+  // when the WP mirror is unavailable, send users there instead of a
+  // dead stub.  Other policy slugs get a corrected generic stub with the
+  // real support channels (email + business phone).
+  const contactLine =
+    'email <a href="mailto:info@purepep.shop" rel="noopener noreferrer nofollow">info@purepep.shop</a> ' +
+    'or call <a href="tel:+18662126466" rel="noopener noreferrer nofollow">(866) 212-6466</a>';
+  const content =
+    slug === "contact"
+      ? '<p>Reach the PurePep research team through our ' +
+        '<a href="/contact">support portal</a>, or ' +
+        contactLine +
+        '. Support hours: Mon–Fri 9:00–17:00, reply within one business day.</p>'
+      : '<p>This page is temporarily unavailable. For questions, please ' +
+        contactLine +
+        '.</p>';
   return {
     slug,
     title: humanize(slug),
-    content:
-      '<p>This page is temporarily unavailable. ' +
-      'For questions, please email ' +
-      '<a href="mailto:research@purepep.com" rel="noopener noreferrer nofollow">research@purepep.com</a>.</p>',
+    content,
     modified: "",
   };
 }

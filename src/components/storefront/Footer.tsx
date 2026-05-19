@@ -96,7 +96,14 @@ export function Footer({
 
   const policyItems: { label: string; href?: string }[] =
     policies.length > 0
-      ? policies.map((p) => ({ label: p.title, href: `/legal/${p.slug}` }))
+      ? [
+          // `contact` has a dedicated in-repo portal — never link the
+          // WP-mirrored /legal/contact stub from the footer.
+          ...policies
+            .filter((p) => p.slug !== "contact")
+            .map((p) => ({ label: p.title, href: `/legal/${p.slug}` })),
+          { label: "Contact", href: "/contact" },
+        ]
       : [
           { label: "Refund policy", href: "/legal/refund-policy" },
           { label: "Terms of service", href: "/legal/terms-of-service" },

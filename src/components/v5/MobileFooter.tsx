@@ -27,7 +27,7 @@ export function MobileFooter() {
         <div className="mob-foot-h">Contact</div>
         <div className="mob-foot-text">info@purepep.shop</div>
         <div className="mob-foot-text">(866) 212-6466</div>
-        <a href="/legal/contact" className="mob-foot-link">Contact us</a>
+        <a href="/contact" className="mob-foot-link">Contact us</a>
       </div>
       <div className="mob-foot-divider" />
       <div className="mob-foot-secure"><span>Secure Checkout</span></div>
