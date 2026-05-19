@@ -7186,8 +7186,16 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-pdp-tier.is-active {
-  border-color: var(--m-ink);
-  background: var(--m-surface, var(--m-bone));
+  /* Strong unmistakable selection — amber ring + amber tint + amber
+   * label.  Previous treatment (ink border + fallback-to-bone bg)
+   * was visually identical to the unselected state, so users
+   * couldn't tell which tier was chosen. */
+  border-color: var(--m-amber-cta);
+  background: rgb(200 137 10 / 9%);
+  box-shadow: inset 0 0 0 1px var(--m-amber-cta);
+}
+.mob-pdp-tier.is-active .mob-pdp-tier-qty {
+  color: var(--m-amber-cta);
 }
 
 .mob-pdp-tier-qty {

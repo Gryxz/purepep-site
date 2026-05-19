@@ -20,5 +20,7 @@ export const PRICING_TIERS: PricingTier[] = [
   { qty: 5, discount: 0.2, label: "5 vials", sub: "lab pack", save: "Save 20%" },
 ];
 
-/** Default selection — the "Most popular" 3-vial tier. */
-export const DEFAULT_TIER_INDEX = 1;
+/** Default selection — the entry-tier (1 vial).  The 3-vial tier
+ * keeps the "Most popular" badge as informational, but it isn't
+ * pre-selected for the user (per Taiga's feedback). */
+export const DEFAULT_TIER_INDEX = 0;

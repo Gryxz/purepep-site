@@ -33,7 +33,9 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
     return i >= 0 ? i : 0;
   });
   const [tierIdx, setTierIdx] = useState(DEFAULT_TIER_INDEX);
-  const [qty, setQty] = useState(1);
+  // Quantity stepper removed — the tier IS the quantity (1 / 3 / 5
+  // vials).  The previous stepper × tier multiplication produced
+  // confusing jumps (tap + on 3-vial tier → 6 vials, not 4).
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
   const tier = PRICING_TIERS[tierIdx]!;
@@ -49,7 +51,7 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
     product.price;
   const unitPrice = basePrice * (1 - tier.discount);
   const effectiveWcId = variantEntry?.wcId ?? product.wcId;
-  const orderTotal = unitPrice * tier.qty * qty;
+  const orderTotal = unitPrice * tier.qty;
   const isOut = product.stock === "out";
 
   // Fire product_view exactly once per slug change.
@@ -59,7 +61,7 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
 
   function handleAddToCart() {
     if (isOut) return;
-    const totalUnits = tier.qty * qty;
+    const totalUnits = tier.qty;
     for (let i = 0; i < totalUnits; i++) {
       addItem({
         slug: product.slug,
@@ -147,7 +149,7 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
           <span className="mob-pdp-price-big">{formatPrice(orderTotal)}</span>
           {product.regularPrice && product.regularPrice > product.price && (
             <span className="mob-pdp-price-strike">
-              {formatPrice(product.regularPrice * tier.qty * qty)}
+              {formatPrice(product.regularPrice * tier.qty)}
             </span>
           )}
         </div>
@@ -219,16 +221,11 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
           </select>
         </div>
 
+        {/* Quantity stepper removed — the selected tier (1 / 3 / 5)
+            IS the order quantity.  The previous stepper × tier
+            multiplication produced confusing jumps (e.g. tap + on the
+            3-vial tier landed on 6, not 4). */}
         <div className="mob-cta-row">
-          <div className="mob-qty-stepper" role="group" aria-label="Quantity">
-            <button type="button" aria-label="Decrease quantity" onClick={() => setQty((n) => Math.max(1, n - 1))}>
-              −
-            </button>
-            <span className="qval" aria-live="polite">{qty}</span>
-            <button type="button" aria-label="Increase quantity" onClick={() => setQty((n) => n + 1)}>
-              +
-            </button>
-          </div>
           <button
             type="button"
             className="mob-buybox"
