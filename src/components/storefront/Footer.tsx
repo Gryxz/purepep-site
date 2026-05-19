@@ -115,6 +115,11 @@ export function Footer({
           <p className="mt-3 font-sans text-[13.5px] leading-relaxed text-bone/75">
             Research-grade peptides. Triplicate HPLC per lot. Cold-chain shipped.
           </p>
+          <p className="mt-3 font-sans text-[13.5px] leading-relaxed text-bone/75">
+            <a href="mailto:info@purepep.shop" className="text-bone/75 no-underline">info@purepep.shop</a>
+            {" · "}
+            <a href="tel:+18662126466" className="text-bone/75 no-underline">(866) 212-6466</a>
+          </p>
         </div>
 
         {/* Desktop: 5-col grid | Mobile: stacked accordion */}
@@ -124,6 +129,11 @@ export function Footer({
             <Lockup className="h-10 w-auto text-bone" />
             <p className="mt-4.5 max-w-[280px] font-sans text-[13.5px] leading-relaxed text-bone/75">
               Research-grade peptides. Triplicate HPLC per lot. Cold-chain shipped. Documentation on file.
+            </p>
+            <p className="mt-4 font-sans text-[13.5px] leading-relaxed text-bone/75">
+              <a href="mailto:info@purepep.shop" className="text-bone/75 no-underline">info@purepep.shop</a>
+              <br />
+              <a href="tel:+18662126466" className="text-bone/75 no-underline">(866) 212-6466</a>
             </p>
           </div>
 

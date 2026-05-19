@@ -16,6 +16,8 @@ import Link from "next/link";
  */
 
 const SUPPORT_EMAIL = "info@purepep.shop";
+const SUPPORT_PHONE_DISPLAY = "(866) 212-6466";
+const SUPPORT_PHONE_TEL = "+18662126466";
 const TICKETS_KEY = "pp_support_tickets";
 
 const TOPICS = [
@@ -187,7 +189,7 @@ export function ContactPage() {
   }
 
   const inputBase =
-    "w-full border border-ink bg-bone px-3 py-2.5 font-sans text-[14px] text-ink outline-none focus:border-amber";
+    "w-full rounded-2xl border border-ink bg-bone px-4 py-2.5 font-sans text-[14px] text-ink outline-none focus:border-amber";
   const labelBase =
     "mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink";
   const errBase = "mt-1 font-sans text-[12px] text-alert";
@@ -212,6 +214,13 @@ export function ContactPage() {
               className="font-medium text-ink underline decoration-amber underline-offset-2"
             >
               {SUPPORT_EMAIL}
+            </a>{" "}
+            or call{" "}
+            <a
+              href={`tel:${SUPPORT_PHONE_TEL}`}
+              className="font-medium text-ink underline decoration-amber underline-offset-2"
+            >
+              {SUPPORT_PHONE_DISPLAY}
             </a>
             .
           </p>
@@ -227,7 +236,7 @@ export function ContactPage() {
               <Link
                 key={h.href}
                 href={h.href}
-                className="group flex flex-col border border-ink bg-surface p-5 no-underline transition-colors hover:bg-surface-3"
+                className="group flex flex-col rounded-md border border-ink bg-surface p-5 no-underline transition-colors hover:bg-surface-3"
               >
                 <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-40">
                   {h.num}
@@ -251,7 +260,7 @@ export function ContactPage() {
           {/* Form / success */}
           <section>
             {ticket ? (
-              <div className="border border-ink bg-surface p-6 md:p-8">
+              <div className="rounded-md border border-ink bg-surface p-6 md:p-8">
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald">
                   Request created
                 </p>
@@ -259,7 +268,7 @@ export function ContactPage() {
                   Your support reference
                 </h2>
                 <div className="mt-4 flex flex-wrap items-center gap-3">
-                  <span className="border border-ink bg-bone px-4 py-2 font-mono text-[18px] font-semibold tracking-[0.06em] text-ink">
+                  <span className="rounded-md border border-ink bg-bone px-4 py-2 font-mono text-[18px] font-semibold tracking-[0.06em] text-ink">
                     {ticket.ref}
                   </span>
                   <button
@@ -307,7 +316,7 @@ export function ContactPage() {
               <form
                 onSubmit={handleSubmit}
                 noValidate
-                className="border border-ink bg-surface p-6 md:p-8"
+                className="rounded-md border border-ink bg-surface p-6 md:p-8"
               >
                 <h2 className="font-sans text-[22px] font-extrabold tracking-[-0.01em] text-ink">
                   Open a support request
@@ -431,7 +440,7 @@ export function ContactPage() {
                     (saved on this device)
                   </span>
                 </p>
-                <ul className="border border-line">
+                <ul className="overflow-hidden rounded-md border border-line">
                   {recent.map((r, i) => (
                     <li
                       key={r.ref}
@@ -461,7 +470,7 @@ export function ContactPage() {
 
           {/* Channel info */}
           <aside className="lg:pt-1">
-            <div className="border border-ink bg-bone p-5">
+            <div className="rounded-md border border-ink bg-bone p-5">
               <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-60">
                 Email
               </p>
@@ -470,6 +479,16 @@ export function ContactPage() {
                 className="mt-1 block font-sans text-[15px] font-bold text-ink no-underline"
               >
                 {SUPPORT_EMAIL}
+              </a>
+
+              <p className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-60">
+                Phone
+              </p>
+              <a
+                href={`tel:${SUPPORT_PHONE_TEL}`}
+                className="mt-1 block font-sans text-[15px] font-bold text-ink no-underline"
+              >
+                {SUPPORT_PHONE_DISPLAY}
               </a>
 
               <p className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-60">
