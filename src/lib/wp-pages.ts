@@ -26,6 +26,7 @@
  */
 
 import sanitizeHtml from "sanitize-html";
+import { LEGAL_FALLBACKS } from "@/content/legal-fallbacks";
 
 const WC_BASE_URL = (process.env.WC_BASE_URL ?? "").replace(/\/+$/, "");
 
@@ -148,26 +149,33 @@ function humanize(slug: string): string {
 }
 
 function fallbackPage(slug: string): WpPage {
-  // The `contact` slug has a fully-featured in-repo portal at /contact —
-  // when the WP mirror is unavailable, send users there instead of a
-  // dead stub.  Other policy slugs get a corrected generic stub with the
-  // real support channels (email + business phone).
+  // Real policy bodies in src/content/legal-fallbacks.ts ship as the
+  // live content for /legal/<slug> whenever the WP mirror can't
+  // reach upstream.  Each body is sanitised through the same
+  // allowlist as a real WP page.  When a slug isn't in the map
+  // (shouldn't happen — POLICY_SLUGS is closed) we fall back to a
+  // generic-but-correct stub that points at the real support
+  // channels.
+  const real = LEGAL_FALLBACKS[slug];
+  if (real) {
+    return {
+      slug,
+      title: real.title,
+      content: sanitizeHtml(real.contentHtml, SANITIZE_OPTIONS),
+      modified: "",
+    };
+  }
+
   const contactLine =
     'email <a href="mailto:info@purepep.shop" rel="noopener noreferrer nofollow">info@purepep.shop</a> ' +
     'or call <a href="tel:+18662126466" rel="noopener noreferrer nofollow">(866) 212-6466</a>';
-  const content =
-    slug === "contact"
-      ? '<p>Reach the PurePep research team through our ' +
-        '<a href="/contact">support portal</a>, or ' +
-        contactLine +
-        '. Support hours: Mon–Fri 9:00–17:00, reply within one business day.</p>'
-      : '<p>This page is temporarily unavailable. For questions, please ' +
-        contactLine +
-        '.</p>';
   return {
     slug,
     title: humanize(slug),
-    content,
+    content:
+      '<p>This page is temporarily unavailable. For questions, please ' +
+      contactLine +
+      '.</p>',
     modified: "",
   };
 }
