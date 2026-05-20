@@ -150,10 +150,6 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             <div className="mob-heropx-lab-rings" />
           </div>
           <div className="mob-heropx-content">
-            <div className="mob-heropx-eyebrow">
-              <span className="dot" />
-              Research-grade peptides
-            </div>
             <h1 className="mob-heropx-h1">The standard for research peptides.</h1>
             <p className="mob-heropx-sub">
               Lab-verified peptides for in vitro research. Lot-matched COA on every vial, tracked US shipping.
