@@ -7177,57 +7177,82 @@ a.v3-pill-ghost:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 12px 6px 10px;
+  justify-content: flex-end;
+  gap: 8px;
+  /* Top padding reserves room for the badge anchored INSIDE the card
+   * (was sitting on the border at top:-8px, overlapping content). */
+  padding: 28px 8px 14px;
   background: var(--m-bone);
   border: 1px solid var(--m-rule);
   border-radius: var(--m-r2);
   cursor: pointer;
+  min-height: 92px;
 }
 
 .mob-pdp-tier.is-active {
-  /* Strong unmistakable selection — amber ring + amber tint + amber
-   * label.  Previous treatment (ink border + fallback-to-bone bg)
-   * was visually identical to the unselected state, so users
-   * couldn't tell which tier was chosen. */
+  /* Amber ring + amber tint + amber label — unmistakable. */
   border-color: var(--m-amber-cta);
   background: rgb(200 137 10 / 9%);
   box-shadow: inset 0 0 0 1px var(--m-amber-cta);
+}
+
+.mob-pdp-tier-qty {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 17px;
+  line-height: 1.1;
+  color: var(--m-ink);
+  letter-spacing: -0.01em;
 }
 .mob-pdp-tier.is-active .mob-pdp-tier-qty {
   color: var(--m-amber-cta);
 }
 
-.mob-pdp-tier-qty {
-  font-weight: 700;
-  font-size: 13px;
-  color: var(--m-ink);
-}
-
+/* Neutral save label (entry tier "Standard"): plain mono micro-text. */
 .mob-pdp-tier-save {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--m-ink-mute);
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
-.mob-pdp-tier.is-active .mob-pdp-tier-save { color: var(--m-amber-cta); }
+/* Discount tier ("Save 10%" / "Save 20%"): amber chip — concrete value
+ * prop, not a faint inline string.  Higher weight, amber tinted bg. */
+.mob-pdp-tier-save.is-discount {
+  color: var(--m-amber-cta);
+  background: rgb(200 137 10 / 14%);
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.mob-pdp-tier.is-active .mob-pdp-tier-save.is-discount {
+  background: var(--m-amber-cta);
+  color: var(--m-bone);
+}
 
+/* MOST POPULAR badge — now lives INSIDE the card (top: 8px, not -8px),
+ * so it never overlaps the card border or the tile above. */
 .mob-pdp-tier-badge {
   position: absolute;
-  top: -8px;
+  top: 8px;
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
   background: var(--m-ink);
   color: var(--m-bone);
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 8.5px;
   font-weight: 600;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  padding: 2px 7px;
-  border-radius: var(--m-r2);
+  padding: 3px 8px;
+  border-radius: 999px;
 }
 
 .mob-variant-select-wrap {

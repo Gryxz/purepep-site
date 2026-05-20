@@ -200,7 +200,7 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
             >
               {t.badge && <span className="mob-pdp-tier-badge">{t.badge}</span>}
               <span className="mob-pdp-tier-qty">{t.label}</span>
-              <span className="mob-pdp-tier-save">{t.save}</span>
+              <span className={`mob-pdp-tier-save${t.discount > 0 ? " is-discount" : ""}`}>{t.save}</span>
             </button>
           ))}
         </div>

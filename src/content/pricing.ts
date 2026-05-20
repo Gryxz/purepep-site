@@ -15,7 +15,7 @@ export interface PricingTier {
 }
 
 export const PRICING_TIERS: PricingTier[] = [
-  { qty: 1, discount: 0, label: "1 vial", sub: "single unit", save: "No discount" },
+  { qty: 1, discount: 0, label: "1 vial", sub: "single unit", save: "Standard" },
   { qty: 3, discount: 0.1, label: "3 vials", sub: "researcher pack", save: "Save 10%", badge: "Most popular" },
   { qty: 5, discount: 0.2, label: "5 vials", sub: "lab pack", save: "Save 20%" },
 ];
