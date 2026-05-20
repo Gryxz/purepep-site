@@ -363,12 +363,33 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
                     <div className="mob-more-desc">{shortDesc(p)}</div>
                     <div className="mob-more-price-row">
                       <span className="mob-more-price">{formatPrice(p.price)}</span>
-                      <span className="mob-more-arr-btn">
+                      <button
+                        type="button"
+                        className="mob-more-arr-btn"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (p.stock === "out") return;
+                          addItem({
+                            slug: p.slug,
+                            compound: p.compound,
+                            name: p.name,
+                            dose: p.dose,
+                            price: p.price,
+                            priceLabel: `$${p.price.toFixed(2)}`,
+                            wcId: p.wcId,
+                          });
+                          trackAddToCart(p, p.dose, 1, p.price, p.wcId);
+                          openCart();
+                        }}
+                        disabled={p.stock === "out"}
+                        aria-label={p.stock === "out" ? "Out of stock" : `Add ${p.name} to cart`}
+                      >
                         <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <line x1="5" y1="12" x2="19" y2="12" />
                           <polyline points="12 5 19 12 12 19" />
                         </svg>
-                      </span>
+                      </button>
                     </div>
                   </div>
                 </a>

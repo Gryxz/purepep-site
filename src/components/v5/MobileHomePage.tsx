@@ -8,6 +8,8 @@ import { MobileVial } from "./MobileVial";
 import { MobileRetaSpotlight } from "./MobileRetaSpotlight";
 import { MobileFooter } from "./MobileFooter";
 import { TestimonialsSection } from "../v3/TestimonialsSection";
+import { useCartStore } from "@/lib/cart-store";
+import { trackAddToCart } from "@/lib/analytics";
 import {
   stockLabel,
   STACK_BADGE_LABEL,
@@ -53,6 +55,28 @@ export function MobileHomePage({ products }: { products: Product[] }) {
   const rest = (RETA_FEATURE_ENABLED ? products.slice(1) : products)
     .filter((p) => p.type !== "stack")
     .slice(0, 8);
+  const { addItem, openCart } = useCartStore();
+
+  /** Tile / bundle quick-add — bypasses the wrapping <a href> via
+   *  preventDefault + stopPropagation so clicking the button adds
+   *  to cart instead of navigating to the PDP.  Image + name still
+   *  click through to the PDP. */
+  function handleQuickAdd(e: React.MouseEvent, p: Product) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (p.stock === "out") return;
+    addItem({
+      slug: p.slug,
+      compound: p.compound,
+      name: p.name,
+      dose: p.dose,
+      price: p.price,
+      priceLabel: `$${p.price.toFixed(2)}`,
+      wcId: p.wcId,
+    });
+    trackAddToCart(p, p.dose, 1, p.price, p.wcId);
+    openCart();
+  }
   const parallaxRef = useRef<HTMLDivElement | null>(null);
 
   // Hero parallax — tracks scroll progress through the 2-viewport stack and
@@ -341,7 +365,15 @@ export function MobileHomePage({ products }: { products: Product[] }) {
                 <div className="mob-pdesc">{shortDesc(p)}</div>
                 <div className="mob-pcard-foot">
                   <span className="mob-pprice">${Math.round(p.price)}</span>
-                  <span className="mob-parr">→</span>
+                  <button
+                    type="button"
+                    className="mob-parr"
+                    onClick={(e) => handleQuickAdd(e, p)}
+                    disabled={p.stock === "out"}
+                    aria-label={p.stock === "out" ? "Out of stock" : `Add ${p.name} to cart`}
+                  >
+                    +
+                  </button>
                 </div>
               </div>
             </a>

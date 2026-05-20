@@ -9,6 +9,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { LabelCropSvg } from "./LabelCropSvg";
 import { TestimonialsSection } from "./TestimonialsSection";
+import { useCartStore } from "@/lib/cart-store";
+import { trackAddToCart } from "@/lib/analytics";
 import { REFERRAL } from "@/content/referral";
 
 /**
@@ -422,6 +424,26 @@ function ProductTile({ product }: { product: Product }) {
   const stockLabel =
     product.stock === "out" ? "Waitlist" : product.stock === "low" ? "Low stock" : "In stock";
   const showDot = product.stock !== "out";
+  const { addItem, openCart } = useCartStore();
+  const isOut = product.stock === "out";
+
+  function handleAdd(e: React.MouseEvent) {
+    // Tile wraps a PDP link; block its navigation when the button is clicked.
+    e.preventDefault();
+    e.stopPropagation();
+    if (isOut) return;
+    addItem({
+      slug: product.slug,
+      compound: product.compound,
+      name: product.name,
+      dose: product.dose,
+      price: product.price,
+      priceLabel: `$${product.price.toFixed(2)}`,
+      wcId: product.wcId,
+    });
+    trackAddToCart(product, product.dose, 1, product.price, product.wcId);
+    openCart();
+  }
 
   return (
     <a href={`/shop/${product.slug}`} className="v3-tile">
@@ -454,14 +476,20 @@ function ProductTile({ product }: { product: Product }) {
             <div className="v3-tile-price">${Math.round(product.price)}</div>
             <div className="v3-price-from">From · 1 vial</div>
           </div>
-          <span className="v3-view-pill">
-            View
+          <button
+            type="button"
+            className="v3-view-pill"
+            onClick={handleAdd}
+            disabled={isOut}
+            aria-label={isOut ? "Out of stock" : `Add ${product.name} to cart`}
+          >
+            {isOut ? "Out" : "Add"}
             <span className="arrow">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m9 6 6 6-6 6" />
               </svg>
             </span>
-          </span>
+          </button>
         </div>
       </div>
     </a>

@@ -6450,10 +6450,31 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-parr {
+  /* Now a real <button> quick-add affordance — was a static "→"
+   * arrow span; converted to an amber + pill that adds the tile's
+   * product to the cart (preventDefault + stopPropagation so the
+   * wrapping <a> to the PDP doesn't fire). */
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border: none;
+  background: var(--m-amber-cta);
+  color: var(--m-bone);
+  border-radius: var(--m-rf);
   font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: clamp(15px, 4vw, var(--t-body-l));
-  color: var(--m-amber-cta);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s, transform 0.1s;
+}
+.mob-parr:active { transform: translateY(1px); }
+.mob-parr:disabled {
+  background: var(--m-rule);
+  color: var(--m-ink-mute);
+  cursor: not-allowed;
 }
 
 /* ── Transparency band ───────────────────────────────────────────── */
@@ -7608,9 +7629,25 @@ a.v3-pill-ghost:hover {
 }
 
 .mob-more-arr-btn {
+  /* Real <button> quick-add on the PDP related-products carousel —
+   * was an icon-only span; now adds the related product to the
+   * cart (preventDefault + stopPropagation on the wrapping card
+   * link). */
   width: 34px; height: 34px;
-  background: var(--m-s1); border-radius: var(--m-rf);
-  display: grid; place-items: center; color: var(--m-amber-cta);
+  background: var(--m-amber-cta);
+  border: none;
+  border-radius: var(--m-rf);
+  display: grid; place-items: center;
+  color: var(--m-bone);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.12s, transform 0.1s;
+}
+.mob-more-arr-btn:active { transform: translateY(1px); }
+.mob-more-arr-btn:disabled {
+  background: var(--m-rule);
+  color: var(--m-ink-mute);
+  cursor: not-allowed;
 }
 
 .mob-carousel-arrow {

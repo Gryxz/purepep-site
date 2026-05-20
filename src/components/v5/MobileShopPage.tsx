@@ -20,6 +20,8 @@ import {
 import Image from "next/image";
 import { MobileVial } from "./MobileVial";
 import { MobileFooter } from "./MobileFooter";
+import { useCartStore } from "@/lib/cart-store";
+import { trackAddToCart } from "@/lib/analytics";
 
 /**
  * v5 mobile shop / catalog page — ported 1:1 from
@@ -53,6 +55,26 @@ export function MobileShopPage({ products }: { products: Product[] }) {
     () => products.filter((p) => activeChip.match(p.category)),
     [products, activeChip],
   );
+  const { addItem, openCart } = useCartStore();
+
+  /** Tile quick-add — preventDefault + stopPropagation so the
+   *  wrapping <a> to the PDP doesn't fire when the button is tapped. */
+  function handleQuickAdd(e: React.MouseEvent, p: Product) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (p.stock === "out") return;
+    addItem({
+      slug: p.slug,
+      compound: p.compound,
+      name: p.name,
+      dose: p.dose,
+      price: p.price,
+      priceLabel: `$${p.price.toFixed(2)}`,
+      wcId: p.wcId,
+    });
+    trackAddToCart(p, p.dose, 1, p.price, p.wcId);
+    openCart();
+  }
 
   return (
     <div className="mob-app mob-shop">
@@ -143,7 +165,15 @@ export function MobileShopPage({ products }: { products: Product[] }) {
               <div className="mob-pdesc">{shortDesc(p)}</div>
               <div className="mob-pcard-foot">
                 <span className="mob-pprice">${Math.round(p.price)}</span>
-                <span className="mob-parr">→</span>
+                <button
+                  type="button"
+                  className="mob-parr"
+                  onClick={(e) => handleQuickAdd(e, p)}
+                  disabled={p.stock === "out"}
+                  aria-label={p.stock === "out" ? "Out of stock" : `Add ${p.name} to cart`}
+                >
+                  +
+                </button>
               </div>
             </div>
           </a>
