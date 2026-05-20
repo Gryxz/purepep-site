@@ -20,6 +20,8 @@ import {
 import Image from "next/image";
 import { RetaVial } from "./RetaVial";
 import { TrustBar } from "./TrustBar";
+import { useCartStore } from "@/lib/cart-store";
+import { trackAddToCart } from "@/lib/analytics";
 
 // Reta flagship/featured treatment disabled for now.  Flip to true
 // to restore Reta as a lead slide in the featured carousel.
@@ -247,9 +249,33 @@ export function CatalogPage({ products }: { products: Product[] }) {
 }
 
 function FeaturedSlide({ product }: { product: Product }) {
+  const { addItem, openCart } = useCartStore();
+  const isOut = product.stock === "out";
+
+  function handleAdd() {
+    if (isOut) return;
+    addItem({
+      slug: product.slug,
+      compound: product.compound,
+      name: product.name,
+      dose: product.dose,
+      price: product.price,
+      priceLabel: `$${product.price.toFixed(2)}`,
+      wcId: product.wcId,
+    });
+    trackAddToCart(product, product.dose, 1, product.price, product.wcId);
+    openCart();
+  }
+
   return (
     <div className="v3cat-featured-slide">
-      <div className="v3cat-featured-photo">
+      {/* Vial photo is the click-to-PDP affordance — the CTA below is
+          now Add-to-cart, so the icon carries the "see details" job. */}
+      <Link
+        href={`/shop/${product.slug}`}
+        className="v3cat-featured-photo"
+        aria-label={`Open ${product.name} product page`}
+      >
         <Image
           src={product.imageUrl ?? `/images/products/source/purepep-vial-${product.slug}-v1.0.jpg`}
           alt={`${product.compound} vial`}
@@ -258,7 +284,7 @@ function FeaturedSlide({ product }: { product: Product }) {
           className="v3-product-hero-img"
           onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
         />
-      </div>
+      </Link>
       <div className="v3cat-featured-info">
         <div className="v3-meta-row">
           <span className="v3-sku-line">
@@ -287,14 +313,20 @@ function FeaturedSlide({ product }: { product: Product }) {
           </div>
         </div>
         <div className="v3cat-featured-cta-row">
-          <Link href={`/shop/${product.slug}`} className="v3-view-pill">
-            View product
+          <button
+            type="button"
+            className="v3-view-pill"
+            onClick={handleAdd}
+            disabled={isOut}
+            aria-label={isOut ? "Out of stock" : `Add ${product.name} to cart`}
+          >
+            {isOut ? "Out of stock" : "Add to cart"}
             <span className="arrow">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m9 6 6 6-6 6" />
               </svg>
             </span>
-          </Link>
+          </button>
         </div>
       </div>
     </div>
@@ -302,6 +334,29 @@ function FeaturedSlide({ product }: { product: Product }) {
 }
 
 function ProductTile({ product }: { product: Product }) {
+  const { addItem, openCart } = useCartStore();
+  const isOut = product.stock === "out";
+
+  function handleAdd(e: React.MouseEvent) {
+    // Tile is wrapped in a <Link> to the PDP; the Add button is a
+    // sibling action, so block the link's navigation when the
+    // button is clicked.
+    e.preventDefault();
+    e.stopPropagation();
+    if (isOut) return;
+    addItem({
+      slug: product.slug,
+      compound: product.compound,
+      name: product.name,
+      dose: product.dose,
+      price: product.price,
+      priceLabel: `$${product.price.toFixed(2)}`,
+      wcId: product.wcId,
+    });
+    trackAddToCart(product, product.dose, 1, product.price, product.wcId);
+    openCart();
+  }
+
   return (
     <Link href={`/shop/${product.slug}`} className="v3-tile">
       <div className="v3-tile-photo">
@@ -335,14 +390,20 @@ function ProductTile({ product }: { product: Product }) {
             <div className="v3-tile-price">${Math.round(product.price)}</div>
             <div className="v3-price-from">From · 1 vial</div>
           </div>
-          <span className="v3-view-pill">
-            View
+          <button
+            type="button"
+            className="v3-view-pill"
+            onClick={handleAdd}
+            disabled={isOut}
+            aria-label={isOut ? "Out of stock" : `Add ${product.name} to cart`}
+          >
+            {isOut ? "Out" : "Add"}
             <span className="arrow">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m9 6 6 6-6 6" />
               </svg>
             </span>
-          </span>
+          </button>
         </div>
       </div>
     </Link>
