@@ -55,6 +55,10 @@ jobs:
           NEXT_PUBLIC_WC_STORE_URL: ${{ secrets.NEXT_PUBLIC_WC_STORE_URL }}
           NEXT_PUBLIC_SITE_URL: "https://purepep.shop"
           NEXT_PUBLIC_INDEXING_ENABLED: "true"
+          # Strict policy-mirror: every /legal/* page MUST mirror from WP at
+          # build time (no silent stub fallback).  src/lib/wp-pages.ts throws
+          # if WC_BASE_URL is missing or any policy slug fails to fetch.
+          WP_MIRROR_STRICT: "1"
 
       - name: Set up SSH key
         run: |

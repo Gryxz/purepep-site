@@ -7,12 +7,22 @@
  * are public.  Output runs through `sanitize-html` so a stray `<script>`
  * or `<iframe>` from WP can't enter the static bundle.
  *
- * If `WC_BASE_URL` is unset OR the upstream fetch fails, every page
- * falls back to a stub ("Policy temporarily unavailable …") so the build
- * never breaks on missing creds or a flaky CMS.
+ * STRICT MODE (default in production):
+ *   Triggered automatically when WC_BASE_URL is set, OR explicitly by
+ *   WP_MIRROR_STRICT=1.  In strict mode getPage() THROWS on any failure
+ *   (no base URL / non-2xx / empty result / fetch exception / empty
+ *   content) — the build fails loud rather than silently shipping a
+ *   stub.  Per direction: "mirror the policy text from WC for all
+ *   /legal, always".
+ *
+ * NON-STRICT MODE (dev / sandbox without WC creds):
+ *   Falls back to the in-file stub but emits a loud console.warn so
+ *   the fallback is visible in build logs.  Production CI sets
+ *   WP_MIRROR_STRICT=1 so a misconfigured WC_BASE_URL secret can't
+ *   silently degrade.
  *
  * The WP root is derived from `WC_BASE_URL` by stripping the
- * /wp-json/wc/v3 suffix — no new env var.
+ * /wp-json/wc/v3 suffix — no new env var for the host itself.
  */
 
 import sanitizeHtml from "sanitize-html";
@@ -21,6 +31,12 @@ const WC_BASE_URL = (process.env.WC_BASE_URL ?? "").replace(/\/+$/, "");
 
 // Strip /wp-json/wc/v3 (the WC REST root) to get the WP root host.
 const WP_BASE_URL = WC_BASE_URL.replace(/\/wp-json\/wc\/v3$/, "");
+
+// Strict mode: throw on any failure rather than silently stub.  On
+// whenever WC_BASE_URL is configured, or explicitly via the env knob
+// so CI can fail loud even if the secret is missing.
+const STRICT_MIRROR =
+  process.env.WP_MIRROR_STRICT === "1" || WP_BASE_URL.length > 0;
 
 const REVALIDATE_SECONDS = 3600;
 
@@ -161,30 +177,67 @@ function fallbackPage(slug: string): WpPage {
 // ---------------------------------------------------------------------------
 
 export async function getPage(slug: string): Promise<WpPage> {
-  if (!WP_BASE_URL) return fallbackPage(slug);
-  try {
-    const res = await fetch(
-      `${WP_BASE_URL}/wp-json/wp/v2/pages?slug=${encodeURIComponent(slug)}`,
-      {
-        headers: { Accept: "application/json" },
-        next: { revalidate: REVALIDATE_SECONDS },
-      },
+  if (!STRICT_MIRROR) {
+    // Dev / sandbox without WC creds — fall back, but loudly.
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[wp-pages] STRICT mode OFF — fallback stub used for "/legal/${slug}". ` +
+        `Set WC_BASE_URL (and WP_MIRROR_STRICT=1 in CI) to mirror the real WP page.`,
     );
-    if (!res.ok) return fallbackPage(slug);
-    const data: unknown = await res.json();
-    if (!Array.isArray(data) || data.length === 0) return fallbackPage(slug);
-    const raw = data[0] as WpPageRaw;
-    const titleRaw = raw.title?.rendered ?? humanize(slug);
-    const contentRaw = raw.content?.rendered ?? "";
-    return {
-      slug,
-      title: decodeBasicEntities(titleRaw).trim() || humanize(slug),
-      content: sanitizeHtml(contentRaw, SANITIZE_OPTIONS),
-      modified: typeof raw.modified === "string" ? raw.modified : "",
-    };
-  } catch {
     return fallbackPage(slug);
   }
+
+  // Strict mode — base URL must be configured; every failure throws.
+  if (!WP_BASE_URL) {
+    throw new Error(
+      `[wp-pages] STRICT mode ON but WC_BASE_URL is empty.  Set the ` +
+        `WC_BASE_URL secret (e.g. https://<wp-host>/wp-json/wc/v3) so the ` +
+        `WP policy mirror has a host, or unset WP_MIRROR_STRICT.`,
+    );
+  }
+
+  const url = `${WP_BASE_URL}/wp-json/wp/v2/pages?slug=${encodeURIComponent(slug)}`;
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      headers: { Accept: "application/json" },
+      next: { revalidate: REVALIDATE_SECONDS },
+    });
+  } catch (err) {
+    throw new Error(
+      `[wp-pages] fetch failed for slug "${slug}" from ${WP_BASE_URL}: ` +
+        (err instanceof Error ? err.message : String(err)),
+    );
+  }
+  if (!res.ok) {
+    throw new Error(
+      `[wp-pages] HTTP ${res.status} for slug "${slug}" from ${WP_BASE_URL}`,
+    );
+  }
+  const data: unknown = await res.json();
+  if (!Array.isArray(data) || data.length === 0) {
+    throw new Error(
+      `[wp-pages] WP returned no page for slug "${slug}".  Create + publish ` +
+        `the page in WordPress at that exact slug, or remove it from POLICY_SLUGS.`,
+    );
+  }
+  const raw = data[0] as WpPageRaw;
+  const titleRaw = raw.title?.rendered ?? humanize(slug);
+  const contentRaw = raw.content?.rendered ?? "";
+  if (contentRaw.trim().length === 0) {
+    throw new Error(
+      `[wp-pages] WP page "${slug}" exists but has empty content.  Add body ` +
+        `copy in WP admin and re-publish.`,
+    );
+  }
+  // eslint-disable-next-line no-console
+  console.log(`[wp-pages] mirrored /legal/${slug} (modified ${raw.modified ?? "?"})`);
+  return {
+    slug,
+    title: decodeBasicEntities(titleRaw).trim() || humanize(slug),
+    content: sanitizeHtml(contentRaw, SANITIZE_OPTIONS),
+    modified: typeof raw.modified === "string" ? raw.modified : "",
+  };
 }
 
 /**
