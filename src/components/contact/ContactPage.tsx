@@ -128,32 +128,6 @@ export function ContactPage() {
     return Object.keys(e).length === 0;
   }
 
-  function buildBody(ref: string): string {
-    return [
-      `Support reference: ${ref}`,
-      `Topic: ${topic}`,
-      orderRef.trim() ? `Order / lot #: ${orderRef.trim()}` : null,
-      `Name: ${name.trim()}`,
-      `Email: ${email.trim()}`,
-      "",
-      "Message:",
-      message.trim(),
-      "",
-      "—",
-      "Sent from the PurePep support portal (purepep.shop/contact).",
-      "Research use only. Not for human or veterinary use.",
-    ]
-      .filter((l) => l !== null)
-      .join("\n");
-  }
-
-  function mailtoFor(ref: string): string {
-    const subj = `[${ref}] ${topic} — ${subject.trim()}`;
-    return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(
-      subj,
-    )}&body=${encodeURIComponent(buildBody(ref))}`;
-  }
-
   async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
     if (submitting) return;
@@ -289,17 +263,12 @@ export function ContactPage() {
                   </button>
                 </div>
                 <p className="mt-5 font-sans text-[14px] leading-relaxed text-ink-muted">
-                  A pre-filled message to {SUPPORT_EMAIL} should have opened in
-                  your email app. If it did not, email us directly and quote the
-                  reference above — it links your message to this request.
+                  Your request was sent to the PurePep research team. We
+                  reply within one business day. Quote the reference above
+                  in any follow-up so we can link your message back to
+                  this request.
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3">
-                  <a
-                    href={mailtoFor(ticket.ref)}
-                    className="inline-flex items-center gap-2 rounded-full border border-ink bg-amber px-5 py-2.5 font-sans text-[14px] font-bold text-ink no-underline hover:bg-amber-hover"
-                  >
-                    Reopen email <span aria-hidden="true">→</span>
-                  </a>
                   <button
                     type="button"
                     onClick={() =>
