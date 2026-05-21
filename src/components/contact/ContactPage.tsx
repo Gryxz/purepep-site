@@ -154,11 +154,15 @@ export function ContactPage() {
     )}&body=${encodeURIComponent(buildBody(ref))}`;
   }
 
-  async function handleSubmit(ev: React.FormEvent) {
+  async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
     if (submitting) return;
     if (!validate()) return;
 
+    // Capture the form element synchronously — React's synthetic event
+    // currentTarget can read as null after any await, even though pooling
+    // is off in React 18.  Belt-and-braces.
+    const formEl = ev.currentTarget;
     const ref = genRef();
     const record: TicketRecord = {
       ref,
@@ -170,25 +174,18 @@ export function ContactPage() {
     setSubmitting(true);
     setSubmitError(null);
 
-    // POST to Web3Forms — they relay the form contents to the
-    // verified destination inbox (info@purepep.shop on Zoho).
-    // FormData payload includes the ticket ref in both the subject
-    // line and a body field so the reply email is greppable in the
-    // inbox.  `from_name` + the user's email power a clean Reply-To.
-    // `redirect: false` suppresses their default redirect — we render
-    // the in-page success card instead.
+    // Build FormData from the form element — picks up every named
+    // input + hidden field (access_key, redirect, from_name, name,
+    // email, topic, order_or_lot, subject, message) declaratively
+    // from the DOM, so view-source confirms the integration without
+    // reading JS bundles.  Then we OVERRIDE `subject` with the
+    // greppable `[ref] topic — user-subject` form for the Zoho
+    // inbox, and `.set("ref", ref)` so the body carries the ticket
+    // reference.
     try {
-      const fd = new FormData();
-      fd.append("access_key", WEB3FORMS_KEY);
-      fd.append("subject", `[${ref}] ${topic} — ${subject.trim()}`);
-      fd.append("from_name", name.trim() || "PurePep support form");
-      fd.append("email", email.trim());
-      fd.append("name", name.trim());
-      fd.append("topic", topic);
-      fd.append("order_or_lot", orderRef.trim());
-      fd.append("message", message.trim());
-      fd.append("ref", ref);
-      fd.append("redirect", "false");
+      const fd = new FormData(formEl);
+      fd.set("subject", `[${ref}] ${topic} — ${subject.trim()}`);
+      fd.set("ref", ref);
 
       const res = await fetch(WEB3FORMS_ENDPOINT, { method: "POST", body: fd });
       const data: { success?: boolean; message?: string } = await res
@@ -326,10 +323,21 @@ export function ContactPage() {
               </div>
             ) : (
               <form
+                action={WEB3FORMS_ENDPOINT}
+                method="POST"
                 onSubmit={handleSubmit}
                 noValidate
                 className="rounded-2xl border border-ink/12 bg-surface p-5 shadow-sm md:p-7"
               >
+                {/* Web3Forms wiring — declarative so view-source confirms
+                    the integration without inspecting JS bundles.  The
+                    onSubmit handler intercepts with preventDefault and
+                    runs an async fetch so the in-page success card +
+                    ticket ref UX still works; the action/method are the
+                    no-JS graceful degradation path. */}
+                <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+                <input type="hidden" name="redirect" value="false" />
+                <input type="hidden" name="from_name" value={name.trim() || "PurePep support form"} />
                 <h2 className="font-sans text-[22px] font-extrabold tracking-[-0.01em] text-ink">
                   Open a support request
                 </h2>
@@ -344,6 +352,7 @@ export function ContactPage() {
                     </label>
                     <input
                       id="c-name"
+                      name="name"
                       className={inputBase}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -357,6 +366,7 @@ export function ContactPage() {
                     </label>
                     <input
                       id="c-email"
+                      name="email"
                       type="email"
                       className={inputBase}
                       value={email}
@@ -374,6 +384,7 @@ export function ContactPage() {
                     </label>
                     <select
                       id="c-topic"
+                      name="topic"
                       className={`${inputBase} appearance-none`}
                       value={topic}
                       onChange={(e) => setTopic(e.target.value)}
@@ -391,6 +402,7 @@ export function ContactPage() {
                     </label>
                     <input
                       id="c-order"
+                      name="order_or_lot"
                       className={inputBase}
                       value={orderRef}
                       onChange={(e) => setOrderRef(e.target.value)}
@@ -405,6 +417,7 @@ export function ContactPage() {
                   </label>
                   <input
                     id="c-subject"
+                    name="subject"
                     className={inputBase}
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
@@ -420,6 +433,7 @@ export function ContactPage() {
                   </label>
                   <textarea
                     id="c-message"
+                    name="message"
                     rows={6}
                     className={`${inputBase} resize-y`}
                     value={message}
