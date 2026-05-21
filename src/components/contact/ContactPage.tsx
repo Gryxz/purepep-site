@@ -20,6 +20,15 @@ const SUPPORT_PHONE_DISPLAY = "(866) 212-6466";
 const SUPPORT_PHONE_TEL = "+18662126466";
 const TICKETS_KEY = "pp_support_tickets";
 
+// Web3Forms access key — public-by-design (client-side key, rate-limited
+// per key by Web3Forms themselves).  Pulled from a build-time env so it
+// can be rotated without code edits; hardcoded fallback lets local dev
+// + sandbox builds work without the env being set.
+const WEB3FORMS_KEY =
+  process.env.NEXT_PUBLIC_WEB3FORMS_KEY ??
+  "19ec57f5-b47c-4c14-ae51-870605335a5b";
+const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+
 const TOPICS = [
   "Order status",
   "Shipping & delivery",
@@ -91,6 +100,8 @@ export function ContactPage() {
   const [ticket, setTicket] = useState<TicketRecord | null>(null);
   const [recent, setRecent] = useState<TicketRecord[]>([]);
   const [copied, setCopied] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -143,8 +154,9 @@ export function ContactPage() {
     )}&body=${encodeURIComponent(buildBody(ref))}`;
   }
 
-  function handleSubmit(ev: React.FormEvent) {
+  async function handleSubmit(ev: React.FormEvent) {
     ev.preventDefault();
+    if (submitting) return;
     if (!validate()) return;
 
     const ref = genRef();
@@ -155,16 +167,61 @@ export function ContactPage() {
       date: new Date().toISOString(),
     };
 
-    const next = [record, ...recent].slice(0, 5);
-    setRecent(next);
-    try {
-      window.localStorage.setItem(TICKETS_KEY, JSON.stringify(next));
-    } catch {
-      /* non-fatal */
-    }
+    setSubmitting(true);
+    setSubmitError(null);
 
-    setTicket(record);
-    window.location.href = mailtoFor(ref);
+    // POST to Web3Forms — they relay the form contents to the
+    // verified destination inbox (info@purepep.shop on Zoho).
+    // FormData payload includes the ticket ref in both the subject
+    // line and a body field so the reply email is greppable in the
+    // inbox.  `from_name` + the user's email power a clean Reply-To.
+    // `redirect: false` suppresses their default redirect — we render
+    // the in-page success card instead.
+    try {
+      const fd = new FormData();
+      fd.append("access_key", WEB3FORMS_KEY);
+      fd.append("subject", `[${ref}] ${topic} — ${subject.trim()}`);
+      fd.append("from_name", name.trim() || "PurePep support form");
+      fd.append("email", email.trim());
+      fd.append("name", name.trim());
+      fd.append("topic", topic);
+      fd.append("order_or_lot", orderRef.trim());
+      fd.append("message", message.trim());
+      fd.append("ref", ref);
+      fd.append("redirect", "false");
+
+      const res = await fetch(WEB3FORMS_ENDPOINT, { method: "POST", body: fd });
+      const data: { success?: boolean; message?: string } = await res
+        .json()
+        .catch(() => ({}));
+      if (!res.ok || !data.success) {
+        throw new Error(
+          typeof data.message === "string" && data.message
+            ? data.message
+            : `Submit failed (HTTP ${res.status}).`,
+        );
+      }
+
+      // Persist locally only AFTER a confirmed delivery — keeps the
+      // "recent requests" list aligned with what actually reached
+      // the inbox.
+      const next = [record, ...recent].slice(0, 5);
+      setRecent(next);
+      try {
+        window.localStorage.setItem(TICKETS_KEY, JSON.stringify(next));
+      } catch {
+        /* non-fatal */
+      }
+      setTicket(record);
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong sending your request.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   async function copy(text: string, tag: string) {
@@ -375,14 +432,32 @@ export function ContactPage() {
 
                 <button
                   type="submit"
-                  className="mt-7 inline-flex w-full cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-2xl bg-amber px-6 py-4 font-sans text-[15px] font-bold text-ink shadow-sm transition hover:bg-amber-hover active:translate-y-px"
+                  disabled={submitting}
+                  aria-busy={submitting}
+                  className="mt-7 inline-flex w-full cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-2xl bg-amber px-6 py-4 font-sans text-[15px] font-bold text-ink shadow-sm transition hover:bg-amber-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Send request <span aria-hidden="true">→</span>
+                  {submitting ? "Sending…" : "Send request"}{" "}
+                  <span aria-hidden="true">→</span>
                 </button>
+                {submitError && (
+                  <p
+                    role="alert"
+                    className="mt-3 font-sans text-[13px] leading-relaxed text-alert"
+                  >
+                    Couldn&rsquo;t send: {submitError} You can also email{" "}
+                    <a
+                      href={`mailto:${SUPPORT_EMAIL}`}
+                      className="font-medium underline"
+                    >
+                      {SUPPORT_EMAIL}
+                    </a>{" "}
+                    directly.
+                  </p>
+                )}
                 <p className="mt-3 font-sans text-[12px] leading-relaxed text-ink-40">
-                  Submitting opens a pre-filled email to {SUPPORT_EMAIL} and
-                  gives you a reference number to track this request. All
-                  products are sold for research use only.
+                  Sends directly to the PurePep research team. You&rsquo;ll
+                  get a reference number to track this request. All products
+                  are sold for research use only.
                 </p>
               </form>
             )}

@@ -68,6 +68,13 @@ jobs:
           # published WP pages and WC_BASE_URL is configured as a GH
           # secret.
           WP_MIRROR_STRICT: "0"
+          # Web3Forms public access key — relays contact-form submits to
+          # the info@purepep.shop Zoho inbox.  This is a client-side
+          # public key by design (Web3Forms rate-limits per key and
+          # filters to the verified destination).  Hardcoded fallback
+          # also lives in src/components/contact/ContactPage.tsx so
+          # local/sandbox builds work without this env being set.
+          NEXT_PUBLIC_WEB3FORMS_KEY: "19ec57f5-b47c-4c14-ae51-870605335a5b"
 
       - name: Set up SSH key
         run: |
