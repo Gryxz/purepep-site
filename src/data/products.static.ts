@@ -262,18 +262,16 @@ export const PRODUCTS: Product[] = [
     purity: "≥ 99.0% (HPLC)",
     sku: "PP-IP-005",
   },
-  // GHK-Cu / MOTS-c: canon SKUs + product images that previously lived
-  // only on the WC backend. price / sku below are PLACEHOLDERS —
-  // reconcile against the WC source of truth (pnpm wc:audit) before launch.
   {
     slug: "ghk-cu",
     compound: "GHKCU",
     name: "GHK-Cu",
-    dose: "50 mg",
-    variants: ["50 mg"],
+    dose: "10 mg",
+    variants: ["5 mg", "10 mg", "15 mg"],
+    variantPrices: { "5 mg": 59.0, "10 mg": 99.0, "15 mg": 139.0 },
     cas: "49557-75-7",
-    price: 65.0, // PLACEHOLDER
-    priceLabel: "$65.00", // PLACEHOLDER
+    price: 99.0,
+    priceLabel: "$99.00",
     category: "Healing",
     stock: "in",
     description:
@@ -283,17 +281,18 @@ export const PRODUCTS: Product[] = [
     lot: "GH-2604-A05",
     storage: "2–8 °C, protect from light",
     purity: "≥ 99.0% (HPLC)",
-    sku: "PP-GHKCU-050", // PLACEHOLDER
+    sku: "PP-GHKCU-010",
   },
   {
     slug: "mots-c",
     compound: "MOTSC",
     name: "MOTS-c",
     dose: "10 mg",
-    variants: ["10 mg"],
+    variants: ["5 mg", "10 mg", "15 mg"],
+    variantPrices: { "5 mg": 69.0, "10 mg": 119.0, "15 mg": 169.0 },
     cas: "1627580-64-6",
-    price: 95.0, // PLACEHOLDER
-    priceLabel: "$95.00", // PLACEHOLDER
+    price: 119.0,
+    priceLabel: "$119.00",
     category: "Metabolic",
     stock: "in",
     description:
@@ -303,7 +302,7 @@ export const PRODUCTS: Product[] = [
     lot: "MO-2604-B03",
     storage: "2–8 °C, protect from light",
     purity: "≥ 99.0% (HPLC)",
-    sku: "PP-MOTSC-010", // PLACEHOLDER
+    sku: "PP-MOTSC-010",
   },
   {
     slug: "bac-water",
@@ -326,18 +325,18 @@ export const PRODUCTS: Product[] = [
     purity: "USP-grade · 0.9% benzyl alcohol",
     sku: "PP-BACW-030",
   },
-  // Healing Stack — BPC-157 5mg + TB-500 5mg
+  // Healing Stack — BPC-157 5mg + TB-500 10mg
   {
     slug: "healing-stack",
     compound: "HEAL",
     name: "Healing Stack",
-    dose: "10 mg",
-    variants: ["10 mg"],
-    variantPrices: { "10 mg": 150.0 },
+    dose: "15 mg",
+    variants: ["15 mg"],
+    variantPrices: { "15 mg": 210.0 },
     cas: "—",
-    price: 150.0,
-    priceLabel: "$150.00",
-    regularPrice: 158.0,
+    price: 210.0,
+    priceLabel: "$210.00",
+    regularPrice: 221.0,
     category: "Healing",
     stock: "in",
     description:
@@ -347,25 +346,25 @@ export const PRODUCTS: Product[] = [
     lot: "HS-2604-A01",
     storage: "2–8 °C, protect from light",
     purity: "≥ 99.0% (HPLC)",
-    sku: "PP-HS-010",
+    sku: "PP-HS-015",
     type: "stack",
     stackComponents: [
       { compound: "BPC", name: "BPC-157", mass: "5 mg" },
-      { compound: "TB500", name: "TB-500", mass: "5 mg" },
+      { compound: "TB500", name: "TB-500", mass: "10 mg" },
     ],
   },
-  // GLP Stack — Retatrutide 5mg + Cagrilintide 5mg
+  // GLP Stack — Retatrutide 5mg + Cagrilintide 10mg
   {
     slug: "glp-stack",
     compound: "GLPS",
     name: "GLP Stack",
-    dose: "10 mg",
-    variants: ["10 mg"],
-    variantPrices: { "10 mg": 274.0 },
+    dose: "15 mg",
+    variants: ["15 mg"],
+    variantPrices: { "15 mg": 384.0 },
     cas: "—",
-    price: 274.0,
-    priceLabel: "$274.00",
-    regularPrice: 288.0,
+    price: 384.0,
+    priceLabel: "$384.00",
+    regularPrice: 408.0,
     category: "Incretin mimetics",
     stock: "in",
     description:
@@ -375,25 +374,25 @@ export const PRODUCTS: Product[] = [
     lot: "GS-2604-A01",
     storage: "2–8 °C, protect from light",
     purity: "≥ 99.5% (HPLC)",
-    sku: "PP-GS-010",
+    sku: "PP-GS-015",
     type: "stack",
     stackComponents: [
       { compound: "RETA", name: "Retatrutide", mass: "5 mg" },
-      { compound: "CAGRI", name: "Cagrilintide", mass: "5 mg" },
+      { compound: "CAGRI", name: "Cagrilintide", mass: "10 mg" },
     ],
   },
-  // Recovery Stack — BPC-157 5mg + Ipamorelin 5mg
+  // Recovery Stack — BPC-157 5mg + Ipamorelin 10mg
   {
     slug: "recovery-stack",
     compound: "RECOV",
     name: "Recovery Stack",
-    dose: "10 mg",
-    variants: ["10 mg"],
-    variantPrices: { "10 mg": 141.0 },
+    dose: "15 mg",
+    variants: ["15 mg"],
+    variantPrices: { "15 mg": 197.0 },
     cas: "—",
-    price: 141.0,
-    priceLabel: "$141.00",
-    regularPrice: 148.0,
+    price: 197.0,
+    priceLabel: "$197.00",
+    regularPrice: 207.0,
     category: "Healing",
     stock: "in",
     description:
@@ -403,11 +402,11 @@ export const PRODUCTS: Product[] = [
     lot: "RS-2604-A01",
     storage: "2–8 °C, protect from light",
     purity: "≥ 99.0% (HPLC)",
-    sku: "PP-RS-010",
+    sku: "PP-RS-015",
     type: "stack",
     stackComponents: [
       { compound: "BPC", name: "BPC-157", mass: "5 mg" },
-      { compound: "IPAM", name: "Ipamorelin", mass: "5 mg" },
+      { compound: "IPAM", name: "Ipamorelin", mass: "10 mg" },
     ],
   },
 ];
