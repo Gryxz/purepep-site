@@ -36,7 +36,6 @@ export function MobileFooter() {
         <span className="mob-pay-badge">MC</span>
         <span className="mob-pay-badge is-amex">AMEX</span>
         <span className="mob-pay-badge">DISCOVER</span>
-        <span className="mob-pay-badge is-dark">Pay</span>
       </div>
       <div className="mob-foot-disc">
         For research use only · Not for human consumption.
