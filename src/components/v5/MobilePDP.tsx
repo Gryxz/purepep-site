@@ -228,7 +228,7 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
         <div className="mob-cta-row">
           <button
             type="button"
-            className="mob-buybox"
+            className="mob-cta-amber-base mob-buybox"
             onClick={handleAddToCart}
             disabled={isOut}
             aria-label={isOut ? "Out of stock" : `Add to cart, ${formatPrice(orderTotal)}`}
@@ -249,9 +249,68 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
               <path d="M9 11l3 3L22 4" />
               <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
             </svg>
-            <span>Third-party tested — <a href="/documentation">View Certificate of Analysis →</a></span>
+            <span>Third-party tested — every lot measured before release.</span>
           </div>
         </div>
+      </div>
+
+      {/* Certificate of Analysis card — mirrors the desktop PDP COA panel
+          so both breakpoints offer the same trust affordance. Analytical
+          values match desktop (representative lot); only Lot is per-product. */}
+      <div className="mob-pdp-coa-card">
+        <div className="mob-pdp-coa-head">
+          <div className="mob-pdp-coa-head-left">
+            <span className="mob-pdp-coa-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+                <path d="M14 3v6h6" />
+                <path d="M9 13h6" />
+                <path d="M9 17h4" />
+              </svg>
+            </span>
+            <h3 className="mob-pdp-coa-title">Certificate of Analysis</h3>
+          </div>
+          <span className="mob-pdp-coa-pill">
+            <span className="dot" />
+            Released
+          </span>
+        </div>
+
+        <div className="mob-pdp-coa-meta">
+          <div className="mob-pdp-coa-row">
+            <div className="lbl">Lot</div>
+            <div className="val">{product.lot}</div>
+          </div>
+          <div className="mob-pdp-coa-row">
+            <div className="lbl">Released</div>
+            <div className="val is-sans">2026-04-12</div>
+          </div>
+          <div className="mob-pdp-coa-row">
+            <div className="lbl">Purity (HPLC)</div>
+            <div className="val">99.72%</div>
+          </div>
+          <div className="mob-pdp-coa-row">
+            <div className="lbl">Mass (MS)</div>
+            <div className="val">4866.4 Da</div>
+          </div>
+          <div className="mob-pdp-coa-row">
+            <div className="lbl">Endotoxin</div>
+            <div className="val">&lt; 0.05 EU/mg</div>
+          </div>
+          <div className="mob-pdp-coa-row">
+            <div className="lbl">Water (KF)</div>
+            <div className="val">2.1%</div>
+          </div>
+        </div>
+
+        <a href="/documentation" className="mob-pdp-coa-cta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3v12" />
+            <path d="m7 10 5 5 5-5" />
+            <path d="M5 21h14" />
+          </svg>
+          Download COA (PDF, 482 KB)
+        </a>
       </div>
 
       {/* Content sections */}

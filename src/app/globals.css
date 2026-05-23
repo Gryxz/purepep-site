@@ -8839,25 +8839,22 @@ a.v3-pill-ghost:hover {
   letter-spacing: 0.16em;
 }
 
-/* Force dark pill on the PDP buy-row button.
-   Root cause: `.mob-app button { background: none; color: inherit }` (line 5213)
-   has specificity 0-1-1 which beats the single-class `.mob-buybox` rule (0-1-0),
-   silently stripping the dark bg.  The parent-scoped selector below wins that
-   race and !important ensures no future single-class rule can re-clobber it. */
-
-/* Add-to-cart pill — --m-ink (#1F1F1F) for a true-grayscale dark.
-   --m-ink-mute (#6B6B66) read too light; --m-loden (#3D4232) was
-   olive-tinted (the user wanted true grey, not green).  --m-ink is
-   the canonical dark token in the mobile palette, neutral. */
+/* Amber primary CTA on the PDP buy-row button.
+   Add-to-cart is the PRIMARY action, so it gets the amber treatment to
+   match every other primary CTA in the mobile flow (checkout, hero,
+   catalog request).  It pairs `mob-cta-amber-base` in markup, but that
+   class is 0-1-0 and loses to `.mob-app button { background: none }`
+   (0-1-1, line ~5213).  This parent-scoped selector wins that race and
+   re-applies the amber gradient + ink-on-amber legibility. */
 .mob-cta-row .mob-buybox {
-  background: var(--m-ink) !important;
-  color: var(--m-bone) !important;
-  border: none;
+  background: linear-gradient(158deg, #e5a30d 0%, #c8890a 18%, #a86f00 50%, #8a5a00 78%, #6b4500 100%) !important;
+  color: #fff !important;
 }
 
 .mob-cta-row .mob-buybox:disabled {
-  background: var(--m-ink) !important;
-  opacity: 0.45;
+  background: var(--m-s3) !important;
+  color: var(--m-ink-mute) !important;
+  opacity: 1;
 }
 
 /* Upsell + ADD button — small amber pill with glint sweep */
@@ -9984,6 +9981,134 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   font-size: clamp(11px, 3vw, var(--t-caption));
   line-height: var(--lh-normal);
   color: var(--m-ink-mute);
+}
+
+/* ─── Mobile Certificate of Analysis card ──────────────────────────────
+   Mirrors the desktop PDP COA panel (.v3pdp-coa-*) so both breakpoints
+   carry the same trust affordance: parchment/ink card, mono analytical
+   values, a "Released" status pill, and an ink/ghost download button
+   (secondary affordance — NOT amber). */
+.mob-pdp-coa-card {
+  margin: 8px 20px 24px;
+  padding: 20px;
+  background: var(--m-bone);
+  border: 1px solid var(--m-rule);
+  border-radius: var(--m-r2);
+}
+
+.mob-pdp-coa-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.mob-pdp-coa-head-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mob-pdp-coa-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: var(--m-s2);
+  border: 1px solid var(--m-rule);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--m-ink);
+}
+
+.mob-pdp-coa-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--m-ink);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.mob-pdp-coa-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: var(--m-rf);
+  border: 1px solid var(--m-rule);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--m-ink);
+}
+
+.mob-pdp-coa-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--m-amber-cta);
+}
+
+.mob-pdp-coa-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.mob-pdp-coa-row .lbl {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--m-ink-mute);
+  margin-bottom: 4px;
+}
+
+.mob-pdp-coa-row .val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--m-ink);
+  letter-spacing: 0.02em;
+}
+
+.mob-pdp-coa-row .val.is-sans {
+  font-family: var(--font-sans);
+  text-transform: none;
+  letter-spacing: -0.005em;
+  font-size: 14px;
+}
+
+.mob-pdp-coa-cta {
+  margin-top: 22px;
+  width: 100%;
+  height: 48px;
+  background: transparent;
+  border: 1px solid var(--m-rule);
+  border-radius: var(--m-rf);
+  color: var(--m-ink);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.mob-pdp-coa-cta:active {
+  background: var(--m-s2);
+  border-color: var(--m-ink);
 }
 
 /* Stack ribbon on shop/home cards — dark variant of the sale ribbon */
