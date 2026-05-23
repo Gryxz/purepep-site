@@ -263,7 +263,7 @@ export const PRODUCTS: Product[] = [
     sku: "PP-IP-005",
   },
   // GHK-Cu / MOTS-c: canon SKUs + product images that previously lived
-  // only on the WC backend. price / lot / sku below are PLACEHOLDERS —
+  // only on the WC backend. price / sku below are PLACEHOLDERS —
   // reconcile against the WC source of truth (pnpm wc:audit) before launch.
   {
     slug: "ghk-cu",
@@ -280,7 +280,7 @@ export const PRODUCTS: Product[] = [
       "GHK-Cu (copper tripeptide-1) is a naturally occurring copper-binding tripeptide studied in skin-remodeling and tissue-repair research.",
     disclaimer:
       "This is a lyophilized powder vial intended for research use — this is not a capsule or oral supplement.",
-    lot: "GH-0000-PLACEHOLDER", // PLACEHOLDER
+    lot: "GH-2604-A05",
     storage: "2–8 °C, protect from light",
     purity: "≥ 99.0% (HPLC)",
     sku: "PP-GHKCU-050", // PLACEHOLDER
@@ -300,7 +300,7 @@ export const PRODUCTS: Product[] = [
       "MOTS-c is a 16-amino-acid mitochondrial-derived peptide studied in metabolic-regulation and exercise-physiology research.",
     disclaimer:
       "This is a lyophilized powder vial intended for research use — this is not a capsule or oral supplement.",
-    lot: "MO-0000-PLACEHOLDER", // PLACEHOLDER
+    lot: "MO-2604-B03",
     storage: "2–8 °C, protect from light",
     purity: "≥ 99.0% (HPLC)",
     sku: "PP-MOTSC-010", // PLACEHOLDER

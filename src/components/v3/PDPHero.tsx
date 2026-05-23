@@ -55,12 +55,6 @@ const STATS = [
     source:
       "Limulus Amebocyte Lysate (LAL) assay per lot. Results included in downloadable Certificate of Analysis.",
   },
-  {
-    num: "[TBD]",
-    label: "Research Accounts Served",
-    source: "Operational scale stat — exact figure to be committed by PurePep at launch.",
-    placeholder: true,
-  },
 ];
 
 const TIMELINE = [
@@ -492,7 +486,7 @@ export function PDPHero({ product }: { product: Product }) {
           <div className="v3pdp-stat-grid">
             {STATS.map((s) => (
               <div key={s.label} className="v3pdp-stat-card">
-                <div className={clsx("v3pdp-stat-num", s.placeholder && "is-placeholder")}>{s.num}</div>
+                <div className="v3pdp-stat-num">{s.num}</div>
                 <div className="v3pdp-stat-label">{s.label}</div>
                 <div className="v3pdp-stat-source">{s.source}</div>
               </div>

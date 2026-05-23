@@ -38,7 +38,7 @@ export function categoryShort(c: Category): string {
 
 /** First sentence of the description, capped so it fits a card. */
 export function shortDesc(p: Product): string {
-  const first = p.description.split(".")[0] ?? p.name;
+  const first = p.description.split(/\.\s+/)[0] ?? p.name;
   return first.length > 60 ? first.slice(0, 57) + "..." : first + ".";
 }
 
