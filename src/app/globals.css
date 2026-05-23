@@ -4178,8 +4178,8 @@ a.v3-pill-ghost:hover {
 .v3cart-cta-primary {
   width: 100%;
   padding: 18px 24px;
-  background: linear-gradient(160deg, #4a5238 0%, #3D4232 55%, #333827 100%);
-  color: var(--v3-canvas);
+  background: linear-gradient(160deg, var(--amber-light) 0%, var(--amber-cta) 50%, color-mix(in srgb, var(--amber) 80%, black) 100%);
+  color: #fff;
   border-radius: 9999px;
   font-weight: 700;
   font-size: 14px;
@@ -4194,7 +4194,7 @@ a.v3-pill-ghost:hover {
   margin-bottom: 10px;
   border-top: 1px solid rgb(255 255 255 / 10%);
   border-bottom: 1px solid rgb(0 0 0 / 25%);
-  box-shadow: 0 4px 16px rgb(45 50 35 / 50%), 0 1px 3px rgb(0 0 0 / 20%), inset 0 1px 0 rgb(255 255 255 / 8%);
+  box-shadow: 0 4px 16px rgb(120 75 0 / 45%), 0 1px 3px rgb(0 0 0 / 20%), inset 0 1px 0 rgb(255 255 255 / 8%);
   transition: filter 0.2s, transform 0.15s;
   text-decoration: none;
   cursor: pointer;
@@ -5126,8 +5126,8 @@ a.v3-pill-ghost:hover {
 .v3chk-place {
   width: 100%;
   padding: 19px 24px;
-  background: linear-gradient(158deg, #5a6647 0%, #4a5238 18%, #3D4232 50%, #333827 78%, #2a2f1f 100%);
-  color: var(--v3-canvas);
+  background: linear-gradient(158deg, var(--amber-light) 0%, var(--amber-cta) 18%, var(--amber) 50%, color-mix(in srgb, var(--amber) 72%, black) 78%, color-mix(in srgb, var(--amber) 52%, black) 100%);
+  color: #fff;
   border-radius: 9999px;
   font-weight: 700;
   font-size: 15px;
@@ -5143,7 +5143,7 @@ a.v3-pill-ghost:hover {
   border-color: rgb(255 255 255 / 28%) rgb(0 0 0 / 15%) rgb(0 0 0 / 35%) rgb(255 255 255 / 12%);
   box-shadow:
     0 1px 0 rgb(255 255 255 / 15%),
-    0 8px 24px rgb(20 28 14 / 65%),
+    0 8px 24px rgb(120 75 0 / 55%),
     0 2px 6px rgb(0 0 0 / 30%),
     0 1px 2px rgb(0 0 0 / 20%),
     inset 0 1px 0 rgb(255 255 255 / 22%),
@@ -5181,7 +5181,7 @@ a.v3-pill-ghost:hover {
   filter: brightness(1.08) contrast(1.02);
   box-shadow:
     0 1px 0 rgb(255 255 255 / 18%),
-    0 12px 32px rgb(20 28 14 / 75%),
+    0 12px 32px rgb(120 75 0 / 65%),
     0 4px 10px rgb(0 0 0 / 35%),
     0 1px 2px rgb(0 0 0 / 20%),
     inset 0 1px 0 rgb(255 255 255 / 28%),
@@ -5194,6 +5194,13 @@ a.v3-pill-ghost:hover {
 .v3chk-place:active {
   transform: translateY(1px) scale(0.995);
   filter: brightness(0.94);
+}
+
+.v3cart-cta-primary:focus-visible,
+.v3chk-place:focus-visible,
+.v3drawer-cta-primary:focus-visible {
+  outline: 2px solid var(--v3-ink);
+  outline-offset: 2px;
 }
 
 .v3chk-place:disabled {
@@ -5735,11 +5742,11 @@ a.v3-pill-ghost:hover {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: var(--v3-canvas);
-  background: linear-gradient(160deg, #4a5038 0%, #3d4232 60%, #333826 100%);
+  color: #fff;
+  background: linear-gradient(160deg, var(--amber-light) 0%, var(--amber-cta) 55%, color-mix(in srgb, var(--amber) 80%, black) 100%);
   box-shadow:
     0 1px 3px rgb(0 0 0 / 18%),
-    0 4px 12px rgb(61 66 50 / 25%);
+    0 4px 12px rgb(120 75 0 / 30%);
   text-decoration: none;
   transition: filter 0.15s, box-shadow 0.15s;
   margin-bottom: 8px;
@@ -5749,7 +5756,7 @@ a.v3-pill-ghost:hover {
   filter: brightness(1.08);
   box-shadow:
     0 2px 6px rgb(0 0 0 / 20%),
-    0 6px 16px rgb(61 66 50 / 30%);
+    0 6px 16px rgb(120 75 0 / 35%);
 }
 
 .v3drawer-cta-secondary {
