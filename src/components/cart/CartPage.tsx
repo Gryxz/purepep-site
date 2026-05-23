@@ -114,7 +114,9 @@ export function CartPage({ products }: { products: Product[] }) {
             </Link>
           </div>
         ) : (
-          <>
+          <div className="v3cart-layout">
+            {/* LEFT column — line items, free-ship bar, promo, upsell */}
+            <div className="v3cart-col-main">
             {/* Free-ship bar */}
             <div className="v3cart-shipbar">
               <div className="v3cart-shipbar-row">
@@ -225,7 +227,35 @@ export function CartPage({ products }: { products: Product[] }) {
               </div>
             </div>
 
-            {/* Order summary */}
+            {/* Upsell */}
+            {!hasUpsell && upsellProduct && (
+              <div className="v3cart-upsell">
+                <div className="v3cart-upsell-eyebrow">Often paired with</div>
+                <div className="v3cart-upsell-card">
+                  <div className="v3cart-upsell-thumb">
+                    <RetaVialMini compound={UPSELL.compound} />
+                  </div>
+                  <div className="v3cart-upsell-info">
+                    <div className="v3cart-upsell-name">{UPSELL.name}</div>
+                    <div className="v3cart-upsell-meta">{UPSELL.meta}</div>
+                    <div className="v3cart-upsell-price">${UPSELL.price.toFixed(2)}</div>
+                  </div>
+                  <button
+                    type="button"
+                    className="v3cart-upsell-add"
+                    onClick={addUpsell}
+                    aria-label={`Add ${UPSELL.name} to cart`}
+                  >
+                    + Add
+                  </button>
+                </div>
+              </div>
+            )}
+            </div>
+            {/* END LEFT column */}
+
+            {/* RIGHT column — sticky order summary + primary CTA */}
+            <aside className="v3cart-col-aside">
             <div className="v3cart-summary-wrap">
               <div className="v3cart-summary">
                 <div className="v3cart-summary-h">Order summary</div>
@@ -268,56 +298,33 @@ export function CartPage({ products }: { products: Product[] }) {
                 <div className="v3cart-summary-note">
                   Taxes calculated at checkout · All sales final · Research use only
                 </div>
-              </div>
-            </div>
 
-            {/* Upsell */}
-            {!hasUpsell && upsellProduct && (
-              <div className="v3cart-upsell">
-                <div className="v3cart-upsell-eyebrow">Often paired with</div>
-                <div className="v3cart-upsell-card">
-                  <div className="v3cart-upsell-thumb">
-                    <RetaVialMini compound={UPSELL.compound} />
-                  </div>
-                  <div className="v3cart-upsell-info">
-                    <div className="v3cart-upsell-name">{UPSELL.name}</div>
-                    <div className="v3cart-upsell-meta">{UPSELL.meta}</div>
-                    <div className="v3cart-upsell-price">${UPSELL.price.toFixed(2)}</div>
-                  </div>
-                  <button
-                    type="button"
-                    className="v3cart-upsell-add"
-                    onClick={addUpsell}
-                    aria-label={`Add ${UPSELL.name} to cart`}
-                  >
-                    + Add
-                  </button>
+                {/* CTAs — primary amber checkout lives inside the sticky summary */}
+                <div className="v3cart-ctas">
+                  <Link href="/checkout" className="v3cart-cta-primary">
+                    Continue to checkout
+                    <svg
+                      width="14"
+                      height="14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </Link>
+                  <Link href="/shop" className="v3cart-cta-secondary">
+                    Continue shopping
+                  </Link>
                 </div>
               </div>
-            )}
-
-            {/* CTAs */}
-            <div className="v3cart-ctas">
-              <Link href="/checkout" className="v3cart-cta-primary">
-                Continue to checkout
-                <svg
-                  width="14"
-                  height="14"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </Link>
-              <Link href="/shop" className="v3cart-cta-secondary">
-                Continue shopping
-              </Link>
             </div>
-          </>
+            </aside>
+            {/* END RIGHT column */}
+          </div>
         )}
 
         {/* Trust footer */}

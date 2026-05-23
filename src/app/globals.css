@@ -3605,9 +3605,45 @@ a.v3-pill-ghost:hover {
 
 /* ── CART page (v3cart-*) ─────────────────────────── */
 .v3cart {
-  max-width: 480px;
+  max-width: 1080px;
   margin: 0 auto;
   padding-bottom: 32px;
+}
+
+/* Desktop two-column layout: line items left, sticky summary right.
+   Collapses to a single column below 1024px (summary drops under items). */
+.v3cart-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 32px;
+  align-items: start;
+}
+
+.v3cart-col-main {
+  min-width: 0;
+}
+
+/* Sticky summary — header is position:relative (scrolls away), so a small
+   top offset is enough to give the card breathing room while pinned. */
+.v3cart-col-aside {
+  position: sticky;
+  top: 24px;
+}
+
+@media (max-width: 1024px) {
+  .v3cart {
+    max-width: 480px;
+  }
+
+  .v3cart-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .v3cart-col-aside {
+    position: static;
+    top: auto;
+  }
 }
 
 .v3cart-title {
@@ -4271,6 +4307,14 @@ a.v3-pill-ghost:hover {
   padding: 16px 20px 8px;
 }
 
+/* CTAs now live inside the summary card, which supplies its own padding —
+   so drop the horizontal padding and add a divider above the buttons. */
+.v3cart-summary .v3cart-ctas {
+  padding: 16px 0 0;
+  margin-top: 16px;
+  border-top: 1px solid var(--v3-hair-strong);
+}
+
 .v3cart-cta-primary {
   width: 100%;
   padding: 18px 24px;
@@ -4375,9 +4419,74 @@ a.v3-pill-ghost:hover {
 
 /* ── CHECKOUT page (v3chk-*) ──────────────────────── */
 .v3chk {
-  max-width: 480px;
+  max-width: 1080px;
   margin: 0 auto;
   padding: 16px 0 32px;
+}
+
+/* Desktop two-column layout: form sections left, sticky summary +
+   compliance + place order right. Collapses below 1024px (summary +
+   place order drop under the form sections). */
+.v3chk-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 32px;
+  align-items: start;
+  padding: 0 16px;
+}
+
+.v3chk-col-main {
+  min-width: 0;
+}
+
+/* Sticky right column — header is position:relative (scrolls away), so a
+   small top offset gives the card breathing room while pinned. */
+.v3chk-col-aside {
+  position: sticky;
+  top: 24px;
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .v3chk {
+    max-width: 480px;
+  }
+
+  .v3chk-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 0;
+  }
+
+  .v3chk-col-aside {
+    position: static;
+    top: auto;
+  }
+}
+
+/* Desktop only: inner blocks of the aside drop their side margins/padding
+   so the order card, compliance, place order, and note align flush inside
+   the sticky column (they keep their mobile spacing below 1024px). */
+@media (min-width: 1025px) {
+  .v3chk-col-main .v3chk-section {
+    margin: 0;
+  }
+
+  .v3chk-col-aside .v3chk-order-card {
+    margin: 0;
+  }
+
+  .v3chk-col-aside .v3chk-compliance {
+    margin: 16px 0 0;
+  }
+
+  .v3chk-col-aside .v3chk-place-wrap {
+    padding: 16px 0 0;
+  }
+
+  .v3chk-col-aside .v3chk-place-note {
+    padding: 10px 0 0;
+  }
 }
 
 .v3chk-empty {

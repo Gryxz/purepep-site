@@ -204,103 +204,9 @@ export function CheckoutPage() {
   return (
     <div className="v3-shop">
       <main className="v3chk">
-        {/* Order summary */}
-        <div className="v3chk-order-card">
-          <div className="v3chk-order-h">
-            <span>Order summary</span>
-            <button
-              type="button"
-              className="v3chk-order-toggle"
-              onClick={() => setSummaryOpen((o) => !o)}
-              aria-expanded={summaryOpen}
-            >
-              {summaryOpen ? "Hide ▴" : "Show ▾"}
-            </button>
-          </div>
-          {summaryOpen && (
-            <div>
-              <div className="v3chk-order-lines">
-                {items.map((item) => {
-                  const lineTotal = item.price * item.qty;
-                  const unitStr =
-                    item.qty > 1
-                      ? `${item.qty} × $${item.price.toFixed(2)}`
-                      : `$${item.price.toFixed(2)}/vial`;
-                  return (
-                    <div key={item.slug + item.dose} className="v3chk-order-line">
-                      <div className="v3chk-ol-left">
-                        <span className="v3chk-ol-name">{item.name}</span>
-                        <span className="v3chk-ol-meta">{item.dose} · LYOPHILIZED</span>
-                        <span className="v3chk-ol-meta">{unitStr}</span>
-                      </div>
-                      <span className="v3chk-ol-price">${lineTotal.toFixed(2)}</span>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="v3chk-order-divider" />
-              <div className="v3chk-order-row">
-                <span className="v3chk-order-k">Subtotal</span>
-                <span className="v3chk-order-v">${sub.toFixed(2)}</span>
-              </div>
-              <div className="v3chk-order-row">
-                <span className="v3chk-order-k">Shipping</span>
-                <span
-                  className={clsx(
-                    "v3chk-order-v",
-                    shippingCost === 0 && "is-free",
-                    shippingCost > 0 && "is-muted",
-                  )}
-                >
-                  {shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}
-                </span>
-              </div>
-
-              {/* Referral / promo code */}
-              {promoApplied ? (
-                <div className="v3chk-order-row v3chk-promo-applied">
-                  <span className="v3chk-order-k v3chk-promo-code-label">
-                    <span className="v3chk-promo-dot" />
-                    Referral: {promoApplied}
-                    <button type="button" className="v3chk-promo-remove" onClick={removePromo} aria-label="Remove promo code">×</button>
-                  </span>
-                  <span className="v3chk-order-v v3chk-promo-savings">−${promoDiscount.toFixed(2)}</span>
-                </div>
-              ) : (
-                <div className="v3chk-promo-toggle-wrap">
-                  {!promoOpen ? (
-                    <button type="button" className="v3chk-promo-toggle" onClick={() => setPromoOpen(true)}>
-                      Have a referral or promo code?
-                    </button>
-                  ) : (
-                    <div className="v3chk-promo-row">
-                      <input
-                        type="text"
-                        className="v3chk-promo-input"
-                        placeholder="PP-REF-XXXX"
-                        value={promoInput}
-                        onChange={(e) => { setPromoInput(e.target.value.toUpperCase()); setPromoError(null); }}
-                        onKeyDown={(e) => e.key === "Enter" && applyPromo()}
-                        autoFocus
-                        aria-label="Promo or referral code"
-                      />
-                      <button type="button" className="v3chk-promo-apply" onClick={applyPromo}>
-                        Apply
-                      </button>
-                    </div>
-                  )}
-                  {promoError && <p className="v3chk-promo-error">{promoError}</p>}
-                </div>
-              )}
-
-              <div className="v3chk-order-total">
-                <span className="v3chk-order-tk">Total</span>
-                <span className="v3chk-order-tv">${total.toFixed(2)}</span>
-              </div>
-            </div>
-          )}
-        </div>
-
+        <div className="v3chk-layout">
+        {/* LEFT column — form sections */}
+        <div className="v3chk-col-main">
         {/* SECTIONS */}
         <div className="v3chk-sections">
           {/* 01 Contact */}
@@ -568,6 +474,107 @@ export function CheckoutPage() {
             )}
           </Section>
         </div>
+        </div>
+        {/* END LEFT column */}
+
+        {/* RIGHT column — sticky order summary + compliance + place order */}
+        <aside className="v3chk-col-aside">
+        {/* Order summary */}
+        <div className="v3chk-order-card">
+          <div className="v3chk-order-h">
+            <span>Order summary</span>
+            <button
+              type="button"
+              className="v3chk-order-toggle"
+              onClick={() => setSummaryOpen((o) => !o)}
+              aria-expanded={summaryOpen}
+            >
+              {summaryOpen ? "Hide ▴" : "Show ▾"}
+            </button>
+          </div>
+          {summaryOpen && (
+            <div>
+              <div className="v3chk-order-lines">
+                {items.map((item) => {
+                  const lineTotal = item.price * item.qty;
+                  const unitStr =
+                    item.qty > 1
+                      ? `${item.qty} × $${item.price.toFixed(2)}`
+                      : `$${item.price.toFixed(2)}/vial`;
+                  return (
+                    <div key={item.slug + item.dose} className="v3chk-order-line">
+                      <div className="v3chk-ol-left">
+                        <span className="v3chk-ol-name">{item.name}</span>
+                        <span className="v3chk-ol-meta">{item.dose} · LYOPHILIZED</span>
+                        <span className="v3chk-ol-meta">{unitStr}</span>
+                      </div>
+                      <span className="v3chk-ol-price">${lineTotal.toFixed(2)}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="v3chk-order-divider" />
+              <div className="v3chk-order-row">
+                <span className="v3chk-order-k">Subtotal</span>
+                <span className="v3chk-order-v">${sub.toFixed(2)}</span>
+              </div>
+              <div className="v3chk-order-row">
+                <span className="v3chk-order-k">Shipping</span>
+                <span
+                  className={clsx(
+                    "v3chk-order-v",
+                    shippingCost === 0 && "is-free",
+                    shippingCost > 0 && "is-muted",
+                  )}
+                >
+                  {shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}
+                </span>
+              </div>
+
+              {/* Referral / promo code */}
+              {promoApplied ? (
+                <div className="v3chk-order-row v3chk-promo-applied">
+                  <span className="v3chk-order-k v3chk-promo-code-label">
+                    <span className="v3chk-promo-dot" />
+                    Referral: {promoApplied}
+                    <button type="button" className="v3chk-promo-remove" onClick={removePromo} aria-label="Remove promo code">×</button>
+                  </span>
+                  <span className="v3chk-order-v v3chk-promo-savings">−${promoDiscount.toFixed(2)}</span>
+                </div>
+              ) : (
+                <div className="v3chk-promo-toggle-wrap">
+                  {!promoOpen ? (
+                    <button type="button" className="v3chk-promo-toggle" onClick={() => setPromoOpen(true)}>
+                      Have a referral or promo code?
+                    </button>
+                  ) : (
+                    <div className="v3chk-promo-row">
+                      <input
+                        type="text"
+                        className="v3chk-promo-input"
+                        placeholder="PP-REF-XXXX"
+                        value={promoInput}
+                        onChange={(e) => { setPromoInput(e.target.value.toUpperCase()); setPromoError(null); }}
+                        onKeyDown={(e) => e.key === "Enter" && applyPromo()}
+                        autoFocus
+                        aria-label="Promo or referral code"
+                      />
+                      <button type="button" className="v3chk-promo-apply" onClick={applyPromo}>
+                        Apply
+                      </button>
+                    </div>
+                  )}
+                  {promoError && <p className="v3chk-promo-error">{promoError}</p>}
+                </div>
+              )}
+
+              <div className="v3chk-order-total">
+                <span className="v3chk-order-tk">Total</span>
+                <span className="v3chk-order-tv">${total.toFixed(2)}</span>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Compliance */}
         <div className={clsx("v3chk-compliance", compliance && "is-confirmed")}>
@@ -636,6 +643,10 @@ export function CheckoutPage() {
             Order #{orderResult.order_id} placed. We&rsquo;ll email next steps.
           </p>
         )}
+        </aside>
+        {/* END RIGHT column */}
+        </div>
+        {/* END layout */}
 
         {/* Trust footer */}
         <div className="v3chk-trust">
