@@ -281,6 +281,36 @@ When generating: match the locked palette (bone `#FAF7F0`, loden/ink `#3D4232`/
 
 ---
 
+## 8a. Potential uses for the SVG label card (`LabelCropSvg`)
+
+Open idea (not decided). Three product-visual systems exist:
+- **Photoreal vial JPGs** (`public/images/products/source/purepep-vial-<slug>-v1.0.jpg`)
+  — already live on catalog cards + PDP; rival the AXIS reference. Exist for 8
+  SKUs only.
+- **`src/components/v3/LabelCropSvg.tsx`** — code-rendered "big RETA card"
+  (parametric parchment spec label: compound, dose, LOT, EXP, RUO). Currently
+  live ONLY on the desktop homepage (`HomePage.tsx:131`).
+- **`src/components/v3/RetaVial.tsx`** — large SVG vial, now ORPHANED (imported
+  in CatalogPage/PDPHero but those render the JPG). Candidate for deletion.
+
+The SVG label's unique edge vs the photos: parametric (any compound/dose/lot
+from data), tiny + crisp at any size, and can show the REAL lot number a static
+photo can't. Best-fit uses (where photos fall short — NOT side-by-side with a
+photoreal vial, since the flat parchment is a different visual language):
+1. **Universal fallback image** for the 6 SKUs with no photoreal render
+   (bac-water, glp-stack, healing-stack, ipamorelin, recovery-stack, survo) so
+   the catalog looks complete before Higgsfield fills the photo gaps.
+2. **Cart line-item thumbnails** (finding #15, currently low-fi silhouettes) —
+   one consistent all-SKU treatment, near-zero payload.
+3. **PDP "label detail" beat next to the COA** — show the actual LOT matching the
+   certificate (authenticity signal).
+4. **OG / social share images** — a per-PDP parametric label card.
+
+Note: our photoreal vials ALREADY carry a printed label (PurePep, mg, compound,
+CAS, RUO), so adding a second big label card beside them (pure AXIS style) is
+redundant/busy. A full AXIS-style spec PANEL would also need new data — records
+have `cas` + `purity` but no molecular weight / molecular formula.
+
 ## 9. What was NOT done this session
 
 - No code edits committed (working tree clean at handoff; only this doc added).
