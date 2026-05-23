@@ -514,7 +514,7 @@ export function CheckoutPage() {
                   </Field>
                 </div>
                 <div className="v3chk-bankful-note">
-                  Processed by Bankful · 256-bit SSL encryption
+                  256-bit SSL encryption
                 </div>
               </div>
             )}

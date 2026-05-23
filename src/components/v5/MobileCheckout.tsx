@@ -472,7 +472,7 @@ export function MobileCheckout() {
                 </div>
               </div>
               <div className="mob-chk-card-foot">
-                <div className="mob-chk-card-foot-text">Processed by Bankful · 256-bit SSL encryption</div>
+                <div className="mob-chk-card-foot-text">256-bit SSL encryption</div>
               </div>
             </div>
 
@@ -512,11 +512,10 @@ export function MobileCheckout() {
             onChange={(e) => setCompliance(e.target.checked)}
           />
           <span className="mob-chk-compliance-text">
-            I agree to PurePep&apos;s{" "}
-            <a href="/legal/terms-of-service" style={{ color: "var(--m-amber-cta)", fontWeight: 600 }}>Terms of Sale</a>,{" "}
-            <a href="/legal/refund-policy" style={{ color: "var(--m-amber-cta)", fontWeight: 600 }}>Refund Policy</a>, and{" "}
-            <a href="/legal/shipping-policy" style={{ color: "var(--m-amber-cta)", fontWeight: 600 }}>Shipping Policy</a>.{" "}
-            <strong>All sales are final.</strong>
+            I confirm I am a{" "}
+            <strong>qualified researcher aged 21+</strong> and that these products will be
+            used <strong>strictly for in vitro laboratory research</strong>. I understand
+            all sales are final.
           </span>
         </label>
         <div className={`mob-chk-compliance-bar${compliance ? " is-show" : ""}`}>

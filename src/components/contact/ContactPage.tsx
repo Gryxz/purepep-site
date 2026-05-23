@@ -510,7 +510,7 @@ export function ContactPage() {
                 Hours
               </span>
               <span className="mt-1 block font-sans text-[13.5px] font-bold text-ink">
-                Mon–Fri · 9–17 · 1 business day
+                Mon–Fri · 9 AM–5 PM ET · 1 business day
               </span>
             </div>
           </section>
