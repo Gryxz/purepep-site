@@ -1925,45 +1925,135 @@ a.v3-pill-ghost:hover {
 
 .v3-test-visual {
   position: relative;
-  background: var(--v3-ink);
+  background: var(--v3-surface-3);
+  border-right: 1.5px solid var(--v3-ink);
+  display: flex;
 }
-.v3-test-transform-wrap {
-  position: relative;
-  aspect-ratio: 3/4;
-  overflow: hidden;
-}
+
 @media (max-width: 900px) {
-  .v3-test-transform-wrap { aspect-ratio: 16/9; }
+  .v3-test-visual {
+    border-right: 0;
+    border-bottom: 1.5px solid var(--v3-ink);
+  }
 }
-.v3-test-transform-img {
-  object-fit: cover;
-  object-position: center top;
+
+.v3-test-coa {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 18px;
+  padding: 40px;
+  justify-content: center;
 }
-.v3-test-transform-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 50%, rgba(31,31,31,0.7) 100%);
+
+@media (max-width: 1024px) {
+  .v3-test-coa { padding: 32px; }
 }
-.v3-test-metric {
-  position: absolute;
-  bottom: 24px;
-  left: 24px;
+
+.v3-test-coa-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1.5px solid var(--v3-ink);
 }
-.v3-test-metric-num {
-  font-size: 40px;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-.v3-test-metric-lbl {
+
+.v3-test-coa-label {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.65);
+  color: var(--v3-ink-60);
+}
+
+.v3-test-coa-cpd {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--v3-ink);
+}
+
+.v3-test-coa-lot {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.v3-test-coa-lot-lbl {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--v3-ink-60);
+}
+
+.v3-test-coa-lot-val {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--v3-ink);
+}
+
+.v3-test-coa-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+}
+
+.v3-test-coa-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--v3-surface-4);
+}
+
+.v3-test-coa-row dt {
+  font-size: 13px;
+  color: var(--v3-ink-60);
+}
+
+.v3-test-coa-row dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--v3-ink);
+}
+
+.v3-test-coa-verified {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--v3-ink-60);
+}
+
+.v3-test-coa-tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--v3-ink);
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--v3-ink);
 }
 
 .v3-test-body {
@@ -2007,17 +2097,23 @@ a.v3-pill-ghost:hover {
   align-items: center;
   gap: 14px;
 }
-.v3-test-avatar-wrap {
-  position: relative;
+.v3-test-monogram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 52px;
   height: 52px;
   border-radius: 2px;
-  overflow: hidden;
   flex-shrink: 0;
-  background: var(--v3-surface-2);
+  background: var(--v3-surface-3);
   border: 1.5px solid var(--v3-ink);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--v3-ink);
 }
-.v3-test-avatar-img { object-fit: cover; }
+
 .v3-test-name {
   font-size: 14px;
   font-weight: 600;
