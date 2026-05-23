@@ -3495,14 +3495,25 @@ a.v3-pill-ghost:hover {
 
 /* ── Amber-dot trust strip (ink bg, horizontal scroll) ── */
 .v3-trust-bar {
-  display: flex; gap: 24px;
-  padding: 12px 20px;
+  padding: 12px 0;
   background: var(--v3-ink);
+}
+
+.v3-trust-bar-inner {
+  display: flex; gap: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
   overflow-x: auto; scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch; white-space: nowrap;
   scrollbar-width: none;
 }
-.v3-trust-bar::-webkit-scrollbar { display: none; }
+
+.v3-trust-bar-inner::-webkit-scrollbar { display: none; }
+
+@media (max-width: 640px) {
+  .v3-trust-bar-inner { padding: 0 20px; }
+}
 
 .v3-trust-bar-item {
   display: flex; align-items: center; gap: 8px; flex-shrink: 0;
@@ -5722,18 +5733,18 @@ a.v3-pill-ghost:hover {
 
 .v3drawer-shipbar-text {
   font-size: 12px;
-  color: rgb(250 230 180 / 75%);
+  color: rgb(250 230 180 / 95%);
   font-weight: 500;
 }
 
 .v3drawer-shipbar-text.is-unlocked {
-  color: rgb(140 220 160 / 85%);
+  color: rgb(150 230 170 / 100%);
 }
 
 .v3drawer-shipbar-pct {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: rgb(250 230 180 / 55%);
+  color: rgb(250 230 180 / 82%);
   letter-spacing: 0.06em;
 }
 
@@ -9100,18 +9111,20 @@ a.v3-pill-ghost:hover {
 
 /* ── Trust strip auto-marquee ────────────────────────────────────── */
 .mob-trust-bar {
-  /* override: no longer scroll-snap — items animate by themselves */
+  /* override: no longer scroll-snap — items animate by themselves.
+     Horizontal gutter lives here (fixed, non-translating) so the first
+     item never sits flush against the edge or gets clipped at the loop. */
   scroll-snap-type: none;
   overflow: hidden;
   position: relative;
   display: block;
-  padding: 0;
+  padding: 0 20px;
 }
 
 .mob-trust-track {
   display: inline-flex;
   gap: 24px;
-  padding: 11px 20px;
+  padding: 11px 0;
   white-space: nowrap;
   animation: mob-trust-marquee 32s linear infinite;
   will-change: transform;
@@ -9121,11 +9134,19 @@ a.v3-pill-ghost:hover {
 .mob-trust-bar:focus-within .mob-trust-track { animation-play-state: paused; }
 
 @keyframes mob-trust-marquee {
+  /* -12px offsets half the inter-item gap so the duplicated set lands
+     pixel-perfect on the original, removing the first-item seam clip. */
   from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  to   { transform: translateX(calc(-50% - 12px)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .mob-trust-bar {
+    /* static + scrollable so every item stays reachable and legible */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .mob-trust-track { animation: none; }
 }
 
