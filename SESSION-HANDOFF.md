@@ -311,6 +311,73 @@ CAS, RUO), so adding a second big label card beside them (pure AXIS style) is
 redundant/busy. A full AXIS-style spec PANEL would also need new data — records
 have `cas` + `purity` but no molecular weight / molecular formula.
 
+## 8b. Higgsfield generation prompts
+
+Goal: fill the 6 photoless SKUs and a new hero, matching the existing house
+style (study `purepep-vial-reta-v1.0.jpg` — it's the reference look). Aesthetic
+"up to standard" pass = Claude vision over the rendered contact sheet.
+
+**File outputs (match existing naming so the code picks them up with no change —
+render sites use `/images/products/source/purepep-vial-<slug>-v1.0.jpg`):**
+- `purepep-vial-<slug>-v1.0.jpg` — plain, near-white bg (the one the cards use)
+- `purepep-vial-<slug>-chroma-v1.0.jpg` — same vial on a soft tonal background
+- `purepep-vial-<slug>-v1.0-cutout.png` — transparent; derive from the plain via
+  `pnpm vial-cutout --only <slug>` rather than generating separately.
+
+**House-style base prompt (template — fill {BIGNAME}/{DOSE}/{CAS}):**
+> Photorealistic studio product photo of one small clear glass pharmaceutical
+> vial, upright and centered. Brushed aluminum crimp cap over a dark grey rubber
+> stopper. Bottom third filled with white lyophilized (freeze-dried) peptide
+> powder. Wrapped paper label in warm parchment cream. Label top row: a small
+> solid-black square glyph beside the "PurePep" wordmark (Inter, heavy) on the
+> left, a solid-black "{DOSE} MG" badge on the right. Center: "{BIGNAME}" in very
+> large bold black condensed sans. Below: "CAS {CAS}" in monospace. A solid black
+> band across the lower label reads "FOR RESEARCH USE ONLY · NOT FOR HUMAN
+> CONSUMPTION" in small white mono caps. Soft even lighting, seamless near-white
+> background, subtle reflection and shadow under the vial. Sharp focus, high
+> detail, 4:5 portrait, no people, label is the only text.
+
+Chroma variant: append "place the vial on a soft tonal gradient background" —
+match the exact bg of an existing `*-chroma-v1.0.jpg` so the set stays uniform.
+
+**Per-SKU fills (data from `src/data/products.static.ts`):**
+
+| slug | {BIGNAME} | {DOSE} | {CAS} | notes |
+|---|---|---|---|---|
+| `ipamorelin` | IPA | 5 | 170851-70-4 | single vial, base prompt as-is |
+| `survo` | SURVO | 10 | 1510265-99-0 | single vial, base prompt as-is |
+
+**Stacks = TWO vials side by side, each with its own label** (replace the single-
+vial line in the base prompt with "two identical vials standing side by side,
+each with its own label"):
+- `healing-stack` (HEAL): vial 1 "BPC" / "BPC-157" / 5 MG · vial 2 "TB500" /
+  "TB-500" / 5 MG.
+- `glp-stack` (GLPS): vial 1 "RETA" / "Retatrutide" / 5 MG · vial 2 "CAGRI" /
+  "Cagrilintide" / 5 MG.
+- `recovery-stack` (RECOV): vial 1 "BPC" / "BPC-157" / 5 MG · vial 2 "IPAM" /
+  "Ipamorelin" / 5 MG.
+
+**`bac-water` (BACW) — DIFFERENT, do not use the powder prompt:**
+> Photorealistic studio product photo of one clear glass 30 mL multi-dose vial,
+> upright and centered, filled with clear colorless liquid (NOT powder). Aluminum
+> flip-off cap over a grey rubber stopper. Wrapped parchment-cream paper label:
+> small black glyph + "PurePep" wordmark top-left, "30 mL" badge top-right,
+> "BAC WATER" in large bold black sans center, "0.9% BENZYL ALCOHOL" in mono
+> below, and a black band "FOR RESEARCH USE ONLY · NOT FOR HUMAN CONSUMPTION".
+> Soft even lighting, seamless near-white background, subtle reflection. 4:5
+> portrait, no people.
+
+**Hero (replace `public/hero/lab.jpg`, findings #7/#22):**
+> Premium, minimal hero composition: the PurePep RETA vial (clean glass, parchment
+> label, aluminum cap) on a soft tonal product-on-color background with generous
+> negative space for headline text on the left. Soft directional studio light,
+> gentle floor reflection, no warehouse/lab clutter, no people. Wide 16:9 for
+> desktop plus a 4:5 portrait crop for mobile.
+
+Constraints for all generations: locked palette (bone `#FAF7F0`, loden/ink
+`#3D4232`/`#1F1F1F`, amber accents only), consistent aspect ratios, export at 2×,
+and NO fake people / clinical results.
+
 ## 9. What was NOT done this session
 
 - No code edits committed (working tree clean at handoff; only this doc added).
