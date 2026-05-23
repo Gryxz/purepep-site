@@ -171,12 +171,38 @@ installed). Confirm **every SKU resolves to a real image (broken:0)** on
 `/shop/<slug>/` for all 6, then hand the contact sheet to the user for the
 Claude-vision quality pass at desktop (1440) + mobile (390).
 
-## 8. Non-image open item
+## 8. Non-image open items — variants, prices, deploy
 
-`src/data/products.static.ts` — ghk-cu (`price: 65.0`, `sku: PP-GHKCU-050`) and
-mots-c (`price: 95.0`, `sku: PP-MOTSC-010`) are flagged `// PLACEHOLDER`. Values
-render plausibly but are not confirmed against WooCommerce. Get the real numbers
-from the user (or `pnpm wc:audit`) and drop them in. Lots were already fixed.
+### 8a. Dose variants + prices (USER DECISION CAPTURED — needs final numbers)
+The user confirmed: ALL peptides sell in **5 / 10 / 15 mg**; any bundle/stack is
+**always 15 mg**; bac-water stays 30 mL. Apply in `src/data/products.static.ts`
+(`dose`, `variants`, `variantPrices`, `price`, `priceLabel`) and DELETE the
+`// PLACEHOLDER` markers.
+
+- The 8 main peptides (reta, sema, tirz, cagri, survo, bpc-157, tb-500,
+  ipamorelin) ALREADY have `variants: ["5 mg","10 mg","15 mg"]` + `variantPrices`
+  with real numbers — leave them.
+- EXPAND to 5/10/15 mg (set `variants` + `variantPrices`; default `dose` = "10 mg"
+  unless the user says otherwise):
+  - `ghk-cu` — currently 50 mg single, `price: 65.0 // PLACEHOLDER`
+  - `mots-c` — currently 10 mg single, `price: 95.0 // PLACEHOLDER`
+- CHANGE to a single **15 mg** dose (currently 10 mg; they already carry real
+  prices — confirm the 15 mg price equals the current one or get a new number):
+  - `healing-stack` ($150) · `glp-stack` ($274) · `recovery-stack` ($141)
+- **NEEDED FROM USER (they said "I'll give you the prices"):** ghk-cu 5/10/15,
+  mots-c 5/10/15, and the 15 mg price for each of the 3 stacks. Paste-in shorthand
+  works, e.g. `ghk-cu 49/79/109, mots-c 69/119/169, stacks keep`.
+- CAVEAT: ghk-cu's canon label (`src/lib/labels/skus.ts`) says **50 MG**. If
+  ghk-cu becomes 5/10/15, update that label entry + re-run `pnpm labels`, and the
+  ghk-cu vial image dose, so the printed label matches the offering. (mots-c label
+  is already 10 MG — fine as a representative default.)
+
+### 8b. Deploy (git-based — already wired on the GitHub side)
+A read-write deploy key **"git deploy (thecommercemedia01)"** was added to the
+GitHub repo (alongside the pre-existing "Cloudways deploy" key). To deploy: point
+the host's git pull at branch **`claude/port-apple-swiss-design-29ktB`** (NOT
+`main`, which only holds the README + a couple hero JPEGs), and the deploy must
+run `pnpm install && pnpm build` then serve the static `out/` directory.
 
 ## 9. Definition of done (carry over from the goal)
 
@@ -189,28 +215,40 @@ hero replaced.
 
 Paste into `/goal`:
 
-> Finish the PurePep storefront imagery. Source of truth: SESSION-HANDOFF-IMAGES.md
-> (repo root) — read ALL of it first, plus §3/§8b of SESSION-HANDOFF.md. Confirm
-> you're in /home/zay/purepep-site on branch claude/port-apple-swiss-design-29ktB
-> and `git pull`. All code work is already done (10 commits); only assets remain.
+> Finish the PurePep storefront — only assets + data remain. Source of truth:
+> SESSION-HANDOFF-IMAGES.md (repo root) — read ALL of it first, plus §3/§8b of
+> SESSION-HANDOFF.md. Confirm you're in /home/zay/purepep-site on branch
+> claude/port-apple-swiss-design-29ktB and `git pull`. All code/UX work is already
+> committed and green (12 commits) and visually QA'd; do NOT redo it.
 >
-> First: authenticate Higgsfield — run `/mcp` → higgsfield → Authenticate, then
-> (if needed) restart so the tools load; confirm with ToolSearch `+higgsfield`.
-> If it still won't drive, tell me and I'll generate in the Higgsfield web app and
-> drop files at the documented paths for you to run `pnpm vial-cutout`.
+> THREE things remain:
 >
-> Then generate, using the canon data in src/lib/labels/skus.ts and the filled
-> prompts in SESSION-HANDOFF-IMAGES.md §5: (a) the 6 gap SKUs — ipamorelin, survo,
-> bac-water, glp-stack, healing-stack, recovery-stack — each gets plain +
-> chroma at the §4 paths, then `pnpm vial-cutout --only <slug>` for the cutout;
-> (b) a new clean product-on-color hero replacing public/hero/lab.jpg + the
-> public/hero/reta.jpg mobile crop. Match the reta house style.
+> 1. PRICES + DOSE VARIANTS (§8a) — ask me for the numbers, then edit
+>    src/data/products.static.ts and DELETE the `// PLACEHOLDER` markers: expand
+>    ghk-cu and mots-c to 5/10/15 mg (variants + variantPrices, default dose
+>    10 mg); change the 3 stacks (healing/glp/recovery) to a single 15 mg dose.
+>    The 8 main peptides already have 5/10/15 — leave them. If ghk-cu moves off
+>    50 mg, also update src/lib/labels/skus.ts + run `pnpm labels` (§8a caveat).
+>
+> 2. IMAGES (§4–§6) — authenticate Higgsfield first: run `/mcp` → higgsfield →
+>    Authenticate, then restart so the tools load; confirm via ToolSearch
+>    `+higgsfield`. If it still won't drive, tell me and I'll generate in the web
+>    app and drop files for you to run `pnpm vial-cutout`. Using the canon data in
+>    src/lib/labels/skus.ts and the filled prompts in §5: (a) the 6 gap SKUs
+>    (ipamorelin, survo, bac-water, glp-stack, healing-stack, recovery-stack) each
+>    get plain + chroma at the §4 paths, then `pnpm vial-cutout --only <slug>`;
+>    (b) a clean product-on-color hero replacing public/hero/lab.jpg + the
+>    public/hero/reta.jpg mobile crop. Match the reta house style.
+>
+> 3. After all the above: verify every SKU resolves to a real image with the
+>    Playwright harness (pp-qa.mjs / pp-sheet.mjs, §7) and give me a contact sheet
+>    at 1440 + 390 for a Claude-vision pass.
 >
 > Hard rules: keep output:"export"; compliance copy verbatim; no emoji/exclaims;
 > after each batch `pnpm fence && pnpm typecheck && pnpm lint && pnpm build` green
-> (stylelint baseline is 81, don't exceed) and commit+push in small batches
-> without breaking PR #8. Verify every SKU resolves to a real image with the
-> Playwright harness (pp-qa.mjs / pp-sheet.mjs, §7), then give me a contact sheet
-> at 1440 + 390 for a vision pass. Also: ask me for the real ghk-cu/mots-c prices
-> (§8) and drop them in. Done = all 6 gap SKUs have real chroma+cutout, hero
-> replaced, no PLACEHOLDER left, build green, visual QA passed on both breakpoints.
+> (stylelint baseline is 81 pre-existing — don't exceed; the user wants a single
+> `stylelint --fix` cleanup commit at the very end) and commit+push in small
+> batches without breaking PR #8. Deploy is git-based (key already added) — see
+> §8b. Done = ghk-cu/mots-c at 5/10/15 + stacks at 15 mg with real prices and NO
+> PLACEHOLDER left, all 6 gap SKUs have real chroma+cutout, hero replaced, build
+> green, visual QA passed on both breakpoints.
