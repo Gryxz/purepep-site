@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
-import { useCartStore } from "@/lib/cart-store";
+import { useCartStore, useCartCount } from "@/lib/cart-store";
 import { Lockup, Icon, Eyebrow } from "./primitives";
 import { clsx } from "@/lib/clsx";
 import { ACCOUNT_HREF } from "@/content/nav";
@@ -127,9 +127,9 @@ const MOBILE_NAV_LINKS = [
 ];
 
 export function Header({ minimal = false }: { minimal?: boolean }) {
-  const { totalItems, openCart } = useCartStore();
+  const { openCart } = useCartStore();
   const [menuOpen, setMenuOpen] = useState(false);
-  const count = totalItems();
+  const count = useCartCount();
 
   return (
     <header className="relative z-10 bg-bone">

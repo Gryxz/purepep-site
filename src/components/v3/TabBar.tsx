@@ -2,7 +2,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useCartStore } from "@/lib/cart-store";
+import { useCartStore, useCartCount } from "@/lib/cart-store";
 import { ACCOUNT_HREF } from "@/content/nav";
 
 function HomeIcon() {
@@ -45,8 +45,8 @@ function UserIcon() {
 
 export function TabBar() {
   const pathname = usePathname();
-  const { openCart, totalItems } = useCartStore();
-  const count = totalItems();
+  const { openCart } = useCartStore();
+  const count = useCartCount();
 
   const isHome = pathname === "/";
   const isShop = pathname?.startsWith("/shop");
