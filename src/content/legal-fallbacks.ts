@@ -53,7 +53,7 @@ export const LEGAL_FALLBACKS: Record<string, PolicyFallback> = {
       <p>Every order ships with a lot-matched Certificate of Analysis. If our published analytical specifications are not met for a given lot, contact us and we will issue a replacement from the next qualified batch.</p>
 
       <h2>Contact</h2>
-      <p>Questions about a return or replacement: ${SUPPORT_LINKS}. Support hours: Mon–Fri 9:00–17:00, reply within one business day.</p>
+      <p>Questions about a return or replacement: ${SUPPORT_LINKS}. Support hours: Mon–Fri 9 AM–5 PM ET, reply within one business day.</p>
     `.trim(),
   },
 
@@ -192,10 +192,41 @@ export const LEGAL_FALLBACKS: Record<string, PolicyFallback> = {
       <p>Reach the PurePep research team through our <a href="/contact">support portal</a>, by email at <a href="mailto:info@purepep.shop">info@purepep.shop</a>, or by phone at <a href="tel:+18662126466">(866) 212-6466</a>.</p>
 
       <h2>Hours</h2>
-      <p>Mon–Fri · 9:00–17:00. Reply within one business day.</p>
+      <p>Mon–Fri · 9 AM–5 PM ET. Reply within one business day.</p>
 
       <h2>Order issues</h2>
       <p>Quote your order or lot number for the fastest resolution. Tracking is in your confirmation email.</p>
+    `.trim(),
+  },
+
+  faq: {
+    title: "FAQ",
+    contentHtml: `
+      <p>Answers to common questions about PurePep products, ordering, and research-use requirements.</p>
+
+      <h2>What does "for research use only" mean?</h2>
+      <p>${compliance.researchUseOnly} PurePep peptides are not approved by the FDA or any other regulatory body for human or veterinary use. They are not drugs, food, or dietary supplements, and they may not be used in humans, animals, or any application outside a qualified laboratory research context.</p>
+
+      <h2>Who may purchase?</h2>
+      <p>${compliance.qualified21} By completing a purchase you confirm you are a qualified researcher aged 21 or older and that any product will be used exclusively for in vitro laboratory research. PurePep reserves the right to refuse or cancel any order that does not meet these eligibility requirements.</p>
+
+      <h2>How are products shipped and how long does delivery take?</h2>
+      <p>PurePep ships within the United States only via standard tracked shipping. Most US addresses receive their order within 2–3 business days after dispatch. Orders placed before 12:00 ET Monday through Friday ship the same business day; orders placed later ship the next business day. A tracking number is emailed once the carrier collects the package.</p>
+
+      <h2>Does every order include a Certificate of Analysis?</h2>
+      <p>Yes. Every order ships with a lot-specific Certificate of Analysis (COA) documenting HPLC purity, mass confirmation, and lot identifier. The COA is downloadable from the product page and is also included with the shipment. All PurePep peptides are assayed at ≥99.0% purity by HPLC (≥99.5% for incretin-class compounds) on every manufactured lot.</p>
+
+      <h2>What is your refund and return policy?</h2>
+      <p>${compliance.noRefunds} If a package arrives damaged or is confirmed lost in transit, PurePep will replace the order at no charge — contact us within 14 days of the expected delivery date and quote your order number. Orders may be cancelled before a shipping label is generated, typically within one hour of placement. See the full <a href="/legal/refund-policy">Refund Policy</a> for details.</p>
+
+      <h2>How should peptides be stored?</h2>
+      <p>Lyophilized (freeze-dried) peptides are stable at room temperature during transit. On receipt, store vials at 2–8 °C, protected from light, until reconstitution. Once reconstituted in bacteriostatic water, the solution should be refrigerated and used within 30 days. Do not freeze reconstituted product.</p>
+
+      <h2>Is bacteriostatic water included with my order?</h2>
+      <p>Bacteriostatic water is sold separately as an add-on item at checkout. It is not included by default. PurePep recommends using sterile bacteriostatic water (0.9% benzyl alcohol) for reconstitution of all lyophilized peptide vials.</p>
+
+      <h2>How can I reach support?</h2>
+      <p>Contact the PurePep research team via email at <a href="mailto:info@purepep.shop">info@purepep.shop</a>, by phone at <a href="tel:+18662126466">(866) 212-6466</a>, or through the <a href="/contact">support portal</a>. Support hours are Mon–Fri 9 AM–5 PM ET. Replies are sent within one business day. For order and lot inquiries, quote your order number for the fastest resolution.</p>
     `.trim(),
   },
 };
