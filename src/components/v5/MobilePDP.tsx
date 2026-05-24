@@ -113,9 +113,9 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
       </nav>
 
       {/* Product image */}
-      <div className="mob-pdp-img">
+      <div className="mob-pdp-img" data-vial-slug={product.slug}>
         <Image
-          src={product.imageUrl ?? `/images/products/source/purepep-vial-${product.slug}-v1.0.jpg`}
+          src={`/images/products/source/purepep-vial-${product.slug}-v1.0-cutout.png`}
           alt={`${product.compound} vial`}
           fill
           priority
@@ -369,9 +369,9 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
         <div className="mob-paired-band">
           <h2 className="mob-paired-h2">Often paired with</h2>
           <a href={`/shop/${related[0].slug}`} className="mob-paired-card">
-            <div className="mob-paired-thumb">
+            <div className="mob-paired-thumb" data-vial-slug={related[0].slug}>
               <Image
-                src={related[0].imageUrl ?? `/images/products/source/purepep-vial-${related[0].slug}-v1.0.jpg`}
+                src={`/images/products/source/purepep-vial-${related[0].slug}-v1.0-cutout.png`}
                 alt={`${related[0].compound} vial`}
                 fill
                 sizes="60px"
@@ -402,14 +402,14 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
             <div className="mob-more-carousel" ref={carouselRef}>
               {related.map((p) => (
                 <a key={p.slug} href={`/shop/${p.slug}`} className="mob-more-card">
-                  <div className="mob-more-img">
+                  <div className="mob-more-img" data-vial-slug={p.slug}>
                     <span className="mob-more-cat-pill">{categoryShort(p.category)}</span>
                     <span className={`mob-more-stock ${p.stock === "low" ? "is-low" : "is-in"}`}>
                       <span className="sd" />
                       {p.stock === "low" ? "Low stock" : "In stock"}
                     </span>
                     <Image
-                      src={p.imageUrl ?? `/images/products/source/purepep-vial-${p.slug}-v1.0.jpg`}
+                      src={`/images/products/source/purepep-vial-${p.slug}-v1.0-cutout.png`}
                       alt={`${p.compound} vial`}
                       fill
                       sizes="40vw"

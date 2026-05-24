@@ -136,7 +136,7 @@ export function MobileShopPage({ products }: { products: Product[] }) {
       <div className="mob-pgrid">
         {visible.map((p) => (
           <a key={p.slug} href={`/shop/${p.slug}`} className="mob-pcard">
-            <div className="mob-pcard-img">
+            <div className="mob-pcard-img" data-vial-slug={p.slug}>
               {p.type === "stack" ? (
                 <span className="mob-card-stack-ribbon">{STACK_BADGE_LABEL}</span>
               ) : p.regularPrice && p.regularPrice > p.price ? (
@@ -152,7 +152,7 @@ export function MobileShopPage({ products }: { products: Product[] }) {
                 {stockLabel(p.stock)}
               </span>
               <Image
-                src={p.imageUrl ?? `/images/products/source/purepep-vial-${p.slug}-v1.0.jpg`}
+                src={`/images/products/source/purepep-vial-${p.slug}-v1.0-cutout.png`}
                 alt={`${p.compound} vial`}
                 fill
                 sizes="50vw"

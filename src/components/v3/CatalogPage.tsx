@@ -275,9 +275,10 @@ function FeaturedSlide({ product }: { product: Product }) {
         href={`/shop/${product.slug}`}
         className="v3cat-featured-photo"
         aria-label={`Open ${product.name} product page`}
+        data-vial-slug={product.slug}
       >
         <Image
-          src={product.imageUrl ?? `/images/products/source/purepep-vial-${product.slug}-v1.0.jpg`}
+          src={`/images/products/source/purepep-vial-${product.slug}-v1.0-cutout.png`}
           alt={`${product.compound} vial`}
           fill
           sizes="(max-width:900px) 100vw, 40vw"
@@ -359,14 +360,14 @@ function ProductTile({ product }: { product: Product }) {
 
   return (
     <Link href={`/shop/${product.slug}`} className="v3-tile">
-      <div className="v3-tile-photo">
+      <div className="v3-tile-photo" data-vial-slug={product.slug}>
         {product.type === "stack" ? (
           <span className="v3-tile-stack-badge">{STACK_BADGE_LABEL}</span>
         ) : product.regularPrice && product.regularPrice > product.price ? (
           <span className="v3-tile-sale-badge">Sale</span>
         ) : null}
         <Image
-          src={product.imageUrl ?? `/images/products/source/purepep-vial-${product.slug}-v1.0.jpg`}
+          src={`/images/products/source/purepep-vial-${product.slug}-v1.0-cutout.png`}
           alt={`${product.compound} vial`}
           fill
           sizes="(max-width:600px) 50vw, 25vw"

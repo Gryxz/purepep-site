@@ -573,7 +573,7 @@ button { font-family: inherit; }
 
 /* Photo card — vial visual on the cream gradient surface. */
 .v3pdp-photo-card {
-  background-image: linear-gradient(168deg, #F1EDE3 0%, #E8E1D0 60%, #DDD3BC 100%);
+  background: linear-gradient(to bottom, var(--vial-upper, #F1EDE3), var(--vial-shelf, #DDD3BC));
   border-radius: 28px;
   padding: 56px 48px;
   box-shadow: var(--v3-shadow-hero);
@@ -1567,7 +1567,7 @@ a.v3-pill-ghost:hover {
 .v3-tile-photo {
   position: relative;
   aspect-ratio: 4 / 3;
-  background: var(--v3-surface-2);
+  background: linear-gradient(to bottom, var(--vial-upper, var(--v3-surface-2)), var(--vial-shelf, var(--v3-surface-2)));
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
   border-bottom: 1.5px solid var(--v3-ink);
@@ -2869,7 +2869,7 @@ a.v3-pill-ghost:hover {
 .v3cat-featured-photo {
   position: relative;
   aspect-ratio: 4 / 3;
-  background: var(--v3-surface-2);
+  background: linear-gradient(to bottom, var(--vial-upper, var(--v3-surface-2)), var(--vial-shelf, var(--v3-surface-2)));
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
   border-right: 1.5px solid var(--v3-ink);
@@ -6663,7 +6663,7 @@ a.v3-pill-ghost:hover {
 
 .mob-pcard-img {
   position: relative; aspect-ratio: 1/1;
-  background: linear-gradient(160deg, var(--m-s1) 0%, var(--m-s3) 100%);
+  background: linear-gradient(to bottom, var(--vial-upper, var(--m-s1)), var(--vial-shelf, var(--m-s3)));
   display: flex; align-items: flex-end; justify-content: center;
   overflow: hidden;
 }
@@ -7390,7 +7390,7 @@ a.v3-pill-ghost:hover {
 .mob-pdp-img {
   margin: 0 20px;
   border-radius: var(--m-r2);
-  background: linear-gradient(160deg, var(--m-s1) 0%, var(--m-s3) 50%, var(--m-s2) 100%);
+  background: linear-gradient(to bottom, var(--vial-upper, var(--m-s1)), var(--vial-shelf, var(--m-s3)));
   border: 1px solid var(--m-rule);
   aspect-ratio: 1/1;
   display: flex; align-items: flex-end; justify-content: center;
@@ -10333,8 +10333,9 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
+  padding: 8%;
   z-index: 1;
 }
 
@@ -10876,5 +10877,25 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   color: var(--pp-emerald) !important;
   font-weight: 700;
 }
+
+/* ── SKU backdrop tokens ──────────────────────────────────────────────────────
+   Set data-vial-slug="<slug>" on any container to get --vial-upper /
+   --vial-shelf resolved. Components never reference hex directly.
+   Values are the canonical backdropUpper / backdropShelf from skus.ts.
+   --------------------------------------------------------------------------- */
+[data-vial-slug="reta"]         { --vial-upper: #f3ead9; --vial-shelf: #d4c5a7; }
+[data-vial-slug="sema"]         { --vial-upper: #f5dfca; --vial-shelf: #d8a586; }
+[data-vial-slug="tirz"]         { --vial-upper: #e0d8ec; --vial-shelf: #a89dc6; }
+[data-vial-slug="cagri"]        { --vial-upper: #d8e2d0; --vial-shelf: #9eb393; }
+[data-vial-slug="bpc-157"]      { --vial-upper: #dcc8d0; --vial-shelf: #9c7e8a; }
+[data-vial-slug="tb-500"]       { --vial-upper: #e8cecb; --vial-shelf: #b48b87; }
+[data-vial-slug="ghk-cu"]       { --vial-upper: #cfdce6; --vial-shelf: #a9c0d3; }
+[data-vial-slug="mots-c"]       { --vial-upper: #d2e0dc; --vial-shelf: #8eada6; }
+[data-vial-slug="survo"]        { --vial-upper: #F0DEC8; --vial-shelf: #D9BC96; }
+[data-vial-slug="ipamorelin"]   { --vial-upper: #DDD0E8; --vial-shelf: #C4B0D6; }
+[data-vial-slug="bac-water"]    { --vial-upper: #ddd2bd; --vial-shelf: #c7b89e; }
+[data-vial-slug="glp-stack"]    { --vial-upper: #F0E8D5; --vial-shelf: #D8C8A8; }
+[data-vial-slug="healing-stack"]  { --vial-upper: #E8D0CC; --vial-shelf: #C8A8A4; }
+[data-vial-slug="recovery-stack"] { --vial-upper: #D8C8DC; --vial-shelf: #B8A0C0; }
 
 
