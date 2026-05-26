@@ -13,14 +13,8 @@ export function MobileFooter() {
         <a href="/shop" className="mob-foot-link">
           Shop all peptides
         </a>
-        <a href="/documentation" className="mob-foot-link">
-          View all COAs
-        </a>
         <a href="/faq" className="mob-foot-link">
           FAQ
-        </a>
-        <a href="/affiliates" className="mob-foot-link">
-          Affiliate program
         </a>
       </div>
       <div className="mob-foot-section">

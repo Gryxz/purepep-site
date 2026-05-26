@@ -339,67 +339,7 @@ export function HomePage({ products }: { products: Product[] }) {
         </div>
       </section>
 
-      {/* ───── Documentation strip ───── */}
-      <section className="v3-docs-band">
-        <div className="v3-container">
-          <div className="v3-docs-grid">
-            <a href="/quality#methods" className="v3-doc-card">
-              <div className="v3-doc-num">01 — Methods</div>
-              <h3 className="v3-doc-title">How we test every lot</h3>
-              <div className="v3-doc-foot">
-                <span>Read methods</span>
-                <span className="arrow">→</span>
-              </div>
-            </a>
-            <a href="/quality#sample-coa" className="v3-doc-card">
-              <div className="v3-doc-num">02 — Sample COA</div>
-              <h3 className="v3-doc-title">Read a real Certificate of Analysis</h3>
-              <div className="v3-doc-foot">
-                <span>Open sample</span>
-                <span className="arrow">→</span>
-              </div>
-            </a>
-            <a href="/researcher-access" className="v3-doc-card">
-              <div className="v3-doc-num">03 — Researcher verification</div>
-              <h3 className="v3-doc-title">21+ qualified researchers only</h3>
-              <div className="v3-doc-foot">
-                <span>Verify access</span>
-                <span className="arrow">→</span>
-              </div>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* ───── Referral teaser ───── */}
-      <section className="v3-section v3-referral-teaser">
-        <div className="v3-container">
-          <div className="v3-ref-teaser-grid">
-            <div className="v3-ref-teaser-left">
-              <p className="v3-section-eyebrow">{REFERRAL.eyebrow}</p>
-              <h2 className="v3-ref-teaser-h">{REFERRAL.headline}</h2>
-              <p className="v3-ref-teaser-body">{REFERRAL.body}</p>
-              <div className="v3-ref-teaser-ctas">
-                <a href={REFERRAL.primary.href} className="v3-pill v3-pill-primary">
-                  {REFERRAL.primary.label} <span className="arrow">→</span>
-                </a>
-                <a href={REFERRAL.secondary.href} className="v3-pill v3-pill-ghost">
-                  {REFERRAL.secondary.label}
-                </a>
-              </div>
-              <p className="v3-ref-teaser-fine">{REFERRAL.terms}</p>
-            </div>
-            <div className="v3-ref-teaser-stats">
-              {REFERRAL.stats.map((s) => (
-                <div key={s.label} className="v3-ref-stat">
-                  <div className="v3-ref-stat-num">{s.value}</div>
-                  <div className="v3-ref-stat-label">{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* docs-band + referral-teaser hidden */}
 
       {/* ───── Closing CTA ───── */}
       <section className="v3-closing">

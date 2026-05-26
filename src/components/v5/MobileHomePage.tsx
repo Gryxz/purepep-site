@@ -403,38 +403,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
               </div>
             </div>
           </a>
-          <a href="/documentation" className="mob-tr-card">
-            <div className="mob-tr-card-row">
-              <div className="mob-tr-card-num">02</div>
-              <div className="mob-tr-card-content">
-                <h3 className="mob-tr-card-h">Read a real Certificate of Analysis</h3>
-                <p className="mob-tr-card-cap">
-                  Lot-specific, third-party COA documents purity, identity, and endotoxin level. Open
-                  a sample to see what ships with every vial.
-                </p>
-                <div className="mob-tr-card-action">
-                  <span>Open sample</span>
-                  <span className="arr">→</span>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a href="/researcher-access" className="mob-tr-card">
-            <div className="mob-tr-card-row">
-              <div className="mob-tr-card-num">03</div>
-              <div className="mob-tr-card-content">
-                <h3 className="mob-tr-card-h">21+ qualified researchers only</h3>
-                <p className="mob-tr-card-cap">
-                  Eligibility verified at checkout. Sold strictly for in vitro laboratory research —
-                  not for human or veterinary use.
-                </p>
-                <div className="mob-tr-card-action">
-                  <span>Verify access</span>
-                  <span className="arr">→</span>
-                </div>
-              </div>
-            </div>
-          </a>
+          {/* COA + researcher-access cards hidden */}
         </div>
       </section>
 
@@ -493,31 +462,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         </div>
       </section>
 
-      {/* Referral — eyebrow dropped, declarative headline. */}
-      <section className="mob-referral">
-        <div className="mob-ref-frame">
-          <div className="mob-ref-content">
-            <h2 className="mob-ref-h">{REFERRAL.headline}</h2>
-            <p className="mob-ref-sub">{REFERRAL.body}</p>
-            <div className="mob-ref-stats">
-              {REFERRAL.stats.map((s) => (
-                <div key={s.label} className="mob-r-stat">
-                  <div className="mob-r-stat-num">{s.value}</div>
-                  <div className="mob-r-stat-label">{s.label}</div>
-                </div>
-              ))}
-            </div>
-            <a href={REFERRAL.primary.href} className="mob-ref-cta">
-              {REFERRAL.primary.label}
-              <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </a>
-            <span className="mob-ref-fine">{REFERRAL.terms}</span>
-          </div>
-        </div>
-      </section>
+      {/* referral section hidden */}
 
       {/* Dark CTA — declarative headline + tightened body. */}
       <section className="mob-dcta" data-mob-section="dark">

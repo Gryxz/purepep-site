@@ -144,20 +144,7 @@ export function CartDrawer() {
             Proceed to checkout
           </Link>
 
-          {/* Referral micro-prompt */}
-          <div className="mt-4 flex items-center justify-center gap-1.5">
-            <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-muted">
-              Know a researcher?
-            </span>
-            <Link
-              href="/referral"
-              onClick={closeCart}
-              className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink underline underline-offset-2 no-underline hover:text-ink-muted"
-              style={{ textDecoration: "underline", textUnderlineOffset: 2 }}
-            >
-              Refer &amp; save $25 →
-            </Link>
-          </div>
+          {/* referral micro-prompt hidden */}
         </div>
       </aside>
     </>

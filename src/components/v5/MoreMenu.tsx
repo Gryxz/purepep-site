@@ -84,22 +84,10 @@ export function MoreMenu({ open, onClose }: Props) {
               <span>Quality &amp; testing</span>
               <span className="arr">→</span>
             </a>
-            <a href="/documentation" className="mob-more-link" onClick={onClose}>
-              <span>Documentation</span>
-              <span className="arr">→</span>
-            </a>
-            <a href="/affiliates" className="mob-more-link" onClick={onClose}>
-              <span>Affiliate program</span>
-              <span className="arr">→</span>
-            </a>
           </section>
 
           <section className="mob-more-section">
             <div className="mob-more-eyebrow">Account</div>
-            <a href={ACCOUNT_HREF} className="mob-more-link" onClick={onClose}>
-              <span>Researcher verification</span>
-              <span className="arr">→</span>
-            </a>
             <a href="/cart" className="mob-more-link" onClick={onClose}>
               <span>View cart</span>
               <span className="arr">→</span>
@@ -114,10 +102,6 @@ export function MoreMenu({ open, onClose }: Props) {
             </a>
             <a href="/faq" className="mob-more-link" onClick={onClose}>
               <span>FAQ</span>
-              <span className="arr">→</span>
-            </a>
-            <a href="/documentation" className="mob-more-link" onClick={onClose}>
-              <span>View all COAs</span>
               <span className="arr">→</span>
             </a>
           </section>

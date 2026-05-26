@@ -39,26 +39,16 @@ function UtilityStrip() {
 const TOP_NAV_LINKS = [
   { label: "Catalog", href: "/shop" },
   { label: "Quality", href: "/quality" },
-  { label: "Documentation", href: "/documentation" },
-  { label: "Researcher access", href: ACCOUNT_HREF },
-  { label: "Affiliates", href: "/affiliates" },
 ];
 
 const FEATURED_MENU_LINKS = [
   { label: "Best sellers", href: "/shop" },
-  { label: "COA verified", href: "/quality" },
-  { label: "Researcher onboarding", href: ACCOUNT_HREF },
+  { label: "Quality", href: "/quality" },
 ];
 
 const MOBILE_NAV_LINKS = [
   { label: "Catalog", href: "/shop" },
   { label: "Quality", href: "/quality" },
-  { label: "Documentation", href: "/documentation" },
-  { label: "Affiliates", href: "/affiliates" },
-  { label: "Refer a colleague", href: "/referral" },
-  { label: "Referral dashboard", href: "/referral/dashboard" },
-  { label: "Affiliate dashboard", href: "/affiliates/dashboard" },
-  { label: "Account", href: ACCOUNT_HREF },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -146,18 +136,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
             </button>
 
             <div className="pointer-events-auto flex items-center gap-2 md:gap-3">
-              <a
-                href={ACCOUNT_HREF}
-                aria-label="Researcher account"
-                className={clsx(
-                  glassPill,
-                  "hidden w-11 animate-[ppPillPop_560ms_cubic-bezier(0.2,0.6,0.2,1)_120ms_both] md:inline-flex",
-                )}
-              >
-                <span className="transition-transform duration-300 ease-out group-hover:scale-110">
-                  <Icon name="user" size={18} />
-                </span>
-              </a>
+{/* researcher-access icon hidden */}
               <button
                 type="button"
                 onClick={openCart}
@@ -250,13 +229,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
                 <Icon name="cart" size={16} />
                 Cart · {String(count).padStart(2, "0")}
               </button>
-              <a
-                href="/researcher-access"
-                onClick={() => setMenuOpen(false)}
-                className="mt-3 flex h-11 w-full items-center justify-center rounded-full border border-ink/20 bg-white/45 font-mono text-[11px] uppercase tracking-[0.14em] text-ink no-underline"
-              >
-                Researcher access →
-              </a>
+{/* researcher-access button hidden */}
             </div>
           </div>
         </div>

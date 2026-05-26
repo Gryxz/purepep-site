@@ -319,60 +319,7 @@ export default function OrderConfirmPage() {
               </Link>
             </div>
 
-            {/* Referral nudge — post-purchase highest-intent moment */}
-            <div
-              style={{
-                marginTop: 20,
-                border: "1.5px solid var(--pp-line)",
-                background: "var(--pp-surface)",
-                padding: "20px 20px 18px",
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 10,
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.18em",
-                  color: "var(--pp-ink-muted)",
-                  marginBottom: 8,
-                }}
-              >
-                Researcher referral
-              </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: 14,
-                  lineHeight: 1.55,
-                  color: "var(--pp-ink)",
-                  marginBottom: 14,
-                }}
-              >
-                Know a colleague who needs research peptides?{" "}
-                <strong>Refer them and both of you save $25.</strong> No cap — every verified referral earns you store credit.
-              </p>
-              <Link
-                href="/referral"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 11,
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.12em",
-                  color: "var(--pp-ink)",
-                  textDecoration: "none",
-                  borderBottom: "1px solid var(--pp-ink)",
-                  paddingBottom: 1,
-                }}
-              >
-                Get your referral link →
-              </Link>
-            </div>
+            {/* referral nudge hidden */}
           </div>
         </div>
       </div>
