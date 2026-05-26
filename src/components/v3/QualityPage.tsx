@@ -38,7 +38,7 @@ const FAQ_ROWS = [
   ],
   [
     "Can I request additional analytical work?",
-    "Yes. NMR, peptide mapping, and trace-metal analysis can be added to a lot for a fee. Email research@purepep.com.",
+    "Yes. NMR, peptide mapping, and trace-metal analysis can be added to a lot for a fee. Email info@purepep.shop.",
   ],
   ["What if a lot fails?", "It does not ship. Failed lots are quarantined. We never re-test until pass."],
 ];

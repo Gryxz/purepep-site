@@ -86,9 +86,9 @@ export const LABEL_SKUS: LabelSku[] = [
     fullName: "BPC-157",
     cas: "137525-51-0",
     dose: "5 MG",
-    labelBg: "#d4c0c8",
-    backdropUpper: "#dcc8d0",
-    backdropShelf: "#9c7e8a",
+    labelBg: "#EB9481",
+    backdropUpper: "#EA7A64",
+    backdropShelf: "#E56046",
   },
   {
     slug: "tb-500",

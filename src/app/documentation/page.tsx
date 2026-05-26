@@ -103,7 +103,7 @@ export default function DocumentationPage() {
             style={{ maxWidth: "60ch", margin: "0 auto 32px" }}
           >
             For lot history beyond the most recent release, email{" "}
-            <a href="mailto:research@purepep.com">research@purepep.com</a>{" "}
+            <a href="mailto:info@purepep.shop">info@purepep.shop</a>{" "}
             with the lot identifier from your vial label.
           </p>
           <div className="v3-closing-pills">

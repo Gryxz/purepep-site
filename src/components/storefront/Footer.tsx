@@ -82,6 +82,9 @@ export function Footer({
     return (
       <footer className="bg-ink py-5 text-center font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-bone">
         © 2026 PurePep · For research use only · Not for human consumption
+        <span className="mt-1 block text-[10px] normal-case tracking-normal text-bone/55">
+          [PUREPEP_OPERATOR_ADDRESS — fill before launch]
+        </span>
       </footer>
     );
   }
@@ -175,6 +178,9 @@ export function Footer({
             <PaymentLogos />
             <span>© 2026 PurePep</span>
           </div>
+          <span className="block w-full text-[10px] normal-case tracking-normal text-bone/55">
+            [PUREPEP_OPERATOR_ADDRESS — fill before launch]
+          </span>
         </div>
       </div>
     </footer>

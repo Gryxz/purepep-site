@@ -10,6 +10,12 @@
  * strings; everything that needs these values must import from here
  * (resolved via the `@design/*` alias in tsconfig.json).
  */
+export const palette = {
+  ink: "rgb(31,31,31)",
+  inkMuted: "rgb(106,106,106)",
+  alert: "rgb(200,62,77)",
+} as const;
+
 export const compliance = {
   researchUseOnly: "For research use only. Not for human consumption.",
   qualified21: "Sales restricted to qualified researchers, 21 and over.",

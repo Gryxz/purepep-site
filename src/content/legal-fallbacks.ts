@@ -26,6 +26,13 @@
 
 import { compliance } from "@design/tokens";
 
+// ── FILL BEFORE LAUNCH: replace with registered legal entity name + address ──
+const OPERATOR_NAME = "PurePep";
+const OPERATOR_ADDRESS =
+  "[PUREPEP_OPERATOR_ADDRESS — fill with street, city, state, ZIP before Bankful submission]";
+const GOVERNING_STATE =
+  "[GOVERNING_STATE — fill with state of incorporation/operation before Bankful submission]";
+
 const SUPPORT_LINKS =
   '<a href="mailto:info@purepep.shop">info@purepep.shop</a> · ' +
   '<a href="tel:+18662126466">(866) 212-6466</a> · ' +
@@ -52,6 +59,10 @@ export const LEGAL_FALLBACKS: Record<string, PolicyFallback> = {
       <h2>Lot quality concerns</h2>
       <p>Every order ships with a lot-matched Certificate of Analysis. If our published analytical specifications are not met for a given lot, contact us and we will issue a replacement from the next qualified batch.</p>
 
+      <h2>Disputes and chargebacks</h2>
+      <p>Before initiating a chargeback or bank dispute, contact us first at <a href="mailto:info@purepep.shop">info@purepep.shop</a> or <a href="tel:+18662126466">(866) 212-6466</a>. Most issues are resolved within one business day.</p>
+      <p>All ${OPERATOR_NAME} orders include tracking and delivery confirmation. Unauthorized chargebacks on completed research-material orders may be contested using order records, tracking numbers, and carrier delivery proof. Issuing a chargeback does not entitle the buyer to retain the product.</p>
+
       <h2>Contact</h2>
       <p>Questions about a return or replacement: ${SUPPORT_LINKS}. Support hours: Mon–Fri 9 AM–5 PM ET, reply within one business day.</p>
     `.trim(),
@@ -77,8 +88,14 @@ export const LEGAL_FALLBACKS: Record<string, PolicyFallback> = {
       <h2>Limitation of liability</h2>
       <p>PurePep's liability for any product is limited to the purchase price of that product. We are not liable for incidental, consequential, or punitive damages arising from product use, misuse, or storage outside published parameters.</p>
 
+      <h2>Returns and refunds</h2>
+      <p>All sales are final. ${OPERATOR_NAME} does not accept returns or issue refunds except for packages lost in transit or arriving physically damaged — see our full <a href="/legal/refund-policy">Refund Policy</a> for the claims process.</p>
+
       <h2>Governing law</h2>
-      <p>These terms are governed by the laws of the state in which PurePep is incorporated. Any dispute shall be resolved in the courts of that state.</p>
+      <p>These terms are governed by the laws of the State of ${GOVERNING_STATE}. Any dispute shall be resolved in the courts of ${GOVERNING_STATE}.</p>
+
+      <h2>Company information</h2>
+      <p>${OPERATOR_NAME} · ${OPERATOR_ADDRESS}</p>
 
       <h2>Changes to these terms</h2>
       <p>We may update these terms at any time. Continued use of the site constitutes acceptance of the current version.</p>
@@ -113,19 +130,22 @@ export const LEGAL_FALLBACKS: Record<string, PolicyFallback> = {
       <p>We do not sell your information. We share order details with shipping carriers, payment processors, and qualified service providers strictly as needed to fulfill your order. We may disclose information when required by law or to protect the rights and safety of PurePep, our researchers, or the public.</p>
 
       <h2>Cookies</h2>
-      <p>We use cookies for session management, cart state, analytics, and fraud prevention. Essential cookies cannot be disabled; non-essential cookies can be declined via the cookie banner.</p>
+      <p>We use cookies for session management, cart state, analytics (PostHog), and fraud prevention. Essential cookies cannot be disabled; non-essential analytics cookies can be declined via the cookie banner on first visit.</p>
 
       <h2>Retention</h2>
       <p>Order records are retained for the period required by applicable tax, accounting, and compliance regulations. You may request deletion of personal data not subject to a retention obligation.</p>
 
       <h2>Your rights</h2>
-      <p>Depending on your jurisdiction you may have the right to access, correct, delete, or port your personal information, or to opt out of certain processing. To exercise any right contact <a href="mailto:info@purepep.shop">info@purepep.shop</a>.</p>
+      <p>Depending on your jurisdiction you may have the right to access, correct, delete, or port your personal information. California residents (CCPA) have the right to know what personal information we collect, to delete it, and to opt out of its sale (we do not sell personal information). To exercise any right, email <a href="mailto:info@purepep.shop">info@purepep.shop</a> with the subject line <strong>DATA REQUEST</strong>. We will respond within 30 days.</p>
 
       <h2>Researchers under 21</h2>
       <p>This site and the products sold here are not intended for individuals under the age of 21. We do not knowingly collect information from anyone under 21. ${compliance.qualified21}</p>
 
       <h2>Updates</h2>
       <p>This policy may be updated. Continued use of the site after changes constitutes acceptance of the revised policy.</p>
+
+      <h2>Data controller</h2>
+      <p>${OPERATOR_NAME} · ${OPERATOR_ADDRESS}</p>
 
       <h2>Contact</h2>
       <p>Privacy questions: ${SUPPORT_LINKS}.</p>

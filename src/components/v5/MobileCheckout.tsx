@@ -1,36 +1,36 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
-import { placeWcOrder } from "@/lib/wc-store-api";
+import { placeWcOrder, getCartToken, getNonce } from "@/lib/wc-store-api";
 import { FREE_SHIP_THRESHOLD } from "@/content/cart";
+import { compliance as complianceTokens, palette } from "@design/tokens";
+import type { BankfulHostedFields } from "@/components/checkout/bankful";
 
 const EXPRESS_SHIP_COST = 24;
 const STANDARD_SHIP_COST_BELOW_THRESHOLD = 8;
 
+const SHOW_CRYPTO = process.env.NEXT_PUBLIC_SHOW_CRYPTO === "true";
+const SHOW_WIRE = process.env.NEXT_PUBLIC_SHOW_WIRE === "true";
+const DECLINE_FALLBACK =
+  "Your payment couldn't be completed. Please try a different card or contact info@purepep.shop.";
+
 type PayMethod = "card" | "crypto" | "wire";
 type ShipMethod = "standard" | "express";
 
-/**
- * v5 mobile /checkout page — ported 1:1 from
- * docs/design-v3/mobile-mockups/Checkout flow (the third device frame
- * in the cart→checkout flow paste).
- *
- * Wiring:
- *  - useCartStore for line items + subtotal + clearCart on success
- *  - placeWcOrder() for the bacs gateway path (same as v3 CheckoutPage —
- *    card/crypto/wire are visual until staff follow up off-site)
- *  - Compliance checkbox gates the Place Order button (disabled until
- *    confirmed; bounce + slide-up confirmation bar on check)
- *
- * The mockup's payment tabs (Card / Crypto / Wire VIP) follow the
- * v3 desktop pattern — only the bacs path actually hits WC; the card
- * UI is the Bankful placeholder.
- */
-export function MobileCheckout() {
-  const router = useRouter();
+function toggleHfClass(field: string, prefix: "v3" | "mob", cls: string, on: boolean) {
+  const map: Record<string, string> = {
+    cardNumber: `#${prefix}-bankful-card-number`,
+    expiry: `#${prefix}-bankful-card-expiry`,
+    cvv: `#${prefix}-bankful-card-cvv`,
+  };
+  const sel = map[field];
+  if (!sel || typeof document === "undefined") return;
+  document.querySelector(sel)?.classList.toggle(cls, on);
+}
+
+export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
   const { items, subtotal, clearCart } = useCartStore();
 
   // Form state
@@ -45,10 +45,16 @@ export function MobileCheckout() {
   const [country, setCountry] = useState("United States");
   const [shipping, setShipping] = useState<ShipMethod>("standard");
   const [pay, setPay] = useState<PayMethod>("card");
-  const [cardNum, setCardNum] = useState("");
+
+  // Cardholder name only — PAN/expiry/CVV are in Bankful hosted fields
   const [cardName, setCardName] = useState("");
-  const [cardExpiry, setCardExpiry] = useState("");
-  const [cardCvv, setCardCvv] = useState("");
+
+  // Bankful hosted fields
+  const hf = useRef<BankfulHostedFields | null>(null);
+  const [hfReady, setHfReady] = useState(false);
+  const [hfErrors, setHfErrors] = useState<Record<string, string | null>>({});
+  const [verifying, setVerifying] = useState(false);
+
   const [compliance, setCompliance] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -81,23 +87,50 @@ export function MobileCheckout() {
   }
 
   const sub = subtotal();
-  const shipCost = shipping === "express"
-    ? EXPRESS_SHIP_COST
-    : sub >= FREE_SHIP_THRESHOLD
-    ? 0
-    : STANDARD_SHIP_COST_BELOW_THRESHOLD;
+  const shipCost =
+    shipping === "express"
+      ? EXPRESS_SHIP_COST
+      : sub >= FREE_SHIP_THRESHOLD
+      ? 0
+      : STANDARD_SHIP_COST_BELOW_THRESHOLD;
   const total = Math.max(0, sub + shipCost - promoDiscount);
   const standardLabel = sub >= FREE_SHIP_THRESHOLD ? "Free" : `$${STANDARD_SHIP_COST_BELOW_THRESHOLD.toFixed(2)}`;
 
-  // Card formatters
-  function formatCard(v: string): string {
-    const digits = v.replace(/\D/g, "").substring(0, 16);
-    return digits.replace(/(.{4})/g, "$1 ").trim();
-  }
-  function formatExpiry(v: string): string {
-    const digits = v.replace(/\D/g, "").substring(0, 4);
-    return digits.length >= 2 ? `${digits.substring(0, 2)} / ${digits.substring(2)}` : digits;
-  }
+  // Mount Bankful hosted fields once the SDK is ready
+  useEffect(() => {
+    if (sdkReady !== true || hf.current || typeof window === "undefined" || !window.Bankful) return;
+    const pk = process.env.NEXT_PUBLIC_BANKFUL_HOSTED_FIELDS_KEY;
+    if (!pk) return;
+    const instance = window.Bankful.create({
+      publishableKey: pk,
+      environment: process.env.NEXT_PUBLIC_BANKFUL_ENV ?? "sandbox",
+    });
+    instance.mount({
+      fields: {
+        cardNumber: { selector: "#mob-bankful-card-number", placeholder: "0000 0000 0000 0000" },
+        expiry: { selector: "#mob-bankful-card-expiry", placeholder: "MM / YY" },
+        cvv: { selector: "#mob-bankful-card-cvv", placeholder: "•••" },
+      },
+      styles: {
+        base: {
+          "font-family": "var(--font-sans), system-ui, sans-serif",
+          "font-size": "14px",
+          color: palette.ink,
+        },
+        placeholder: { color: palette.inkMuted },
+        invalid: { color: palette.alert },
+      },
+      onReady: () => setHfReady(true),
+      onFocus: (f) => toggleHfClass(f, "mob", "hf-focus", true),
+      onBlur: (f) => toggleHfClass(f, "mob", "hf-focus", false),
+      onValidityChange: (f, err) => setHfErrors((p) => ({ ...p, [f]: err })),
+    });
+    hf.current = instance;
+    return () => {
+      hf.current?.destroy();
+      hf.current = null;
+    };
+  }, [sdkReady]);
 
   async function handlePlaceOrder() {
     if (submitting || items.length === 0 || !compliance) return;
@@ -116,25 +149,78 @@ export function MobileCheckout() {
       email,
     };
 
-    const result = await placeWcOrder({
-      billing_address: { ...address },
-      shipping_address: address,
-      payment_method: "bacs", // only enabled WC gateway; staff follows up for card/crypto/wire
-    });
-
-    setSubmitting(false);
-
-    if (result) {
-      clearCart();
-      if (result.payment_url) {
-        window.location.href = result.payment_url;
+    // ── WIRE (hidden unless SHOW_WIRE) — bacs path ──
+    if (pay === "wire") {
+      const result = await placeWcOrder({
+        billing_address: { ...address },
+        shipping_address: address,
+        payment_method: "bacs",
+      });
+      setSubmitting(false);
+      if (result) {
+        clearCart();
+        if (result.payment_url) window.location.href = result.payment_url;
+        else window.location.href = `/order-confirm/?key=${encodeURIComponent(result.order_key ?? "")}&id=${result.order_id}`;
       } else {
-        const key = result.order_key ?? "";
-        window.location.href = `/order-confirm/?key=${encodeURIComponent(key)}&id=${result.order_id}`;
+        setOrderError(
+          "We couldn't place this order. Please double-check your delivery details, or email info@purepep.shop if it persists.",
+        );
       }
-    } else {
+      return;
+    }
+
+    // ── CARD (default) — Bankful tokenize → WP proxy → WC order ──
+    const endpoint = process.env.NEXT_PUBLIC_BANKFUL_CHECKOUT_ENDPOINT;
+    if (!endpoint || !hf.current || !hfReady) {
+      setSubmitting(false);
       setOrderError(
-        "We couldn't place this order. Please double-check your delivery details, or email research@purepep.com if it persists.",
+        "Card payment is temporarily unavailable. Please email info@purepep.shop and we'll complete your order.",
+      );
+      return;
+    }
+
+    try {
+      const { token } = await hf.current.tokenize({ cardholderName: cardName, billingPostalCode: postcode });
+      const cartToken = await getCartToken();
+      const nonce = await getNonce();
+
+      const charge = async (extra?: Record<string, unknown>) => {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, email, billing: address, shipping: address, cartToken, nonce, ...extra }),
+        });
+        return res.json() as Promise<{
+          ok: boolean;
+          order_id?: number;
+          order_key?: string;
+          requiresAction?: boolean;
+          threeDS?: unknown;
+          error?: { code: string; message: string };
+        }>;
+      };
+
+      let data = await charge();
+
+      if (data.requiresAction && data.threeDS) {
+        setVerifying(true);
+        const stepUp = await hf.current.handleAction(data.threeDS);
+        setVerifying(false);
+        data = await charge({ token: stepUp.token, threeDSResult: stepUp.token });
+      }
+
+      if (data.ok && data.order_id) {
+        clearCart();
+        window.location.href = `/order-confirm/?key=${encodeURIComponent(data.order_key ?? "")}&id=${data.order_id}`;
+        return;
+      }
+      setSubmitting(false);
+      setOrderError(data.error?.message ?? DECLINE_FALLBACK);
+    } catch {
+      setSubmitting(false);
+      setVerifying(false);
+      setOrderError(
+        "We couldn't reach the payment processor. Please try again, or email info@purepep.shop.",
       );
     }
   }
@@ -163,7 +249,7 @@ export function MobileCheckout() {
     <div className="mob-app">
       {/* Custom checkout header */}
       <header className="mob-chk-hdr">
-        <button type="button" className="mob-chk-back" onClick={() => router.back()}>
+        <button type="button" className="mob-chk-back" onClick={() => window.history.back()}>
           <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
             <polyline points="15 18 9 12 15 6" />
           </svg>
@@ -191,9 +277,10 @@ export function MobileCheckout() {
             <div>
               {items.map((item) => {
                 const linePrice = (item.price * item.qty).toFixed(2);
-                const unitStr = item.qty > 1
-                  ? `${item.qty} × $${item.price.toFixed(2)}`
-                  : `$${item.price.toFixed(2)}/vial`;
+                const unitStr =
+                  item.qty > 1
+                    ? `${item.qty} × $${item.price.toFixed(2)}`
+                    : `$${item.price.toFixed(2)}/vial`;
                 return (
                   <div key={`${item.slug}-${item.dose}`} className="mob-sum-line">
                     <div className="mob-sum-line-info">
@@ -207,7 +294,10 @@ export function MobileCheckout() {
               })}
             </div>
             <div className="mob-sum-divider" />
-            <div className="mob-order-row"><span className="ok">Subtotal</span><span className="ov">${sub.toFixed(2)}</span></div>
+            <div className="mob-order-row">
+              <span className="ok">Subtotal</span>
+              <span className="ov">${sub.toFixed(2)}</span>
+            </div>
             <div className="mob-order-row">
               <span className="ok">Shipping</span>
               <span
@@ -250,7 +340,7 @@ export function MobileCheckout() {
                     </button>
                   </div>
                 )}
-                {promoError && <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--m-alert)", margin: "5px 0 0", letterSpacing: "0.06em" }}>{promoError}</p>}
+                {promoError && <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--pp-alert)", margin: "5px 0 0", letterSpacing: "0.06em" }}>{promoError}</p>}
               </div>
             )}
 
@@ -357,13 +447,7 @@ export function MobileCheckout() {
           <div className="mob-chk-section-body">
             <div className="mob-chk-ship-options">
               <label className={`mob-chk-ship-option${shipping === "standard" ? " is-selected" : ""}`}>
-                <input
-                  type="radio"
-                  name="shipping"
-                  value="standard"
-                  checked={shipping === "standard"}
-                  onChange={() => setShipping("standard")}
-                />
+                <input type="radio" name="shipping" value="standard" checked={shipping === "standard"} onChange={() => setShipping("standard")} />
                 <div className="mob-chk-ship-info">
                   <div className="mob-chk-ship-name">Standard</div>
                   <div className="mob-chk-ship-eta">2–3 BUSINESS DAYS · USPS / UPS</div>
@@ -371,13 +455,7 @@ export function MobileCheckout() {
                 <span className={`mob-chk-ship-price${standardLabel === "Free" ? " is-free" : ""}`}>{standardLabel}</span>
               </label>
               <label className={`mob-chk-ship-option${shipping === "express" ? " is-selected" : ""}`}>
-                <input
-                  type="radio"
-                  name="shipping"
-                  value="express"
-                  checked={shipping === "express"}
-                  onChange={() => setShipping("express")}
-                />
+                <input type="radio" name="shipping" value="express" checked={shipping === "express"} onChange={() => setShipping("express")} />
                 <div className="mob-chk-ship-info">
                   <div className="mob-chk-ship-name">Express</div>
                   <div className="mob-chk-ship-eta">1 BUSINESS DAY · UPS OVERNIGHT</div>
@@ -405,41 +483,40 @@ export function MobileCheckout() {
                 </svg>
                 Card
               </button>
-              <button type="button" role="tab" aria-selected={pay === "crypto"} className={`mob-chk-pay-tab${pay === "crypto" ? " is-active" : ""}`} onClick={() => setPay("crypto")}>
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M9 9h6v6H9z" />
-                </svg>
-                Crypto
-              </button>
-              <button type="button" role="tab" aria-selected={pay === "wire"} className={`mob-chk-pay-tab${pay === "wire" ? " is-active" : ""}`} onClick={() => setPay("wire")}>
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
-                  <path d="M2 20h20M5 20V10l7-7 7 7v10" />
-                </svg>
-                Wire
-                <span className="mob-chk-vip-badge">VIP</span>
-              </button>
+              {SHOW_CRYPTO && (
+                <button type="button" role="tab" aria-selected={pay === "crypto"} className={`mob-chk-pay-tab${pay === "crypto" ? " is-active" : ""}`} onClick={() => setPay("crypto")}>
+                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9 9h6v6H9z" />
+                  </svg>
+                  Crypto
+                </button>
+              )}
+              {SHOW_WIRE && (
+                <button type="button" role="tab" aria-selected={pay === "wire"} className={`mob-chk-pay-tab${pay === "wire" ? " is-active" : ""}`} onClick={() => setPay("wire")}>
+                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+                    <path d="M2 20h20M5 20V10l7-7 7 7v10" />
+                  </svg>
+                  Wire
+                  <span className="mob-chk-vip-badge">VIP</span>
+                </button>
+              )}
             </div>
 
             {/* Card panel */}
             <div className={`mob-chk-pay-panel${pay === "card" ? " is-active" : ""}`}>
-              <div className="mob-chk-field">
-                <label htmlFor="m-card">Card number</label>
-                <div className="mob-chk-card-wrap">
-                  <input
-                    id="m-card"
-                    type="text"
-                    placeholder="0000 0000 0000 0000"
-                    maxLength={19}
-                    value={cardNum}
-                    onChange={(e) => setCardNum(formatCard(e.target.value))}
-                    autoComplete="cc-number"
-                  />
-                  <div className="mob-chk-card-icons">
-                    <div className="mob-chk-card-icon">VISA</div>
-                    <div className="mob-chk-card-icon">MC</div>
-                  </div>
+              <div className="mob-chk-ruo-notice">{complianceTokens.researchUseOnly}</div>
+
+              {sdkReady === "failed" && (
+                <div style={{ marginBottom: 12, fontSize: 13, color: "var(--pp-alert)" }}>
+                  Card payment is temporarily unavailable. Please email info@purepep.shop and we&apos;ll complete your order.
                 </div>
+              )}
+
+              <div className="mob-chk-field">
+                <label>Card number</label>
+                <div id="mob-bankful-card-number" className="mob-chk-hf-field" />
+                {hfErrors.cardNumber && <div className="mob-chk-hf-error">{hfErrors.cardNumber}</div>}
               </div>
               <div className="mob-chk-field">
                 <label htmlFor="m-card-name">Name on card</label>
@@ -447,63 +524,52 @@ export function MobileCheckout() {
               </div>
               <div className="mob-chk-field-row">
                 <div className="mob-chk-field">
-                  <label htmlFor="m-card-exp">Expiry</label>
-                  <input
-                    id="m-card-exp"
-                    type="text"
-                    placeholder="MM / YY"
-                    maxLength={7}
-                    value={cardExpiry}
-                    onChange={(e) => setCardExpiry(formatExpiry(e.target.value))}
-                    autoComplete="cc-exp"
-                  />
+                  <label>Expiry</label>
+                  <div id="mob-bankful-card-expiry" className="mob-chk-hf-field" />
+                  {hfErrors.expiry && <div className="mob-chk-hf-error">{hfErrors.expiry}</div>}
                 </div>
                 <div className="mob-chk-field is-narrow">
-                  <label htmlFor="m-card-cvv">CVV</label>
-                  <input
-                    id="m-card-cvv"
-                    type="text"
-                    placeholder="•••"
-                    maxLength={4}
-                    value={cardCvv}
-                    onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, ""))}
-                    autoComplete="cc-csc"
-                  />
+                  <label>CVV</label>
+                  <div id="mob-bankful-card-cvv" className="mob-chk-hf-field" />
+                  {hfErrors.cvv && <div className="mob-chk-hf-error">{hfErrors.cvv}</div>}
                 </div>
               </div>
-              <div className="mob-chk-card-foot">
-                <div className="mob-chk-card-foot-text">256-bit SSL encryption</div>
+              <div className="mob-chk-security-note">
+                Card details are entered in PCI-DSS secure fields hosted by Bankful and tokenized in your browser. PurePep never sees or stores your full card number or CVV.
+              </div>
+              <div className="mob-chk-descriptor-note">
+                Your statement will show this charge as PUREPEP.SHOP.
               </div>
             </div>
 
-            {/* Crypto panel — simplified: single bone card with the fallback
-                instruction.  The dramatic gold-glass dome / coin badges felt
-                ornamental for a feature that doesn't ship. */}
-            <div className={`mob-chk-pay-panel${pay === "crypto" ? " is-active" : ""}`}>
-              <div className="mob-chk-crypto-fallback">
-                Crypto payments coming soon · 3% off when launched. To pay in crypto today, email{" "}
-                <strong>info@purepep.shop</strong> and we&apos;ll handle it manually.
+            {/* Crypto panel */}
+            {SHOW_CRYPTO && pay === "crypto" && (
+              <div className="mob-chk-pay-panel is-active">
+                <div className="mob-chk-crypto-fallback">
+                  Crypto payments coming soon · 3% off when launched. To pay in crypto today, email{" "}
+                  <strong>info@purepep.shop</strong> and we&apos;ll handle it manually.
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Wire panel */}
-            <div className={`mob-chk-pay-panel${pay === "wire" ? " is-active" : ""}`}>
-              <div className="mob-chk-bank-panel">
-                <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Bank</span><span className="mob-chk-bank-v">[Bank name pending]</span></div>
-                <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Account name</span><span className="mob-chk-bank-v">PurePep LLC</span></div>
-                <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Routing</span><span className="mob-chk-bank-v">[Routing pending]</span></div>
-                <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Account</span><span className="mob-chk-bank-v">[Account pending]</span></div>
-                <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Reference</span><span className="mob-chk-bank-v">Your email</span></div>
-                <div className="mob-chk-bank-note">Orders ship within 1 business day of payment confirmation. Include your email as the wire reference so we can match your order.</div>
+            {SHOW_WIRE && pay === "wire" && (
+              <div className="mob-chk-pay-panel is-active">
+                <div className="mob-chk-bank-panel">
+                  <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Bank</span><span className="mob-chk-bank-v">[Bank name pending]</span></div>
+                  <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Account name</span><span className="mob-chk-bank-v">PurePep LLC</span></div>
+                  <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Routing</span><span className="mob-chk-bank-v">[Routing pending]</span></div>
+                  <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Account</span><span className="mob-chk-bank-v">[Account pending]</span></div>
+                  <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Reference</span><span className="mob-chk-bank-v">Your email</span></div>
+                  <div className="mob-chk-bank-note">Orders ship within 1 business day of payment confirmation. Include your email as the wire reference so we can match your order.</div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </section>
       </div>
 
-      {/* Terms acknowledgement gate — researcher 21+ verification already
-          happened at the AgeGate, so this surface is for sale-policy
-          consent only. */}
+      {/* Compliance */}
       <div className={`mob-chk-compliance-box${compliance ? " is-confirmed" : ""}`}>
         <label className={`mob-chk-compliance-check${compliance ? " is-confirmed" : ""}`}>
           <input
@@ -531,8 +597,8 @@ export function MobileCheckout() {
           disabled={!compliance || submitting}
           onClick={handlePlaceOrder}
         >
-          {submitting ? "Placing order…" : "Place order"}
-          {!submitting && (
+          {verifying ? "Verifying with your bank…" : submitting ? "Placing order…" : "Place order"}
+          {!submitting && !verifying && (
             <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
@@ -540,17 +606,26 @@ export function MobileCheckout() {
           )}
         </button>
       </div>
+
       <div className="mob-chk-place-note">
-        By placing your order you agree to PurePep&apos;s Terms of Sale and Privacy Policy.
-        Your card will be charged ${total.toFixed(2)}.
+        By placing your order you agree to PurePep&apos;s Terms of Sale, Privacy Policy, and{" "}
+        <a href="/legal/refund-policy">Refund Policy</a>. Your card will be charged ${total.toFixed(2)}, shown on your statement as PUREPEP.SHOP.
       </div>
+      <div className="mob-chk-refund-note">
+        All sales are final. No refunds, returns, or exchanges except where a package is lost in transit or arrives damaged — see our{" "}
+        <a href="/legal/refund-policy">Refund Policy</a>.
+      </div>
+      <div className="mob-chk-dispute-note">
+        Questions about a charge? Contact us before disputing with your bank — most issues are resolved within one business day. Unauthorized chargebacks on completed research-material orders may be contested with order, tracking, and delivery records.
+      </div>
+
       {orderError && (
-        <div style={{ padding: "0 16px", marginTop: 12, fontSize: 13, color: "var(--m-alert)" }}>
+        <div style={{ padding: "0 16px", marginTop: 12, fontSize: 13, color: "var(--pp-alert)" }}>
           {orderError}
         </div>
       )}
 
-      {/* Trust footer (reuses cart-page tile styles) */}
+      {/* Trust footer */}
       <div className="mob-trust-footer">
         <div className="mob-tf-item">
           <div className="mob-tf-icon">
@@ -589,6 +664,10 @@ export function MobileCheckout() {
           </div>
           <div className="mob-tf-label">2-3 day<br />ship</div>
         </div>
+      </div>
+
+      <div className="mob-chk-support-line">
+        Need help? <a href="mailto:info@purepep.shop">info@purepep.shop</a> · PurePep LLC
       </div>
     </div>
   );

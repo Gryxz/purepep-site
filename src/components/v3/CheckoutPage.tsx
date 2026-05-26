@@ -1,34 +1,23 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { clsx } from "@/lib/clsx";
 import { useCartStore } from "@/lib/cart-store";
-import { placeWcOrder, type WcOrderResult } from "@/lib/wc-store-api";
+import { placeWcOrder, getCartToken, getNonce, type WcOrderResult } from "@/lib/wc-store-api";
 import { trackBeginCheckout } from "@/lib/analytics";
 import { FREE_SHIP_THRESHOLD } from "@/content/cart";
-
-/**
- * v3 Apple Swiss Checkout page (mobile-first).
- *
- * Source: checkout-mockup.html.
- *
- * Layout: collapsible order summary card → four numbered sections
- * (Contact · Shipping address · Shipping method · Payment with Card / Crypto
- * / Wire tabs) → compliance acknowledgment (gates Place order) →
- * dark-loden Place order CTA → charge note → trust footer.
- *
- * Wire transfer details are intentional `[ pending ]` placeholders until
- * banking info is finalized. Crypto is a "Coming soon" panel; the manual
- * fallback is `info@purepep.shop`.
- *
- * Place order posts to the same WC Store API /checkout endpoint as the
- * previous CheckoutShell, with payment_method `bacs` (only enabled gateway).
- */
+import { compliance as complianceTokens, palette } from "@design/tokens";
+import type { BankfulHostedFields } from "@/components/checkout/bankful";
 
 const EXPRESS_PRICE = 24;
 const STANDARD_BELOW_THRESHOLD = 8;
+
+const SHOW_CRYPTO = process.env.NEXT_PUBLIC_SHOW_CRYPTO === "true";
+const SHOW_WIRE = process.env.NEXT_PUBLIC_SHOW_WIRE === "true";
+const DECLINE_FALLBACK =
+  "Your payment couldn't be completed. Please try a different card or contact info@purepep.shop.";
 
 type ShippingMethod = "standard" | "express";
 type PayTab = "card" | "crypto" | "wire";
@@ -46,7 +35,18 @@ const COUNTRIES = [
   "Other",
 ];
 
-export function CheckoutPage() {
+function toggleHfClass(field: string, prefix: "v3" | "mob", cls: string, on: boolean) {
+  const map: Record<string, string> = {
+    cardNumber: `#${prefix}-bankful-card-number`,
+    expiry: `#${prefix}-bankful-card-expiry`,
+    cvv: `#${prefix}-bankful-card-cvv`,
+  };
+  const sel = map[field];
+  if (!sel || typeof document === "undefined") return;
+  document.querySelector(sel)?.classList.toggle(cls, on);
+}
+
+export function CheckoutPage({ sdkReady }: { sdkReady: boolean | "failed" }) {
   const { items, subtotal, clearCart } = useCartStore();
   const sub = subtotal();
 
@@ -64,7 +64,6 @@ export function CheckoutPage() {
   function applyPromo() {
     const code = promoInput.trim().toUpperCase();
     if (!code) return;
-    // Referral codes: PP-REF-XXXX pattern → $25 off
     if (/^PP-REF-[A-Z0-9]{4,}$/.test(code) || code === "PP-REF-XXXX") {
       setPromoApplied(code);
       setPromoDiscount(25);
@@ -81,7 +80,7 @@ export function CheckoutPage() {
     setPromoError(null);
   }
 
-  // Form state — all controlled
+  // Form state
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -92,13 +91,16 @@ export function CheckoutPage() {
   const [postcode, setPostcode] = useState("");
   const [country, setCountry] = useState("United States");
 
-  // Card fields are UI-only — Bankful processing happens off-site.
-  const [cardNum, setCardNum] = useState("");
+  // Cardholder name only — PAN/expiry/CVV are in Bankful hosted fields
   const [cardName, setCardName] = useState("");
-  const [cardExp, setCardExp] = useState("");
-  const [cardCvv, setCardCvv] = useState("");
 
-  const [compliance, setCompliance] = useState(false);
+  // Bankful hosted fields
+  const hf = useRef<BankfulHostedFields | null>(null);
+  const [hfReady, setHfReady] = useState(false);
+  const [hfErrors, setHfErrors] = useState<Record<string, string | null>>({});
+  const [verifying, setVerifying] = useState(false);
+
+  const [complianceChecked, setComplianceChecked] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [orderResult, setOrderResult] = useState<WcOrderResult | null>(null);
   const [orderError, setOrderError] = useState<string | null>(null);
@@ -106,7 +108,7 @@ export function CheckoutPage() {
   // Place-order button polish — entrance + shimmer when compliance flips on
   const [unlockAnim, setUnlockAnim] = useState<"unlock" | "shimmer" | null>(null);
   useEffect(() => {
-    if (compliance) {
+    if (complianceChecked) {
       setUnlockAnim("unlock");
       const t1 = setTimeout(() => setUnlockAnim("shimmer"), 500);
       const t2 = setTimeout(() => setUnlockAnim(null), 1300);
@@ -117,7 +119,7 @@ export function CheckoutPage() {
     } else {
       setUnlockAnim(null);
     }
-  }, [compliance]);
+  }, [complianceChecked]);
 
   // Fire begin_checkout once on mount with a non-empty cart
   useEffect(() => {
@@ -126,6 +128,42 @@ export function CheckoutPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Mount Bankful hosted fields once the SDK is ready
+  useEffect(() => {
+    if (sdkReady !== true || hf.current || typeof window === "undefined" || !window.Bankful) return;
+    const pk = process.env.NEXT_PUBLIC_BANKFUL_HOSTED_FIELDS_KEY;
+    if (!pk) return;
+    const instance = window.Bankful.create({
+      publishableKey: pk,
+      environment: process.env.NEXT_PUBLIC_BANKFUL_ENV ?? "sandbox",
+    });
+    instance.mount({
+      fields: {
+        cardNumber: { selector: "#v3-bankful-card-number", placeholder: "0000 0000 0000 0000" },
+        expiry: { selector: "#v3-bankful-card-expiry", placeholder: "MM / YY" },
+        cvv: { selector: "#v3-bankful-card-cvv", placeholder: "•••" },
+      },
+      styles: {
+        base: {
+          "font-family": "var(--font-sans), system-ui, sans-serif",
+          "font-size": "14px",
+          color: palette.ink,
+        },
+        placeholder: { color: palette.inkMuted },
+        invalid: { color: palette.alert },
+      },
+      onReady: () => setHfReady(true),
+      onFocus: (f) => toggleHfClass(f, "v3", "hf-focus", true),
+      onBlur: (f) => toggleHfClass(f, "v3", "hf-focus", false),
+      onValidityChange: (f, err) => setHfErrors((p) => ({ ...p, [f]: err })),
+    });
+    hf.current = instance;
+    return () => {
+      hf.current?.destroy();
+      hf.current = null;
+    };
+  }, [sdkReady]);
+
   // Pricing
   const shippingCost =
     shipping === "express" ? EXPRESS_PRICE : sub >= FREE_SHIP_THRESHOLD ? 0 : STANDARD_BELOW_THRESHOLD;
@@ -133,18 +171,8 @@ export function CheckoutPage() {
   const total = Math.max(0, sub + shippingCost - promoDiscount);
   const empty = items.length === 0;
 
-  function formatCard(v: string) {
-    const digits = v.replace(/\D/g, "").substring(0, 16);
-    return digits.replace(/(.{4})/g, "$1 ").trim();
-  }
-  function formatExpiry(v: string) {
-    const digits = v.replace(/\D/g, "").substring(0, 4);
-    if (digits.length >= 2) return `${digits.substring(0, 2)} / ${digits.substring(2)}`;
-    return digits;
-  }
-
   async function handlePlaceOrder() {
-    if (submitting || empty || !compliance) return;
+    if (submitting || empty || !complianceChecked) return;
     setSubmitting(true);
     setOrderError(null);
 
@@ -160,27 +188,79 @@ export function CheckoutPage() {
       email,
     };
 
-    const result = await placeWcOrder({
-      billing_address: { ...address },
-      shipping_address: address,
-      // bacs is the only enabled WC gateway; staff follow up off-site for card/crypto/wire
-      payment_method: "bacs",
-    });
-
-    setSubmitting(false);
-
-    if (result) {
-      setOrderResult(result);
-      clearCart();
-      if (result.payment_url) {
-        window.location.href = result.payment_url;
+    // ── WIRE (hidden unless SHOW_WIRE) — bacs path ──
+    if (payTab === "wire") {
+      const result = await placeWcOrder({
+        billing_address: { ...address },
+        shipping_address: address,
+        payment_method: "bacs",
+      });
+      setSubmitting(false);
+      if (result) {
+        setOrderResult(result);
+        clearCart();
+        if (result.payment_url) window.location.href = result.payment_url;
+        else window.location.href = `/order-confirm/?key=${encodeURIComponent(result.order_key ?? "")}&id=${result.order_id}`;
       } else {
-        const key = result.order_key ?? "";
-        window.location.href = `/order-confirm/?key=${encodeURIComponent(key)}&id=${result.order_id}`;
+        setOrderError(
+          "We couldn't place this order. Please double-check your delivery details, or email info@purepep.shop if it persists.",
+        );
       }
-    } else {
+      return;
+    }
+
+    // ── CARD (default) — Bankful tokenize → WP proxy → WC order ──
+    const endpoint = process.env.NEXT_PUBLIC_BANKFUL_CHECKOUT_ENDPOINT;
+    if (!endpoint || !hf.current || !hfReady) {
+      setSubmitting(false);
       setOrderError(
-        "We couldn't place this order. Please double-check your delivery details, or email research@purepep.com if it persists.",
+        "Card payment is temporarily unavailable. Please email info@purepep.shop and we'll complete your order.",
+      );
+      return;
+    }
+
+    try {
+      const { token } = await hf.current.tokenize({ cardholderName: cardName, billingPostalCode: postcode });
+      const cartToken = await getCartToken();
+      const nonce = await getNonce();
+
+      const charge = async (extra?: Record<string, unknown>) => {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, email, billing: address, shipping: address, cartToken, nonce, ...extra }),
+        });
+        return res.json() as Promise<{
+          ok: boolean;
+          order_id?: number;
+          order_key?: string;
+          requiresAction?: boolean;
+          threeDS?: unknown;
+          error?: { code: string; message: string };
+        }>;
+      };
+
+      let data = await charge();
+
+      if (data.requiresAction && data.threeDS) {
+        setVerifying(true);
+        const stepUp = await hf.current.handleAction(data.threeDS);
+        setVerifying(false);
+        data = await charge({ token: stepUp.token, threeDSResult: stepUp.token });
+      }
+
+      if (data.ok && data.order_id) {
+        clearCart();
+        window.location.href = `/order-confirm/?key=${encodeURIComponent(data.order_key ?? "")}&id=${data.order_id}`;
+        return;
+      }
+      setSubmitting(false);
+      setOrderError(data.error?.message ?? DECLINE_FALLBACK);
+    } catch {
+      setSubmitting(false);
+      setVerifying(false);
+      setOrderError(
+        "We couldn't reach the payment processor. Please try again, or email info@purepep.shop.",
       );
     }
   }
@@ -207,7 +287,6 @@ export function CheckoutPage() {
         <div className="v3chk-layout">
         {/* LEFT column — form sections */}
         <div className="v3chk-col-main">
-        {/* SECTIONS */}
         <div className="v3chk-sections">
           {/* 01 Contact */}
           <Section num="01" label="Contact">
@@ -351,41 +430,40 @@ export function CheckoutPage() {
                 </svg>
                 Card
               </PayTabBtn>
-              <PayTabBtn active={payTab === "crypto"} onSelect={() => setPayTab("crypto")}>
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M11.767 19.089c4.924.868 6.14-6.025 1.216-6.894m-1.216 6.894L10.5 19.25m1.267-.161L9.5 4.25m2.267 14.839L10.5 19.25m0 0L8.75 9.75M12 6.75c-4.924-.868-6.14 6.025-1.216 6.894M12 6.75L10.5 4.25m1.5 2.5L9.5 4.25" />
-                </svg>
-                Crypto
-              </PayTabBtn>
-              <PayTabBtn active={payTab === "wire"} onSelect={() => setPayTab("wire")}>
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M2 20h20M5 20V10l7-7 7 7v10" />
-                </svg>
-                Wire
-                <span className="v3chk-vip-badge">VIP</span>
-              </PayTabBtn>
+              {SHOW_CRYPTO && (
+                <PayTabBtn active={payTab === "crypto"} onSelect={() => setPayTab("crypto")}>
+                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M11.767 19.089c4.924.868 6.14-6.025 1.216-6.894m-1.216 6.894L10.5 19.25m1.267-.161L9.5 4.25m2.267 14.839L10.5 19.25m0 0L8.75 9.75M12 6.75c-4.924-.868-6.14 6.025-1.216 6.894M12 6.75L10.5 4.25m1.5 2.5L9.5 4.25" />
+                  </svg>
+                  Crypto
+                </PayTabBtn>
+              )}
+              {SHOW_WIRE && (
+                <PayTabBtn active={payTab === "wire"} onSelect={() => setPayTab("wire")}>
+                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2 20h20M5 20V10l7-7 7 7v10" />
+                  </svg>
+                  Wire
+                  <span className="v3chk-vip-badge">VIP</span>
+                </PayTabBtn>
+              )}
             </div>
 
             {payTab === "card" && (
               <div className="v3chk-pay-panel">
+                <div className="v3chk-ruo-notice">{complianceTokens.researchUseOnly}</div>
+
+                {sdkReady === "failed" && (
+                  <p role="alert" className="v3chk-error" style={{ margin: "0 0 12px" }}>
+                    Card payment is temporarily unavailable. Please email info@purepep.shop and we&rsquo;ll complete your order.
+                  </p>
+                )}
+
                 <Field label="Card number">
-                  <div className="v3chk-card-wrap">
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="cc-number"
-                      placeholder="0000 0000 0000 0000"
-                      maxLength={19}
-                      value={cardNum}
-                      onChange={(e) => setCardNum(formatCard(e.target.value))}
-                      aria-label="Card number"
-                    />
-                    <div className="v3chk-card-icons" aria-hidden="true">
-                      <div className="v3chk-card-icon">VISA</div>
-                      <div className="v3chk-card-icon">MC</div>
-                    </div>
-                  </div>
+                  <div id="v3-bankful-card-number" className="v3chk-hf-field" />
+                  {hfErrors.cardNumber && <div className="v3chk-hf-error">{hfErrors.cardNumber}</div>}
                 </Field>
+
                 <Field label="Name on card">
                   <input
                     type="text"
@@ -395,37 +473,28 @@ export function CheckoutPage() {
                     onChange={(e) => setCardName(e.target.value)}
                   />
                 </Field>
+
                 <div className="v3chk-field-row">
                   <Field label="Expiry">
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="cc-exp"
-                      placeholder="MM / YY"
-                      maxLength={7}
-                      value={cardExp}
-                      onChange={(e) => setCardExp(formatExpiry(e.target.value))}
-                    />
+                    <div id="v3-bankful-card-expiry" className="v3chk-hf-field" />
+                    {hfErrors.expiry && <div className="v3chk-hf-error">{hfErrors.expiry}</div>}
                   </Field>
                   <Field label="CVV" narrow>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="cc-csc"
-                      placeholder="•••"
-                      maxLength={4}
-                      value={cardCvv}
-                      onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, ""))}
-                    />
+                    <div id="v3-bankful-card-cvv" className="v3chk-hf-field" />
+                    {hfErrors.cvv && <div className="v3chk-hf-error">{hfErrors.cvv}</div>}
                   </Field>
                 </div>
-                <div className="v3chk-bankful-note">
-                  256-bit SSL encryption
+
+                <div className="v3chk-security-note">
+                  Card details are entered in PCI-DSS secure fields hosted by Bankful and tokenized in your browser. PurePep never sees or stores your full card number or CVV.
+                </div>
+                <div className="v3chk-descriptor-note">
+                  Your statement will show this charge as PUREPEP.SHOP.
                 </div>
               </div>
             )}
 
-            {payTab === "crypto" && (
+            {SHOW_CRYPTO && payTab === "crypto" && (
               <div className="v3chk-pay-panel">
                 <div className="v3chk-crypto-panel">
                   <div className="v3chk-crypto-eyebrow">Coming soon</div>
@@ -457,7 +526,7 @@ export function CheckoutPage() {
               </div>
             )}
 
-            {payTab === "wire" && (
+            {SHOW_WIRE && payTab === "wire" && (
               <div className="v3chk-pay-panel">
                 <div className="v3chk-bank-panel">
                   <BankRow k="Bank" v="[Bank name pending]" />
@@ -577,12 +646,12 @@ export function CheckoutPage() {
         </div>
 
         {/* Compliance */}
-        <div className={clsx("v3chk-compliance", compliance && "is-confirmed")}>
-          <label className={clsx("v3chk-compliance-label", compliance && "is-confirmed")}>
+        <div className={clsx("v3chk-compliance", complianceChecked && "is-confirmed")}>
+          <label className={clsx("v3chk-compliance-label", complianceChecked && "is-confirmed")}>
             <input
               type="checkbox"
-              checked={compliance}
-              onChange={(e) => setCompliance(e.target.checked)}
+              checked={complianceChecked}
+              onChange={(e) => setComplianceChecked(e.target.checked)}
             />
             <span className="v3chk-compliance-text">
               I confirm I am a{" "}
@@ -591,7 +660,7 @@ export function CheckoutPage() {
               all sales are final.
             </span>
           </label>
-          <div className={clsx("v3chk-compliance-bar", compliance && "is-shown")}>
+          <div className={clsx("v3chk-compliance-bar", complianceChecked && "is-shown")}>
             <span>✓&nbsp;&nbsp;Confirmed — research use acknowledged</span>
           </div>
         </div>
@@ -605,12 +674,14 @@ export function CheckoutPage() {
               unlockAnim === "unlock" && "is-unlock",
               unlockAnim === "shimmer" && "is-shimmer",
             )}
-            disabled={!compliance || submitting}
+            disabled={!complianceChecked || submitting}
             onClick={handlePlaceOrder}
             aria-busy={submitting}
           >
             <div className="v3chk-place-shadow" />
-            <span className="v3chk-place-label">{submitting ? "Placing…" : "Place order"}</span>
+            <span className="v3chk-place-label">
+              {verifying ? "Verifying with your bank…" : submitting ? "Placing…" : "Place order"}
+            </span>
             <svg
               className="v3chk-place-arrow"
               width="14"
@@ -626,11 +697,20 @@ export function CheckoutPage() {
             </svg>
           </button>
         </div>
+
         <div className="v3chk-place-note">
           By placing your order you agree to PurePep&rsquo;s{" "}
-          <a href="/legal/terms-of-service">Terms of Sale</a> and{" "}
-          <a href="/legal/privacy-policy">Privacy Policy</a>. Your card will be charged{" "}
-          <span className="v3chk-place-charge">${total.toFixed(2)}</span>.
+          <a href="/legal/terms-of-service">Terms of Sale</a>,{" "}
+          <a href="/legal/privacy-policy">Privacy Policy</a>, and{" "}
+          <a href="/legal/refund-policy">Refund Policy</a>. Your card will be charged{" "}
+          <span className="v3chk-place-charge">${total.toFixed(2)}</span>, shown on your statement as PUREPEP.SHOP.
+        </div>
+        <div className="v3chk-refund-note">
+          All sales are final. No refunds, returns, or exchanges except where a package is lost in transit or arrives damaged — see our{" "}
+          <a href="/legal/refund-policy">Refund Policy</a>.
+        </div>
+        <div className="v3chk-dispute-note">
+          Questions about a charge? Contact us before disputing with your bank — most issues are resolved within one business day. Unauthorized chargebacks on completed research-material orders may be contested with order, tracking, and delivery records.
         </div>
 
         {orderError && (
@@ -707,6 +787,9 @@ export function CheckoutPage() {
               <circle cx="18.5" cy="18.5" r="2.5" />
             </svg>
           </TrustItem>
+        </div>
+        <div className="v3chk-support-line">
+          Need help? <a href="mailto:info@purepep.shop">info@purepep.shop</a> · PurePep LLC
         </div>
       </main>
     </div>

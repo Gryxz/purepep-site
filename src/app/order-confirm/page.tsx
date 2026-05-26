@@ -47,7 +47,7 @@ function ErrorState() {
           <p className="deck">
             We couldn&rsquo;t load your order details. Check your email for
             confirmation, or contact{" "}
-            <a href="mailto:research@purepep.com">research@purepep.com</a>.
+            <a href="mailto:info@purepep.shop">info@purepep.shop</a>.
           </p>
         </div>
       </section>

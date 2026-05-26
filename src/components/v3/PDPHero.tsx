@@ -114,11 +114,14 @@ export function PDPHero({ product }: { product: Product }) {
   const variant = product.variants[doseIdx] ?? product.dose;
 
   // Variable products: per-dose price + per-dose WC variation id come from
-  // variantMap. Falls back to the parent price/id when the upstream isn't a
-  // variable product (or when the storefront is rendering from the static
-  // fixture, which doesn't carry variationMap at all).
+  // variantMap. Falls back to variantPrices (static per-dose table) then the
+  // parent price — identical priority chain to MobilePDP so desktop and mobile
+  // always show the same number for the same dose selection.
   const variantEntry = product.variantMap?.[variant];
-  const basePrice = variantEntry?.price ?? product.price;
+  const basePrice =
+    variantEntry?.price ??
+    product.variantPrices?.[variant] ??
+    product.price;
   const effectiveWcId = variantEntry?.wcId ?? product.wcId;
 
   const unitPrice = basePrice * (1 - tier.discount);
