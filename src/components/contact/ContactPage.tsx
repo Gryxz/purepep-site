@@ -505,6 +505,47 @@ export function ContactPage() {
             </div>
           </section>
 
+          <section className="mt-6 rounded-xl border border-ink/12 bg-surface px-4 py-4">
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-40">
+              Legal entity
+            </p>
+            <dl className="mt-3 grid gap-3 font-sans text-[13.5px] text-ink sm:grid-cols-2">
+              <div>
+                <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-40">
+                  Operator
+                </dt>
+                <dd className="mt-1 font-bold">
+                  {ENTITY.legalName} ({ENTITY.legalNameJa})
+                </dd>
+              </div>
+              <div>
+                <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-40">
+                  Corporate Number
+                </dt>
+                <dd className="mt-1 font-bold">{ENTITY.corporateNumber}</dd>
+              </div>
+              <div className="sm:col-span-2">
+                <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-40">
+                  Registered office
+                </dt>
+                <dd className="mt-1">
+                  <span className="block">{ENTITY.address.en}</span>
+                  <span className="mt-1 block">{ENTITY.address.ja}</span>
+                </dd>
+              </div>
+              <div>
+                <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-40">
+                  Email
+                </dt>
+                <dd className="mt-1 font-bold">
+                  <a href={`mailto:${ENTITY.email}`} className="no-underline">
+                    {ENTITY.email}
+                  </a>
+                </dd>
+              </div>
+            </dl>
+          </section>
+
           {/* ── Self-serve — demoted, last ── */}
           <section className="mt-10">
             <p className="mb-3 text-center font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-60">
