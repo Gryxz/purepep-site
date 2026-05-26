@@ -200,7 +200,7 @@ export function Footer({
           </div>
         </div>
 
-        <div className="mt-8 space-y-1 border-t-[1.5px] border-ink bg-bone p-4 font-mono text-xs text-ink">
+        <div className="mt-8 space-y-1 border-t-[1.5px] border-bone/20 bg-ink p-4 font-mono text-xs text-bone">
           <p>
             {ENTITY.brand} is a trade name operated by {ENTITY.legalName} ({ENTITY.legalNameJa}), a{" "}
             {ENTITY.entityType} registered in {ENTITY.country}.
