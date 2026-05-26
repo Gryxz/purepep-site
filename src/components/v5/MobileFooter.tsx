@@ -10,27 +10,49 @@ export function MobileFooter() {
     <footer className="mob-foot" data-mob-section="dark">
       <div className="mob-foot-section">
         <div className="mob-foot-h">Catalog</div>
-        <a href="/shop" className="mob-foot-link">Shop all peptides</a>
-        <a href="/documentation" className="mob-foot-link">View all COAs</a>
-        <a href="/faq" className="mob-foot-link">FAQ</a>
-        <a href="/affiliates" className="mob-foot-link">Affiliate program</a>
+        <a href="/shop" className="mob-foot-link">
+          Shop all peptides
+        </a>
+        <a href="/documentation" className="mob-foot-link">
+          View all COAs
+        </a>
+        <a href="/faq" className="mob-foot-link">
+          FAQ
+        </a>
+        <a href="/affiliates" className="mob-foot-link">
+          Affiliate program
+        </a>
       </div>
       <div className="mob-foot-section">
         <div className="mob-foot-h">Legal</div>
-        <a href="/legal/terms-of-service" className="mob-foot-link">Terms of Service</a>
-        <a href="/legal/refund-policy" className="mob-foot-link">Refund Policy</a>
-        <a href="/legal/shipping-policy" className="mob-foot-link">Shipping Policy</a>
-        <a href="/legal/privacy-policy" className="mob-foot-link">Privacy Policy</a>
-        <a href="/legal/disclaimer" className="mob-foot-link">Disclaimer</a>
+        <a href="/terms-of-service" className="mob-foot-link">
+          Terms of Service
+        </a>
+        <a href="/refund-policy" className="mob-foot-link">
+          Refund Policy
+        </a>
+        <a href="/shipping-policy" className="mob-foot-link">
+          Shipping Policy
+        </a>
+        <a href="/privacy-policy" className="mob-foot-link">
+          Privacy Policy
+        </a>
+        <a href="/disclaimer" className="mob-foot-link">
+          Disclaimer
+        </a>
       </div>
       <div className="mob-foot-section">
         <div className="mob-foot-h">Contact</div>
         <div className="mob-foot-text">info@purepep.shop</div>
         <div className="mob-foot-text">(866) 212-6466</div>
-        <a href="/contact" className="mob-foot-link">Contact us</a>
+        <a href="/contact" className="mob-foot-link">
+          Contact us
+        </a>
       </div>
       <div className="mob-foot-divider" />
-      <div className="mob-foot-secure"><span>Secure Checkout</span></div>
+      <div className="mob-foot-secure">
+        <span>Secure Checkout</span>
+      </div>
       <div className="mob-foot-pay">
         <span className="mob-pay-badge">VISA</span>
         <span className="mob-pay-badge">MC</span>

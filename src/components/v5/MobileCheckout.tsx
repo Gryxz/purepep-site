@@ -92,10 +92,11 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
     shipping === "express"
       ? EXPRESS_SHIP_COST
       : sub >= FREE_SHIP_THRESHOLD
-      ? 0
-      : STANDARD_SHIP_COST_BELOW_THRESHOLD;
+        ? 0
+        : STANDARD_SHIP_COST_BELOW_THRESHOLD;
   const total = Math.max(0, sub + shipCost - promoDiscount);
-  const standardLabel = sub >= FREE_SHIP_THRESHOLD ? "Free" : `$${STANDARD_SHIP_COST_BELOW_THRESHOLD.toFixed(2)}`;
+  const standardLabel =
+    sub >= FREE_SHIP_THRESHOLD ? "Free" : `$${STANDARD_SHIP_COST_BELOW_THRESHOLD.toFixed(2)}`;
 
   // Mount Bankful hosted fields once the SDK is ready
   useEffect(() => {
@@ -161,7 +162,8 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
       if (result) {
         clearCart();
         if (result.payment_url) window.location.href = result.payment_url;
-        else window.location.href = `/order-confirm/?key=${encodeURIComponent(result.order_key ?? "")}&id=${result.order_id}`;
+        else
+          window.location.href = `/order-confirm/?key=${encodeURIComponent(result.order_key ?? "")}&id=${result.order_id}`;
       } else {
         setOrderError(
           "We couldn't place this order. Please double-check your delivery details, or email info@purepep.shop if it persists.",
@@ -181,7 +183,10 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
     }
 
     try {
-      const { token } = await hf.current.tokenize({ cardholderName: cardName, billingPostalCode: postcode });
+      const { token } = await hf.current.tokenize({
+        cardholderName: cardName,
+        billingPostalCode: postcode,
+      });
       const cartToken = await getCartToken();
       const nonce = await getNonce();
 
@@ -189,7 +194,15 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
         const res = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token, email, billing: address, shipping: address, cartToken, nonce, ...extra }),
+          body: JSON.stringify({
+            token,
+            email,
+            billing: address,
+            shipping: address,
+            cartToken,
+            nonce,
+            ...extra,
+          }),
         });
         return res.json() as Promise<{
           ok: boolean;
@@ -232,7 +245,15 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
       <div className="mob-app">
         <div className="mob-cart-empty" style={{ padding: "80px 20px" }}>
           <div className="mob-cart-empty-icon">
-            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" style={{ color: "var(--m-ink-mute)" }}>
+            <svg
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              viewBox="0 0 24 24"
+              style={{ color: "var(--m-ink-mute)" }}
+            >
               <circle cx="9" cy="21" r="1" />
               <circle cx="20" cy="21" r="1" />
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
@@ -240,7 +261,9 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
           </div>
           <div className="mob-cart-empty-h">No items to check out</div>
           <div className="mob-cart-empty-p">Add a vial to get started.</div>
-          <a href="/shop" className="mob-cta-view" style={{ marginTop: 12, maxWidth: 280 }}>Browse the catalog →</a>
+          <a href="/shop" className="mob-cta-view" style={{ marginTop: 12, maxWidth: 280 }}>
+            Browse the catalog →
+          </a>
         </div>
       </div>
     );
@@ -251,13 +274,27 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
       {/* Custom checkout header */}
       <header className="mob-chk-hdr">
         <button type="button" className="mob-chk-back" onClick={() => window.history.back()}>
-          <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+          <svg
+            width="13"
+            height="13"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            viewBox="0 0 24 24"
+          >
             <polyline points="15 18 9 12 15 6" />
           </svg>
           <span>Back</span>
         </button>
         <div className="mob-chk-secure">
-          <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+          <svg
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            viewBox="0 0 24 24"
+          >
             <rect x="3" y="11" width="18" height="11" rx="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
@@ -269,7 +306,11 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
       <div className="mob-chk-order-card">
         <div className="mob-chk-order-h">
           Order summary
-          <button type="button" className="mob-chk-order-toggle" onClick={() => setSummaryOpen((o) => !o)}>
+          <button
+            type="button"
+            className="mob-chk-order-toggle"
+            onClick={() => setSummaryOpen((o) => !o)}
+          >
             {summaryOpen ? "Hide ▴" : "Show ▾"}
           </button>
         </div>
@@ -303,7 +344,10 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
               <span className="ok">Shipping</span>
               <span
                 className="ov"
-                style={{ color: shipCost === 0 ? "var(--m-emerald)" : "var(--m-ink)", fontWeight: shipCost === 0 ? 600 : 500 }}
+                style={{
+                  color: shipCost === 0 ? "var(--m-emerald)" : "var(--m-ink)",
+                  fontWeight: shipCost === 0 ? 600 : 500,
+                }}
               >
                 {shipCost === 0 ? "Free" : `$${shipCost.toFixed(2)}`}
               </span>
@@ -311,18 +355,62 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
 
             {/* Referral / promo code */}
             {promoApplied ? (
-              <div className="mob-order-row" style={{ borderTop: "1px solid var(--m-rule)", paddingTop: 8, marginTop: 4 }}>
+              <div
+                className="mob-order-row"
+                style={{ borderTop: "1px solid var(--m-rule)", paddingTop: 8, marginTop: 4 }}
+              >
                 <span className="ok" style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--m-emerald)", flexShrink: 0, display: "inline-block" }} />
+                  <span
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      background: "var(--m-emerald)",
+                      flexShrink: 0,
+                      display: "inline-block",
+                    }}
+                  />
                   Referral: {promoApplied}
-                  <button type="button" onClick={removePromo} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "var(--m-ink-mute)", padding: "0 2px", lineHeight: 1 }}>×</button>
+                  <button
+                    type="button"
+                    onClick={removePromo}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: 13,
+                      color: "var(--m-ink-mute)",
+                      padding: "0 2px",
+                      lineHeight: 1,
+                    }}
+                  >
+                    ×
+                  </button>
                 </span>
-                <span className="ov" style={{ color: "var(--m-emerald)", fontWeight: 700 }}>−${promoDiscount.toFixed(2)}</span>
+                <span className="ov" style={{ color: "var(--m-emerald)", fontWeight: 700 }}>
+                  −${promoDiscount.toFixed(2)}
+                </span>
               </div>
             ) : (
               <div style={{ borderTop: "1px solid var(--m-rule)", paddingTop: 8, marginTop: 4 }}>
                 {!promoOpen ? (
-                  <button type="button" onClick={() => setPromoOpen(true)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--m-ink-mute)", textDecoration: "underline", textUnderlineOffset: 3, padding: "4px 0" }}>
+                  <button
+                    type="button"
+                    onClick={() => setPromoOpen(true)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 10,
+                      letterSpacing: "0.12em",
+                      textTransform: "uppercase",
+                      color: "var(--m-ink-mute)",
+                      textDecoration: "underline",
+                      textUnderlineOffset: 3,
+                      padding: "4px 0",
+                    }}
+                  >
                     Have a referral or promo code?
                   </button>
                 ) : (
@@ -331,17 +419,61 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
                       type="text"
                       placeholder="PP-REF-XXXX"
                       value={promoInput}
-                      onChange={(e) => { setPromoInput(e.target.value.toUpperCase()); setPromoError(null); }}
+                      onChange={(e) => {
+                        setPromoInput(e.target.value.toUpperCase());
+                        setPromoError(null);
+                      }}
                       onKeyDown={(e) => e.key === "Enter" && applyPromo()}
                       autoFocus
-                      style={{ flex: 1, height: 40, border: "1.5px solid var(--m-ink)", borderRight: "none", background: "var(--m-bone)", padding: "0 10px", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.06em", color: "var(--m-ink)", outline: "none" }}
+                      style={{
+                        flex: 1,
+                        height: 40,
+                        border: "1.5px solid var(--m-ink)",
+                        borderRight: "none",
+                        background: "var(--m-bone)",
+                        padding: "0 10px",
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 11,
+                        letterSpacing: "0.06em",
+                        color: "var(--m-ink)",
+                        outline: "none",
+                      }}
                     />
-                    <button type="button" onClick={applyPromo} style={{ height: 40, padding: "0 14px", border: "1.5px solid var(--m-ink)", background: "var(--m-ink)", color: "var(--m-bone)", fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", cursor: "pointer", flexShrink: 0 }}>
+                    <button
+                      type="button"
+                      onClick={applyPromo}
+                      style={{
+                        height: 40,
+                        padding: "0 14px",
+                        border: "1.5px solid var(--m-ink)",
+                        background: "var(--m-ink)",
+                        color: "var(--m-bone)",
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 10,
+                        fontWeight: 600,
+                        letterSpacing: "0.12em",
+                        textTransform: "uppercase",
+                        cursor: "pointer",
+                        flexShrink: 0,
+                      }}
+                    >
                       Apply
                     </button>
                   </div>
                 )}
-                {promoError && <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--pp-alert)", margin: "5px 0 0", letterSpacing: "0.06em" }}>{promoError}</p>}
+                {promoError && (
+                  <p
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 10,
+                      color: "var(--pp-alert)",
+                      margin: "5px 0 0",
+                      letterSpacing: "0.06em",
+                    }}
+                  >
+                    {promoError}
+                  </p>
+                )}
               </div>
             )}
 
@@ -390,46 +522,108 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
             <div className="mob-chk-field-row">
               <div className="mob-chk-field">
                 <label htmlFor="m-fname">First name</label>
-                <input id="m-fname" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" />
+                <input
+                  id="m-fname"
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  autoComplete="given-name"
+                />
               </div>
               <div className="mob-chk-field">
                 <label htmlFor="m-lname">Last name</label>
-                <input id="m-lname" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" />
+                <input
+                  id="m-lname"
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  autoComplete="family-name"
+                />
               </div>
             </div>
             <div className="mob-chk-field">
               <label htmlFor="m-addr">Address</label>
-              <input id="m-addr" type="text" placeholder="123 Research Blvd" value={address1} onChange={(e) => setAddress1(e.target.value)} autoComplete="address-line1" />
+              <input
+                id="m-addr"
+                type="text"
+                placeholder="123 Research Blvd"
+                value={address1}
+                onChange={(e) => setAddress1(e.target.value)}
+                autoComplete="address-line1"
+              />
             </div>
             <div className="mob-chk-field">
               <label htmlFor="m-addr2">Apt / Suite / Lab (optional)</label>
-              <input id="m-addr2" type="text" placeholder="Lab 4B" value={address2} onChange={(e) => setAddress2(e.target.value)} autoComplete="address-line2" />
+              <input
+                id="m-addr2"
+                type="text"
+                placeholder="Lab 4B"
+                value={address2}
+                onChange={(e) => setAddress2(e.target.value)}
+                autoComplete="address-line2"
+              />
             </div>
             <div className="mob-chk-field-row">
               <div className="mob-chk-field">
                 <label htmlFor="m-city">City</label>
-                <input id="m-city" type="text" value={city} onChange={(e) => setCity(e.target.value)} autoComplete="address-level2" />
+                <input
+                  id="m-city"
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  autoComplete="address-level2"
+                />
               </div>
               <div className="mob-chk-field is-narrow">
                 <label htmlFor="m-state">State</label>
                 <div className="mob-chk-select-wrap">
-                  <select id="m-state" value={stateField} onChange={(e) => setStateField(e.target.value)} autoComplete="address-level1">
+                  <select
+                    id="m-state"
+                    value={stateField}
+                    onChange={(e) => setStateField(e.target.value)}
+                    autoComplete="address-level1"
+                  >
                     <option value="">—</option>
-                    {US_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
+                    {US_STATES.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
               <div className="mob-chk-field is-narrow">
                 <label htmlFor="m-zip">ZIP</label>
-                <input id="m-zip" type="text" maxLength={10} value={postcode} onChange={(e) => setPostcode(e.target.value)} autoComplete="postal-code" />
+                <input
+                  id="m-zip"
+                  type="text"
+                  maxLength={10}
+                  value={postcode}
+                  onChange={(e) => setPostcode(e.target.value)}
+                  autoComplete="postal-code"
+                />
               </div>
             </div>
             <div className="mob-chk-field">
               <label htmlFor="m-country">Country</label>
               <div className="mob-chk-select-wrap">
-                <select id="m-country" value={country} onChange={(e) => setCountry(e.target.value)} autoComplete="country-name">
-                  {["United States", "Canada", "United Kingdom", "Australia", "Germany", "Other"].map((c) => (
-                    <option key={c} value={c}>{c}</option>
+                <select
+                  id="m-country"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  autoComplete="country-name"
+                >
+                  {[
+                    "United States",
+                    "Canada",
+                    "United Kingdom",
+                    "Australia",
+                    "Germany",
+                    "Other",
+                  ].map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -447,16 +641,34 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
           </header>
           <div className="mob-chk-section-body">
             <div className="mob-chk-ship-options">
-              <label className={`mob-chk-ship-option${shipping === "standard" ? " is-selected" : ""}`}>
-                <input type="radio" name="shipping" value="standard" checked={shipping === "standard"} onChange={() => setShipping("standard")} />
+              <label
+                className={`mob-chk-ship-option${shipping === "standard" ? " is-selected" : ""}`}
+              >
+                <input
+                  type="radio"
+                  name="shipping"
+                  value="standard"
+                  checked={shipping === "standard"}
+                  onChange={() => setShipping("standard")}
+                />
                 <div className="mob-chk-ship-info">
                   <div className="mob-chk-ship-name">Standard</div>
                   <div className="mob-chk-ship-eta">2–3 BUSINESS DAYS · USPS / UPS</div>
                 </div>
-                <span className={`mob-chk-ship-price${standardLabel === "Free" ? " is-free" : ""}`}>{standardLabel}</span>
+                <span className={`mob-chk-ship-price${standardLabel === "Free" ? " is-free" : ""}`}>
+                  {standardLabel}
+                </span>
               </label>
-              <label className={`mob-chk-ship-option${shipping === "express" ? " is-selected" : ""}`}>
-                <input type="radio" name="shipping" value="express" checked={shipping === "express"} onChange={() => setShipping("express")} />
+              <label
+                className={`mob-chk-ship-option${shipping === "express" ? " is-selected" : ""}`}
+              >
+                <input
+                  type="radio"
+                  name="shipping"
+                  value="express"
+                  checked={shipping === "express"}
+                  onChange={() => setShipping("express")}
+                />
                 <div className="mob-chk-ship-info">
                   <div className="mob-chk-ship-name">Express</div>
                   <div className="mob-chk-ship-eta">1 BUSINESS DAY · UPS OVERNIGHT</div>
@@ -477,16 +689,42 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
           </header>
           <div className="mob-chk-section-body">
             <div className="mob-chk-pay-methods" role="tablist">
-              <button type="button" role="tab" aria-selected={pay === "card"} className={`mob-chk-pay-tab${pay === "card" ? " is-active" : ""}`} onClick={() => setPay("card")}>
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={pay === "card"}
+                className={`mob-chk-pay-tab${pay === "card" ? " is-active" : ""}`}
+                onClick={() => setPay("card")}
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  viewBox="0 0 24 24"
+                >
                   <rect x="1" y="4" width="22" height="16" rx="2" />
                   <line x1="1" y1="10" x2="23" y2="10" />
                 </svg>
                 Card
               </button>
               {SHOW_CRYPTO && (
-                <button type="button" role="tab" aria-selected={pay === "crypto"} className={`mob-chk-pay-tab${pay === "crypto" ? " is-active" : ""}`} onClick={() => setPay("crypto")}>
-                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={pay === "crypto"}
+                  className={`mob-chk-pay-tab${pay === "crypto" ? " is-active" : ""}`}
+                  onClick={() => setPay("crypto")}
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    viewBox="0 0 24 24"
+                  >
                     <circle cx="12" cy="12" r="10" />
                     <path d="M9 9h6v6H9z" />
                   </svg>
@@ -494,8 +732,21 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
                 </button>
               )}
               {SHOW_WIRE && (
-                <button type="button" role="tab" aria-selected={pay === "wire"} className={`mob-chk-pay-tab${pay === "wire" ? " is-active" : ""}`} onClick={() => setPay("wire")}>
-                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={pay === "wire"}
+                  className={`mob-chk-pay-tab${pay === "wire" ? " is-active" : ""}`}
+                  onClick={() => setPay("wire")}
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M2 20h20M5 20V10l7-7 7 7v10" />
                   </svg>
                   Wire
@@ -510,18 +761,27 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
 
               {sdkReady === "failed" && (
                 <div style={{ marginBottom: 12, fontSize: 13, color: "var(--pp-alert)" }}>
-                  Card payment is temporarily unavailable. Please email info@purepep.shop and we&apos;ll complete your order.
+                  Card payment is temporarily unavailable. Please email info@purepep.shop and
+                  we&apos;ll complete your order.
                 </div>
               )}
 
               <div className="mob-chk-field">
                 <label>Card number</label>
                 <div id="mob-bankful-card-number" className="mob-chk-hf-field" />
-                {hfErrors.cardNumber && <div className="mob-chk-hf-error">{hfErrors.cardNumber}</div>}
+                {hfErrors.cardNumber && (
+                  <div className="mob-chk-hf-error">{hfErrors.cardNumber}</div>
+                )}
               </div>
               <div className="mob-chk-field">
                 <label htmlFor="m-card-name">Name on card</label>
-                <input id="m-card-name" type="text" value={cardName} onChange={(e) => setCardName(e.target.value)} autoComplete="cc-name" />
+                <input
+                  id="m-card-name"
+                  type="text"
+                  value={cardName}
+                  onChange={(e) => setCardName(e.target.value)}
+                  autoComplete="cc-name"
+                />
               </div>
               <div className="mob-chk-field-row">
                 <div className="mob-chk-field">
@@ -536,7 +796,8 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
                 </div>
               </div>
               <div className="mob-chk-security-note">
-                Card details are entered in PCI-DSS secure fields hosted by Bankful and tokenized in your browser. PurePep never sees or stores your full card number or CVV.
+                Card details are entered in PCI-DSS secure fields hosted by Bankful and tokenized in
+                your browser. PurePep never sees or stores your full card number or CVV.
               </div>
               <div className="mob-chk-descriptor-note">
                 Your statement will show this charge as PUREPEP.SHOP.
@@ -557,12 +818,30 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
             {SHOW_WIRE && pay === "wire" && (
               <div className="mob-chk-pay-panel is-active">
                 <div className="mob-chk-bank-panel">
-                  <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Bank</span><span className="mob-chk-bank-v">[Bank name pending]</span></div>
-                  <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Account name</span><span className="mob-chk-bank-v">{ENTITY.legalName}</span></div>
-                  <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Routing</span><span className="mob-chk-bank-v">[Routing pending]</span></div>
-                  <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Account</span><span className="mob-chk-bank-v">[Account pending]</span></div>
-                  <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Reference</span><span className="mob-chk-bank-v">Your email</span></div>
-                  <div className="mob-chk-bank-note">Orders ship within 1 business day of payment confirmation. Include your email as the wire reference so we can match your order.</div>
+                  <div className="mob-chk-bank-row">
+                    <span className="mob-chk-bank-k">Bank</span>
+                    <span className="mob-chk-bank-v">[Bank name pending]</span>
+                  </div>
+                  <div className="mob-chk-bank-row">
+                    <span className="mob-chk-bank-k">Account name</span>
+                    <span className="mob-chk-bank-v">{ENTITY.legalName}</span>
+                  </div>
+                  <div className="mob-chk-bank-row">
+                    <span className="mob-chk-bank-k">Routing</span>
+                    <span className="mob-chk-bank-v">[Routing pending]</span>
+                  </div>
+                  <div className="mob-chk-bank-row">
+                    <span className="mob-chk-bank-k">Account</span>
+                    <span className="mob-chk-bank-v">[Account pending]</span>
+                  </div>
+                  <div className="mob-chk-bank-row">
+                    <span className="mob-chk-bank-k">Reference</span>
+                    <span className="mob-chk-bank-v">Your email</span>
+                  </div>
+                  <div className="mob-chk-bank-note">
+                    Orders ship within 1 business day of payment confirmation. Include your email as
+                    the wire reference so we can match your order.
+                  </div>
                 </div>
               </div>
             )}
@@ -579,9 +858,8 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
             onChange={(e) => setCompliance(e.target.checked)}
           />
           <span className="mob-chk-compliance-text">
-            I confirm I am a{" "}
-            <strong>qualified researcher aged 21+</strong> and that these products will be
-            used <strong>strictly for in vitro laboratory research</strong>. I understand
+            I confirm I am a <strong>qualified researcher aged 21+</strong> and that these products
+            will be used <strong>strictly for in vitro laboratory research</strong>. I understand
             all sales are final.
           </span>
         </label>
@@ -600,7 +878,14 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
         >
           {verifying ? "Verifying with your bank…" : submitting ? "Placing order…" : "Place order"}
           {!submitting && !verifying && (
-            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              viewBox="0 0 24 24"
+            >
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
             </svg>
@@ -610,14 +895,17 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
 
       <div className="mob-chk-place-note">
         By placing your order you agree to PurePep&apos;s Terms of Sale, Privacy Policy, and{" "}
-        <a href="/legal/refund-policy">Refund Policy</a>. Your card will be charged ${total.toFixed(2)}, shown on your statement as PUREPEP.SHOP.
+        <a href="/refund-policy">Refund Policy</a>. Your card will be charged ${total.toFixed(2)},
+        shown on your statement as PUREPEP.SHOP.
       </div>
       <div className="mob-chk-refund-note">
-        All sales are final. No refunds, returns, or exchanges except where a package is lost in transit or arrives damaged — see our{" "}
-        <a href="/legal/refund-policy">Refund Policy</a>.
+        All sales are final. No refunds, returns, or exchanges except where a package is lost in
+        transit or arrives damaged — see our <a href="/refund-policy">Refund Policy</a>.
       </div>
       <div className="mob-chk-dispute-note">
-        Questions about a charge? Contact us before disputing with your bank — most issues are resolved within one business day. Unauthorized chargebacks on completed research-material orders may be contested with order, tracking, and delivery records.
+        Questions about a charge? Contact us before disputing with your bank — most issues are
+        resolved within one business day. Unauthorized chargebacks on completed research-material
+        orders may be contested with order, tracking, and delivery records.
       </div>
 
       {orderError && (
@@ -630,40 +918,84 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
       <div className="mob-trust-footer">
         <div className="mob-tf-item">
           <div className="mob-tf-icon">
-            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              viewBox="0 0 24 24"
+            >
               <rect x="3" y="11" width="18" height="11" rx="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
           </div>
-          <div className="mob-tf-label">SSL<br />encrypted</div>
+          <div className="mob-tf-label">
+            SSL
+            <br />
+            encrypted
+          </div>
         </div>
         <div className="mob-tf-item">
           <div className="mob-tf-icon">
-            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              viewBox="0 0 24 24"
+            >
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
           </div>
-          <div className="mob-tf-label">Fraud<br />protected</div>
+          <div className="mob-tf-label">
+            Fraud
+            <br />
+            protected
+          </div>
         </div>
         <div className="mob-tf-item">
           <div className="mob-tf-icon">
-            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              viewBox="0 0 24 24"
+            >
               <path d="M9 11l3 3L22 4" />
               <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
             </svg>
           </div>
-          <div className="mob-tf-label">COA<br />included</div>
+          <div className="mob-tf-label">
+            COA
+            <br />
+            included
+          </div>
         </div>
         <div className="mob-tf-item">
           <div className="mob-tf-icon">
-            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              viewBox="0 0 24 24"
+            >
               <rect x="1" y="3" width="15" height="13" rx="1" />
               <path d="M16 8h4l3 3v5h-7V8z" />
               <circle cx="5.5" cy="18.5" r="2.5" />
               <circle cx="18.5" cy="18.5" r="2.5" />
             </svg>
           </div>
-          <div className="mob-tf-label">2-3 day<br />ship</div>
+          <div className="mob-tf-label">
+            2-3 day
+            <br />
+            ship
+          </div>
         </div>
       </div>
 
@@ -675,8 +1007,54 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
 }
 
 const US_STATES = [
-  "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA",
-  "KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ",
-  "NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT",
-  "VA","WA","WV","WI","WY",
+  "AL",
+  "AK",
+  "AZ",
+  "AR",
+  "CA",
+  "CO",
+  "CT",
+  "DE",
+  "FL",
+  "GA",
+  "HI",
+  "ID",
+  "IL",
+  "IN",
+  "IA",
+  "KS",
+  "KY",
+  "LA",
+  "ME",
+  "MD",
+  "MA",
+  "MI",
+  "MN",
+  "MS",
+  "MO",
+  "MT",
+  "NE",
+  "NV",
+  "NH",
+  "NJ",
+  "NM",
+  "NY",
+  "NC",
+  "ND",
+  "OH",
+  "OK",
+  "OR",
+  "PA",
+  "RI",
+  "SC",
+  "SD",
+  "TN",
+  "TX",
+  "UT",
+  "VT",
+  "VA",
+  "WA",
+  "WV",
+  "WI",
+  "WY",
 ];

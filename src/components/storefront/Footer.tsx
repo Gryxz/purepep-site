@@ -112,7 +112,7 @@ export function Footer({
     policies.length > 0
       ? [
           // `contact` has a dedicated in-repo portal — never link the
-          // WP-mirrored /legal/contact stub from the footer.
+          // WP-mirrored /contact stub from the footer.
           ...policies
             .filter((p) => p.slug !== "contact")
             .map((p) => ({ label: p.title, href: `/${p.slug}` })),
@@ -174,7 +174,7 @@ export function Footer({
               { label: "Certificates of analysis", href: "/documentation" },
               { label: "FAQ", href: "/faq" },
               { label: "Methods & lab partners", href: "/quality#methods" },
-              { label: "Cold-chain shipping", href: "/legal/shipping-policy" },
+              { label: "Cold-chain shipping", href: "/shipping-policy" },
               { label: "Lot traceability", href: "/documentation#lots" },
             ]}
           />

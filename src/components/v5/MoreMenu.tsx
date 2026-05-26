@@ -50,15 +50,23 @@ export function MoreMenu({ open, onClose }: Props) {
         onClick={onClose}
         aria-hidden="true"
       />
-      <aside
-        className={`mob-more${open ? " is-open" : ""}`}
-        aria-label="Menu"
-        aria-hidden={!open}
-      >
+      <aside className={`mob-more${open ? " is-open" : ""}`} aria-label="Menu" aria-hidden={!open}>
         <header className="mob-more-hdr">
           <span className="mob-more-title">Menu</span>
-          <button type="button" className="mob-more-close" onClick={onClose} aria-label="Close menu">
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <button
+            type="button"
+            className="mob-more-close"
+            onClick={onClose}
+            aria-label="Close menu"
+          >
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -117,11 +125,21 @@ export function MoreMenu({ open, onClose }: Props) {
           <section className="mob-more-section">
             <div className="mob-more-eyebrow">Legal</div>
             <div className="mob-more-legal">
-              <a href="/legal/terms-of-service" onClick={onClose}>Terms</a>
-              <a href="/legal/privacy-policy" onClick={onClose}>Privacy</a>
-              <a href="/legal/refund-policy" onClick={onClose}>Refund</a>
-              <a href="/legal/shipping-policy" onClick={onClose}>Shipping</a>
-              <a href="/legal/disclaimer" onClick={onClose}>Disclaimer</a>
+              <a href="/terms-of-service" onClick={onClose}>
+                Terms
+              </a>
+              <a href="/privacy-policy" onClick={onClose}>
+                Privacy
+              </a>
+              <a href="/refund-policy" onClick={onClose}>
+                Refund
+              </a>
+              <a href="/shipping-policy" onClick={onClose}>
+                Shipping
+              </a>
+              <a href="/disclaimer" onClick={onClose}>
+                Disclaimer
+              </a>
             </div>
           </section>
         </div>

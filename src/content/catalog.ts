@@ -50,7 +50,7 @@ export const CATALOG_REQUEST_CTA = {
   body:
     "We source and synthesize additional peptides for labs and repeat buyers. " +
     "Send us your spec — we respond within one business day.",
-  primary: { label: "Request a quote", href: "/legal/contact" },
+  primary: { label: "Request a quote", href: "/contact" },
   secondary: { label: "View all COAs", href: "/documentation" },
 } as const;
 

@@ -71,14 +71,9 @@ export default function CookieBanner() {
   if (!mounted || !visible) return null;
 
   return (
-    <div
-      role="dialog"
-      aria-label="Cookie consent"
-      className="mob-cookies"
-    >
+    <div role="dialog" aria-label="Cookie consent" className="mob-cookies">
       <p className="mob-cookies-text">
-        Essential cookies only.{" "}
-        <a href="/legal/privacy-policy">Privacy Policy</a>
+        Essential cookies only. <a href="/privacy-policy">Privacy Policy</a>
       </p>
       <div className="mob-cookies-buttons">
         <button
