@@ -90,8 +90,7 @@ export function CatalogPage({ products }: { products: Product[] }) {
           <div className="eyebrow">Catalog</div>
           <h1>Research-grade peptides.</h1>
           <p>
-            Lyophilized, lot-tested, shipped with a matched Certificate of Analysis. No marketing math — just
-            specifications.
+            Lyophilized, lot-tested, tracked US shipping. No marketing math — just specifications.
           </p>
         </section>
 

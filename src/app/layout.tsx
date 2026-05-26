@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     template: "%s — PurePep",
   },
   description:
-    "Lyophilized research peptides assayed at ≥99.5% purity by HPLC, lot-matched COA on every vial. " +
+    "Lyophilized research peptides assayed at ≥99.5% purity by HPLC. " +
     compliance.researchUseOnly,
   applicationName: "PurePep",
   robots: INDEX_ENABLED

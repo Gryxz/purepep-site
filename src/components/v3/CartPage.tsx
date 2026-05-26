@@ -317,9 +317,9 @@ export function CartPage({ products }: { products: Product[] }) {
           <TrustItem
             label={
               <>
-                COA
+                Lab
                 <br />
-                included
+                verified
               </>
             }
           >

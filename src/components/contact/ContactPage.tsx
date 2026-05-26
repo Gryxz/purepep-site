@@ -33,11 +33,8 @@ const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
 const TOPICS = [
   "Order status",
   "Shipping & delivery",
-  "Certificate of Analysis / documentation",
   "Product question",
   "Returns & refunds",
-  "Affiliate / referral program",
-  "Researcher access & verification",
   "Something else",
 ] as const;
 
