@@ -169,11 +169,11 @@ export function Footer({
 
           <FootCol title="Catalog" items={catalogItems} />
           <FootCol
-            title="Quality"
+            title="Support"
             items={[
               { label: "FAQ", href: "/faq" },
-              { label: "Methods & lab partners", href: "/quality#methods" },
               { label: "Cold-chain shipping", href: "/shipping-policy" },
+              { label: "Contact", href: "/contact" },
             ]}
           />
           <FootCol

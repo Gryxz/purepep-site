@@ -80,10 +80,6 @@ export function MoreMenu({ open, onClose }: Props) {
               <span>Shop all peptides</span>
               <span className="arr">→</span>
             </a>
-            <a href="/quality" className="mob-more-link" onClick={onClose}>
-              <span>Quality &amp; testing</span>
-              <span className="arr">→</span>
-            </a>
           </section>
 
           <section className="mob-more-section">

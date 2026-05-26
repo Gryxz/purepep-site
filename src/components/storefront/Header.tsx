@@ -38,17 +38,14 @@ function UtilityStrip() {
 
 const TOP_NAV_LINKS = [
   { label: "Catalog", href: "/shop" },
-  { label: "Quality", href: "/quality" },
 ];
 
 const FEATURED_MENU_LINKS = [
   { label: "Best sellers", href: "/shop" },
-  { label: "Quality", href: "/quality" },
 ];
 
 const MOBILE_NAV_LINKS = [
   { label: "Catalog", href: "/shop" },
-  { label: "Quality", href: "/quality" },
   { label: "Contact", href: "/contact" },
 ];
 
