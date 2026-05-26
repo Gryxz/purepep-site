@@ -529,8 +529,8 @@ export function ContactPage() {
                   Registered office
                 </dt>
                 <dd className="mt-1">
-                  <span className="block">{ENTITY.address.en}</span>
-                  <span className="mt-1 block">{ENTITY.address.ja}</span>
+                  <span className="block">{ENTITY.address.full}</span>
+                  <span className="mt-1 block">{ENTITY.address.fullJa}</span>
                 </dd>
               </div>
               <div>

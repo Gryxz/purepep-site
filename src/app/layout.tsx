@@ -59,19 +59,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: ENTITY.legalName,
-    alternateName: ENTITY.brand,
-    url: SITE_URL,
+    name: ENTITY.brand,
+    legalName: ENTITY.legalName,
+    alternateName: ENTITY.legalNameJa,
+    url: ENTITY.website,
     email: ENTITY.email,
     identifier: {
       "@type": "PropertyValue",
-      propertyID: "Japan National Tax Agency Corporate Number",
+      propertyID: "JP Corporate Number",
       value: ENTITY.corporateNumber,
     },
     address: {
       "@type": "PostalAddress",
-      streetAddress: ENTITY.address.en,
-      addressCountry: "JP",
+      streetAddress: `${ENTITY.address.line1}, ${ENTITY.address.line2}`,
+      addressLocality: "Sakai",
+      addressRegion: ENTITY.address.region,
+      postalCode: ENTITY.address.postalCode,
+      addressCountry: ENTITY.address.countryCode,
     },
   };
 

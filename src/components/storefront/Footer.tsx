@@ -198,11 +198,18 @@ export function Footer({
             <PaymentLogos />
             <span>© 2026 PurePep</span>
           </div>
-          <span className="block w-full text-[10px] normal-case tracking-normal text-bone/55">
-            {ENTITY.brand} is operated by {ENTITY.legalName} ({ENTITY.legalNameJa}) ·{" "}
-            {ENTITY.entityType} · Corporate Number {ENTITY.corporateNumber} · Registered office:{" "}
-            {ENTITY.address.full}
-          </span>
+        </div>
+
+        <div className="mt-8 space-y-1 border-t-[1.5px] border-ink bg-bone p-4 font-mono text-xs text-ink">
+          <p>
+            {ENTITY.brand} is a trade name operated by {ENTITY.legalName} ({ENTITY.legalNameJa}), a{" "}
+            {ENTITY.entityType} registered in {ENTITY.country}.
+          </p>
+          <p>Corporate Number: {ENTITY.corporateNumber}</p>
+          <p>Registered office: {ENTITY.address.full}</p>
+          <p className="pt-2">
+            {ENTITY.useStatement}. Sales restricted to {ENTITY.audience}.
+          </p>
         </div>
       </div>
     </footer>

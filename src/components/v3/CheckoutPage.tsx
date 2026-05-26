@@ -7,6 +7,7 @@ import { clsx } from "@/lib/clsx";
 import { useCartStore } from "@/lib/cart-store";
 import { placeWcOrder, getCartToken, getNonce, type WcOrderResult } from "@/lib/wc-store-api";
 import { trackBeginCheckout } from "@/lib/analytics";
+import { ENTITY } from "@/lib/entity";
 import { FREE_SHIP_THRESHOLD } from "@/content/cart";
 import { compliance as complianceTokens, palette } from "@design/tokens";
 import type { BankfulHostedFields } from "@/components/checkout/bankful";
@@ -530,7 +531,7 @@ export function CheckoutPage({ sdkReady }: { sdkReady: boolean | "failed" }) {
               <div className="v3chk-pay-panel">
                 <div className="v3chk-bank-panel">
                   <BankRow k="Bank" v="[Bank name pending]" />
-                  <BankRow k="Account name" v="PurePep LLC" />
+                  <BankRow k="Account name" v={ENTITY.legalName} />
                   <BankRow k="Routing" v="[Routing pending]" />
                   <BankRow k="Account" v="[Account pending]" />
                   <BankRow k="Reference" v="Your email" />
@@ -789,7 +790,7 @@ export function CheckoutPage({ sdkReady }: { sdkReady: boolean | "failed" }) {
           </TrustItem>
         </div>
         <div className="v3chk-support-line">
-          Need help? <a href="mailto:info@purepep.shop">info@purepep.shop</a> · PurePep LLC
+          Need help? <a href={`mailto:${ENTITY.email}`}>{ENTITY.email}</a> · {ENTITY.legalName}
         </div>
       </main>
     </div>

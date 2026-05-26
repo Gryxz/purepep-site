@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
+import { ENTITY } from "@/lib/entity";
 import { placeWcOrder, getCartToken, getNonce } from "@/lib/wc-store-api";
 import { FREE_SHIP_THRESHOLD } from "@/content/cart";
 import { compliance as complianceTokens, palette } from "@design/tokens";
@@ -557,7 +558,7 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
               <div className="mob-chk-pay-panel is-active">
                 <div className="mob-chk-bank-panel">
                   <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Bank</span><span className="mob-chk-bank-v">[Bank name pending]</span></div>
-                  <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Account name</span><span className="mob-chk-bank-v">PurePep LLC</span></div>
+                  <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Account name</span><span className="mob-chk-bank-v">{ENTITY.legalName}</span></div>
                   <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Routing</span><span className="mob-chk-bank-v">[Routing pending]</span></div>
                   <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Account</span><span className="mob-chk-bank-v">[Account pending]</span></div>
                   <div className="mob-chk-bank-row"><span className="mob-chk-bank-k">Reference</span><span className="mob-chk-bank-v">Your email</span></div>
@@ -667,7 +668,7 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
       </div>
 
       <div className="mob-chk-support-line">
-        Need help? <a href="mailto:info@purepep.shop">info@purepep.shop</a> · PurePep LLC
+        Need help? <a href={`mailto:${ENTITY.email}`}>{ENTITY.email}</a> · {ENTITY.legalName}
       </div>
     </div>
   );

@@ -6,12 +6,12 @@ export function EntityDisclosure() {
       <p>
         <strong>{ENTITY.brand}</strong> is a trade name operated by{" "}
         <strong>{ENTITY.legalName}</strong> ({ENTITY.legalNameJa}), a {ENTITY.entityType} registered
-        with the Japan National Tax Agency under Corporate Number{" "}
+        in {ENTITY.country} with the Japan National Tax Agency under Corporate Number{" "}
         <strong>{ENTITY.corporateNumber}</strong>.
       </p>
       <p className="mt-2">Registered office: {ENTITY.address.full}</p>
       <p className="mt-2">
-        All products are sold {ENTITY.useStatement}. Sales are restricted to {ENTITY.audience}.
+        {ENTITY.useStatement}. Sales are restricted to {ENTITY.audience}.
       </p>
     </div>
   );
