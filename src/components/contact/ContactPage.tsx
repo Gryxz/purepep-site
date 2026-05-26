@@ -49,22 +49,10 @@ const HELP_LINKS: { href: string; num: string; title: string; body: string }[] =
     body: "Shipping, lot traceability, research-use terms, and payment.",
   },
   {
-    href: "/quality#sample-coa",
-    num: "02",
-    title: "Certificates of Analysis",
-    body: "Read a real COA and how every lot is tested.",
-  },
-  {
     href: "/documentation",
-    num: "03",
+    num: "02",
     title: "Documentation",
     body: "Handling, reconstitution, and storage references.",
-  },
-  {
-    href: "/researcher-access",
-    num: "04",
-    title: "Researcher access",
-    body: "Verification for 21+ qualified researchers.",
   },
 ];
 

@@ -46,8 +46,6 @@ export default function DocumentationPage() {
           </p>
           <div className="v3qual-hero-links">
             <span className="is-pending" aria-disabled="true">Sample COA — pending</span>
-            <Link href="/quality">Methods overview</Link>
-            <Link href="/researcher-access">Researcher access</Link>
           </div>
           <div className="v3qual-hero-foot">
             Last sample COA released 2026-04-12 · RETA Lot RT-2604-A11
@@ -109,9 +107,6 @@ export default function DocumentationPage() {
           <div className="v3-closing-pills">
             <Link href="/shop" className="v3-pill v3-pill-primary">
               Open the catalog <span className="arrow">→</span>
-            </Link>
-            <Link href="/quality" className="v3-pill v3-pill-ghost">
-              Read methods
             </Link>
           </div>
         </div>

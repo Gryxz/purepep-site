@@ -381,31 +381,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         </div>
       </section>
 
-      {/* Transparency — eyebrow dropped, headline declarative. */}
-      <section className="mob-transparency">
-        <div className="mob-tr-header">
-          <h2 className="mob-tr-h">Independent verification</h2>
-        </div>
-        <div className="mob-tr-stack">
-          <a href="/quality" className="mob-tr-card">
-            <div className="mob-tr-card-row">
-              <div className="mob-tr-card-num">01</div>
-              <div className="mob-tr-card-content">
-                <h3 className="mob-tr-card-h">How we test every lot</h3>
-                <p className="mob-tr-card-cap">
-                  Independent HPLC, mass spec, and LAL endotoxin verification on every batch — same
-                  protocols as institutional research suppliers.
-                </p>
-                <div className="mob-tr-card-action">
-                  <span>Read methods</span>
-                  <span className="arr">→</span>
-                </div>
-              </div>
-            </div>
-          </a>
-          {/* COA + researcher-access cards hidden */}
-        </div>
-      </section>
+      {/* transparency section hidden */}
 
       {/* Testimonials — shared v3 component, adapts to narrow layout */}
       <TestimonialsSection />
