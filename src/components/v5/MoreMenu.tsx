@@ -76,6 +76,10 @@ export function MoreMenu({ open, onClose }: Props) {
         <div className="mob-more-scroll">
           <section className="mob-more-section">
             <div className="mob-more-eyebrow">Navigation</div>
+            <a href="/" className="mob-more-link" onClick={onClose}>
+              <span>Home</span>
+              <span className="arr">→</span>
+            </a>
             <a href="/shop" className="mob-more-link" onClick={onClose}>
               <span>Shop all peptides</span>
               <span className="arr">→</span>

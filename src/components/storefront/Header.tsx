@@ -37,15 +37,20 @@ function UtilityStrip() {
 }
 
 const TOP_NAV_LINKS = [
+  { label: "Home", href: "/" },
   { label: "Catalog", href: "/shop" },
 ];
 
 const FEATURED_MENU_LINKS = [
+  { label: "Home", href: "/" },
   { label: "Best sellers", href: "/shop" },
 ];
 
 const MOBILE_NAV_LINKS = [
+  { label: "Home", href: "/" },
   { label: "Catalog", href: "/shop" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Policies", href: "/terms-of-service" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -56,6 +61,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
   const pathname = usePathname();
 
   function isActiveNav(href: string) {
+    if (href === "/") return pathname === "/";
     if (href === "/shop") return pathname === "/shop" || pathname.startsWith("/shop/");
     return pathname === href || pathname.startsWith(`${href}/`);
   }
