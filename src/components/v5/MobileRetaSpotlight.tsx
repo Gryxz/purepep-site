@@ -61,7 +61,6 @@ export function MobileRetaSpotlight({ products }: { products: Product[] }) {
   // research profile: the bundle first, then the individual stack
   // companions, then the in-class peer.
   const stackChips: Array<{ name: string; sub: string; href: string }> = [
-    { name: "GLP Stack",   sub: "Bundle · Save", href: "/shop/glp-stack" },
     { name: "BPC-157",     sub: "Peptide",        href: "/shop/bpc-157" },
     { name: "TB-500",      sub: "Peptide",        href: "/shop/tb-500" },
     { name: "Semaglutide", sub: "GLP-1",          href: "/shop/sema" },

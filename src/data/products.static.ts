@@ -353,34 +353,6 @@ export const PRODUCTS: Product[] = [
       { compound: "TB500", name: "TB-500", mass: "10 mg" },
     ],
   },
-  // GLP Stack — Retatrutide 5mg + Cagrilintide 10mg
-  {
-    slug: "glp-stack",
-    compound: "GLPS",
-    name: "GLP Stack",
-    dose: "15 mg",
-    variants: ["15 mg"],
-    variantPrices: { "15 mg": 384.0 },
-    cas: "—",
-    price: 384.0,
-    priceLabel: "$384.00",
-    regularPrice: 408.0,
-    category: "Incretin mimetics",
-    stock: "in",
-    description:
-      "GLP-1 / amylin combination stack pairing Retatrutide (triple GLP-1 / GIP / glucagon agonist) with Cagrilintide (long-acting amylin analogue). Each peptide ships as its own separately-sealed lyophilized vial — never pre-mixed — under a single lot-matched COA. Studied in metabolic research models.",
-    disclaimer:
-      "This is a curated multi-peptide research stack — supplied as two lyophilized vials with a single lot-matched COA covering both compounds.",
-    lot: "GS-2604-A01",
-    storage: "2–8 °C, protect from light",
-    purity: "≥ 99.5% (HPLC)",
-    sku: "PP-GS-015",
-    type: "stack",
-    stackComponents: [
-      { compound: "RETA", name: "Retatrutide", mass: "5 mg" },
-      { compound: "CAGRI", name: "Cagrilintide", mass: "10 mg" },
-    ],
-  },
   // Recovery Stack — BPC-157 5mg + Ipamorelin 10mg
   {
     slug: "recovery-stack",

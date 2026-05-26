@@ -430,15 +430,18 @@ function logStaticSlugDiff(wcSlugs: Iterable<string>): void {
 
 export async function getAllProducts(): Promise<Product[]> {
   const wc = await fetchWcProducts();
-  if (!wc || wc.length === 0) return STATIC_PRODUCTS;
+  const HIDDEN_SLUGS = new Set(["glp-stack"]);
+  if (!wc || wc.length === 0) return STATIC_PRODUCTS.filter((p) => !HIDDEN_SLUGS.has(p.slug));
   try {
-    const products = await Promise.all(
-      wc.map(async (p) => {
-        const variations =
-          p.type === "variable" ? (await fetchWcVariations(p.id)) ?? undefined : undefined;
-        return toProduct(p, variations);
-      }),
-    );
+    const products = (await Promise.all(
+      wc
+        .filter((p) => !HIDDEN_SLUGS.has(p.slug))
+        .map(async (p) => {
+          const variations =
+            p.type === "variable" ? (await fetchWcVariations(p.id)) ?? undefined : undefined;
+          return toProduct(p, variations);
+        }),
+    ));
     if (hasCreds()) logStaticSlugDiff(wc.map((p) => p.slug));
     return products;
   } catch {
