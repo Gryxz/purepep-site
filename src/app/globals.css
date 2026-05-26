@@ -189,6 +189,14 @@ button { font-family: inherit; }
   color: inherit;
 }
 
+/* The footer itself is dark, but the legal entity disclosure is an
+   intentionally light card. Keep its text ink-colored instead of letting
+   the dark-footer guardrail above force white-on-bone text. */
+footer .bg-bone,
+footer .bg-bone * {
+  color: var(--pp-ink);
+}
+
 /* Utility classes — used by v2 primitives (Eyebrow / Hairline / etc.) */
 .pp-eyebrow {
   font-family: var(--font-mono);
