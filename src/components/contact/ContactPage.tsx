@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { EntityDisclosure } from "@/components/EntityDisclosure";
+import { ENTITY } from "@/lib/entity";
 
 /**
  * /contact — support ticket portal (Shopify-style help + contact form).
@@ -15,9 +17,9 @@ import Link from "next/link";
  * by the layout, the content here is identical on both by construction.
  */
 
-const SUPPORT_EMAIL = "info@purepep.shop";
-const SUPPORT_PHONE_DISPLAY = "(866) 212-6466";
-const SUPPORT_PHONE_TEL = "+18662126466";
+const SUPPORT_EMAIL = ENTITY.email;
+const SUPPORT_PHONE_DISPLAY = ENTITY.phoneDisplay;
+const SUPPORT_PHONE_TEL = ENTITY.phoneTel;
 const TICKETS_KEY = "pp_support_tickets";
 
 // Web3Forms access key — public-by-design (client-side key, rate-limited
@@ -25,8 +27,7 @@ const TICKETS_KEY = "pp_support_tickets";
 // can be rotated without code edits; hardcoded fallback lets local dev
 // + sandbox builds work without the env being set.
 const WEB3FORMS_KEY =
-  process.env.NEXT_PUBLIC_WEB3FORMS_KEY ??
-  "19ec57f5-b47c-4c14-ae51-870605335a5b";
+  process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "19ec57f5-b47c-4c14-ae51-870605335a5b";
 const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
 
 const TOPICS = [
@@ -40,33 +41,32 @@ const TOPICS = [
   "Something else",
 ] as const;
 
-const HELP_LINKS: { href: string; num: string; title: string; body: string }[] =
-  [
-    {
-      href: "/faq",
-      num: "01",
-      title: "FAQ",
-      body: "Shipping, lot traceability, research-use terms, and payment.",
-    },
-    {
-      href: "/quality#sample-coa",
-      num: "02",
-      title: "Certificates of Analysis",
-      body: "Read a real COA and how every lot is tested.",
-    },
-    {
-      href: "/documentation",
-      num: "03",
-      title: "Documentation",
-      body: "Handling, reconstitution, and storage references.",
-    },
-    {
-      href: "/researcher-access",
-      num: "04",
-      title: "Researcher access",
-      body: "Verification for 21+ qualified researchers.",
-    },
-  ];
+const HELP_LINKS: { href: string; num: string; title: string; body: string }[] = [
+  {
+    href: "/faq",
+    num: "01",
+    title: "FAQ",
+    body: "Shipping, lot traceability, research-use terms, and payment.",
+  },
+  {
+    href: "/quality#sample-coa",
+    num: "02",
+    title: "Certificates of Analysis",
+    body: "Read a real COA and how every lot is tested.",
+  },
+  {
+    href: "/documentation",
+    num: "03",
+    title: "Documentation",
+    body: "Handling, reconstitution, and storage references.",
+  },
+  {
+    href: "/researcher-access",
+    num: "04",
+    title: "Researcher access",
+    body: "Verification for 21+ qualified researchers.",
+  },
+];
 
 interface TicketRecord {
   ref: string;
@@ -162,9 +162,7 @@ export function ContactPage() {
       fd.set("ref", ref);
 
       const res = await fetch(WEB3FORMS_ENDPOINT, { method: "POST", body: fd });
-      const data: { success?: boolean; message?: string } = await res
-        .json()
-        .catch(() => ({}));
+      const data: { success?: boolean; message?: string } = await res.json().catch(() => ({}));
       if (!res.ok || !data.success) {
         throw new Error(
           typeof data.message === "string" && data.message
@@ -186,9 +184,7 @@ export function ContactPage() {
       setTicket(record);
     } catch (err) {
       setSubmitError(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong sending your request.",
+        err instanceof Error ? err.message : "Something went wrong sending your request.",
       );
     } finally {
       setSubmitting(false);
@@ -235,10 +231,13 @@ export function ContactPage() {
               How can we help?
             </h1>
             <p className="mx-auto mt-3 max-w-[46ch] font-sans text-[14px] leading-relaxed text-ink-muted md:text-[15px]">
-              Open a request and the PurePep research team replies within one
-              business day.
+              Open a request and the PurePep research team replies within one business day.
             </p>
           </header>
+
+          <div className="mt-8">
+            <EntityDisclosure />
+          </div>
 
           {/* ── PRIMARY: support request portal ── */}
           <section className="mt-8">
@@ -263,10 +262,9 @@ export function ContactPage() {
                   </button>
                 </div>
                 <p className="mt-5 font-sans text-[14px] leading-relaxed text-ink-muted">
-                  Your request was sent to the PurePep research team. We
-                  reply within one business day. Quote the reference above
-                  in any follow-up so we can link your message back to
-                  this request.
+                  Your request was sent to the PurePep research team. We reply within one business
+                  day. Quote the reference above in any follow-up so we can link your message back
+                  to this request.
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3">
                   <button
@@ -306,7 +304,11 @@ export function ContactPage() {
                     no-JS graceful degradation path. */}
                 <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
                 <input type="hidden" name="redirect" value="false" />
-                <input type="hidden" name="from_name" value={name.trim() || "PurePep support form"} />
+                <input
+                  type="hidden"
+                  name="from_name"
+                  value={name.trim() || "PurePep support form"}
+                />
                 <h2 className="font-sans text-[22px] font-extrabold tracking-[-0.01em] text-ink">
                   Open a support request
                 </h2>
@@ -391,9 +393,7 @@ export function ContactPage() {
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                   />
-                  {errors.subject && (
-                    <p className={errBase}>{errors.subject}</p>
-                  )}
+                  {errors.subject && <p className={errBase}>{errors.subject}</p>}
                 </div>
 
                 <div className="mt-4">
@@ -408,9 +408,7 @@ export function ContactPage() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                   />
-                  {errors.message && (
-                    <p className={errBase}>{errors.message}</p>
-                  )}
+                  {errors.message && <p className={errBase}>{errors.message}</p>}
                 </div>
 
                 <button
@@ -419,28 +417,20 @@ export function ContactPage() {
                   aria-busy={submitting}
                   className="mt-7 inline-flex w-full cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-2xl bg-amber px-6 py-4 font-sans text-[15px] font-bold text-ink shadow-sm transition hover:bg-amber-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {submitting ? "Sending…" : "Send request"}{" "}
-                  <span aria-hidden="true">→</span>
+                  {submitting ? "Sending…" : "Send request"} <span aria-hidden="true">→</span>
                 </button>
                 {submitError && (
-                  <p
-                    role="alert"
-                    className="mt-3 font-sans text-[13px] leading-relaxed text-alert"
-                  >
+                  <p role="alert" className="mt-3 font-sans text-[13px] leading-relaxed text-alert">
                     Couldn&rsquo;t send: {submitError} You can also email{" "}
-                    <a
-                      href={`mailto:${SUPPORT_EMAIL}`}
-                      className="font-medium underline"
-                    >
+                    <a href={`mailto:${SUPPORT_EMAIL}`} className="font-medium underline">
                       {SUPPORT_EMAIL}
                     </a>{" "}
                     directly.
                   </p>
                 )}
                 <p className="mt-3 font-sans text-[12px] leading-relaxed text-ink-40">
-                  Sends directly to the PurePep research team. You&rsquo;ll
-                  get a reference number to track this request. All products
-                  are sold for research use only.
+                  Sends directly to the PurePep research team. You&rsquo;ll get a reference number
+                  to track this request. All products are sold for research use only.
                 </p>
               </form>
             )}
@@ -529,9 +519,7 @@ export function ContactPage() {
                     i > 0 ? "border-t border-ink/10" : ""
                   }`}
                 >
-                  <span className="font-mono text-[11px] font-semibold text-ink-40">
-                    {h.num}
-                  </span>
+                  <span className="font-mono text-[11px] font-semibold text-ink-40">{h.num}</span>
                   <span className="min-w-0 flex-1">
                     <span className="block font-sans text-[14px] font-bold text-ink">
                       {h.title}
@@ -549,8 +537,8 @@ export function ContactPage() {
           </section>
 
           <p className="mt-8 text-center font-sans text-[12px] leading-relaxed text-ink-40">
-            PurePep peptides are sold strictly for in vitro laboratory
-            research. Not for human or veterinary use.
+            PurePep peptides are sold strictly for in vitro laboratory research. Not for human or
+            veterinary use.
           </p>
         </div>
       </div>
