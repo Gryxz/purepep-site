@@ -172,6 +172,23 @@ header a {
 
 button { font-family: inherit; }
 
+/* Dark CTA guardrail — base `a { color: ink }` can otherwise override
+   Tailwind text-bone on dark button-like links. Keep every ink/emerald CTA
+   readable across desktop screenshots. */
+:is(a, button).bg-ink,
+:is(a, button).bg-emerald,
+.bg-ink.text-bone,
+.bg-emerald.text-bone {
+  color: var(--pp-white) !important;
+}
+
+:is(a, button).bg-ink *,
+:is(a, button).bg-emerald *,
+.bg-ink.text-bone *,
+.bg-emerald.text-bone * {
+  color: inherit;
+}
+
 /* Utility classes — used by v2 primitives (Eyebrow / Hairline / etc.) */
 .pp-eyebrow {
   font-family: var(--font-mono);
@@ -503,6 +520,13 @@ button { font-family: inherit; }
   --v3-shadow-hero: none;
   --v3-shadow-cta:  0 1px 2px rgb(220 152 20 / 18%), 0 10px 24px rgb(220 152 20 / 22%);
   --v3-shadow-cta-hover: 0 1px 2px rgb(220 152 20 / 20%), 0 14px 30px rgb(220 152 20 / 26%);
+
+  /* Desktop polish layer — shared card geometry for v3 desktop surfaces.
+     Keeps the ink-outline Swiss character, but moves desktop closer to the
+     softer v5 mobile system instead of the older hard 2px card treatment. */
+  --v3-card-radius: 18px;
+  --v3-card-radius-sm: 14px;
+  --v3-card-stroke: 1px;
 
   /* Motion — Apple soft-ease default. */
   --v3-ease: cubic-bezier(0.2, 0.6, 0.2, 1);
@@ -1521,9 +1545,9 @@ a.v3-pill-ghost:hover {
 
 .v3-stat-card {
   background: var(--v3-surface-2);
-  border-radius: 2px;
+  border-radius: var(--v3-card-radius);
   padding: 32px;
-  border: 1.5px solid var(--v3-ink);
+  border: var(--v3-card-stroke) solid var(--v3-ink);
   display: flex; flex-direction: column; gap: 14px;
   min-height: 240px;
 }
@@ -1555,8 +1579,8 @@ a.v3-pill-ghost:hover {
 /* ── Product tile (homepage rail + catalog grid/rail) ── */
 .v3-tile {
   background: var(--v3-surface-2);
-  border-radius: 2px;
-  border: 1.5px solid var(--v3-ink);
+  border-radius: var(--v3-card-radius);
+  border: var(--v3-card-stroke) solid var(--v3-ink);
   overflow: hidden;
   display: flex; flex-direction: column;
   cursor: pointer;
@@ -1570,7 +1594,7 @@ a.v3-pill-ghost:hover {
   background: linear-gradient(to bottom, var(--vial-upper, var(--v3-surface-2)), var(--vial-shelf, var(--v3-surface-2)));
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
-  border-bottom: 1.5px solid var(--v3-ink);
+  border-bottom: var(--v3-card-stroke) solid var(--v3-ink);
 }
 
 .v3-tile-photo .v3pdp-vial {
@@ -1751,33 +1775,24 @@ a.v3-pill-ghost:hover {
   .v3cat-section-aside { display: none; }
 }
 
-/* Homepage catalog — desktop carousel.  Scoped to .v3home-catalog so
- * the shared .v3-rail-* rules stay a static grid everywhere else
- * (notably the /shop "All peptides" rail).  Converts the desktop
- * grid to a snap-scroll rail (~3.25 tiles visible) and re-shows the
- * arrows + progress bar that the rule above hides on desktop. */
+/* Homepage catalog — desktop parity pass.
+ * Desktop now uses the same calm product-grid logic as /shop instead of a
+ * horizontally clipped rail.  The scroll rail remains for tablet/mobile where
+ * horizontal cards are intentional and thumb-friendly. */
 @media (min-width: 1025px) {
-  .v3home-catalog .v3-rail-viewport {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .v3home-catalog .v3-rail-viewport::-webkit-scrollbar { display: none; }
-
   .v3home-catalog .v3-rail-track {
-    display: flex;
-    grid-template-columns: none;
-    gap: 24px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
   }
 
   .v3home-catalog .v3-rail-track > .v3-tile {
-    flex: 0 0 calc((100% - 2 * 24px) / 3.25);
     width: auto;
-    scroll-snap-align: start;
   }
-  .v3home-catalog .v3-rail-progress-track { display: block; }
-  .v3home-catalog .v3-arrow-btn.is-sm { display: inline-flex; }
+}
+
+@media (min-width: 1025px) and (max-width: 1279px) {
+  .v3home-catalog .v3-rail-track { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 /* ── Expand tab (homepage) ─────────────────────────── */
@@ -1840,8 +1855,8 @@ a.v3-pill-ghost:hover {
 
 .v3-doc-card {
   background: var(--v3-canvas);
-  border-radius: 2px;
-  border: 1.5px solid var(--v3-ink);
+  border-radius: var(--v3-card-radius);
+  border: var(--v3-card-stroke) solid var(--v3-ink);
   padding: 32px;
   display: flex; flex-direction: column; gap: 16px;
   min-height: 220px;
@@ -5062,11 +5077,13 @@ a.v3-pill-ghost:hover {
   overflow: hidden;
 }
 .v3chk-hf-field iframe { width: 100%; height: 100%; border: 0; }
+
 .v3chk-hf-field.hf-focus {
   border-color: var(--v3-ink);
   box-shadow: 0 0 0 3px rgb(31 31 31 / 7%);
 }
 .v3chk-hf-field.hf-error { border-color: var(--pp-alert); }
+
 .v3chk-hf-error {
   margin-top: 5px;
   font-family: var(--font-mono);
@@ -5089,6 +5106,7 @@ a.v3-pill-ghost:hover {
   color: var(--v3-ink-muted);
   line-height: 1.5;
 }
+
 .v3chk-descriptor-note,
 .v3chk-security-note {
   margin-top: 10px;
@@ -5103,6 +5121,7 @@ a.v3-pill-ghost:hover {
   color: var(--v3-ink-muted);
   line-height: 1.5;
 }
+
 .v3chk-refund-note,
 .v3chk-dispute-note {
   margin: 8px 16px 0;
@@ -5112,8 +5131,10 @@ a.v3-pill-ghost:hover {
   color: var(--v3-ink-muted);
   line-height: 1.6;
 }
+
 .v3chk-refund-note a,
 .v3chk-dispute-note a { color: var(--v3-ink); text-decoration: underline; }
+
 .v3chk-support-line {
   margin-top: 12px;
   text-align: center;
@@ -8827,11 +8848,13 @@ a.v3-pill-ghost:hover {
   overflow: hidden;
 }
 .mob-chk-hf-field iframe { width: 100%; height: 100%; border: 0; }
+
 .mob-chk-hf-field.hf-focus {
   border-color: var(--m-ink);
   box-shadow: 0 0 0 3px rgb(31 31 31 / 7%);
 }
 .mob-chk-hf-field.hf-error { border-color: var(--pp-alert); }
+
 .mob-chk-hf-error {
   margin-top: 5px;
   font-family: var(--font-mono);
@@ -8839,6 +8862,7 @@ a.v3-pill-ghost:hover {
   letter-spacing: 0.06em;
   color: var(--pp-alert);
 }
+
 .mob-chk-ruo-notice {
   margin-bottom: 14px;
   padding: 10px 12px;
@@ -8852,6 +8876,7 @@ a.v3-pill-ghost:hover {
   color: var(--m-ink-mute);
   line-height: 1.5;
 }
+
 .mob-chk-descriptor-note,
 .mob-chk-security-note {
   margin-top: 10px;
@@ -8866,6 +8891,7 @@ a.v3-pill-ghost:hover {
   color: var(--m-ink-mute);
   line-height: 1.5;
 }
+
 .mob-chk-refund-note,
 .mob-chk-dispute-note {
   padding: 8px 16px 0;
@@ -8875,8 +8901,10 @@ a.v3-pill-ghost:hover {
   color: var(--m-ink-mute);
   line-height: 1.6;
 }
+
 .mob-chk-refund-note a,
 .mob-chk-dispute-note a { color: var(--m-ink); text-decoration: underline; }
+
 .mob-chk-support-line {
   padding: 12px 16px 0;
   text-align: center;

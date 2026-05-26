@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { useCartStore, useCartCount } from "@/lib/cart-store";
 import { Lockup, Icon, Eyebrow } from "./primitives";
@@ -18,7 +19,9 @@ function UtilityStrip() {
               {t}
             </span>
             {i < items.length - 1 && (
-              <span className="text-ink" aria-hidden="true">·</span>
+              <span className="text-ink" aria-hidden="true">
+                ·
+              </span>
             )}
           </React.Fragment>
         ))}
@@ -33,86 +36,19 @@ function UtilityStrip() {
   );
 }
 
-function NavLink({ children, href = "#", active = false }: { children: React.ReactNode; href?: string; active?: boolean }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <a
-      href={href}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className={clsx(
-        "pb-px font-sans text-[14px] font-medium leading-none tracking-[-0.005em] text-ink no-underline",
-        active || hovered ? "border-b border-ink" : "border-b border-transparent",
-      )}
-    >
-      {children}
-    </a>
-  );
-}
+const TOP_NAV_LINKS = [
+  { label: "Catalog", href: "/shop" },
+  { label: "Quality", href: "/quality" },
+  { label: "Documentation", href: "/documentation" },
+  { label: "Researcher access", href: ACCOUNT_HREF },
+  { label: "Affiliates", href: "/affiliates" },
+];
 
-function DropdownRow({ href, children, divider }: { href: string; children: React.ReactNode; divider?: boolean }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <a
-      href={href}
-      role="menuitem"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className={clsx(
-        "block px-[18px] py-[14px] font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ink no-underline",
-        hovered ? "bg-surface" : "bg-bone",
-        divider ? "border-t border-line" : "",
-      )}
-    >
-      {children}
-    </a>
-  );
-}
-
-function NavAffiliatesDropdown({ active = false }: { active?: boolean }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div
-      className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-    >
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className={clsx(
-          "inline-flex cursor-pointer items-center gap-1.5 border-b bg-transparent py-2 font-sans text-[14px] font-medium tracking-[-0.005em] text-ink",
-          active || open ? "border-ink" : "border-transparent",
-        )}
-      >
-        Affiliates
-        <svg
-          width="10"
-          height="10"
-          viewBox="0 0 10 10"
-          fill="none"
-          aria-hidden="true"
-          className="transition-transform duration-150"
-          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
-        >
-          <path d="M2 4l3 3 3-3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
-
-      {open && (
-        <div
-          role="menu"
-          className="absolute left-1/2 top-[calc(100%+2px)] z-40 min-w-[260px] -translate-x-1/2 rounded-[2px] border border-ink bg-bone"
-        >
-          <DropdownRow href="/referral">Refer a colleague →</DropdownRow>
-          <DropdownRow href="/affiliates" divider>Affiliate program →</DropdownRow>
-          <DropdownRow href="/affiliates/dashboard" divider>Affiliate dashboard →</DropdownRow>
-          <DropdownRow href="/referral/dashboard" divider>Referral dashboard →</DropdownRow>
-        </div>
-      )}
-    </div>
-  );
-}
+const FEATURED_MENU_LINKS = [
+  { label: "Best sellers", href: "/shop" },
+  { label: "COA verified", href: "/quality" },
+  { label: "Researcher onboarding", href: ACCOUNT_HREF },
+];
 
 const MOBILE_NAV_LINKS = [
   { label: "Catalog", href: "/shop" },
@@ -130,133 +66,264 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
   const { openCart } = useCartStore();
   const [menuOpen, setMenuOpen] = useState(false);
   const count = useCartCount();
+  const pathname = usePathname();
+
+  function isActiveNav(href: string) {
+    if (href === "/shop") return pathname === "/shop" || pathname.startsWith("/shop/");
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
+
+  const glassPill =
+    "group inline-flex h-11 cursor-pointer items-center justify-center rounded-full border border-ink/15 bg-white/55 text-ink shadow-[0_8px_24px_rgb(31_31_31_/_7%)] backdrop-blur-xl transition-[background-color,border-color,box-shadow,transform] duration-300 ease-out hover:-translate-y-0.5 hover:border-ink/25 hover:bg-bone hover:shadow-[0_12px_32px_rgb(31_31_31_/_12%)]";
 
   return (
-    <header className="relative z-10 bg-bone">
-      <UtilityStrip />
-      <div
-        className={clsx(
-          "layout-content grid items-center border-b border-ink py-4 md:py-5",
-          minimal
-            ? "grid-cols-[1fr_auto] gap-4"
-            : // <xl the nav is display:none, so it's not a grid item —
-              // a 2-col [logo | actions] template keeps the cart +
-              // hamburger flush right (3-col left an empty col3 and
-              // shoved them to centre).  ≥xl: full 3-col with nav.
-              "grid-cols-[auto_1fr] gap-4 xl:grid-cols-[auto_minmax(0,1fr)_auto] xl:gap-8",
-        )}
-      >
-        <Link href="/" className="inline-block no-underline">
-          <Lockup className="h-8 w-auto md:h-9" />
-        </Link>
+    <>
+      <header className="sticky top-0 z-40 animate-[ppHeaderFade_420ms_ease-out_both] bg-bone/95 shadow-[0_1px_0_rgb(31_31_31_/_12%)] backdrop-blur-xl">
+        <UtilityStrip />
+        <div
+          className={clsx(
+            "layout-content grid items-center py-3 md:py-4",
+            minimal ? "grid-cols-[1fr_auto] gap-4" : "grid-cols-[1fr_auto_1fr] gap-3 md:gap-6",
+          )}
+        >
+          {!minimal && <div aria-hidden="true" />}
+
+          <Link
+            href="/"
+            className={clsx("inline-block no-underline", !minimal && "justify-self-center")}
+          >
+            <Lockup className="h-8 w-auto md:h-9" />
+          </Link>
+
+          {minimal ? (
+            <Eyebrow className="text-ink">Secure checkout</Eyebrow>
+          ) : (
+            <div aria-hidden="true" />
+          )}
+        </div>
 
         {!minimal && (
-          /* Desktop nav — full horizontal nav only ≥1280px (xl), where
-             all 7 items + the Affiliates dropdown clear the (wide)
-             PurePep lockup and cart.  md: (768) then lg: (1024) both
-             still collided — real-world compression started ~1240px.
-             Below xl the hamburger + full-screen overlay handle nav. */
-          <nav className="hidden items-center justify-center gap-6 xl:flex">
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/shop">Catalog</NavLink>
-            <NavLink href="/quality">Quality</NavLink>
-            <NavLink href="/documentation">Documentation</NavLink>
-            <NavAffiliatesDropdown />
-            <NavLink href={ACCOUNT_HREF}>Account</NavLink>
-            <NavLink href="/contact">Contact</NavLink>
+          <nav className="layout-content hidden items-center justify-center gap-2 border-t border-line py-2 md:flex">
+            {TOP_NAV_LINKS.map((link) => {
+              const active = isActiveNav(link.href);
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  aria-current={active ? "page" : undefined}
+                  className={clsx(
+                    "rounded-full border px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.14em] no-underline transition-colors",
+                    active
+                      ? "border-ink bg-ink hover:text-white"
+                      : "border-ink/15 bg-white/35 text-ink hover:bg-bone",
+                  )}
+                  style={active ? { color: "var(--pp-white)" } : undefined}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </nav>
         )}
+      </header>
 
-        {minimal ? (
-          <Eyebrow className="text-ink">Secure checkout</Eyebrow>
-        ) : (
-          <div className="flex items-center justify-self-end gap-2 md:gap-[18px]">
-            {/* Cart — desktop: bordered label; mobile: icon + amber badge */}
-            <button
-              type="button"
-              onClick={openCart}
-              aria-label={`Open cart, ${count} item${count !== 1 ? "s" : ""}`}
-              className="relative inline-flex h-11 cursor-pointer items-center gap-2 border border-ink bg-transparent px-3 py-2 text-ink"
-            >
-              <Icon name="cart" size={16} />
-              <span className="hidden font-mono text-[11px] font-semibold tracking-[0.12em] min-[360px]:inline md:inline">
-                {String(count).padStart(2, "0")}
-              </span>
-              {count > 0 && (
-                <span
-                  className="absolute -right-1 -top-1 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-amber px-0.5 font-mono text-[8px] font-bold text-ink md:hidden"
-                  aria-hidden="true"
-                >
-                  {count}
-                </span>
-              )}
-            </button>
-            {/* Hamburger — mobile only */}
+      {!minimal && (
+        <div className="pointer-events-none fixed inset-x-0 top-[43px] z-50 md:top-[52px]">
+          <div className="layout-content flex items-center justify-between">
             <button
               type="button"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((o) => !o)}
-              className="inline-flex h-11 w-11 cursor-pointer items-center justify-center border-none bg-transparent text-ink xl:hidden"
+              className={clsx(
+                glassPill,
+                "pointer-events-auto w-11 animate-[ppPillPop_520ms_cubic-bezier(0.2,0.6,0.2,1)_both]",
+              )}
             >
-              <Icon name={menuOpen ? "close" : "menu"} size={22} />
+              <span className="transition-transform duration-300 ease-out group-hover:scale-110">
+                <Icon name={menuOpen ? "close" : "menu"} size={22} />
+              </span>
             </button>
-          </div>
-        )}
-      </div>
 
-      {/* Mobile full-screen nav overlay */}
-      {menuOpen && !minimal && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-bone xl:hidden">
-          {/* Top bar */}
-          <div className="flex items-center justify-between border-b border-ink px-4 py-4">
-            <Link href="/" onClick={() => setMenuOpen(false)} className="inline-block no-underline">
-              <Lockup className="h-8 w-auto" />
-            </Link>
-            <button
-              type="button"
-              aria-label="Close menu"
-              onClick={() => setMenuOpen(false)}
-              className="inline-flex h-11 w-11 cursor-pointer items-center justify-center border-none bg-transparent text-ink"
-            >
-              <Icon name="close" size={22} />
-            </button>
-          </div>
-
-          {/* Nav links */}
-          <nav className="flex flex-1 flex-col overflow-y-auto">
-            {MOBILE_NAV_LINKS.map((link) => (
+            <div className="pointer-events-auto flex items-center gap-2 md:gap-3">
               <a
-                key={link.label}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className="flex min-h-[56px] items-center border-b border-line px-4 font-sans text-[17px] font-medium text-ink no-underline"
+                href={ACCOUNT_HREF}
+                aria-label="Researcher account"
+                className={clsx(
+                  glassPill,
+                  "hidden w-11 animate-[ppPillPop_560ms_cubic-bezier(0.2,0.6,0.2,1)_120ms_both] md:inline-flex",
+                )}
               >
-                {link.label}
+                <span className="transition-transform duration-300 ease-out group-hover:scale-110">
+                  <Icon name="user" size={18} />
+                </span>
               </a>
-            ))}
-          </nav>
-
-          {/* Bottom actions */}
-          <div className="border-t border-ink px-4 pb-8 pt-4">
-            <button
-              type="button"
-              onClick={() => { openCart(); setMenuOpen(false); }}
-              className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone"
-            >
-              <Icon name="cart" size={16} />
-              Cart · {String(count).padStart(2, "0")}
-            </button>
-            <a
-              href="/researcher-access"
-              onClick={() => setMenuOpen(false)}
-              className="mt-3 flex h-11 w-full items-center justify-center border border-ink bg-transparent font-mono text-[11px] uppercase tracking-[0.14em] text-ink no-underline"
-            >
-              Researcher access →
-            </a>
+              <button
+                type="button"
+                onClick={openCart}
+                aria-label={`Open cart, ${count} item${count !== 1 ? "s" : ""}`}
+                className="group relative inline-flex h-11 cursor-pointer items-center gap-2 rounded-full border border-ink bg-ink px-4 py-2 text-bone shadow-[0_10px_28px_rgb(31_31_31_/_14%)] transition-[box-shadow,transform] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgb(31_31_31_/_20%)]"
+              >
+                <span className="transition-transform duration-300 ease-out group-hover:-rotate-6 group-hover:scale-110">
+                  <Icon name="cart" size={16} />
+                </span>
+                <span className="font-mono text-[11px] font-semibold tracking-[0.12em]">
+                  {String(count).padStart(2, "0")}
+                </span>
+                {count > 0 && (
+                  <span
+                    className="absolute -right-1 -top-1 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-amber px-0.5 font-mono text-[8px] font-bold text-ink md:hidden"
+                    aria-hidden="true"
+                  >
+                    {count}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}
-    </header>
+
+      {menuOpen && !minimal && (
+        <div className="fixed inset-0 z-50 animate-[ppOverlayFade_220ms_ease-out_both] bg-ink/35 p-3 backdrop-blur-sm md:p-6">
+          <div className="mx-auto flex h-full max-w-[760px] animate-[ppMenuRise_360ms_cubic-bezier(0.2,0.6,0.2,1)_both] flex-col overflow-hidden rounded-[24px] border border-bone/80 bg-bone/90 shadow-[0_30px_80px_rgb(31_31_31_/_28%)] backdrop-blur-2xl">
+            <div className="flex items-center justify-between border-b border-ink/15 px-4 py-4 md:px-6">
+              <Link
+                href="/"
+                onClick={() => setMenuOpen(false)}
+                className="inline-block no-underline"
+              >
+                <Lockup className="h-8 w-auto" />
+              </Link>
+              <button
+                type="button"
+                aria-label="Close menu"
+                onClick={() => setMenuOpen(false)}
+                className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-ink/15 bg-white/45 text-ink"
+              >
+                <Icon name="close" size={22} />
+              </button>
+            </div>
+
+            <div className="flex gap-2 overflow-x-auto border-b border-ink/10 px-4 py-3 md:px-6">
+              {FEATURED_MENU_LINKS.map((link, index) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={clsx(
+                    "whitespace-nowrap rounded-full border px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.13em] no-underline",
+                    index === 0 ? "border-ink bg-ink" : "border-ink/15 bg-white/55 text-ink",
+                  )}
+                  style={index === 0 ? { color: "var(--pp-white)" } : undefined}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+
+            <nav className="flex flex-1 flex-col overflow-y-auto px-2 py-2 md:px-4 md:py-4">
+              {MOBILE_NAV_LINKS.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="group flex min-h-[58px] animate-[ppMenuItemIn_420ms_cubic-bezier(0.2,0.6,0.2,1)_both] items-center justify-between rounded-[18px] px-4 font-sans text-[20px] font-semibold tracking-[-0.02em] text-ink no-underline transition-colors hover:bg-white/55 md:text-[24px]"
+                >
+                  <span>{link.label}</span>
+                  <span className="font-mono text-[18px] text-ink-muted transition-transform group-hover:translate-x-1">
+                    +
+                  </span>
+                </a>
+              ))}
+            </nav>
+
+            <div className="border-t border-ink/15 px-4 pb-5 pt-4 md:px-6">
+              <button
+                type="button"
+                onClick={() => {
+                  openCart();
+                  setMenuOpen(false);
+                }}
+                className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-ink bg-ink font-sans text-[14px] font-bold uppercase tracking-[0.04em] text-bone"
+              >
+                <Icon name="cart" size={16} />
+                Cart · {String(count).padStart(2, "0")}
+              </button>
+              <a
+                href="/researcher-access"
+                onClick={() => setMenuOpen(false)}
+                className="mt-3 flex h-11 w-full items-center justify-center rounded-full border border-ink/20 bg-white/45 font-mono text-[11px] uppercase tracking-[0.14em] text-ink no-underline"
+              >
+                Researcher access →
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+      <style jsx global>{`
+        @keyframes ppHeaderFade {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes ppPillPop {
+          from {
+            opacity: 0;
+            transform: translateY(-6px) scale(0.94);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        @keyframes ppOverlayFade {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes ppMenuRise {
+          from {
+            opacity: 0;
+            transform: translateY(14px) scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        @keyframes ppMenuItemIn {
+          from {
+            opacity: 0;
+            transform: translateX(-8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .animate-\[ppHeaderFade_420ms_ease-out_both\],
+          .animate-\[ppPillPop_520ms_cubic-bezier\(0\.2\,0\.6\,0\.2\,1\)_both\],
+          .animate-\[ppPillPop_560ms_cubic-bezier\(0\.2\,0\.6\,0\.2\,1\)_120ms_both\],
+          .animate-\[ppOverlayFade_220ms_ease-out_both\],
+          .animate-\[ppMenuRise_360ms_cubic-bezier\(0\.2\,0\.6\,0\.2\,1\)_both\],
+          .animate-\[ppMenuItemIn_420ms_cubic-bezier\(0\.2\,0\.6\,0\.2\,1\)_both\] {
+            animation: none !important;
+          }
+        }
+      `}</style>
+    </>
   );
 }
