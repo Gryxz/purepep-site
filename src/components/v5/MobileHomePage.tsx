@@ -145,12 +145,12 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           <div className="mob-trust-item"><span className="dot" />Third-Party Tested</div>
           <div className="mob-trust-item"><span className="dot" />2-3 Day Shipping</div>
           <div className="mob-trust-item"><span className="dot" />Free over $200</div>
-          <div className="mob-trust-item"><span className="dot" />Lot-matched COA</div>
+          <div className="mob-trust-item"><span className="dot" />US Warehouse</div>
           <div className="mob-trust-item" aria-hidden="true"><span className="dot" />99.5%+ Purity</div>
           <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Third-Party Tested</div>
           <div className="mob-trust-item" aria-hidden="true"><span className="dot" />2-3 Day Shipping</div>
           <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Free over $200</div>
-          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Lot-matched COA</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />US Warehouse</div>
         </div>
       </div>
 
@@ -176,7 +176,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           <div className="mob-heropx-content">
             <h1 className="mob-heropx-h1">The standard for research peptides.</h1>
             <p className="mob-heropx-sub">
-              Lab-verified peptides for in vitro research. Lot-matched COA on every vial, tracked US shipping.
+              Lab-verified peptides for in vitro research. Tracked US shipping.
             </p>
             <a href="/shop" className="mob-hero-cta">
               Shop the catalog
@@ -271,7 +271,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
                 post-CTA fine-print readout it reinforces the pharma
                 credibility note without competing with the headline. */}
             <p className="mob-heropx-spec mob-heropx-spec-foot">
-              {featured ? shortSpec(featured) : "Lab-verified · Lot-matched COA · Lyophilized"}
+              {featured ? shortSpec(featured) : "Lab-verified · Third-party tested · Lyophilized"}
             </p>
           </div>
         </section>
@@ -283,47 +283,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           re-enabling is a one-line flip. */}
       {RETA_FEATURE_ENABLED && <MobileRetaSpotlight products={products} />}
 
-      {/* Best-selling bundles — 3 stacks, horizontal scroll rail. */}
-      {(() => {
-        const stacks = products.filter((p) => p.type === "stack");
-        if (stacks.length === 0) return null;
-        return (
-          <section className="mob-bundles-section">
-            <div className="mob-bundles-header">
-              <div className="mob-bundles-eyebrow"><span className="dot" />Best-selling bundles</div>
-              <a href="/shop" className="mob-bundles-see-all">View all →</a>
-            </div>
-            <div className="mob-bundles-rail">
-              {stacks.map((p) => (
-                <a key={p.slug} href={`/shop/${p.slug}`} className="mob-bundle-card">
-                  <div className="mob-bundle-img">
-                    <span className="mob-bundle-badge">Bundle · Save</span>
-                    <Image
-                      src={`/images/products/source/purepep-vial-${p.slug}-v1.0.jpg`}
-                      alt={`${p.compound} bundle vial`}
-                      fill
-                      sizes="75vw"
-                      className="mob-bundle-hero-img"
-                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                    />
-                  </div>
-                  <div className="mob-bundle-body">
-                    <div className="mob-bundle-name">{p.name}</div>
-                    <div className="mob-bundle-desc">{p.stackComponents?.map((c) => c.compound).join(" + ")}</div>
-                    <div className="mob-bundle-foot">
-                      <span className="mob-bundle-price">${Math.round(p.price)}</span>
-                      {p.regularPrice && p.regularPrice > p.price && (
-                        <span className="mob-bundle-was">${Math.round(p.regularPrice)}</span>
-                      )}
-                      <span className="mob-bundle-arr">→</span>
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
-        );
-      })()}
+      {/* stacks/bundles section hidden */}
 
       {/* Catalog teaser — eyebrow dropped (the section header is enough). */}
       <section className="mob-catalog-section">
@@ -409,9 +369,9 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             <div className="mob-tstep-num">2</div>
             <div className="mob-tstep-body">
               <div className="mob-tstep-meta">Same / next business day</div>
-              <h3 className="mob-tstep-h">COA released + dispatched</h3>
+              <h3 className="mob-tstep-h">Packed + dispatched</h3>
               <p className="mob-tstep-cap">
-                Lot-specific Certificate of Analysis issued. Tracked package leaves the US warehouse.
+                Tracked package leaves the US warehouse same or next business day.
               </p>
             </div>
           </div>
