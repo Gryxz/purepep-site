@@ -201,7 +201,7 @@ export function PDPHero({ product }: { product: Product }) {
   }
 
   const stickySummary = useMemo(() => {
-    const parts = [tier.sub, "lyo", `lot ${product.lot}`];
+    const parts = [tier.sub, "lyo"];
     return parts.join(" · ");
   }, [tier.sub, product.lot]);
 
@@ -240,8 +240,6 @@ export function PDPHero({ product }: { product: Product }) {
               />
               <div className="v3pdp-photo-meta">
                 <span>{product.sku}</span>
-                <span className="dot">·</span>
-                <span>Lot {product.lot}</span>
               </div>
             </div>
 
@@ -409,8 +407,6 @@ export function PDPHero({ product }: { product: Product }) {
             <div className="v3pdp-cta-secondary">
               <span>Ships in 2 business days</span>
               <span className="dot">·</span>
-              <span>COA verified per lot</span>
-              <span className="dot">·</span>
               <span>Carrier-tracked</span>
             </div>
 
@@ -420,75 +416,10 @@ export function PDPHero({ product }: { product: Product }) {
             </p>
           </div>
 
-          {/* COA panel */}
-          <div className="v3pdp-card-coa">
-            <div className="v3pdp-coa-head">
-              <div className="left">
-                <span className="v3pdp-coa-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
-                    <path d="M14 3v6h6" />
-                    <path d="M9 13h6" />
-                    <path d="M9 17h4" />
-                  </svg>
-                </span>
-                <h3 className="v3pdp-coa-title">Certificate of Analysis</h3>
-              </div>
-              <span className="v3pdp-coa-pill">
-                <span className="dot" />
-                Released
-              </span>
-            </div>
-
-            <div className="v3pdp-coa-meta">
-              <div className="row">
-                <div className="lbl">Lot</div>
-                <div className="val">{product.lot}</div>
-              </div>
-              <div className="row">
-                <div className="lbl">Released</div>
-                <div className="val is-sans">2026-04-12</div>
-              </div>
-              <div className="row">
-                <div className="lbl">Purity (HPLC)</div>
-                <div className="val">99.72%</div>
-              </div>
-              <div className="row">
-                <div className="lbl">Mass (MS)</div>
-                <div className="val">4866.4 Da</div>
-              </div>
-              <div className="row">
-                <div className="lbl">Endotoxin</div>
-                <div className="val">&lt; 0.05 EU/mg</div>
-              </div>
-              <div className="row">
-                <div className="lbl">Water (KF)</div>
-                <div className="val">2.1%</div>
-              </div>
-            </div>
-
-{/* download COA button hidden */}
-          </div>
+          {/* COA panel hidden */}
         </section>
 
-        {/* Proven & Tested */}
-        <section className="v3pdp-section">
-          <div className="v3pdp-section-eyebrow">Proven &amp; Tested</div>
-          <h2 className="v3pdp-section-headline">Every lot, measured.</h2>
-          <p className="v3pdp-section-sub">
-            Analytical specifications verified per lot. No marketing math, no rounded promises — just the numbers
-            from the instruments.
-          </p>
-          <div className="v3pdp-stat-grid">
-            {STATS.map((s) => (
-              <div key={s.label} className="v3pdp-stat-card">
-                <div className="v3pdp-stat-num">{s.num}</div>
-                <div className="v3pdp-stat-label">{s.label}</div>
-                <div className="v3pdp-stat-source">{s.source}</div>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* Proven & Tested section hidden */}
 
         {/* From order to lab */}
         <section className="v3pdp-section" style={{ paddingTop: 0 }}>

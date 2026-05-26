@@ -430,7 +430,7 @@ function logStaticSlugDiff(wcSlugs: Iterable<string>): void {
 
 export async function getAllProducts(): Promise<Product[]> {
   const wc = await fetchWcProducts();
-  const HIDDEN_SLUGS = new Set(["glp-stack"]);
+  const HIDDEN_SLUGS = new Set(["glp-stack", "healing-stack", "recovery-stack"]);
   if (!wc || wc.length === 0) return STATIC_PRODUCTS.filter((p) => !HIDDEN_SLUGS.has(p.slug));
   try {
     const products = (await Promise.all(

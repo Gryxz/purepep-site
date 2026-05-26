@@ -325,62 +325,6 @@ export const PRODUCTS: Product[] = [
     purity: "USP-grade · 0.9% benzyl alcohol",
     sku: "PP-BACW-030",
   },
-  // Healing Stack — BPC-157 5mg + TB-500 10mg
-  {
-    slug: "healing-stack",
-    compound: "HEAL",
-    name: "Healing Stack",
-    dose: "15 mg",
-    variants: ["15 mg"],
-    variantPrices: { "15 mg": 210.0 },
-    cas: "—",
-    price: 210.0,
-    priceLabel: "$210.00",
-    regularPrice: 221.0,
-    category: "Healing",
-    stock: "in",
-    description:
-      "Curated tissue-repair bundle pairing BPC-157 and TB-500. Each peptide ships as its own separately-sealed lyophilized vial — never pre-mixed — under a single lot-matched COA. Both peptides are studied for synergistic roles in connective-tissue and vascular repair models.",
-    disclaimer:
-      "This is a curated multi-peptide research stack — supplied as two lyophilized vials with a single lot-matched COA covering both compounds.",
-    lot: "HS-2604-A01",
-    storage: "2–8 °C, protect from light",
-    purity: "≥ 99.0% (HPLC)",
-    sku: "PP-HS-015",
-    type: "stack",
-    stackComponents: [
-      { compound: "BPC", name: "BPC-157", mass: "5 mg" },
-      { compound: "TB500", name: "TB-500", mass: "10 mg" },
-    ],
-  },
-  // Recovery Stack — BPC-157 5mg + Ipamorelin 10mg
-  {
-    slug: "recovery-stack",
-    compound: "RECOV",
-    name: "Recovery Stack",
-    dose: "15 mg",
-    variants: ["15 mg"],
-    variantPrices: { "15 mg": 197.0 },
-    cas: "—",
-    price: 197.0,
-    priceLabel: "$197.00",
-    regularPrice: 207.0,
-    category: "Healing",
-    stock: "in",
-    description:
-      "Combined tissue-repair and GH-secretagogue stack pairing BPC-157 with Ipamorelin. Each peptide ships as its own separately-sealed lyophilized vial — never pre-mixed — under a single lot-matched COA. Studied for overlapping recovery research pathways.",
-    disclaimer:
-      "This is a curated multi-peptide research stack — supplied as two lyophilized vials with a single lot-matched COA covering both compounds.",
-    lot: "RS-2604-A01",
-    storage: "2–8 °C, protect from light",
-    purity: "≥ 99.0% (HPLC)",
-    sku: "PP-RS-015",
-    type: "stack",
-    stackComponents: [
-      { compound: "BPC", name: "BPC-157", mass: "5 mg" },
-      { compound: "IPAM", name: "Ipamorelin", mass: "10 mg" },
-    ],
-  },
 ];
 
 export function getProduct(slug: string): Product | undefined {
