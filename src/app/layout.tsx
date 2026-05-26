@@ -10,6 +10,7 @@ import CookieBanner from "@/components/v3/CookieBanner";
 import { TabBar } from "@/components/v3/TabBar";
 import { MobileShell } from "@/components/v5/MobileShell";
 import { MobileCartDrawer } from "@/components/v5/MobileCartDrawer";
+import { ENTITY } from "@/lib/entity";
 import { getAllProducts } from "@/lib/wc-api";
 import { getAllPolicyPages } from "@/lib/wp-pages";
 import "./globals.css";
@@ -55,17 +56,37 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: ENTITY.legalName,
+    alternateName: ENTITY.brand,
+    url: SITE_URL,
+    email: ENTITY.email,
+    identifier: {
+      "@type": "PropertyValue",
+      propertyID: "Japan National Tax Agency Corporate Number",
+      value: ENTITY.corporateNumber,
+    },
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: ENTITY.address.en,
+      addressCountry: "JP",
+    },
+  };
+
   // Fetched once per build (output: "export") and deduped by React's
   // request cache when other server components hit the same URL.  Products
   // populate the Footer catalogue column; policies populate the Policies
   // column with the live WP titles so editorial stays single-sourced.
-  const [products, policies] = await Promise.all([
-    getAllProducts(),
-    getAllPolicyPages(),
-  ]);
+  const [products, policies] = await Promise.all([getAllProducts(), getAllPolicyPages()]);
   return (
     <html lang="en" className={`${inter.variable} ${ibmPlexMono.variable}`}>
       <body className="bg-bone text-ink antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         {/* PostHogProvider keeps its own Suspense boundary internally
             (around the useSearchParams-driven pageview tracker), so the
             rest of this tree SSRs normally — header, content, and
