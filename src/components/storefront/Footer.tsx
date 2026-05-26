@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Lockup } from "./primitives";
 import { PaymentLogos } from "./PaymentLogos";
 import { clsx } from "@/lib/clsx";
+import { ENTITY } from "@/lib/entity";
 import type { Product } from "@/data/products";
 import type { WpPage } from "@/lib/wp-pages";
 
@@ -30,7 +31,13 @@ function FootCol({ title, items }: { title: string; items: { label: string; href
           className="text-bone/40 transition-transform duration-200 md:hidden"
           style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
         >
-          <path d="M3 5.5l4 4 4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M3 5.5l4 4 4-4"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </button>
       <ul
@@ -43,7 +50,10 @@ function FootCol({ title, items }: { title: string; items: { label: string; href
         {items.map((item) => (
           <li key={item.label}>
             {item.href ? (
-              <Link href={item.href as never} className="font-sans text-[13.5px] text-bone no-underline hover:text-bone/80">
+              <Link
+                href={item.href as never}
+                className="font-sans text-[13.5px] text-bone no-underline hover:text-bone/80"
+              >
                 {item.label}
               </Link>
             ) : (
@@ -81,9 +91,10 @@ export function Footer({
   if (minimal) {
     return (
       <footer className="bg-ink py-5 text-center font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-bone">
-        © 2026 PurePep · For research use only · Not for human consumption
+        © 2026 {ENTITY.brand} · For research use only · Not for human consumption
         <span className="mt-1 block text-[10px] normal-case tracking-normal text-bone/55">
-          [PUREPEP_OPERATOR_ADDRESS — fill before launch]
+          Operated by {ENTITY.legalName} ({ENTITY.legalNameJa}) · Corporate Number{" "}
+          {ENTITY.corporateNumber}
         </span>
       </footer>
     );
@@ -104,15 +115,15 @@ export function Footer({
           // WP-mirrored /legal/contact stub from the footer.
           ...policies
             .filter((p) => p.slug !== "contact")
-            .map((p) => ({ label: p.title, href: `/legal/${p.slug}` })),
+            .map((p) => ({ label: p.title, href: `/${p.slug}` })),
           { label: "Contact", href: "/contact" },
         ]
       : [
-          { label: "Refund policy", href: "/legal/refund-policy" },
-          { label: "Terms of service", href: "/legal/terms-of-service" },
-          { label: "Privacy policy", href: "/legal/privacy-policy" },
-          { label: "Shipping policy", href: "/legal/shipping-policy" },
-          { label: "Disclaimer", href: "/legal/disclaimer" },
+          { label: "Refund policy", href: "/refund-policy" },
+          { label: "Terms of service", href: "/terms-of-service" },
+          { label: "Privacy policy", href: "/privacy-policy" },
+          { label: "Shipping policy", href: "/shipping-policy" },
+          { label: "Disclaimer", href: "/disclaimer" },
           { label: "Contact", href: "/contact" },
         ];
 
@@ -126,9 +137,13 @@ export function Footer({
             Research-grade peptides. Triplicate HPLC per lot. Cold-chain shipped.
           </p>
           <p className="mt-3 font-sans text-[13.5px] leading-relaxed text-bone/75">
-            <a href="mailto:info@purepep.shop" className="text-bone/75 no-underline">info@purepep.shop</a>
+            <a href={`mailto:${ENTITY.email}`} className="text-bone/75 no-underline">
+              {ENTITY.email}
+            </a>
             {" · "}
-            <a href="tel:+18662126466" className="text-bone/75 no-underline">(866) 212-6466</a>
+            <a href={`tel:${ENTITY.phoneTel}`} className="text-bone/75 no-underline">
+              {ENTITY.phoneDisplay}
+            </a>
           </p>
         </div>
 
@@ -138,12 +153,17 @@ export function Footer({
           <div className="hidden md:block">
             <Lockup className="h-10 w-auto text-bone" />
             <p className="mt-4.5 max-w-[280px] font-sans text-[13.5px] leading-relaxed text-bone/75">
-              Research-grade peptides. Triplicate HPLC per lot. Cold-chain shipped. Documentation on file.
+              Research-grade peptides. Triplicate HPLC per lot. Cold-chain shipped. Documentation on
+              file.
             </p>
             <p className="mt-4 font-sans text-[13.5px] leading-relaxed text-bone/75">
-              <a href="mailto:info@purepep.shop" className="text-bone/75 no-underline">info@purepep.shop</a>
+              <a href={`mailto:${ENTITY.email}`} className="text-bone/75 no-underline">
+                {ENTITY.email}
+              </a>
               <br />
-              <a href="tel:+18662126466" className="text-bone/75 no-underline">(866) 212-6466</a>
+              <a href={`tel:${ENTITY.phoneTel}`} className="text-bone/75 no-underline">
+                {ENTITY.phoneDisplay}
+              </a>
             </p>
           </div>
 
@@ -179,7 +199,9 @@ export function Footer({
             <span>© 2026 PurePep</span>
           </div>
           <span className="block w-full text-[10px] normal-case tracking-normal text-bone/55">
-            [PUREPEP_OPERATOR_ADDRESS — fill before launch]
+            {ENTITY.brand} is operated by {ENTITY.legalName} ({ENTITY.legalNameJa}) ·{" "}
+            {ENTITY.entityType} · Corporate Number {ENTITY.corporateNumber} · Registered office:{" "}
+            {ENTITY.address.full}
           </span>
         </div>
       </div>
