@@ -94,12 +94,12 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
           <div className="mob-trust-item"><span className="dot" />Third-Party Tested</div>
           <div className="mob-trust-item"><span className="dot" />2-3 Day Shipping</div>
           <div className="mob-trust-item"><span className="dot" />Secure Checkout</div>
-          <div className="mob-trust-item"><span className="dot" />Lot-matched COA</div>
+          <div className="mob-trust-item"><span className="dot" />US Warehouse</div>
           <div className="mob-trust-item" aria-hidden="true"><span className="dot" />99.5%+ Purity</div>
           <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Third-Party Tested</div>
           <div className="mob-trust-item" aria-hidden="true"><span className="dot" />2-3 Day Shipping</div>
           <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Secure Checkout</div>
-          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Lot-matched COA</div>
+          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />US Warehouse</div>
         </div>
       </div>
 
@@ -176,9 +176,8 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
             </li>
           </ul>
           <p className="mob-pdp-stack-note">
-            Each peptide ships in its own sealed lyophilized vial with a
-            single lot-matched COA covering both compounds. Reconstitute
-            and store separately per protocol.
+            Each peptide ships in its own sealed lyophilized vial.
+            Reconstitute and store separately per protocol.
           </p>
         </div>
       )}

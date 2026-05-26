@@ -299,7 +299,7 @@ export function PDPHero({ product }: { product: Product }) {
         <section className="v3pdp-below-hero">
           <div className="v3pdp-card v3pdp-buybox" id="v3pdp-buybox" ref={buyboxRef}>
             <h2>Configure your order</h2>
-            <p className="v3pdp-buybox-sub">Choose tier, dose and quantity. Lot-matched COA included.</p>
+            <p className="v3pdp-buybox-sub">Choose tier, dose and quantity.</p>
 
             {/* Tier toggle */}
             <div className="v3pdp-tier-row" role="radiogroup" aria-label="Quantity tier">
