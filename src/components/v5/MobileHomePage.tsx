@@ -156,10 +156,25 @@ export function MobileHomePage({ products }: { products: Product[] }) {
 
       {/* Hero */}
       <section className="mob-hero-v2" data-mob-section="dark" aria-label="Hero: research-grade peptides">
+        {/* Ghost watermark — decorative background text */}
+        <span className="mob-hero-v2-ghost" aria-hidden="true">PEPTIDES</span>
+
+        {/* Back-layer vials — sit behind the headline */}
+        <div className="mob-hero-v2-back" aria-hidden="true">
+          {(["tirz", "bpc-157"] as const).map((slug, i) => (
+            <span key={slug} className={`mob-hero-v2-vial back-v${i + 1}`}>
+              <Image src={`/images/products/source/purepep-vial-${slug}-v1.0-cutout.png`} alt="" fill sizes="40vw" className="mob-hero-v2-vial-img" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+            </span>
+          ))}
+        </div>
+
+        {/* Typography */}
         <div className="mob-hero-v2-content">
-          <p className="mob-hero-v2-eyebrow">Research-grade peptides</p>
-          <h1 className="mob-hero-v2-h1">The standard for research peptides.</h1>
-          <p className="mob-hero-v2-sub">Lab-verified peptides for in vitro research. Tracked US shipping.</p>
+          <p className="mob-hero-v2-meta">Lab-verified · Research use only</p>
+          <h1 className="mob-hero-v2-h1">
+            <span className="mob-hero-v2-line1">The</span>
+            <span className="mob-hero-v2-line2">standard.</span>
+          </h1>
           <a href="/shop" className="mob-hero-v2-cta">
             Shop the catalog
             <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
@@ -168,17 +183,12 @@ export function MobileHomePage({ products }: { products: Product[] }) {
             </svg>
           </a>
         </div>
-        <div className="mob-hero-v2-cluster" aria-hidden="true">
-          {(["tirz", "sema", "cagri", "bpc-157"] as const).map((slug, i) => (
-            <span key={slug} className={`mob-hero-v2-vial v${i + 1}`}>
-              <Image
-                src={`/images/products/source/purepep-vial-${slug}-v1.0-cutout.png`}
-                alt=""
-                fill
-                sizes="40vw"
-                className="mob-hero-v2-vial-img"
-                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-              />
+
+        {/* Front-layer vials — punch through / over the headline */}
+        <div className="mob-hero-v2-front" aria-hidden="true">
+          {(["sema", "cagri"] as const).map((slug, i) => (
+            <span key={slug} className={`mob-hero-v2-vial front-v${i + 1}`}>
+              <Image src={`/images/products/source/purepep-vial-${slug}-v1.0-cutout.png`} alt="" fill sizes="50vw" className="mob-hero-v2-vial-img" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
             </span>
           ))}
         </div>

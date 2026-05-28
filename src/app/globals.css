@@ -11129,69 +11129,115 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
 [data-vial-slug="recovery-stack"] { --vial-upper: #D8C8DC; --vial-shelf: #B8A0C0; }
 
 /* ════════════════════════════════════════════════════════════════════
-   MOBILE HERO v2 — clean single-section, no parallax infrastructure
+   MOBILE HERO v2 — hypereditorial, vials punch through headline
    ════════════════════════════════════════════════════════════════════ */
 .mob-hero-v2 {
   position: relative;
   height: 100svh;
-  min-height: 580px;
-  display: flex;
-  flex-direction: column;
+  min-height: 600px;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 130% 50% at 76% 90%, rgb(200 137 10 / 22%) 0%, transparent 62%),
-    radial-gradient(ellipse 90% 44% at 10% 14%, rgb(200 137 10 / 9%) 0%, transparent 55%),
-    linear-gradient(170deg, #141414 0%, #0d0d0d 55%, #080808 100%);
+    radial-gradient(ellipse 110% 60% at 80% 95%, rgb(200 137 10 / 24%) 0%, transparent 58%),
+    radial-gradient(ellipse 70% 50% at 5% 80%,  rgb(200 137 10 / 10%) 0%, transparent 55%),
+    #0e0e0e;
 }
 
+/* Ghost watermark — ultra-large word behind everything */
+.mob-hero-v2-ghost {
+  position: absolute;
+  bottom: 28%;
+  left: -8px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(80px, 26vw, 110px);
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(255 255 255 / 6%);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}
+
+/* Back vials — behind headline text */
+.mob-hero-v2-back {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.mob-hero-v2-vial {
+  position: absolute;
+  bottom: 0;
+  display: block;
+  filter: drop-shadow(0 20px 40px rgb(0 0 0 / 65%));
+}
+.mob-hero-v2-vial-img { object-fit: contain; object-position: bottom; }
+.mob-hero-v2-vial.back-v1 { left: -5%; width: 42%; height: 44%; }
+.mob-hero-v2-vial.back-v2 { right: -6%; width: 40%; height: 36%; }
+
+/* Typography — floats between the two vial layers */
 .mob-hero-v2-content {
-  position: relative;
+  position: absolute;
+  top: 0; left: 0; right: 0;
   z-index: 2;
-  padding: 60px 24px 0;
+  padding: 64px 22px 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-.mob-hero-v2-eyebrow {
+.mob-hero-v2-meta {
   font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgb(255 220 120 / 72%);
-  padding: 6px 14px;
-  background: rgb(200 137 10 / 10%);
-  border: 1px solid rgb(255 220 120 / 16%);
-  border-radius: 999px;
-  margin-bottom: 22px;
+  color: rgb(255 220 120 / 55%);
+  margin: 0 0 20px;
 }
 
 .mob-hero-v2-h1 {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(36px, 10.5vw, 54px);
-  line-height: 1.04;
-  letter-spacing: -0.03em;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
   color: var(--m-bone);
-  margin: 0 0 16px;
+  margin: 0 0 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.mob-hero-v2-sub {
-  font-size: 15px;
-  line-height: 1.6;
-  color: rgb(250 247 240 / 60%);
-  margin: 0 0 30px;
-  max-width: 30ch;
+/* "The" — small, italic contrast line */
+.mob-hero-v2-line1 {
+  font-size: clamp(28px, 8vw, 42px);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: rgb(250 247 240 / 70%);
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+
+/* "standard." — the massive anchor word */
+.mob-hero-v2-line2 {
+  font-size: clamp(64px, 18vw, 88px);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+  color: var(--m-bone);
 }
 
 .mob-hero-v2-cta {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  padding: 14px 26px;
+  padding: 13px 24px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -11204,26 +11250,14 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
 }
 .mob-hero-v2-cta:active { opacity: 0.88; transform: translateY(1px); }
 
-.mob-hero-v2-cluster {
-  position: relative;
-  margin-top: auto;
-  width: 100%;
-  height: 46%;
-  flex-shrink: 0;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.mob-hero-v2-vial {
+/* Front vials — punch over the headline */
+.mob-hero-v2-front {
   position: absolute;
-  bottom: 0;
-  display: block;
-  filter: drop-shadow(0 18px 36px rgb(0 0 0 / 60%));
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
 }
-.mob-hero-v2-vial-img { object-fit: contain; object-position: bottom; }
-.mob-hero-v2-vial.v1 { left: -4%;  width: 40%; height: 78%; z-index: 1; }
-.mob-hero-v2-vial.v2 { left: 24%;  width: 46%; height: 100%; z-index: 3; }
-.mob-hero-v2-vial.v3 { right: 22%; width: 38%; height: 70%;  z-index: 2; }
-.mob-hero-v2-vial.v4 { right: -5%; width: 42%; height: 86%;  z-index: 2; }
+.mob-hero-v2-vial.front-v1 { left: 18%;  width: 52%; height: 62%; }
+.mob-hero-v2-vial.front-v2 { right: 10%; width: 42%; height: 50%; }
 
 
