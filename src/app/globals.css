@@ -9652,29 +9652,29 @@ a.v3-pill-ghost:hover {
 
 .mob-heropx--solo .mob-heropx-bg-lab {
   background:
-    linear-gradient(180deg, rgb(0 0 0 / 6%) 0%, transparent 40%, rgb(0 0 0 / 10%) 100%),
-    url("/hero/hero-v1.0.jpg") center center / cover no-repeat,
-    var(--m-bone);
+    radial-gradient(ellipse 120% 55% at 72% 85%, rgb(200 137 10 / 18%) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 40% at 15% 20%, rgb(200 137 10 / 8%) 0%, transparent 60%),
+    linear-gradient(160deg, #111111 0%, #0d0d0d 50%, #070707 100%);
 }
 
 .mob-heropx--solo .mob-heropx-h1 {
   font-size: clamp(34px, 9.5vw, 52px);
   margin-bottom: 16px;
-  color: var(--m-ink);
-  text-shadow: none;
+  color: var(--m-bone);
+  text-shadow: 0 2px 20px rgb(0 0 0 / 40%);
 }
 
 .mob-heropx--solo .mob-heropx-sub {
   text-align: left;
   max-width: 34ch;
   margin-bottom: 26px;
-  color: var(--m-ink-mute);
+  color: rgb(250 247 240 / 70%);
 }
 
 .mob-heropx--solo .mob-heropx-eyebrow {
-  color: var(--m-amber);
+  color: rgb(255 220 120 / 80%);
   background: rgb(200 137 10 / 10%);
-  border-color: rgb(200 137 10 / 25%);
+  border-color: rgb(255 220 120 / 20%);
 }
 
 .mob-hero-cta {
