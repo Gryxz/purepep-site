@@ -183,7 +183,8 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           <p className="mob-hero-v2-meta">Lab-verified · Research use only</p>
           <h1 className="mob-hero-v2-h1">
             <em className="mob-hero-v2-line1" style={{ display: "block" }}>The</em>
-            <strong className="mob-hero-v2-line2" style={{ display: "block" }}>standard.</strong>
+            <strong className="mob-hero-v2-line2" style={{ display: "block" }}>standard</strong>
+            <span className="mob-hero-v2-line3" style={{ display: "block" }}>for research peptides.</span>
           </h1>
         </div>
 

@@ -11260,7 +11260,7 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   margin-bottom: 4px;
 }
 
-/* "standard." — massive, the anchor, sized to fit viewport */
+/* "standard" — massive, the anchor, sized to fit viewport */
 .mob-hero-v2-line2 {
   display: block;
   font-family: var(--font-display);
@@ -11270,6 +11270,19 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   letter-spacing: -0.04em;
   line-height: 0.9;
   color: var(--m-bone);
+}
+
+/* "for research peptides." — smaller complement, italic serif feel */
+.mob-hero-v2-line3 {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(14px, 3.8vw, 18px);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: rgb(250 247 240 / 50%);
+  margin-top: 10px;
 }
 
 .mob-hero-v2-cta-layer {
@@ -11356,5 +11369,6 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
 
 
 
+ 
  
  
