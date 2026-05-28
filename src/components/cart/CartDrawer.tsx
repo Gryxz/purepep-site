@@ -54,7 +54,7 @@ export function CartDrawer() {
             </svg>
             <span className="v3drawer-hdr-label">
               Cart{" "}
-              <span className="v3drawer-hdr-count">
+              <span className="v3drawer-hdr-count" suppressHydrationWarning>
                 · {count} {count === 1 ? "item" : "items"}
               </span>
             </span>
