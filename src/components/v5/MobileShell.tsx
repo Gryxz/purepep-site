@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useCartStore } from "@/lib/cart-store";
+import { useCartStore, useCartCount } from "@/lib/cart-store";
 import { Lockup } from "@/components/storefront/primitives";
 import { MoreMenu } from "./MoreMenu";
 import { ACCOUNT_HREF } from "@/content/nav";
@@ -20,8 +20,8 @@ import { ACCOUNT_HREF } from "@/content/nav";
  */
 export function MobileShell() {
   const pathname = usePathname() ?? "/";
-  const { openCart, totalItems } = useCartStore();
-  const count = totalItems();
+  const { openCart } = useCartStore();
+  const count = useCartCount();
   const [menuOpen, setMenuOpen] = useState(false);
   // Synchronous initial dark state — Home + age-gate ship top-of-page
   // dark, so we paint the header glass-on-dark on the very first render
