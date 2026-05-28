@@ -178,10 +178,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           </h1>
         </div>
 
-        {/* Spacer — vials show through this gap */}
-        <div style={{ flex: 1 }} aria-hidden="true" />
-
-        {/* CTA layer — always above vials (z:4) */}
+        {/* CTA layer — always above vials (z:4), sits right under headline */}
         <div className="mob-hero-v2-cta-layer">
           <a href="/shop" className="mob-hero-v2-cta">
             Shop the catalog

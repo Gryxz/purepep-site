@@ -11239,12 +11239,10 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
 }
 
 .mob-hero-v2-cta-layer {
-  position: absolute;
-  bottom: 180px; /* 96px trust-bar-offset + 80px tab-bar + 4px gap */
-  left: 0;
-  right: 0;
+  position: relative;
   z-index: 4;
-  padding: 0 22px;
+  flex-shrink: 0;
+  padding: 0 22px 24px;
 }
 
 .mob-hero-v2-cta {
@@ -11286,5 +11284,6 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
 }
 .mob-hero-v2-vial.front-v1 { left: 12%;  width: 58%; height: 76%; }
 .mob-hero-v2-vial.front-v2 { right: 4%;  width: 48%; height: 60%; }
+
 
 
