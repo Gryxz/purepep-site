@@ -164,7 +164,7 @@ export function MobileShopPage({ products }: { products: Product[] }) {
               <div className="mob-pname">{p.name}</div>
               <div className="mob-pdesc">{shortDesc(p)}</div>
               <div className="mob-pcard-foot">
-                <span className="mob-pprice">${Math.round(p.price)}</span>
+                <span className="mob-pprice">from ${Math.round((p.variants[0] && p.variantPrices?.[p.variants[0]]) || p.price)}</span>
                 <button
                   type="button"
                   className="mob-parr"

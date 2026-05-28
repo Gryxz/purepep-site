@@ -387,8 +387,8 @@ function ProductTile({ product }: { product: Product }) {
         <p className="v3-tile-sub">{product.description.split(/\.\s+/)[0]}.</p>
         <div className="v3-action-row">
           <div>
-            <div className="v3-tile-price">${Math.round(product.price)}</div>
-            <div className="v3-price-from">From · 1 vial</div>
+            <div className="v3-tile-price">${Math.round((product.variants[0] && product.variantPrices?.[product.variants[0]]) || product.price)}</div>
+            <div className="v3-price-from">From · {product.variants[0] ?? "1 vial"}</div>
           </div>
           <button
             type="button"
