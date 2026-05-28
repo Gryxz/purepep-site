@@ -11136,6 +11136,8 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   height: 100svh;
   min-height: 600px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   background:
     radial-gradient(ellipse 110% 60% at 80% 95%, rgb(200 137 10 / 24%) 0%, transparent 58%),
     radial-gradient(ellipse 70% 50% at 5% 80%,  rgb(200 137 10 / 10%) 0%, transparent 55%),
@@ -11185,11 +11187,11 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
 .mob-hero-v2-vial.back-v1 { left: -6%;  width: 44%; height: 58%; }
 .mob-hero-v2-vial.back-v2 { right: -8%; width: 42%; height: 46%; }
 
-/* Typography — z:2, between vial layers */
+/* Typography — flex child, z:2 */
 .mob-hero-v2-content {
-  position: absolute;
-  top: 0; left: 0; right: 0;
+  position: relative;
   z-index: 2;
+  flex-shrink: 0;
   padding: 62px 22px 0;
 }
 
@@ -11234,6 +11236,15 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   letter-spacing: -0.04em;
   line-height: 0.9;
   color: var(--m-bone);
+}
+
+.mob-hero-v2-cta-layer {
+  position: absolute;
+  bottom: 180px; /* 96px trust-bar-offset + 80px tab-bar + 4px gap */
+  left: 0;
+  right: 0;
+  z-index: 4;
+  padding: 0 22px;
 }
 
 .mob-hero-v2-cta {

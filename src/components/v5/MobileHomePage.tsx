@@ -169,13 +169,20 @@ export function MobileHomePage({ products }: { products: Product[] }) {
           ))}
         </div>
 
-        {/* Typography */}
+        {/* Typography — headline sits between vial layers (z:2) */}
         <div className="mob-hero-v2-content">
           <p className="mob-hero-v2-meta">Lab-verified · Research use only</p>
           <h1 className="mob-hero-v2-h1">
-            <em className="mob-hero-v2-line1">The</em>
-            <strong className="mob-hero-v2-line2">standard.</strong>
+            <em className="mob-hero-v2-line1" style={{ display: "block" }}>The</em>
+            <strong className="mob-hero-v2-line2" style={{ display: "block" }}>standard.</strong>
           </h1>
+        </div>
+
+        {/* Spacer — vials show through this gap */}
+        <div style={{ flex: 1 }} aria-hidden="true" />
+
+        {/* CTA layer — always above vials (z:4) */}
+        <div className="mob-hero-v2-cta-layer">
           <a href="/shop" className="mob-hero-v2-cta">
             Shop the catalog
             <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
@@ -183,7 +190,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
               <polyline points="12 5 19 12 12 19" />
             </svg>
           </a>
-          <p className="mob-hero-v2-spec">≥ 99.5% HPLC · Lyophilized · Lot-traceable</p>
+          <p className="mob-hero-v2-spec">≥ 99.5% HPLC · Lyophilized</p>
         </div>
 
         {/* Front-layer vials — punch through / over the headline */}
