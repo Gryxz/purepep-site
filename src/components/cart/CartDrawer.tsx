@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useCartStore } from "@/lib/cart-store";
+import { useCartStore, useCartCount } from "@/lib/cart-store";
 import { RetaVialMini } from "@/components/v3/RetaVialMini";
 import {
   FREE_SHIP_THRESHOLD,
@@ -10,11 +11,17 @@ import {
 } from "@/content/cart";
 
 export function CartDrawer() {
-  const { items, isOpen, closeCart, updateQty, removeItem, subtotal, totalItems } =
+  const { items: allItems, isOpen, closeCart, updateQty, removeItem, subtotal } =
     useCartStore();
 
-  const sub = subtotal();
-  const count = totalItems();
+  // Defer cart state until after hydration — server always renders empty
+  // so SSR HTML matches the first client render and no structural mismatch fires.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const items = mounted ? allItems : [];
+  const sub = mounted ? subtotal() : 0;
+  const count = useCartCount();
   const pct = Math.min(100, (sub / FREE_SHIP_THRESHOLD) * 100);
   const remaining = Math.max(0, FREE_SHIP_THRESHOLD - sub);
   const freeShipUnlocked = sub >= FREE_SHIP_THRESHOLD;
@@ -54,7 +61,7 @@ export function CartDrawer() {
             </svg>
             <span className="v3drawer-hdr-label">
               Cart{" "}
-              <span className="v3drawer-hdr-count" suppressHydrationWarning>
+              <span className="v3drawer-hdr-count">
                 · {count} {count === 1 ? "item" : "items"}
               </span>
             </span>
