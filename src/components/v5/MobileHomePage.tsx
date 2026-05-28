@@ -190,7 +190,27 @@ export function MobileHomePage({ products }: { products: Product[] }) {
 
         {/* CTA layer — always above vials (z:4), sits right under headline */}
         <div className="mob-hero-v2-cta-layer">
-          <a href="/shop" className="mob-hero-v2-cta">
+          <a
+            href="/shop"
+            className="mob-hero-v2-cta"
+            onPointerMove={(e) => {
+              const r = e.currentTarget.getBoundingClientRect();
+              const cx = e.clientX - r.left - r.width  / 2;
+              const cy = e.clientY - r.top  - r.height / 2;
+              const dx = (cx / r.width  * 22).toFixed(1);
+              const dy = (cy / r.height * 12).toFixed(1);
+              // Brighten the button surface toward the cursor
+              const pct = ((e.clientX - r.left) / r.width * 100).toFixed(1);
+              e.currentTarget.style.boxShadow =
+                `${dx}px ${dy}px 52px rgb(200 137 10 / 80%), 0 6px 20px rgb(200 137 10 / 35%)`;
+              e.currentTarget.style.backgroundImage =
+                `radial-gradient(circle at ${pct}% 50%, rgb(255 200 60 / 30%) 0%, transparent 70%)`;
+            }}
+            onPointerLeave={(e) => {
+              e.currentTarget.style.boxShadow = "";
+              e.currentTarget.style.backgroundImage = "";
+            }}
+          >
             Shop the catalog
             <svg className="mob-hero-v2-cta-arrow" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
               <line x1="5" y1="12" x2="19" y2="12" />
