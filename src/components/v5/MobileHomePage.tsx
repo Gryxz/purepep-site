@@ -163,7 +163,8 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         <div className="mob-hero-v2-back" aria-hidden="true">
           {(["tirz", "bpc-157"] as const).map((slug, i) => (
             <span key={slug} className={`mob-hero-v2-vial back-v${i + 1}`}>
-              <Image src={`/images/products/source/purepep-vial-${slug}-v1.0-cutout.png`} alt="" fill sizes="40vw" className="mob-hero-v2-vial-img" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`/images/products/source/purepep-vial-${slug}-v1.0-cutout.png`} alt="" className="mob-hero-v2-vial-img" />
             </span>
           ))}
         </div>
@@ -172,8 +173,8 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         <div className="mob-hero-v2-content">
           <p className="mob-hero-v2-meta">Lab-verified · Research use only</p>
           <h1 className="mob-hero-v2-h1">
-            <span className="mob-hero-v2-line1">The</span>
-            <span className="mob-hero-v2-line2">standard.</span>
+            <em className="mob-hero-v2-line1">The</em>
+            <strong className="mob-hero-v2-line2">standard.</strong>
           </h1>
           <a href="/shop" className="mob-hero-v2-cta">
             Shop the catalog
@@ -182,13 +183,15 @@ export function MobileHomePage({ products }: { products: Product[] }) {
               <polyline points="12 5 19 12 12 19" />
             </svg>
           </a>
+          <p className="mob-hero-v2-spec">≥ 99.5% HPLC · Lyophilized · Lot-traceable</p>
         </div>
 
         {/* Front-layer vials — punch through / over the headline */}
         <div className="mob-hero-v2-front" aria-hidden="true">
           {(["sema", "cagri"] as const).map((slug, i) => (
             <span key={slug} className={`mob-hero-v2-vial front-v${i + 1}`}>
-              <Image src={`/images/products/source/purepep-vial-${slug}-v1.0-cutout.png`} alt="" fill sizes="50vw" className="mob-hero-v2-vial-img" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`/images/products/source/purepep-vial-${slug}-v1.0-cutout.png`} alt="" className="mob-hero-v2-vial-img" />
             </span>
           ))}
         </div>
