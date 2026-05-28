@@ -296,6 +296,7 @@ export function CheckoutPage({ sdkReady }: { sdkReady: boolean | "failed" }) {
         <div className="v3chk-layout">
           {/* LEFT column — form sections */}
           <div className="v3chk-col-main">
+            <Link href="/cart" className="v3chk-back">← Back to cart</Link>
             <div className="v3chk-sections">
               {/* 01 Contact */}
               <Section num="01" label="Contact">

@@ -343,8 +343,8 @@ export function MobileHomePage({ products }: { products: Product[] }) {
 
       {/* transparency section hidden */}
 
-      {/* Testimonials — shared v3 component, adapts to narrow layout */}
-      <TestimonialsSection />
+      {/* Testimonials — temporarily hidden */}
+      {/* <TestimonialsSection /> */}
 
       {/* Process timeline — eyebrow dropped, declarative headline + tightened sub. */}
       <section className="mob-process" data-mob-section="dark">

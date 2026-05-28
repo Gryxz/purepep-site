@@ -257,8 +257,8 @@ export function HomePage({ products }: { products: Product[] }) {
         </div>
       </section>
 
-      {/* ───── Testimonials ───── */}
-      <TestimonialsSection />
+      {/* ───── Testimonials — temporarily hidden ───── */}
+      {/* <TestimonialsSection /> */}
 
       {/* stacks/bundles section hidden */}
 

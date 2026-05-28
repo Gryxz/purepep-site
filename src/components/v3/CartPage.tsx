@@ -99,6 +99,7 @@ export function CartPage({ products }: { products: Product[] }) {
       <main className="v3cart">
         {/* Page title */}
         <div className="v3cart-title">
+          <Link href="/shop" className="v3cart-back">← Shop</Link>
           <h1>
             Your cart{" "}
             <span className="v3cart-title-count">
