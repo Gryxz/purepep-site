@@ -293,10 +293,29 @@ export function CheckoutPage({ sdkReady }: { sdkReady: boolean | "failed" }) {
   return (
     <div className="v3-shop">
       <main className="v3chk">
+        {/* Progress steps */}
+        <div className="v3chk-steps" aria-label="Checkout progress">
+          <div className="v3chk-step is-done">
+            <span className="v3chk-step-dot">✓</span>
+            <span className="v3chk-step-label">Cart</span>
+          </div>
+          <div className="v3chk-step-rule is-done" />
+          <div className="v3chk-step is-current">
+            <span className="v3chk-step-dot">2</span>
+            <span className="v3chk-step-label">Details</span>
+          </div>
+          <div className="v3chk-step-rule" />
+          <div className="v3chk-step">
+            <span className="v3chk-step-dot">3</span>
+            <span className="v3chk-step-label">Payment</span>
+          </div>
+        </div>
+
         <div className="v3chk-layout">
           {/* LEFT column — form sections */}
           <div className="v3chk-col-main">
             <Link href="/cart" className="v3chk-back">← Back to cart</Link>
+            <h1 className="v3chk-h1">Checkout</h1>
             <div className="v3chk-sections">
               {/* 01 Contact */}
               <Section num="01" label="Contact">

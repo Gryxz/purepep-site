@@ -14,6 +14,14 @@ import {
   CART_EMPTY_SUB,
 } from "@/content/cart";
 
+/**
+ * v3 Apple Swiss Cart page (desktop two-column).
+ *
+ * Layout: progress steps · two columns: left = item grid (thumb · name+meta ·
+ * stepper · line total), right = sticky order summary card with free-ship bar,
+ * promo field, totals, Continue-to-checkout CTA, trust strip.
+ */
+
 const UPSELL: {
   slug: string;
   compound: string;
@@ -50,6 +58,7 @@ export function CartPage({ products }: { products: Product[] }) {
   }, [confirmingRemove]);
 
   const [promoOpen, setPromoOpen] = useState(false);
+  const [promoInput, setPromoInput] = useState("");
 
   const pct = Math.min(100, (sub / FREE_SHIP_THRESHOLD) * 100);
   const remaining = Math.max(0, FREE_SHIP_THRESHOLD - sub);
@@ -90,6 +99,24 @@ export function CartPage({ products }: { products: Product[] }) {
       <TrustBar />
 
       <main className="v3cart">
+        {/* Progress steps */}
+        <div className="v3cart-steps" aria-label="Checkout progress">
+          <div className="v3cart-step is-current">
+            <span className="v3cart-step-dot">1</span>
+            <span className="v3cart-step-label">Cart</span>
+          </div>
+          <div className="v3cart-step-rule" />
+          <div className="v3cart-step">
+            <span className="v3cart-step-dot">2</span>
+            <span className="v3cart-step-label">Details</span>
+          </div>
+          <div className="v3cart-step-rule" />
+          <div className="v3cart-step">
+            <span className="v3cart-step-dot">3</span>
+            <span className="v3cart-step-label">Payment</span>
+          </div>
+        </div>
+
         {/* Page-level nav header with back button */}
         <div className="v3cart-nav">
           <BackButton href="/shop" label="Continue shopping" />
@@ -115,150 +142,127 @@ export function CartPage({ products }: { products: Product[] }) {
           </div>
         ) : (
           <div className="v3cart-layout">
-            {/* LEFT column — line items, free-ship bar, promo, upsell */}
+            {/* LEFT column — item grid + upsell */}
             <div className="v3cart-col-main">
-            {/* Free-ship bar */}
-            <div className="v3cart-shipbar">
-              <div className="v3cart-shipbar-row">
-                <span className={clsx("v3cart-shipbar-text", freeShipUnlocked && "is-unlocked")}>
-                  {freeShipUnlocked ? (
-                    <>You&rsquo;ve unlocked <strong>free shipping</strong></>
-                  ) : (
-                    <>
-                      Add <strong>${remaining.toFixed(2)}</strong> more for free shipping
-                    </>
-                  )}
-                </span>
-                <span className="v3cart-shipbar-pct">
-                  {freeShipUnlocked ? "✓" : `${Math.round(pct)}%`}
-                </span>
-              </div>
-              <div className="v3cart-shipbar-track">
-                <div className="v3cart-shipbar-fill" style={{ width: `${pct}%` }}>
-                  <div className="v3cart-shipbar-milestone" />
+              <div className="v3cart-items-card">
+                <div className="v3cart-items-hdr">
+                  <span className="v3cart-items-hdr-label">Item</span>
+                  <span className="v3cart-items-hdr-qty">Quantity</span>
+                  <span className="v3cart-items-hdr-total">Total</span>
                 </div>
-              </div>
-            </div>
-
-            {/* Items */}
-            <div className="v3cart-items">
-              {items.map((item) => {
-                const lineTotal = item.price * item.qty;
-                const isConfirming = confirmingRemove === item.slug;
-                return (
-                  <article key={item.slug + item.dose} className="v3cart-item">
-                    <div className="v3cart-item-thumb">
-                      <RetaVialMini compound={item.compound} />
-                    </div>
-                    <div className="v3cart-item-body">
-                      <div className="v3cart-item-top">
-                        <div className="v3cart-item-name">{item.name}</div>
-                        <button
-                          type="button"
-                          className="v3cart-item-remove"
-                          aria-label={`Remove ${item.name}`}
-                          onClick={() => removeItem(item.slug)}
-                        >
-                          ×
-                        </button>
-                      </div>
-                      <div className="v3cart-item-meta">{item.dose} · LYOPHILIZED</div>
-                      <div className="v3cart-item-bottom">
-                        <div
-                          className={clsx("v3cart-stepper", isConfirming && "is-confirming")}
-                          role="group"
-                          aria-label="Quantity"
-                        >
+                <div className="v3cart-items">
+                  {items.map((item) => {
+                    const lineTotal = item.price * item.qty;
+                    const isConfirming = confirmingRemove === item.slug;
+                    return (
+                      <article key={item.slug + item.dose} className="v3cart-item">
+                        <div className="v3cart-item-thumb">
+                          <RetaVialMini compound={item.compound} />
+                        </div>
+                        <div className="v3cart-item-body">
+                          <div className="v3cart-item-name">{item.name}</div>
+                          <div className="v3cart-item-meta">{item.dose} · LYOPHILIZED</div>
+                          <div className="v3cart-item-price-unit">
+                            ${item.price.toFixed(2)}
+                            <span className="v3cart-item-price-unit-suffix"> / vial</span>
+                          </div>
                           <button
                             type="button"
-                            aria-label={isConfirming ? "Confirm remove" : "Decrease"}
-                            onClick={() => handleStepperMinus(item.slug, item.qty)}
+                            className="v3cart-item-remove-link"
+                            onClick={() => removeItem(item.slug)}
                           >
-                            {isConfirming ? "×" : "−"}
-                          </button>
-                          <span className="v3cart-stepper-num">{item.qty}</span>
-                          <button
-                            type="button"
-                            aria-label="Increase"
-                            onClick={() => updateQty(item.slug, item.qty + 1)}
-                          >
-                            +
+                            Remove
                           </button>
                         </div>
+                        <div className="v3cart-item-qty-col">
+                          <div
+                            className={clsx("v3cart-stepper", isConfirming && "is-confirming")}
+                            role="group"
+                            aria-label="Quantity"
+                          >
+                            <button
+                              type="button"
+                              aria-label={isConfirming ? "Confirm remove" : "Decrease"}
+                              onClick={() => handleStepperMinus(item.slug, item.qty)}
+                            >
+                              {isConfirming ? "×" : "−"}
+                            </button>
+                            <span className="v3cart-stepper-num">{item.qty}</span>
+                            <button
+                              type="button"
+                              aria-label="Increase"
+                              onClick={() => updateQty(item.slug, item.qty + 1)}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
                         <div className="v3cart-item-total">${lineTotal.toFixed(2)}</div>
-                      </div>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-
-            {/* Promo */}
-            <div className="v3cart-promo">
-              <button
-                type="button"
-                className={clsx("v3cart-promo-toggle", promoOpen && "is-open")}
-                onClick={() => setPromoOpen((o) => !o)}
-                aria-expanded={promoOpen}
-              >
-                <svg
-                  width="14"
-                  height="14"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
-                Have a promo code?
-              </button>
-              <div className={clsx("v3cart-promo-field", promoOpen && "is-open")}>
-                <input
-                  className="v3cart-promo-input"
-                  placeholder="Enter code"
-                  type="text"
-                  aria-label="Promo code"
-                />
-                <button type="button" className="v3cart-promo-apply">
-                  Apply
-                </button>
-              </div>
-            </div>
-
-            {/* Upsell */}
-            {!hasUpsell && upsellProduct && (
-              <div className="v3cart-upsell">
-                <div className="v3cart-upsell-eyebrow">Often paired with</div>
-                <div className="v3cart-upsell-card">
-                  <div className="v3cart-upsell-thumb">
-                    <RetaVialMini compound={UPSELL.compound} />
-                  </div>
-                  <div className="v3cart-upsell-info">
-                    <div className="v3cart-upsell-name">{UPSELL.name}</div>
-                    <div className="v3cart-upsell-meta">{UPSELL.meta}</div>
-                    <div className="v3cart-upsell-price">${UPSELL.price.toFixed(2)}</div>
-                  </div>
-                  <button
-                    type="button"
-                    className="v3cart-upsell-add"
-                    onClick={addUpsell}
-                    aria-label={`Add ${UPSELL.name} to cart`}
-                  >
-                    + Add
-                  </button>
+                      </article>
+                    );
+                  })}
                 </div>
               </div>
-            )}
+
+              {/* Upsell */}
+              {!hasUpsell && upsellProduct && (
+                <div className="v3cart-upsell">
+                  <div className="v3cart-upsell-eyebrow">Often paired with</div>
+                  <div className="v3cart-upsell-card">
+                    <div className="v3cart-upsell-thumb">
+                      <RetaVialMini compound={UPSELL.compound} />
+                    </div>
+                    <div className="v3cart-upsell-info">
+                      <div className="v3cart-upsell-name">{UPSELL.name}</div>
+                      <div className="v3cart-upsell-meta">{UPSELL.meta}</div>
+                      <div className="v3cart-upsell-price">${UPSELL.price.toFixed(2)}</div>
+                    </div>
+                    <button
+                      type="button"
+                      className="v3cart-upsell-add"
+                      onClick={addUpsell}
+                      aria-label={`Add ${UPSELL.name} to cart`}
+                    >
+                      + Add
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <Link href="/shop" className="v3cart-continue-shop">
+                ← Continue shopping
+              </Link>
             </div>
             {/* END LEFT column */}
 
             {/* RIGHT column — sticky order summary + primary CTA */}
             <aside className="v3cart-col-aside">
-            <div className="v3cart-summary-wrap">
               <div className="v3cart-summary">
                 <div className="v3cart-summary-h">Order summary</div>
+
+                {/* Free-ship bar inside summary */}
+                <div className="v3cart-shipbar">
+                  <div className="v3cart-shipbar-row">
+                    <span className={clsx("v3cart-shipbar-text", freeShipUnlocked && "is-unlocked")}>
+                      {freeShipUnlocked ? (
+                        <>Free shipping unlocked</>
+                      ) : (
+                        <>
+                          Add <strong>${remaining.toFixed(2)}</strong> for free shipping
+                        </>
+                      )}
+                    </span>
+                    <span className="v3cart-shipbar-pct">
+                      {freeShipUnlocked ? "✓" : `${Math.round(pct)}%`}
+                    </span>
+                  </div>
+                  <div className="v3cart-shipbar-track">
+                    <div className="v3cart-shipbar-fill" style={{ width: `${pct}%` }}>
+                      <div className="v3cart-shipbar-milestone" />
+                    </div>
+                  </div>
+                </div>
+
                 <div className="v3cart-summary-lines">
                   {items.map((item) => {
                     const lineTotal = item.price * item.qty;
@@ -271,35 +275,77 @@ export function CartPage({ products }: { products: Product[] }) {
                         <div className="v3cart-summary-line-info">
                           <span className="v3cart-summary-line-name">{item.name}</span>
                           <span className="v3cart-summary-line-meta">
-                            {item.dose} · Lyophilized
+                            {item.dose} · {unitStr}
                           </span>
                         </div>
-                        <div className="v3cart-summary-line-right">
-                          <span className="v3cart-summary-line-price">
-                            ${lineTotal.toFixed(2)}
-                          </span>
-                          <span className="v3cart-summary-line-unit">{unitStr}</span>
-                        </div>
+                        <span className="v3cart-summary-line-price">
+                          ${lineTotal.toFixed(2)}
+                        </span>
                       </div>
                     );
                   })}
                 </div>
+
+                {/* Promo */}
+                <div className="v3cart-promo">
+                  {!promoOpen ? (
+                    <button
+                      type="button"
+                      className="v3cart-promo-toggle"
+                      onClick={() => setPromoOpen(true)}
+                    >
+                      <svg
+                        width="12"
+                        height="12"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                        <line x1="7" y1="7" x2="7.01" y2="7" />
+                      </svg>
+                      Have a promo or referral code?
+                    </button>
+                  ) : (
+                    <div className="v3cart-promo-field is-open">
+                      <input
+                        className="v3cart-promo-input"
+                        placeholder="Enter code"
+                        type="text"
+                        value={promoInput}
+                        onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+                        aria-label="Promo code"
+                        autoFocus
+                      />
+                      <button type="button" className="v3cart-promo-apply">
+                        Apply
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <div className="v3cart-summary-divider" />
+                <div className="v3cart-summary-shiprow">
+                  <span className="v3cart-summary-k">Subtotal</span>
+                  <span className="v3cart-summary-v">${sub.toFixed(2)}</span>
+                </div>
                 <div className="v3cart-summary-shiprow">
                   <span className="v3cart-summary-k">Shipping</span>
                   <span className={clsx("v3cart-summary-v", freeShipUnlocked && "is-free")}>
                     {freeShipUnlocked ? "Free" : "Calculated at checkout"}
                   </span>
                 </div>
+                <div className="v3cart-summary-shiprow">
+                  <span className="v3cart-summary-k">Tax</span>
+                  <span className="v3cart-summary-v is-muted">Calculated at checkout</span>
+                </div>
                 <div className="v3cart-summary-totalrow">
                   <span className="v3cart-summary-k">Total</span>
                   <span className="v3cart-summary-total">${sub.toFixed(2)}</span>
                 </div>
-                <div className="v3cart-summary-note">
-                  Taxes calculated at checkout · All sales final · Research use only
-                </div>
 
-                {/* CTAs — primary amber checkout lives inside the sticky summary */}
                 <div className="v3cart-ctas">
                   <Link href="/checkout" className="v3cart-cta-primary">
                     Continue to checkout
@@ -316,61 +362,42 @@ export function CartPage({ products }: { products: Product[] }) {
                       <polyline points="12 5 19 12 12 19" />
                     </svg>
                   </Link>
-                  <Link href="/shop" className="v3cart-cta-secondary">
-                    Continue shopping
-                  </Link>
+                </div>
+
+                <div className="v3cart-summary-note">
+                  Taxes calculated at checkout · All sales final · Research use only
+                </div>
+
+                {/* Trust strip inside summary */}
+                <div className="v3cart-summary-trust">
+                  <div className="v3cart-summary-trust-row">
+                    <svg
+                      width="13"
+                      height="13"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <rect x="3" y="11" width="18" height="11" rx="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    <span>Secure SSL · PCI-DSS hosted fields</span>
+                  </div>
+                  <div className="v3cart-summary-pays">
+                    <span className="v3cart-paymark">VISA</span>
+                    <span className="v3cart-paymark">MC</span>
+                    <span className="v3cart-paymark">AMEX</span>
+                    <span className="v3cart-paymark">DISC</span>
+                  </div>
                 </div>
               </div>
-            </div>
             </aside>
             {/* END RIGHT column */}
           </div>
         )}
-
-        {/* Trust footer */}
-        <div className="v3cart-trust">
-          <TrustItem label={<>Secure<br />checkout</>}>
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-          </TrustItem>
-          <TrustItem label={<>Lab<br />verified</>}>
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M9 11l3 3L22 4" />
-              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-            </svg>
-          </TrustItem>
-          <TrustItem label={<>2-3 day<br />shipping</>}>
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="1" y="3" width="15" height="13" rx="1" />
-              <path d="M16 8h4l3 3v5h-7V8z" />
-              <circle cx="5.5" cy="18.5" r="2.5" />
-              <circle cx="18.5" cy="18.5" r="2.5" />
-            </svg>
-          </TrustItem>
-          <TrustItem label={<>Research<br />use only</>}>
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-          </TrustItem>
-        </div>
       </main>
-    </div>
-  );
-}
-
-function TrustItem({
-  children,
-  label,
-}: {
-  children: React.ReactNode;
-  label: React.ReactNode;
-}) {
-  return (
-    <div className="v3cart-trust-item">
-      <div className="v3cart-trust-icon">{children}</div>
-      <div className="v3cart-trust-label">{label}</div>
     </div>
   );
 }
