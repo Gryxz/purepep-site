@@ -11242,7 +11242,7 @@ html.mob-age-gate .mob-hdr .mob-hdr-r { display: none; }
   position: relative;
   z-index: 4;
   flex-shrink: 0;
-  padding: 0 22px 24px;
+  padding: 32px 22px 24px;
 }
 
 .mob-hero-v2-cta {
