@@ -155,7 +155,16 @@ export function MobileHomePage({ products }: { products: Product[] }) {
       </div>
 
       {/* Hero */}
-      <section className="mob-hero-v2" data-mob-section="dark" aria-label="Hero: research-grade peptides">
+      <section
+        className="mob-hero-v2"
+        data-mob-section="dark"
+        aria-label="Hero: research-grade peptides"
+        onPointerMove={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          e.currentTarget.style.setProperty("--mx", ((e.clientX - r.left) / r.width).toFixed(3));
+          e.currentTarget.style.setProperty("--my", ((e.clientY - r.top)  / r.height).toFixed(3));
+        }}
+      >
         {/* Ghost watermark — decorative background text */}
         <span className="mob-hero-v2-ghost" aria-hidden="true">PEPTIDES</span>
 
@@ -182,7 +191,7 @@ export function MobileHomePage({ products }: { products: Product[] }) {
         <div className="mob-hero-v2-cta-layer">
           <a href="/shop" className="mob-hero-v2-cta">
             Shop the catalog
-            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <svg className="mob-hero-v2-cta-arrow" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
             </svg>
@@ -198,6 +207,8 @@ export function MobileHomePage({ products }: { products: Product[] }) {
               <img src={`/images/products/source/purepep-vial-${slug}-v1.0-cutout.png`} alt="" className="mob-hero-v2-vial-img" />
             </span>
           ))}
+          {/* Pointer-driven amber light wash — mix-blend-mode: overlay colours the vials */}
+          <span className="mob-hero-v2-light" aria-hidden="true" />
         </div>
       </section>
 
