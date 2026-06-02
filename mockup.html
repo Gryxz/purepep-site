@@ -1,0 +1,1320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PurePep · v5 · Axis 1-to-1 (PDP + Collection)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─── */
+:root{
+  --bone:#FAF7F0; --ink:#1F1F1F; --loden:#3D4232;
+  --s1:#F1EDE3; --s2:#F5F1EA; --s3:#EFEAE0; --s4:#E9E3D7;
+  --rule:#E5DFD2; --ink-mute:#6B6B66;
+  --emerald:#2F6B4A; --alert:#A24A2A; --amber:#DC9814;
+  --fd:'Inter',system-ui,sans-serif;
+  --fm:'IBM Plex Mono',monospace;
+  --r2:1rem; --r3:1.5rem; --rf:9999px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0d0d0d;font-family:var(--fd);-webkit-font-smoothing:antialiased;color:var(--ink);min-height:100vh}
+a{text-decoration:none;color:inherit}
+button{font-family:var(--fd);cursor:pointer;border:none;background:none;color:inherit}
+
+.stage{display:flex;gap:32px;justify-content:center;align-items:flex-start;padding:44px 24px 80px;flex-wrap:wrap}
+.dw{display:flex;flex-direction:column;align-items:center;gap:10px}
+.dl{font-family:var(--fm);font-size:11px;color:#aaa;letter-spacing:.12em;text-transform:uppercase}
+.device{
+  width:393px;height:852px;background:var(--bone);
+  border-radius:50px;overflow:hidden;position:relative;flex-shrink:0;
+  box-shadow:0 0 0 1px #2a2a2a,0 0 0 9px #111,0 40px 80px rgba(0,0,0,.65);
+}
+
+/* ─── MOBILE NAV (only visible on narrow screens) ─── */
+.mob-nav{
+  display:none;
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(13,13,13,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:10px;gap:8px;justify-content:center;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.mob-nav-btn{
+  flex:1;max-width:180px;padding:10px 14px;
+  background:rgba(255,255,255,.08);color:#fff;
+  border-radius:99px;font-family:var(--fm);font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;text-align:center;
+  border:1px solid rgba(255,255,255,.12);text-decoration:none;
+}
+.mob-nav-btn:active{background:rgba(255,255,255,.15)}
+
+/* ─── MOBILE BREAKPOINT ─── */
+@media (max-width: 900px){
+  .mob-nav{display:flex}
+  .stage{
+    flex-direction:column;align-items:center;
+    gap:48px;padding:64px 12px 40px;
+  }
+  .dw{width:100%;max-width:393px}
+  .device{
+    width:100%;max-width:393px;height:auto;min-height:680px;
+    border-radius:24px;
+    box-shadow:0 0 0 1px #2a2a2a,0 0 0 4px #111,0 12px 32px rgba(0,0,0,.5);
+  }
+  .scroll{
+    position:relative;inset:auto;height:auto;max-height:none;
+    overflow-y:visible;padding-bottom:90px;
+  }
+  .tab-bar{position:sticky;bottom:0}
+}
+
+/* Very small phones */
+@media (max-width: 420px){
+  .stage{padding:60px 0 40px;gap:32px}
+  .dw{max-width:100%}
+  .device{
+    border-radius:0;
+    box-shadow:none;
+    border-top:1px solid #333;border-bottom:1px solid #333;
+  }
+}
+.scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:var(--bone);padding-bottom:74px}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ─── HEADER ─── */
+.hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;background:var(--bone);
+  position:sticky;top:0;z-index:40;
+  border-bottom:1px solid transparent;
+}
+.logo{display:flex;align-items:center;gap:10px}
+.mono{
+  width:32px;height:32px;background:var(--ink);color:var(--bone);
+  border-radius:8px;display:grid;place-items:center;
+  font-weight:900;font-size:15px;font-family:var(--fd);flex-shrink:0;
+}
+.mono.sm{width:24px;height:24px;font-size:11px;border-radius:6px}
+.wm{font-weight:900;font-size:18px;letter-spacing:-.02em}
+.hdr-r{display:flex;gap:4px;align-items:center}
+.ib{
+  width:40px;height:40px;border-radius:var(--rf);
+  display:grid;place-items:center;color:var(--ink);
+  position:relative;background:transparent;
+}
+.ib:active{background:var(--s1)}
+.cc{
+  position:absolute;top:2px;right:2px;
+  background:var(--amber);color:var(--bone);
+  font-family:var(--fm);font-size:9px;
+  min-width:17px;height:17px;border-radius:var(--rf);
+  display:grid;place-items:center;padding:0 4px;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.cc.bump{transform:scale(1.4)}
+
+/* ─── HORIZONTAL TRUST STRIP ─── */
+.trust-bar{
+  display:flex;gap:24px;
+  padding:12px 20px;
+  background:var(--ink);color:var(--bone);
+  overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;white-space:nowrap;
+}
+.trust-bar::-webkit-scrollbar{display:none}
+.trust-item{
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
+  font-family:var(--fm);font-size:10.5px;
+  letter-spacing:.06em;color:rgba(250,247,240,.85);
+  scroll-snap-align:start;
+}
+.trust-item .dot{
+  width:5px;height:5px;border-radius:var(--rf);
+  background:var(--amber);flex-shrink:0;
+}
+
+/* ─── PAGE TITLE ─── */
+.page-title{padding:32px 20px 18px;text-align:center}
+.page-h1{font-weight:900;font-size:34px;letter-spacing:-.025em;line-height:1;color:var(--ink)}
+
+/* ─── SEARCH ─── */
+.search-wrap{padding:0 20px 16px}
+.search-pill{
+  display:flex;align-items:center;gap:12px;
+  width:100%;padding:14px 18px;
+  background:var(--bone);
+  border:1px solid var(--rule);
+  border-radius:var(--rf);
+  color:var(--ink-mute);
+  font-family:var(--fd);font-size:14px;
+}
+.search-pill svg{flex-shrink:0;color:var(--ink-mute)}
+
+/* ─── FILTER CHIPS ─── */
+.filter-row{
+  display:flex;gap:8px;
+  padding:0 20px 12px;
+  overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+}
+.filter-row::-webkit-scrollbar{display:none}
+.filter-row::after{content:'';flex-shrink:0;width:8px}
+.fchip{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 16px;border-radius:var(--rf);
+  background:var(--s2);color:var(--ink);
+  border:1px solid var(--rule);
+  font-family:var(--fd);font-size:13px;font-weight:500;
+  white-space:nowrap;flex-shrink:0;scroll-snap-align:start;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.fchip .ct{font-family:var(--fm);font-size:11px;font-weight:500;color:var(--ink-mute)}
+.fchip.active{background:var(--ink);color:var(--bone);border-color:var(--ink)}
+.fchip.active .ct{color:rgba(250,247,240,.6)}
+
+/* ─── COUNT ROW ─── */
+.count-row{
+  display:flex;justify-content:flex-start;align-items:center;
+  padding:8px 20px 16px;
+  border-bottom:1px solid var(--rule);
+}
+.show-count{font-family:var(--fd);font-size:13px;color:var(--ink-mute)}
+.show-count strong{color:var(--ink);font-weight:600}
+
+/* ─── PRODUCT GRID ─── */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:20px}
+.pcard{
+  background:var(--bone);border:1px solid var(--rule);border-radius:var(--r2);
+  overflow:hidden;display:flex;flex-direction:column;
+  text-decoration:none;color:inherit;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .15s,box-shadow .15s;
+}
+.pcard:active{transform:scale(.985)}
+.pcard.hidden{display:none}
+.pcard-img{
+  position:relative;aspect-ratio:1/1;
+  background:linear-gradient(160deg, var(--s1) 0%, var(--s3) 100%);
+  display:flex;align-items:flex-end;justify-content:center;overflow:hidden;
+}
+.vial-render{display:flex;align-items:flex-end;gap:4px;height:88%;position:relative;z-index:1}
+.vial-label{
+  width:56px;background:var(--bone);border:1px solid var(--rule);border-radius:4px;
+  padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;align-self:center;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+.vial-label .vl-mono{
+  width:14px;height:14px;background:var(--ink);color:var(--bone);
+  border-radius:3px;display:grid;place-items:center;font-weight:900;font-size:7px;
+}
+.vial-label .vl-name{font-weight:900;font-size:8px;letter-spacing:-.02em;color:var(--ink);text-align:center;line-height:1}
+.vial-label .vl-mass{font-family:var(--fm);font-size:6px;font-weight:500;background:var(--ink);color:var(--bone);padding:2px 4px;border-radius:1px}
+.vial-label .vl-purity{font-family:var(--fm);font-size:5px;color:var(--ink-mute);letter-spacing:.05em;text-transform:uppercase}
+.vial-label .vl-foot{font-family:var(--fm);font-size:4.5px;color:var(--ink-mute);letter-spacing:.08em;text-transform:uppercase;border-top:1px dashed var(--rule);padding-top:2px;width:100%;text-align:center}
+.vial-body{
+  width:38px;height:88px;align-self:flex-end;
+  background:linear-gradient(180deg,#d8d4c7 0%,#c4c0b3 30%,#e8e4d7 60%,#d8d4c7 100%);
+  border:1px solid rgba(31,31,31,.15);border-radius:3px 3px 6px 6px;position:relative;
+}
+.vial-body::before{content:'';position:absolute;top:-10px;left:4px;right:4px;height:14px;background:linear-gradient(180deg,#5a5e50 0%,#3d4232 50%,#2a2e24 100%);border-radius:3px 3px 1px 1px}
+.vial-body::after{content:'';position:absolute;left:4px;right:4px;bottom:4px;height:32px;background:rgba(250,247,240,.88);border-radius:1px;box-shadow:inset 0 -2px 4px rgba(31,31,31,.05)}
+.cat-pill{
+  position:absolute;top:10px;left:10px;z-index:2;
+  background:var(--amber);color:var(--bone);
+  padding:5px 10px;border-radius:var(--rf);
+  font-family:var(--fd);font-size:10px;font-weight:600;letter-spacing:.04em;
+}
+.stock-chip{
+  position:absolute;top:10px;right:10px;z-index:2;
+  background:var(--bone);padding:5px 10px;border-radius:var(--rf);
+  font-family:var(--fd);font-size:10px;font-weight:500;
+  display:flex;align-items:center;gap:5px;border:1px solid var(--rule);
+}
+.stock-chip .dot{width:5px;height:5px;border-radius:var(--rf);flex-shrink:0}
+.stock-chip.in{color:var(--emerald)}
+.stock-chip.in .dot{background:var(--emerald)}
+.stock-chip.low{color:var(--alert)}
+.stock-chip.low .dot{background:var(--alert);animation:pdot 2s ease-in-out infinite}
+@keyframes pdot{0%,100%{opacity:1}50%{opacity:.25}}
+.pcard-body{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.pname{font-weight:900;font-size:16px;letter-spacing:-.015em;color:var(--ink);line-height:1.1}
+.pdesc{font-size:12px;color:var(--ink-mute);line-height:1.4}
+.pcard-foot{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:10px;margin-top:auto;border-top:1px solid var(--rule);
+}
+.pprice{font-weight:600;font-size:15px;color:var(--ink);letter-spacing:-.01em}
+.parr{color:var(--amber);font-size:18px;font-weight:500}
+
+/* ─── TRUST BAND 2x2 ─── */
+.trust-band-section{padding:32px 20px;background:var(--bone)}
+.trust-band{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tcell{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:8px}
+.ticon-tile{width:44px;height:44px;background:var(--s1);border-radius:12px;display:grid;place-items:center;color:var(--amber)}
+.tlabel{font-weight:700;font-size:14px;letter-spacing:-.01em;color:var(--ink)}
+.tcap{font-size:12px;color:var(--ink-mute);line-height:1.45}
+
+/* ─── DARK CTA ─── */
+.dark-cta{background:var(--ink);color:var(--bone);padding:40px 20px;text-align:center}
+.dark-cta-eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:14px;font-weight:500}
+.dark-cta-h{font-weight:900;font-size:28px;letter-spacing:-.025em;line-height:1.1;margin-bottom:14px}
+.dark-cta-h em{font-style:italic;color:rgba(250,247,240,.7);font-weight:400}
+.dark-cta-body{font-size:13.5px;line-height:1.55;color:rgba(250,247,240,.65);margin-bottom:24px;max-width:32ch;margin-left:auto;margin-right:auto}
+.cta-btns{display:flex;flex-direction:column;gap:10px;max-width:280px;margin:0 auto}
+.btn-primary{background:var(--amber);color:var(--bone);padding:16px 24px;border-radius:var(--rf);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .12s}
+.btn-primary:active{opacity:.85}
+.btn-secondary{background:transparent;color:var(--bone);padding:15px 24px;border-radius:var(--rf);border:1px solid rgba(250,247,240,.25);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.btn-secondary:active{background:rgba(250,247,240,.05)}
+
+/* ─── FOOTER ─── */
+.foot{background:var(--ink);color:var(--bone);padding:40px 20px 28px}
+.foot-section{margin-bottom:28px}
+.foot-h{font-weight:700;font-size:15px;letter-spacing:-.01em;margin-bottom:14px;color:var(--bone)}
+.foot-link{display:block;padding:8px 0;font-size:14px;color:rgba(250,247,240,.7);font-weight:450}
+.foot-text{font-size:14px;color:rgba(250,247,240,.65);line-height:1.5;margin-bottom:8px}
+.foot-text strong{color:var(--bone);font-weight:600}
+.foot-arrow{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:rgba(250,247,240,.85);padding:8px 0}
+.foot-social{display:flex;gap:10px;margin-top:8px}
+.foot-social-btn{width:38px;height:38px;border-radius:var(--rf);background:rgba(250,247,240,.08);display:grid;place-items:center;color:var(--bone)}
+.foot-divider{height:1px;background:rgba(250,247,240,.1);margin:24px 0}
+.foot-secure{display:flex;align-items:center;gap:10px;font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(250,247,240,.5);margin-bottom:16px}
+.foot-pay{display:flex;gap:6px;flex-wrap:wrap}
+.pay-badge{padding:6px 10px;background:var(--bone);color:var(--ink);border-radius:5px;font-weight:700;font-size:11px;letter-spacing:.04em}
+.pay-badge.amex{background:#1a6cb4;color:var(--bone)}
+.pay-badge.dark{background:rgba(250,247,240,.08);color:var(--bone)}
+.foot-disc{font-family:var(--fm);font-size:10px;color:rgba(250,247,240,.4);letter-spacing:.06em;line-height:1.55;margin-top:20px}
+
+/* ─── BOTTOM TAB BAR ─── */
+.tab-bar{
+  position:absolute;bottom:0;left:0;right:0;z-index:60;
+  background:rgba(250,247,240,.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--rule);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  padding:8px 0 12px;
+}
+.tab-btn{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 0;color:var(--ink-mute);
+  font-size:10px;font-weight:500;position:relative;
+}
+.tab-btn.active{color:var(--ink)}
+.tab-btn.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:2px;background:var(--amber);border-radius:0 0 2px 2px}
+.tab-btn svg{width:22px;height:22px}
+
+/* ════════════════════════════════════════════════
+   RIGHT — PDP (Axis 1-to-1 with PurePep tokens)
+═══════════════════════════════════════════════ */
+
+/* Breadcrumb */
+.crumb{
+  padding:18px 20px 14px;
+  font-size:13px;color:var(--ink-mute);
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.crumb a{color:var(--ink-mute)}
+.crumb .sep{color:var(--ink-mute);opacity:.5}
+.crumb .current{color:var(--ink);font-weight:500}
+
+/* Big product image */
+.pdp-img{
+  margin:0 20px;border-radius:var(--r2);
+  background:linear-gradient(160deg, var(--s1) 0%, var(--s3) 50%, var(--s2) 100%);
+  border:1px solid var(--rule);
+  aspect-ratio:1/1;display:flex;align-items:flex-end;justify-content:center;
+  overflow:hidden;position:relative;
+}
+.pdp-vial-render{display:flex;align-items:flex-end;gap:14px;height:78%;padding-bottom:8%;position:relative;z-index:1}
+.pdp-vial-label{
+  width:140px;background:var(--bone);border:1px solid var(--rule);border-radius:8px;
+  padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;align-self:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.pdp-vial-label .vl-mono{width:32px;height:32px;background:var(--ink);color:var(--bone);border-radius:6px;display:grid;place-items:center;font-weight:900;font-size:14px}
+.pdp-vial-label .vl-brand{font-family:var(--fm);font-size:9px;letter-spacing:.16em;color:var(--ink);text-transform:uppercase;font-weight:500}
+.pdp-vial-label .vl-name{font-weight:900;font-size:18px;letter-spacing:-.02em;color:var(--ink);text-align:center;line-height:1;margin-top:4px}
+.pdp-vial-label .vl-mass-tag{font-family:var(--fm);font-size:13px;font-weight:500;background:var(--ink);color:var(--bone);padding:5px 12px;border-radius:3px;letter-spacing:.04em}
+.pdp-vial-label .vl-purity{font-family:var(--fm);font-size:9px;color:var(--ink);letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-top:2px}
+.pdp-vial-label .vl-meta{font-family:var(--fm);font-size:8px;color:var(--ink-mute);letter-spacing:.04em;line-height:1.6;text-align:left;width:100%}
+.pdp-vial-label .vl-foot{font-family:var(--fm);font-size:7px;color:var(--ink-mute);letter-spacing:.12em;text-transform:uppercase;border-top:1px dashed var(--rule);padding-top:8px;width:100%;text-align:center;margin-top:6px}
+.pdp-vial-body{
+  width:78px;height:200px;align-self:flex-end;
+  background:linear-gradient(180deg,#d8d4c7 0%,#c4c0b3 25%,#e8e4d7 55%,#d0ccbf 80%,#bab6a8 100%);
+  border:1px solid rgba(31,31,31,.18);
+  border-radius:6px 6px 12px 12px;position:relative;
+  box-shadow:inset -8px -2px 16px rgba(31,31,31,.1), inset 8px -2px 16px rgba(250,247,240,.3);
+}
+.pdp-vial-body::before{content:'';position:absolute;top:-22px;left:8px;right:8px;height:30px;background:linear-gradient(180deg,#5a5e50 0%,#3d4232 50%,#2a2e24 100%);border-radius:5px 5px 2px 2px;box-shadow:inset 0 2px 4px rgba(255,255,255,.1)}
+.pdp-vial-body::after{content:'';position:absolute;left:8px;right:8px;bottom:8px;height:80px;background:rgba(250,247,240,.92);border-radius:2px;box-shadow:inset 0 -3px 6px rgba(31,31,31,.06)}
+.pdp-vial-body-label{
+  position:absolute;left:8px;right:8px;top:30px;height:90px;
+  background:var(--ink);color:var(--bone);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  padding:8px 4px;
+}
+.pdp-vial-body-label .vbl-name{font-weight:900;font-size:9px;letter-spacing:-.02em;line-height:1;text-align:center}
+.pdp-vial-body-label .vbl-mass{font-family:var(--fm);font-size:9px;background:var(--bone);color:var(--ink);padding:2px 6px;border-radius:1px;font-weight:500}
+.pdp-vial-body-label .vbl-foot{font-family:var(--fm);font-size:5px;color:rgba(250,247,240,.7);letter-spacing:.1em;text-transform:uppercase;text-align:center;margin-top:auto}
+
+/* Category pill below image */
+.pdp-cat-pill{
+  display:inline-block;margin:24px 20px 16px;
+  background:var(--amber);color:var(--bone);
+  padding:8px 16px;border-radius:var(--rf);
+  font-family:var(--fd);font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+}
+
+/* H1 + SKU */
+.pdp-h1{font-weight:900;font-size:36px;letter-spacing:-.03em;line-height:1;color:var(--ink);padding:0 20px 14px}
+.pdp-sku{
+  padding:0 20px 12px;display:flex;align-items:center;gap:10px;
+  font-family:var(--fm);font-size:13px;letter-spacing:.04em;
+}
+.pdp-sku .sku-label{color:var(--ink-mute);text-transform:uppercase;font-size:11px;letter-spacing:.16em}
+.pdp-sku .sku-val{color:var(--ink);font-weight:500}
+
+/* Compliance line */
+.pdp-compliance{
+  padding:0 20px 20px;font-size:13px;color:var(--ink-mute);line-height:1.5;
+}
+
+/* Hairline rule */
+.pdp-rule{height:1px;background:var(--rule);margin:0 20px}
+
+/* Big price */
+.pdp-price-wrap{padding:24px 20px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.pdp-price-big{font-weight:900;font-size:34px;letter-spacing:-.025em;color:var(--ink);line-height:1}
+.pdp-price-sub{font-size:13px;color:var(--ink-mute)}
+
+/* Variant card */
+.variant-card{
+  margin:8px 20px 24px;background:var(--bone);
+  border:1px solid var(--rule);border-radius:var(--r2);
+  padding:20px;
+}
+.variant-label{
+  font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink);margin-bottom:12px;
+}
+.variant-dropdown{
+  width:100%;padding:14px 16px;
+  background:var(--s1);
+  border:1px solid var(--rule);border-radius:var(--r2);
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:14px;color:var(--ink);font-weight:500;cursor:pointer;
+}
+.variant-dropdown svg{color:var(--ink-mute)}
+.clear-link{
+  display:inline-block;margin-top:10px;
+  font-size:12px;color:var(--ink-mute);
+  text-decoration:underline;cursor:pointer;
+}
+
+/* Stepper + Add to cart row */
+.cta-row{
+  display:flex;gap:10px;margin-top:20px;align-items:stretch;
+}
+.qty-stepper{
+  display:flex;align-items:center;gap:0;
+  background:var(--bone);
+  border:1px solid var(--rule);border-radius:var(--rf);
+  padding:0 6px;flex-shrink:0;
+}
+.qty-stepper button{
+  width:36px;height:48px;display:grid;place-items:center;
+  font-size:18px;color:var(--ink);
+}
+.qty-stepper button:active{opacity:.6}
+.qty-stepper .qval{
+  font-family:var(--fd);font-size:15px;font-weight:600;
+  min-width:24px;text-align:center;color:var(--ink);
+}
+#buybox{
+  flex:1;background:var(--ink);color:var(--bone);
+  border-radius:var(--rf);
+  font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+  padding:14px 20px;cursor:pointer;transition:opacity .12s;
+  display:flex;align-items:center;justify-content:center;
+}
+#buybox:active{opacity:.85}
+
+/* Trust microcopy */
+.trust-micro{margin-top:18px;display:flex;flex-direction:column;gap:12px}
+.trust-line{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:13px;color:var(--ink-mute);line-height:1.5;font-weight:450;
+}
+.trust-line svg{flex-shrink:0;color:var(--ink-mute);margin-top:2px}
+.trust-line strong{color:var(--ink);font-weight:600}
+.trust-line a{color:var(--amber);font-weight:500}
+
+/* ─── PDP CONTENT SECTIONS ─── */
+.pdp-section{padding:8px 20px 28px}
+.pdp-section h2{font-weight:900;font-size:25px;letter-spacing:-.03em;color:var(--ink);margin-bottom:16px;line-height:1.1}
+.pdp-section h3{font-weight:700;font-size:14px;letter-spacing:-.01em;color:var(--ink);margin:18px 0 8px}
+.pdp-section p{font-size:14px;line-height:1.7;color:var(--ink-mute);margin-bottom:16px;font-weight:400}
+.pdp-section p strong{color:var(--ink);font-weight:600}
+
+/* Specs list */
+.spec-list{list-style:none;padding:0;margin:0}
+.spec-list li{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:11px 0;font-size:14px;line-height:1.55;font-weight:500;
+}
+.spec-list li::before{
+  content:'';width:6px;height:6px;border-radius:var(--rf);
+  background:var(--amber);flex-shrink:0;margin-top:8px;
+}
+.spec-list li strong{color:var(--ink);font-weight:700;margin-right:6px}
+.spec-list li {color:var(--ink-mute)}
+
+/* Disclaimer bullets */
+.disc-list{list-style:none;padding:0;margin:0}
+.disc-list li{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 0;font-size:14px;line-height:1.5;color:var(--ink-mute);
+}
+.disc-list li::before{
+  content:'';width:6px;height:6px;border-radius:var(--rf);
+  background:var(--amber);flex-shrink:0;margin-top:8px;
+}
+.disc-list li strong{color:var(--ink);font-weight:700}
+
+/* "Often paired with" band */
+.paired-band{padding:32px 20px;background:var(--s1);border-top:1px solid var(--rule)}
+.paired-eyebrow{
+  font-family:var(--fm);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--amber);font-weight:500;margin-bottom:8px;
+}
+.paired-h2{font-weight:900;font-size:24px;letter-spacing:-.025em;color:var(--ink);margin-bottom:18px}
+.paired-card{
+  background:var(--bone);border:1px solid var(--rule);border-radius:var(--r2);
+  padding:14px;display:flex;align-items:center;gap:14px;
+}
+.paired-thumb{
+  width:60px;height:60px;flex-shrink:0;
+  background:linear-gradient(160deg, var(--s2) 0%, var(--s3) 100%);
+  border-radius:8px;display:grid;place-items:center;
+  font-weight:900;font-size:22px;color:var(--ink);letter-spacing:-.03em;
+}
+.paired-info{flex:1;min-width:0}
+.paired-name{font-weight:700;font-size:15px;color:var(--ink);margin-bottom:2px}
+.paired-price{font-family:var(--fd);font-size:14px;color:var(--ink);font-weight:500;margin-bottom:8px}
+.paired-add{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--fd);font-size:11px;font-weight:700;letter-spacing:.18em;
+  color:var(--amber);text-transform:uppercase;
+}
+
+/* "More from catalog" band */
+.more-band{padding:32px 0 32px;background:var(--bone);position:relative}
+.more-eyebrow{
+  font-family:var(--fm);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--amber);font-weight:500;text-align:center;margin-bottom:8px;
+}
+.more-h2{
+  font-weight:900;font-size:26px;letter-spacing:-.025em;color:var(--ink);
+  text-align:center;margin-bottom:24px;
+}
+.more-carousel-wrap{position:relative}
+.more-carousel{
+  display:flex;gap:12px;
+  padding:4px 20px 20px;
+  overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;scroll-behavior:smooth;
+}
+.more-carousel::-webkit-scrollbar{display:none}
+.more-card{
+  flex:0 0 240px;scroll-snap-align:start;
+  background:var(--bone);border:1px solid var(--rule);border-radius:var(--r2);
+  overflow:hidden;display:flex;flex-direction:column;
+  text-decoration:none;color:inherit;
+  transition:transform .15s,border-color .15s;
+}
+.more-card:active{transform:scale(.98);border-color:var(--ink-mute)}
+.more-img{
+  aspect-ratio:1/1;
+  background:linear-gradient(160deg, var(--s1) 0%, var(--s3) 50%, var(--s2) 100%);
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:8%;position:relative;
+}
+.more-stock{
+  position:absolute;top:10px;right:10px;
+  background:var(--bone);padding:4px 9px;border-radius:var(--rf);
+  font-family:var(--fd);font-size:9.5px;font-weight:500;
+  display:flex;align-items:center;gap:5px;border:1px solid var(--rule);z-index:2;
+}
+.more-stock .dot{width:5px;height:5px;border-radius:var(--rf);flex-shrink:0}
+.more-stock.in{color:var(--emerald)}
+.more-stock.in .dot{background:var(--emerald)}
+.more-stock.low{color:var(--alert)}
+.more-stock.low .dot{background:var(--alert);animation:pdot 2s ease-in-out infinite}
+.more-cat-pill{
+  position:absolute;top:10px;left:10px;z-index:2;
+  background:var(--amber);color:var(--bone);
+  padding:4px 9px;border-radius:var(--rf);
+  font-family:var(--fd);font-size:9.5px;font-weight:600;letter-spacing:.04em;
+}
+.more-body{padding:14px 16px 16px}
+.more-name{font-weight:900;font-size:16px;letter-spacing:-.02em;color:var(--ink);margin-bottom:4px;line-height:1.15}
+.more-desc{font-size:11.5px;color:var(--ink-mute);line-height:1.4;margin-bottom:10px}
+.more-price-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:10px;border-top:1px solid var(--rule);
+}
+.more-price{font-weight:600;font-size:14px;color:var(--ink)}
+.more-arr-btn{
+  width:34px;height:34px;background:var(--s1);border-radius:var(--rf);
+  display:grid;place-items:center;color:var(--amber);
+}
+
+/* arrow buttons */
+.carousel-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:40px;height:40px;border-radius:var(--rf);
+  background:var(--bone);border:1px solid var(--rule);
+  display:grid;place-items:center;cursor:pointer;z-index:5;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  color:var(--ink);
+}
+.carousel-arrow:active{background:var(--s1)}
+.carousel-arrow.prev{left:8px}
+.carousel-arrow.next{right:8px}
+.carousel-arrow:disabled{opacity:.35;cursor:default}
+</style>
+</head>
+<body>
+
+<!-- Mobile nav: only shows on narrow screens -->
+<nav class="mob-nav">
+  <a href="#left-device" class="mob-nav-btn">Collection</a>
+  <a href="#right-device" class="mob-nav-btn">PDP · RETA</a>
+</nav>
+
+<div class="stage">
+
+<!-- ══════════════════════════════════════════════
+     LEFT — Collection (Taiga-approved Axis-faithful)
+══════════════════════════════════════════════ -->
+<div class="dw" id="left-device">
+  <div class="dl">/ · shop · 393×852</div>
+  <div class="device">
+    <div class="scroll">
+
+      <header class="hdr">
+        <div class="logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" fill="currentColor" aria-label="PurePep" style="height:30px;width:auto;color:var(--ink)"><g><rect x="4" y="4" width="22" height="64"/><rect x="26" y="22" width="8" height="2"/><rect x="26" y="29" width="8" height="2"/><rect x="34" y="4" width="22" height="36"/></g><g transform="translate(78 56)"><g transform="translate(0 0) scale(0.02734 -0.02734)"><path d="M96 0V1490H738Q904 1490 1028.5 1424.5Q1153 1359 1222.5 1240.0Q1292 1121 1292 962Q1292 802 1221.0 685.5Q1150 569 1022.0 505.5Q894 442 724 442H500V0ZM500 756H642Q714 756 765.0 781.5Q816 807 843.0 853.0Q870 899 870 962Q870 1027 843.0 1072.5Q816 1118 765.0 1142.0Q714 1166 642 1166H500Z"/></g><g transform="translate(35.630 0) scale(0.02734 -0.02734)"><path d="M492 -14Q374 -14 286.0 40.0Q198 94 150.0 189.0Q102 284 102 406V1118H504V490Q504 407 546.0 359.5Q588 312 664 312Q714 312 750.0 333.5Q786 355 806.0 395.0Q826 435 826 490V1118H1228V0H851L844 253Q806 147 732 73Q646 -14 492 -14Z"/></g><g transform="translate(70.877 0) scale(0.02734 -0.02734)"><path d="M102 0V1118H492V904H504Q534 1023 600.5 1077.5Q667 1132 756 1132Q782 1132 808.0 1128.0Q834 1124 858 1116V774Q828 785 784.5 789.5Q741 794 710 794Q651 794 604.0 767.5Q557 741 530.5 693.5Q504 646 504 582V0Z"/></g><g transform="translate(94.038 0) scale(0.02734 -0.02734)"><path d="M638 -20Q459 -20 329.5 48.5Q200 117 131.0 246.0Q62 375 62 556Q62 729 131.5 858.5Q201 988 328.0 1060.0Q455 1132 628 1132Q755 1132 857.5 1092.5Q960 1053 1033.0 978.5Q1106 904 1145.0 798.0Q1184 692 1184 558V466H456Q458 401 480 358Q503 309 546.0 285.5Q589 262 646 262Q687 262 720.5 273.5Q754 285 778.0 306.5Q802 328 814 359L1168 307Q1140 207 1069.0 133.5Q998 60 889.5 20.0Q781 -20 638 -20ZM459 686H805Q801 725 788 755Q768 801 729.0 825.5Q690 850 632.0 850.0Q574 850 535.0 825.5Q496 801 476 755Q463 725 459 686Z"/></g><g transform="translate(126.879 0) scale(0.02734 -0.02734)"><path d="M96 0V1490H738Q904 1490 1028.5 1424.5Q1153 1359 1222.5 1240.0Q1292 1121 1292 962Q1292 802 1221.0 685.5Q1150 569 1022.0 505.5Q894 442 724 442H500V0ZM500 756H642Q714 756 765.0 781.5Q816 807 843.0 853.0Q870 899 870 962Q870 1027 843.0 1072.5Q816 1118 765.0 1142.0Q714 1166 642 1166H500Z"/></g><g transform="translate(162.509 0) scale(0.02734 -0.02734)"><path d="M638 -20Q459 -20 329.5 48.5Q200 117 131.0 246.0Q62 375 62 556Q62 729 131.5 858.5Q201 988 328.0 1060.0Q455 1132 628 1132Q755 1132 857.5 1092.5Q960 1053 1033.0 978.5Q1106 904 1145.0 798.0Q1184 692 1184 558V466H456Q458 401 480 358Q503 309 546.0 285.5Q589 262 646 262Q687 262 720.5 273.5Q754 285 778.0 306.5Q802 328 814 359L1168 307Q1140 207 1069.0 133.5Q998 60 889.5 20.0Q781 -20 638 -20ZM459 686H805Q801 725 788 755Q768 801 729.0 825.5Q690 850 632.0 850.0Q574 850 535.0 825.5Q496 801 476 755Q463 725 459 686Z"/></g><g transform="translate(195.350 0) scale(0.02734 -0.02734)"><path d="M102 -418V1118H500V922H510Q532 979 574.0 1027.0Q616 1075 678.5 1103.5Q741 1132 824 1132Q935 1132 1034.5 1073.0Q1134 1014 1197.0 887.5Q1260 761 1260 558Q1260 365 1200.0 238.0Q1140 111 1040.0 48.5Q940 -14 820 -14Q742 -14 680.5 12.0Q619 38 576.0 82.5Q533 127 510 184H504V-418ZM672 294Q728 294 766.5 325.5Q805 357 825.5 416.5Q846 476 846 558Q846 641 825.5 700.5Q805 760 766.5 792.0Q728 824 672 824Q617 824 577.0 792.0Q537 760 515.5 700.5Q494 641 494 558Q494 477 515.5 418.0Q537 359 577.0 326.5Q617 294 672 294Z"/></g></g></svg>
+        </div>
+        <div class="hdr-r">
+          <button class="ib" aria-label="Menu"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+          <button class="ib" aria-label="Account"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+          <button class="ib" aria-label="Cart">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <span class="cc" id="cart-count-l">0</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="trust-bar">
+        <div class="trust-item"><span class="dot"></span>99.5%+ Purity</div>
+        <div class="trust-item"><span class="dot"></span>Third-Party Tested</div>
+        <div class="trust-item"><span class="dot"></span>2-3 Day Shipping</div>
+        <div class="trust-item"><span class="dot"></span>Secure Checkout</div>
+        <div class="trust-item"><span class="dot"></span>Free over $200</div>
+      </div>
+
+      <div class="page-title">
+        <h1 class="page-h1">Shop All Peptides</h1>
+      </div>
+
+      <div class="search-wrap">
+        <div class="search-pill">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+          <span>Search peptides…</span>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <button class="fchip active" data-filter="all">All <span class="ct">8</span></button>
+        <button class="fchip" data-filter="glp1">GLP-1 &amp; Metabolic <span class="ct">5</span></button>
+        <button class="fchip" data-filter="gh">Growth Hormone <span class="ct">1</span></button>
+        <button class="fchip" data-filter="heal">Healing <span class="ct">2</span></button>
+      </div>
+
+      <div class="count-row">
+        <span class="show-count">Showing <strong>8</strong> of 8</span>
+      </div>
+
+      <div class="pgrid">
+
+        <a class="pcard" href="/shop/reta" data-category="glp1">
+          <div class="pcard-img">
+            <span class="cat-pill">GLP-1</span>
+            <span class="stock-chip in"><span class="dot"></span>In stock</span>
+            <div class="vial-render">
+              <div class="vial-label">
+                <div class="vl-mono">P</div>
+                <div class="vl-name">RETA</div>
+                <div class="vl-mass">10 mg</div>
+                <div class="vl-purity">≥99.5%</div>
+                <div class="vl-foot">For research use only</div>
+              </div>
+              <div class="vial-body"></div>
+            </div>
+          </div>
+          <div class="pcard-body">
+            <div class="pname">Retatrutide</div>
+            <div class="pdesc">Triple agonist · 10mg</div>
+            <div class="pcard-foot"><span class="pprice">$189</span><span class="parr">→</span></div>
+          </div>
+        </a>
+
+        <a class="pcard" href="#" data-category="glp1">
+          <div class="pcard-img">
+            <span class="cat-pill">GLP-1</span>
+            <span class="stock-chip in"><span class="dot"></span>In stock</span>
+            <div class="vial-render">
+              <div class="vial-label"><div class="vl-mono">P</div><div class="vl-name">SEMA</div><div class="vl-mass">10 mg</div><div class="vl-purity">≥99.5%</div><div class="vl-foot">For research use only</div></div>
+              <div class="vial-body"></div>
+            </div>
+          </div>
+          <div class="pcard-body">
+            <div class="pname">Semaglutide</div>
+            <div class="pdesc">GLP-1 receptor agonist · 10mg</div>
+            <div class="pcard-foot"><span class="pprice">$149</span><span class="parr">→</span></div>
+          </div>
+        </a>
+
+        <a class="pcard" href="#" data-category="glp1">
+          <div class="pcard-img">
+            <span class="cat-pill">GLP-1</span>
+            <span class="stock-chip low"><span class="dot"></span>Low stock</span>
+            <div class="vial-render">
+              <div class="vial-label"><div class="vl-mono">P</div><div class="vl-name">TIRZ</div><div class="vl-mass">10 mg</div><div class="vl-purity">≥99.5%</div><div class="vl-foot">For research use only</div></div>
+              <div class="vial-body"></div>
+            </div>
+          </div>
+          <div class="pcard-body">
+            <div class="pname">Tirzepatide</div>
+            <div class="pdesc">Dual GIP / GLP-1 agonist · 10mg</div>
+            <div class="pcard-foot"><span class="pprice">$199</span><span class="parr">→</span></div>
+          </div>
+        </a>
+
+        <a class="pcard" href="#" data-category="glp1">
+          <div class="pcard-img">
+            <span class="cat-pill">GLP-1</span>
+            <span class="stock-chip in"><span class="dot"></span>In stock</span>
+            <div class="vial-render">
+              <div class="vial-label"><div class="vl-mono">P</div><div class="vl-name">CAGRI</div><div class="vl-mass">10 mg</div><div class="vl-purity">≥99.5%</div><div class="vl-foot">For research use only</div></div>
+              <div class="vial-body"></div>
+            </div>
+          </div>
+          <div class="pcard-body">
+            <div class="pname">Cagrilintide</div>
+            <div class="pdesc">Amylin analog · 10mg</div>
+            <div class="pcard-foot"><span class="pprice">$179</span><span class="parr">→</span></div>
+          </div>
+        </a>
+
+        <a class="pcard" href="#" data-category="glp1">
+          <div class="pcard-img">
+            <span class="cat-pill">GLP-1</span>
+            <span class="stock-chip in"><span class="dot"></span>In stock</span>
+            <div class="vial-render">
+              <div class="vial-label"><div class="vl-mono">P</div><div class="vl-name">SURVO</div><div class="vl-mass">10 mg</div><div class="vl-purity">≥99.5%</div><div class="vl-foot">For research use only</div></div>
+              <div class="vial-body"></div>
+            </div>
+          </div>
+          <div class="pcard-body">
+            <div class="pname">Survodutide</div>
+            <div class="pdesc">GLP-1 / glucagon dual · 10mg</div>
+            <div class="pcard-foot"><span class="pprice">$189</span><span class="parr">→</span></div>
+          </div>
+        </a>
+
+        <a class="pcard" href="#" data-category="heal">
+          <div class="pcard-img">
+            <span class="cat-pill">Healing</span>
+            <span class="stock-chip in"><span class="dot"></span>In stock</span>
+            <div class="vial-render">
+              <div class="vial-label"><div class="vl-mono">P</div><div class="vl-name" style="font-size:7px">BPC-157</div><div class="vl-mass">5 mg</div><div class="vl-purity">≥99.5%</div><div class="vl-foot">For research use only</div></div>
+              <div class="vial-body"></div>
+            </div>
+          </div>
+          <div class="pcard-body">
+            <div class="pname">BPC-157</div>
+            <div class="pdesc">Body protection compound · 5mg</div>
+            <div class="pcard-foot"><span class="pprice">$69</span><span class="parr">→</span></div>
+          </div>
+        </a>
+
+        <a class="pcard" href="#" data-category="heal">
+          <div class="pcard-img">
+            <span class="cat-pill">Healing</span>
+            <span class="stock-chip in"><span class="dot"></span>In stock</span>
+            <div class="vial-render">
+              <div class="vial-label"><div class="vl-mono">P</div><div class="vl-name">TB-500</div><div class="vl-mass">5 mg</div><div class="vl-purity">≥99.5%</div><div class="vl-foot">For research use only</div></div>
+              <div class="vial-body"></div>
+            </div>
+          </div>
+          <div class="pcard-body">
+            <div class="pname">TB-500</div>
+            <div class="pdesc">Thymosin β-4 fragment · 5mg</div>
+            <div class="pcard-foot"><span class="pprice">$89</span><span class="parr">→</span></div>
+          </div>
+        </a>
+
+        <a class="pcard" href="#" data-category="gh">
+          <div class="pcard-img">
+            <span class="cat-pill">Growth Hormone</span>
+            <span class="stock-chip low"><span class="dot"></span>Low stock</span>
+            <div class="vial-render">
+              <div class="vial-label"><div class="vl-mono">P</div><div class="vl-name">IPAM</div><div class="vl-mass">5 mg</div><div class="vl-purity">≥99.5%</div><div class="vl-foot">For research use only</div></div>
+              <div class="vial-body"></div>
+            </div>
+          </div>
+          <div class="pcard-body">
+            <div class="pname">Ipamorelin</div>
+            <div class="pdesc">GH secretagogue · 5mg</div>
+            <div class="pcard-foot"><span class="pprice">$79</span><span class="parr">→</span></div>
+          </div>
+        </a>
+
+      </div>
+
+      <div class="trust-band-section">
+        <div class="trust-band">
+          <div class="tcell">
+            <div class="ticon-tile"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M9 2v6.5L4 17a3 3 0 0 0 2.5 4.5h11A3 3 0 0 0 20 17l-5-8.5V2"/><line x1="9" y1="2" x2="15" y2="2"/></svg></div>
+            <span class="tlabel">99.5%+ HPLC Verified</span>
+            <span class="tcap">Every batch independently analyzed. COA included.</span>
+          </div>
+          <div class="tcell">
+            <div class="ticon-tile"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+            <span class="tlabel">2-3 Day Domestic</span>
+            <span class="tcap">Tracked US fulfillment. Discreet packaging.</span>
+          </div>
+          <div class="tcell">
+            <div class="ticon-tile"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <span class="tlabel">Secure Checkout</span>
+            <span class="tcap">Encrypted payment. Order protection.</span>
+          </div>
+          <div class="tcell">
+            <div class="ticon-tile"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <span class="tlabel">Research Use Only</span>
+            <span class="tcap">Sold strictly for laboratory research.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dark-cta">
+        <div class="dark-cta-eyebrow">For Research Teams</div>
+        <h2 class="dark-cta-h">Need a compound <em>that isn&apos;t listed?</em></h2>
+        <p class="dark-cta-body">We regularly source and synthesize additional peptides for labs and repeat buyers. Reach out with your spec — we&apos;ll get back within one business day.</p>
+        <div class="cta-btns">
+          <button class="btn-primary">Request a quote →</button>
+          <button class="btn-secondary">View all COAs</button>
+        </div>
+      </div>
+
+      <footer class="foot">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" fill="currentColor" aria-label="PurePep" style="height:28px;width:auto;color:var(--bone);display:block;margin-bottom:10px"><g><rect x="4" y="4" width="22" height="64"/><rect x="26" y="22" width="8" height="2"/><rect x="26" y="29" width="8" height="2"/><rect x="34" y="4" width="22" height="36"/></g><g transform="translate(78 56)"><g transform="translate(0 0) scale(0.02734 -0.02734)"><path d="M96 0V1490H738Q904 1490 1028.5 1424.5Q1153 1359 1222.5 1240.0Q1292 1121 1292 962Q1292 802 1221.0 685.5Q1150 569 1022.0 505.5Q894 442 724 442H500V0ZM500 756H642Q714 756 765.0 781.5Q816 807 843.0 853.0Q870 899 870 962Q870 1027 843.0 1072.5Q816 1118 765.0 1142.0Q714 1166 642 1166H500Z"/></g><g transform="translate(35.630 0) scale(0.02734 -0.02734)"><path d="M492 -14Q374 -14 286.0 40.0Q198 94 150.0 189.0Q102 284 102 406V1118H504V490Q504 407 546.0 359.5Q588 312 664 312Q714 312 750.0 333.5Q786 355 806.0 395.0Q826 435 826 490V1118H1228V0H851L844 253Q806 147 732 73Q646 -14 492 -14Z"/></g><g transform="translate(70.877 0) scale(0.02734 -0.02734)"><path d="M102 0V1118H492V904H504Q534 1023 600.5 1077.5Q667 1132 756 1132Q782 1132 808.0 1128.0Q834 1124 858 1116V774Q828 785 784.5 789.5Q741 794 710 794Q651 794 604.0 767.5Q557 741 530.5 693.5Q504 646 504 582V0Z"/></g><g transform="translate(94.038 0) scale(0.02734 -0.02734)"><path d="M638 -20Q459 -20 329.5 48.5Q200 117 131.0 246.0Q62 375 62 556Q62 729 131.5 858.5Q201 988 328.0 1060.0Q455 1132 628 1132Q755 1132 857.5 1092.5Q960 1053 1033.0 978.5Q1106 904 1145.0 798.0Q1184 692 1184 558V466H456Q458 401 480 358Q503 309 546.0 285.5Q589 262 646 262Q687 262 720.5 273.5Q754 285 778.0 306.5Q802 328 814 359L1168 307Q1140 207 1069.0 133.5Q998 60 889.5 20.0Q781 -20 638 -20ZM459 686H805Q801 725 788 755Q768 801 729.0 825.5Q690 850 632.0 850.0Q574 850 535.0 825.5Q496 801 476 755Q463 725 459 686Z"/></g><g transform="translate(126.879 0) scale(0.02734 -0.02734)"><path d="M96 0V1490H738Q904 1490 1028.5 1424.5Q1153 1359 1222.5 1240.0Q1292 1121 1292 962Q1292 802 1221.0 685.5Q1150 569 1022.0 505.5Q894 442 724 442H500V0ZM500 756H642Q714 756 765.0 781.5Q816 807 843.0 853.0Q870 899 870 962Q870 1027 843.0 1072.5Q816 1118 765.0 1142.0Q714 1166 642 1166H500Z"/></g><g transform="translate(162.509 0) scale(0.02734 -0.02734)"><path d="M638 -20Q459 -20 329.5 48.5Q200 117 131.0 246.0Q62 375 62 556Q62 729 131.5 858.5Q201 988 328.0 1060.0Q455 1132 628 1132Q755 1132 857.5 1092.5Q960 1053 1033.0 978.5Q1106 904 1145.0 798.0Q1184 692 1184 558V466H456Q458 401 480 358Q503 309 546.0 285.5Q589 262 646 262Q687 262 720.5 273.5Q754 285 778.0 306.5Q802 328 814 359L1168 307Q1140 207 1069.0 133.5Q998 60 889.5 20.0Q781 -20 638 -20ZM459 686H805Q801 725 788 755Q768 801 729.0 825.5Q690 850 632.0 850.0Q574 850 535.0 825.5Q496 801 476 755Q463 725 459 686Z"/></g><g transform="translate(195.350 0) scale(0.02734 -0.02734)"><path d="M102 -418V1118H500V922H510Q532 979 574.0 1027.0Q616 1075 678.5 1103.5Q741 1132 824 1132Q935 1132 1034.5 1073.0Q1134 1014 1197.0 887.5Q1260 761 1260 558Q1260 365 1200.0 238.0Q1140 111 1040.0 48.5Q940 -14 820 -14Q742 -14 680.5 12.0Q619 38 576.0 82.5Q533 127 510 184H504V-418ZM672 294Q728 294 766.5 325.5Q805 357 825.5 416.5Q846 476 846 558Q846 641 825.5 700.5Q805 760 766.5 792.0Q728 824 672 824Q617 824 577.0 792.0Q537 760 515.5 700.5Q494 641 494 558Q494 477 515.5 418.0Q537 359 577.0 326.5Q617 294 672 294Z"/></g></g></svg>
+        <p style="font-family:var(--fd);font-size:13px;line-height:1.5;color:rgba(250,247,240,.65);margin-bottom:28px;max-width:260px">Research-grade peptides. Triplicate HPLC per lot. Cold-chain shipped.</p>
+        <div class="foot-section">
+          <div class="foot-h">Catalog</div>
+          <a href="#" class="foot-link">RETA · Retatrutide</a>
+          <a href="#" class="foot-link">SEMA · Semaglutide</a>
+          <a href="#" class="foot-link">BPC-157</a>
+          <a href="#" class="foot-link">View all →</a>
+        </div>
+        <div class="foot-section">
+          <div class="foot-h">Quality</div>
+          <a href="#" class="foot-link">Certificates of analysis</a>
+          <a href="#" class="foot-link">Lab partners</a>
+          <a href="#" class="foot-link">Cold-chain shipping</a>
+          <a href="#" class="foot-link">Lot traceability</a>
+        </div>
+        <div class="foot-section">
+          <div class="foot-h">Account</div>
+          <a href="#" class="foot-link">Sign in</a>
+          <a href="#" class="foot-link">Researcher verification</a>
+          <a href="#" class="foot-link">Order history</a>
+          <a href="#" class="foot-link">Re-order</a>
+        </div>
+        <div class="foot-section">
+          <div class="foot-h">Policies</div>
+          <a href="#" class="foot-link">Refund policy</a>
+          <a href="#" class="foot-link">Terms of service</a>
+          <a href="#" class="foot-link">Privacy policy</a>
+          <a href="#" class="foot-link">Shipping policy</a>
+          <a href="#" class="foot-link">Disclaimer</a>
+          <a href="#" class="foot-link">Contact</a>
+        </div>
+        <div class="foot-divider"></div>
+        <div class="foot-pay">
+          <span class="pay-badge">VISA</span>
+          <span class="pay-badge">MC</span>
+          <span class="pay-badge amex">AMEX</span>
+          <span class="pay-badge">DISCOVER</span>
+          <span class="pay-badge dark">Pay</span>
+        </div>
+        <div class="foot-disc">For research use only · Not for human consumption · 21+ qualified researchers<br>© 2026 PurePep</div>
+      </footer>
+
+    </div><!-- /scroll -->
+
+    <div class="tab-bar">
+      <a href="#" class="tab-btn"><svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+      <a href="#" class="tab-btn active"><svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Shop</a>
+      <a href="#" class="tab-btn"><svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart</a>
+      <a href="#" class="tab-btn"><svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account</a>
+    </div>
+
+  </div><!-- /device -->
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     RIGHT — PDP /shop/reta (Axis 1-to-1)
+══════════════════════════════════════════════ -->
+<div class="dw" id="right-device">
+  <div class="dl">/shop/reta · PDP · 393×852</div>
+  <div class="device">
+    <div class="scroll" id="pdp-scroll">
+
+      <header class="hdr">
+        <div class="logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" fill="currentColor" aria-label="PurePep" style="height:30px;width:auto;color:var(--ink)"><g><rect x="4" y="4" width="22" height="64"/><rect x="26" y="22" width="8" height="2"/><rect x="26" y="29" width="8" height="2"/><rect x="34" y="4" width="22" height="36"/></g><g transform="translate(78 56)"><g transform="translate(0 0) scale(0.02734 -0.02734)"><path d="M96 0V1490H738Q904 1490 1028.5 1424.5Q1153 1359 1222.5 1240.0Q1292 1121 1292 962Q1292 802 1221.0 685.5Q1150 569 1022.0 505.5Q894 442 724 442H500V0ZM500 756H642Q714 756 765.0 781.5Q816 807 843.0 853.0Q870 899 870 962Q870 1027 843.0 1072.5Q816 1118 765.0 1142.0Q714 1166 642 1166H500Z"/></g><g transform="translate(35.630 0) scale(0.02734 -0.02734)"><path d="M492 -14Q374 -14 286.0 40.0Q198 94 150.0 189.0Q102 284 102 406V1118H504V490Q504 407 546.0 359.5Q588 312 664 312Q714 312 750.0 333.5Q786 355 806.0 395.0Q826 435 826 490V1118H1228V0H851L844 253Q806 147 732 73Q646 -14 492 -14Z"/></g><g transform="translate(70.877 0) scale(0.02734 -0.02734)"><path d="M102 0V1118H492V904H504Q534 1023 600.5 1077.5Q667 1132 756 1132Q782 1132 808.0 1128.0Q834 1124 858 1116V774Q828 785 784.5 789.5Q741 794 710 794Q651 794 604.0 767.5Q557 741 530.5 693.5Q504 646 504 582V0Z"/></g><g transform="translate(94.038 0) scale(0.02734 -0.02734)"><path d="M638 -20Q459 -20 329.5 48.5Q200 117 131.0 246.0Q62 375 62 556Q62 729 131.5 858.5Q201 988 328.0 1060.0Q455 1132 628 1132Q755 1132 857.5 1092.5Q960 1053 1033.0 978.5Q1106 904 1145.0 798.0Q1184 692 1184 558V466H456Q458 401 480 358Q503 309 546.0 285.5Q589 262 646 262Q687 262 720.5 273.5Q754 285 778.0 306.5Q802 328 814 359L1168 307Q1140 207 1069.0 133.5Q998 60 889.5 20.0Q781 -20 638 -20ZM459 686H805Q801 725 788 755Q768 801 729.0 825.5Q690 850 632.0 850.0Q574 850 535.0 825.5Q496 801 476 755Q463 725 459 686Z"/></g><g transform="translate(126.879 0) scale(0.02734 -0.02734)"><path d="M96 0V1490H738Q904 1490 1028.5 1424.5Q1153 1359 1222.5 1240.0Q1292 1121 1292 962Q1292 802 1221.0 685.5Q1150 569 1022.0 505.5Q894 442 724 442H500V0ZM500 756H642Q714 756 765.0 781.5Q816 807 843.0 853.0Q870 899 870 962Q870 1027 843.0 1072.5Q816 1118 765.0 1142.0Q714 1166 642 1166H500Z"/></g><g transform="translate(162.509 0) scale(0.02734 -0.02734)"><path d="M638 -20Q459 -20 329.5 48.5Q200 117 131.0 246.0Q62 375 62 556Q62 729 131.5 858.5Q201 988 328.0 1060.0Q455 1132 628 1132Q755 1132 857.5 1092.5Q960 1053 1033.0 978.5Q1106 904 1145.0 798.0Q1184 692 1184 558V466H456Q458 401 480 358Q503 309 546.0 285.5Q589 262 646 262Q687 262 720.5 273.5Q754 285 778.0 306.5Q802 328 814 359L1168 307Q1140 207 1069.0 133.5Q998 60 889.5 20.0Q781 -20 638 -20ZM459 686H805Q801 725 788 755Q768 801 729.0 825.5Q690 850 632.0 850.0Q574 850 535.0 825.5Q496 801 476 755Q463 725 459 686Z"/></g><g transform="translate(195.350 0) scale(0.02734 -0.02734)"><path d="M102 -418V1118H500V922H510Q532 979 574.0 1027.0Q616 1075 678.5 1103.5Q741 1132 824 1132Q935 1132 1034.5 1073.0Q1134 1014 1197.0 887.5Q1260 761 1260 558Q1260 365 1200.0 238.0Q1140 111 1040.0 48.5Q940 -14 820 -14Q742 -14 680.5 12.0Q619 38 576.0 82.5Q533 127 510 184H504V-418ZM672 294Q728 294 766.5 325.5Q805 357 825.5 416.5Q846 476 846 558Q846 641 825.5 700.5Q805 760 766.5 792.0Q728 824 672 824Q617 824 577.0 792.0Q537 760 515.5 700.5Q494 641 494 558Q494 477 515.5 418.0Q537 359 577.0 326.5Q617 294 672 294Z"/></g></g></svg>
+        </div>
+        <div class="hdr-r">
+          <button class="ib" aria-label="Menu"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+          <button class="ib" aria-label="Account"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+          <button class="ib" aria-label="Cart">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <span class="cc" id="cart-count-r">0</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="trust-bar">
+        <div class="trust-item"><span class="dot"></span>99.5%+ Purity</div>
+        <div class="trust-item"><span class="dot"></span>Third-Party Tested</div>
+        <div class="trust-item"><span class="dot"></span>2-3 Day Shipping</div>
+        <div class="trust-item"><span class="dot"></span>Secure Checkout</div>
+      </div>
+
+      <!-- Breadcrumb -->
+      <div class="crumb">
+        <a href="#">Home</a>
+        <span class="sep">/</span>
+        <a href="#">Shop</a>
+        <span class="sep">/</span>
+        <span class="current">Retatrutide</span>
+      </div>
+
+      <!-- Product image -->
+      <div class="pdp-img">
+        <div class="pdp-vial-render">
+          <div class="pdp-vial-label">
+            <div class="vl-mono">P</div>
+            <div class="vl-brand">PurePep</div>
+            <div class="vl-name">RETATRUTIDE</div>
+            <div class="vl-mass-tag">10 mg</div>
+            <div class="vl-purity">≥99.5% Purity</div>
+            <div class="vl-meta">CAS: 2381089-83-2<br>MW: 4731.33 g/mol</div>
+            <div class="vl-foot">For Research Use Only</div>
+          </div>
+          <div class="pdp-vial-body">
+            <div class="pdp-vial-body-label">
+              <div class="vbl-name">Retatrutide</div>
+              <div class="vbl-mass">10 mg</div>
+              <div class="vbl-foot">Research Use Only</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category pill -->
+      <div class="pdp-cat-pill">GLP-1 Peptides</div>
+
+      <!-- H1 -->
+      <h1 class="pdp-h1">Retatrutide</h1>
+
+      <!-- SKU -->
+      <div class="pdp-sku">
+        <span class="sku-label">SKU:</span>
+        <span class="sku-val">PP-RETA-10</span>
+      </div>
+
+      <!-- Compliance line -->
+      <div class="pdp-compliance">
+        For In Vitro Research Use Only — Not for Human or Veterinary Application.
+      </div>
+
+      <div class="pdp-rule"></div>
+
+      <!-- Price -->
+      <div class="pdp-price-wrap">
+        <span class="pdp-price-big" id="main-price">$189.00</span>
+        <span class="pdp-price-sub">10 mg vial · in stock</span>
+      </div>
+
+      <div class="pdp-rule"></div>
+
+      <!-- Variant card -->
+      <div class="variant-card">
+        <div class="variant-label">Retatrutide</div>
+        <button class="variant-dropdown">
+          <span>10mg</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <a href="#" class="clear-link">Clear</a>
+
+        <div class="cta-row">
+          <div class="qty-stepper">
+            <button id="qty-minus">−</button>
+            <span class="qval" id="qty-val">1</span>
+            <button id="qty-plus">+</button>
+          </div>
+          <button id="buybox">Add to cart</button>
+        </div>
+
+        <!-- Trust microcopy -->
+        <div class="trust-micro">
+          <div class="trust-line">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Damaged or lost in transit? <strong>We replace it.</strong> No questions asked.</span>
+          </div>
+          <div class="trust-line">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span>Third-party tested — <a href="#">View Certificate of Analysis →</a></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT OVERVIEW -->
+      <section class="pdp-section">
+        <h2>Retatrutide — 10 mg</h2>
+        <p style="font-weight:600;color:var(--ink);font-size:15px">For In Vitro Research Use Only<br>Not for Human or Veterinary Application</p>
+
+        <h3>Product Overview</h3>
+        <p>Retatrutide (LY3437943) is a 39-amino-acid synthetic peptide functioning as a triple agonist of the GLP-1, GIP, and glucagon receptors. It is supplied as a lyophilized white powder for in vitro reconstitution and is widely used as a research tool for studying receptor pharmacology, multi-incretin signaling, and metabolic pathway regulation in preclinical models.</p>
+      </section>
+
+      <!-- SPECIFICATIONS -->
+      <section class="pdp-section">
+        <h2>Specifications</h2>
+        <ul class="spec-list">
+          <li><strong>Quantity:</strong> 10 mg</li>
+          <li><strong>Form:</strong> Lyophilized powder</li>
+          <li><strong>CAS:</strong> 2381089-83-2</li>
+          <li><strong>Molecular Weight:</strong> 4,731.33 g/mol</li>
+          <li><strong>Purity:</strong> ≥99.5% (third-party verified, HPLC)</li>
+          <li><strong>Endotoxin:</strong> &lt; 1.0 EU/mg (LAL)</li>
+          <li><strong>Mass deviation:</strong> ≤ 0.5 Da (MS confirmed)</li>
+          <li><strong>Storage:</strong> -20°C long-term; 4°C short-term (use within 4 weeks of reconstitution)</li>
+        </ul>
+      </section>
+
+      <!-- RESEARCH CONTEXT -->
+      <section class="pdp-section">
+        <h2>Research Context</h2>
+        <p>Retatrutide binds with high affinity to the GLP-1, GIP, and glucagon receptors — a unique triple-agonist profile that activates adenylyl cyclase and downstream cAMP/PKA signaling cascades across multiple metabolic pathways. Research involving retatrutide has examined coordinated incretin signaling, hepatic glucose output suppression, and lipolytic activity in preclinical in vitro models.</p>
+      </section>
+
+      <!-- INTENDED USE -->
+      <section class="pdp-section">
+        <h2>Intended Use</h2>
+        <p>This compound is intended <strong>strictly for in vitro laboratory research</strong> by qualified professionals. It is <strong>not</strong> approved for:</p>
+        <ul class="disc-list">
+          <li>Human use</li>
+          <li>Veterinary use</li>
+          <li>Food, drug, diagnostic, or cosmetic applications</li>
+        </ul>
+      </section>
+
+      <!-- REGULATORY DISCLAIMER -->
+      <section class="pdp-section">
+        <h2>Regulatory Disclaimer</h2>
+        <ul class="disc-list">
+          <li>This compound has <strong>not been evaluated by the U.S. Food and Drug Administration (FDA)</strong>.</li>
+          <li>It is <strong>not intended to diagnose, treat, cure, or prevent any disease</strong>.</li>
+          <li>All handling and use must comply with applicable <strong>institutional, local, state, and federal regulations</strong>.</li>
+        </ul>
+      </section>
+
+      <!-- TERMS OF SALE -->
+      <section class="pdp-section">
+        <h2>Terms of Sale</h2>
+        <p>By purchasing from <strong>PurePep</strong>, the buyer confirms that they are a <strong>qualified researcher, laboratory, or institution</strong> and acknowledge that the product is for research use only.</p>
+        <ul class="disc-list">
+          <li><strong>All sales are final.</strong></li>
+          <li>The purchaser assumes full responsibility for compliant handling, storage, and use.</li>
+          <li>Resale for human consumption is strictly prohibited.</li>
+        </ul>
+      </section>
+
+      <!-- OFTEN PAIRED WITH -->
+      <div class="paired-band">
+        <div class="paired-eyebrow">Complete your research kit</div>
+        <h2 class="paired-h2">Often paired with</h2>
+        <div class="paired-card">
+          <div class="paired-thumb">B</div>
+          <div class="paired-info">
+            <div class="paired-name">BPC-157 (5mg)</div>
+            <div class="paired-price">$69.00</div>
+            <span class="paired-add">Add to pair →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MORE FROM THE CATALOG -->
+      <div class="more-band">
+        <div class="more-eyebrow">More from the catalog</div>
+        <h2 class="more-h2">Related products</h2>
+        <div class="more-carousel-wrap">
+          <button class="carousel-arrow prev" id="carousel-prev" aria-label="Previous">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="more-carousel" id="more-carousel">
+            <a href="#" class="more-card">
+              <div class="more-img">
+                <span class="more-cat-pill">GLP-1</span>
+                <span class="more-stock in"><span class="dot"></span>In stock</span>
+                <div class="vial-render" style="height:78%;padding-bottom:6%">
+                  <div class="vial-label" style="width:78px;padding:12px 6px">
+                    <div class="vl-mono" style="width:16px;height:16px;font-size:8px">P</div>
+                    <div class="vl-name" style="font-size:11px">SEMA</div>
+                    <div class="vl-mass" style="font-size:8px">10 mg</div>
+                    <div class="vl-purity" style="font-size:7px">≥99.5%</div>
+                    <div class="vl-foot" style="font-size:6px">For research use only</div>
+                  </div>
+                  <div class="vial-body" style="width:50px;height:118px"></div>
+                </div>
+              </div>
+              <div class="more-body">
+                <div class="more-name">Semaglutide</div>
+                <div class="more-desc">GLP-1 receptor agonist · 10mg</div>
+                <div class="more-price-row">
+                  <span class="more-price">$149.00</span>
+                  <div class="more-arr-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="more-card">
+              <div class="more-img">
+                <span class="more-cat-pill">GLP-1</span>
+                <span class="more-stock low"><span class="dot"></span>Low stock</span>
+                <div class="vial-render" style="height:78%;padding-bottom:6%">
+                  <div class="vial-label" style="width:78px;padding:12px 6px">
+                    <div class="vl-mono" style="width:16px;height:16px;font-size:8px">P</div>
+                    <div class="vl-name" style="font-size:11px">TIRZ</div>
+                    <div class="vl-mass" style="font-size:8px">10 mg</div>
+                    <div class="vl-purity" style="font-size:7px">≥99.5%</div>
+                    <div class="vl-foot" style="font-size:6px">For research use only</div>
+                  </div>
+                  <div class="vial-body" style="width:50px;height:118px"></div>
+                </div>
+              </div>
+              <div class="more-body">
+                <div class="more-name">Tirzepatide</div>
+                <div class="more-desc">Dual GIP / GLP-1 agonist · 10mg</div>
+                <div class="more-price-row">
+                  <span class="more-price">$199.00</span>
+                  <div class="more-arr-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="more-card">
+              <div class="more-img">
+                <span class="more-cat-pill">GLP-1</span>
+                <span class="more-stock in"><span class="dot"></span>In stock</span>
+                <div class="vial-render" style="height:78%;padding-bottom:6%">
+                  <div class="vial-label" style="width:78px;padding:12px 6px">
+                    <div class="vl-mono" style="width:16px;height:16px;font-size:8px">P</div>
+                    <div class="vl-name" style="font-size:10px">CAGRI</div>
+                    <div class="vl-mass" style="font-size:8px">10 mg</div>
+                    <div class="vl-purity" style="font-size:7px">≥99.5%</div>
+                    <div class="vl-foot" style="font-size:6px">For research use only</div>
+                  </div>
+                  <div class="vial-body" style="width:50px;height:118px"></div>
+                </div>
+              </div>
+              <div class="more-body">
+                <div class="more-name">Cagrilintide</div>
+                <div class="more-desc">Amylin analog · 10mg</div>
+                <div class="more-price-row">
+                  <span class="more-price">$179.00</span>
+                  <div class="more-arr-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="more-card">
+              <div class="more-img">
+                <span class="more-cat-pill">Healing</span>
+                <span class="more-stock in"><span class="dot"></span>In stock</span>
+                <div class="vial-render" style="height:78%;padding-bottom:6%">
+                  <div class="vial-label" style="width:78px;padding:12px 6px">
+                    <div class="vl-mono" style="width:16px;height:16px;font-size:8px">P</div>
+                    <div class="vl-name" style="font-size:11px">B</div>
+                    <div class="vl-mass" style="font-size:8px">5 mg</div>
+                    <div class="vl-purity" style="font-size:7px">≥99.5%</div>
+                    <div class="vl-foot" style="font-size:6px">For research use only</div>
+                  </div>
+                  <div class="vial-body" style="width:50px;height:118px"></div>
+                </div>
+              </div>
+              <div class="more-body">
+                <div class="more-name">BPC-157</div>
+                <div class="more-desc">Body protection compound · 5mg</div>
+                <div class="more-price-row">
+                  <span class="more-price">$69.00</span>
+                  <div class="more-arr-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <button class="carousel-arrow next" id="carousel-next" aria-label="Next">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="foot">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 313 72" fill="currentColor" aria-label="PurePep" style="height:28px;width:auto;color:var(--bone);display:block;margin-bottom:10px"><g><rect x="4" y="4" width="22" height="64"/><rect x="26" y="22" width="8" height="2"/><rect x="26" y="29" width="8" height="2"/><rect x="34" y="4" width="22" height="36"/></g><g transform="translate(78 56)"><g transform="translate(0 0) scale(0.02734 -0.02734)"><path d="M96 0V1490H738Q904 1490 1028.5 1424.5Q1153 1359 1222.5 1240.0Q1292 1121 1292 962Q1292 802 1221.0 685.5Q1150 569 1022.0 505.5Q894 442 724 442H500V0ZM500 756H642Q714 756 765.0 781.5Q816 807 843.0 853.0Q870 899 870 962Q870 1027 843.0 1072.5Q816 1118 765.0 1142.0Q714 1166 642 1166H500Z"/></g><g transform="translate(35.630 0) scale(0.02734 -0.02734)"><path d="M492 -14Q374 -14 286.0 40.0Q198 94 150.0 189.0Q102 284 102 406V1118H504V490Q504 407 546.0 359.5Q588 312 664 312Q714 312 750.0 333.5Q786 355 806.0 395.0Q826 435 826 490V1118H1228V0H851L844 253Q806 147 732 73Q646 -14 492 -14Z"/></g><g transform="translate(70.877 0) scale(0.02734 -0.02734)"><path d="M102 0V1118H492V904H504Q534 1023 600.5 1077.5Q667 1132 756 1132Q782 1132 808.0 1128.0Q834 1124 858 1116V774Q828 785 784.5 789.5Q741 794 710 794Q651 794 604.0 767.5Q557 741 530.5 693.5Q504 646 504 582V0Z"/></g><g transform="translate(94.038 0) scale(0.02734 -0.02734)"><path d="M638 -20Q459 -20 329.5 48.5Q200 117 131.0 246.0Q62 375 62 556Q62 729 131.5 858.5Q201 988 328.0 1060.0Q455 1132 628 1132Q755 1132 857.5 1092.5Q960 1053 1033.0 978.5Q1106 904 1145.0 798.0Q1184 692 1184 558V466H456Q458 401 480 358Q503 309 546.0 285.5Q589 262 646 262Q687 262 720.5 273.5Q754 285 778.0 306.5Q802 328 814 359L1168 307Q1140 207 1069.0 133.5Q998 60 889.5 20.0Q781 -20 638 -20ZM459 686H805Q801 725 788 755Q768 801 729.0 825.5Q690 850 632.0 850.0Q574 850 535.0 825.5Q496 801 476 755Q463 725 459 686Z"/></g><g transform="translate(126.879 0) scale(0.02734 -0.02734)"><path d="M96 0V1490H738Q904 1490 1028.5 1424.5Q1153 1359 1222.5 1240.0Q1292 1121 1292 962Q1292 802 1221.0 685.5Q1150 569 1022.0 505.5Q894 442 724 442H500V0ZM500 756H642Q714 756 765.0 781.5Q816 807 843.0 853.0Q870 899 870 962Q870 1027 843.0 1072.5Q816 1118 765.0 1142.0Q714 1166 642 1166H500Z"/></g><g transform="translate(162.509 0) scale(0.02734 -0.02734)"><path d="M638 -20Q459 -20 329.5 48.5Q200 117 131.0 246.0Q62 375 62 556Q62 729 131.5 858.5Q201 988 328.0 1060.0Q455 1132 628 1132Q755 1132 857.5 1092.5Q960 1053 1033.0 978.5Q1106 904 1145.0 798.0Q1184 692 1184 558V466H456Q458 401 480 358Q503 309 546.0 285.5Q589 262 646 262Q687 262 720.5 273.5Q754 285 778.0 306.5Q802 328 814 359L1168 307Q1140 207 1069.0 133.5Q998 60 889.5 20.0Q781 -20 638 -20ZM459 686H805Q801 725 788 755Q768 801 729.0 825.5Q690 850 632.0 850.0Q574 850 535.0 825.5Q496 801 476 755Q463 725 459 686Z"/></g><g transform="translate(195.350 0) scale(0.02734 -0.02734)"><path d="M102 -418V1118H500V922H510Q532 979 574.0 1027.0Q616 1075 678.5 1103.5Q741 1132 824 1132Q935 1132 1034.5 1073.0Q1134 1014 1197.0 887.5Q1260 761 1260 558Q1260 365 1200.0 238.0Q1140 111 1040.0 48.5Q940 -14 820 -14Q742 -14 680.5 12.0Q619 38 576.0 82.5Q533 127 510 184H504V-418ZM672 294Q728 294 766.5 325.5Q805 357 825.5 416.5Q846 476 846 558Q846 641 825.5 700.5Q805 760 766.5 792.0Q728 824 672 824Q617 824 577.0 792.0Q537 760 515.5 700.5Q494 641 494 558Q494 477 515.5 418.0Q537 359 577.0 326.5Q617 294 672 294Z"/></g></g></svg>
+        <p style="font-family:var(--fd);font-size:13px;line-height:1.5;color:rgba(250,247,240,.65);margin-bottom:28px;max-width:260px">Research-grade peptides. Triplicate HPLC per lot. Cold-chain shipped.</p>
+        <div class="foot-section">
+          <div class="foot-h">Catalog</div>
+          <a href="#" class="foot-link">RETA · Retatrutide</a>
+          <a href="#" class="foot-link">SEMA · Semaglutide</a>
+          <a href="#" class="foot-link">BPC-157</a>
+          <a href="#" class="foot-link">View all →</a>
+        </div>
+        <div class="foot-section">
+          <div class="foot-h">Quality</div>
+          <a href="#" class="foot-link">Certificates of analysis</a>
+          <a href="#" class="foot-link">Lab partners</a>
+          <a href="#" class="foot-link">Cold-chain shipping</a>
+          <a href="#" class="foot-link">Lot traceability</a>
+        </div>
+        <div class="foot-section">
+          <div class="foot-h">Account</div>
+          <a href="#" class="foot-link">Sign in</a>
+          <a href="#" class="foot-link">Researcher verification</a>
+          <a href="#" class="foot-link">Order history</a>
+          <a href="#" class="foot-link">Re-order</a>
+        </div>
+        <div class="foot-section">
+          <div class="foot-h">Policies</div>
+          <a href="#" class="foot-link">Refund policy</a>
+          <a href="#" class="foot-link">Terms of service</a>
+          <a href="#" class="foot-link">Privacy policy</a>
+          <a href="#" class="foot-link">Shipping policy</a>
+          <a href="#" class="foot-link">Disclaimer</a>
+          <a href="#" class="foot-link">Contact</a>
+        </div>
+        <div class="foot-divider"></div>
+        <div class="foot-pay">
+          <span class="pay-badge">VISA</span>
+          <span class="pay-badge">MC</span>
+          <span class="pay-badge amex">AMEX</span>
+          <span class="pay-badge">DISCOVER</span>
+          <span class="pay-badge dark">Pay</span>
+        </div>
+        <div class="foot-disc">For research use only · Not for human consumption · 21+ qualified researchers<br>© 2026 PurePep</div>
+      </footer>
+
+    </div><!-- /scroll -->
+
+    <div class="tab-bar">
+      <a href="#" class="tab-btn"><svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+      <a href="#" class="tab-btn active"><svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Shop</a>
+      <a href="#" class="tab-btn"><svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart</a>
+      <a href="#" class="tab-btn"><svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account</a>
+    </div>
+
+  </div><!-- /device -->
+</div>
+
+</div><!-- /stage -->
+
+<script>
+/* ── CATEGORY FILTER ── */
+var chips = document.querySelectorAll('.fchip');
+var cards = document.querySelectorAll('.pcard');
+var showCount = document.querySelector('.show-count strong');
+chips.forEach(function(chip) {
+  chip.addEventListener('click', function() {
+    chips.forEach(function(c){c.classList.remove('active')});
+    chip.classList.add('active');
+    var f = chip.dataset.filter;
+    var visible = 0;
+    cards.forEach(function(card){
+      var match = (f === 'all' || card.dataset.category === f);
+      card.classList.toggle('hidden', !match);
+      if(match) visible++;
+    });
+    if(showCount) showCount.textContent = visible;
+  });
+});
+
+/* ── PDP STATE ── */
+var BASE_PRICE = 189;
+var qty = 1;
+var cartCount = 0;
+
+function updatePrice(){
+  var lp = (BASE_PRICE * qty).toFixed(2);
+  document.getElementById('main-price').textContent = '$' + Number(lp).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+document.getElementById('qty-minus').addEventListener('click',function(){
+  if(qty>1){qty--;document.getElementById('qty-val').textContent=qty;updatePrice();}
+});
+document.getElementById('qty-plus').addEventListener('click',function(){
+  qty++;document.getElementById('qty-val').textContent=qty;updatePrice();
+});
+
+/* ── CART BUMP ── */
+function bumpCart(){
+  cartCount += qty;
+  ['cart-count-l','cart-count-r'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el)return;
+    el.textContent=cartCount;
+    el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');
+    setTimeout(function(){el.classList.remove('bump')},350);
+  });
+}
+document.getElementById('buybox').addEventListener('click',bumpCart);
+
+updatePrice();
+
+/* ── CAROUSEL ARROWS ── */
+(function(){
+  var carousel = document.getElementById('more-carousel');
+  var prevBtn = document.getElementById('carousel-prev');
+  var nextBtn = document.getElementById('carousel-next');
+  if(!carousel) return;
+
+  function scrollByCard(dir){
+    var card = carousel.querySelector('.more-card');
+    if(!card) return;
+    var step = card.offsetWidth + 12;
+    carousel.scrollBy({left: dir * step, behavior:'smooth'});
+  }
+  function updateBtns(){
+    var max = carousel.scrollWidth - carousel.clientWidth;
+    prevBtn.disabled = carousel.scrollLeft <= 4;
+    nextBtn.disabled = carousel.scrollLeft >= max - 4;
+  }
+  prevBtn.addEventListener('click', function(){ scrollByCard(-1); });
+  nextBtn.addEventListener('click', function(){ scrollByCard(1); });
+  carousel.addEventListener('scroll', updateBtns, {passive:true});
+  updateBtns();
+})();
+</script>
+</body>
+</html>

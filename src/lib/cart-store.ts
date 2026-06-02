@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { addToWcCart } from "@/lib/wc-store-api";
@@ -95,3 +96,16 @@ export const useCartStore = create<CartState>()(
     },
   ),
 );
+
+/**
+ * SSR-safe cart item count for persistent chrome (header, tab bar).
+ * Returns 0 on the server and the first client render, then the live count
+ * after mount — so the prerendered static HTML (no localStorage) matches the
+ * first hydration pass and no hydration mismatch is thrown.
+ */
+export function useCartCount(): number {
+  const items = useCartStore((s) => s.items);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted ? items.reduce((sum, i) => sum + i.qty, 0) : 0;
+}

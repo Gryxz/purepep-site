@@ -1,3 +1,4 @@
+
 node_modules
 .next
 .turbo
@@ -13,3 +14,12 @@ coverage
 .husky/_
 next-env.d.ts
 *.tsbuildinfo
+
+# inspector output
+tmp/
+
+# label-render font cache (downloaded on demand)
+scripts/.fonts-cache/
+
+# label-render output (deterministic from src/lib/labels/skus.ts; regen via 'pnpm labels')
+public/brand/labels/*.png

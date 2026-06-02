@@ -1,0 +1,390 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { clsx } from "@/lib/clsx";
+import { padded2, plural } from "@/lib/text";
+import type { Product } from "@/data/products";
+import Image from "next/image";
+import Link from "next/link";
+import { LabelCropSvg } from "./LabelCropSvg";
+import { TestimonialsSection } from "./TestimonialsSection";
+import { useCartStore } from "@/lib/cart-store";
+import { trackAddToCart } from "@/lib/analytics";
+import { REFERRAL } from "@/content/referral";
+
+/**
+ * v3 Apple Swiss Homepage.
+ *
+ * Sections:
+ *   1. Featured compound band — 60/40 grid with label-crop visual
+ *   2. Catalog — section head row + product grid (rail ≤1024)
+ *   3. Stat grid — Specifications we publish
+ *   4. Testimonials
+ *   5. Best-selling bundles
+ *   6. From-order-to-lab timeline (reuses .v3pdp-timeline classes)
+ *   7. Documentation strip
+ *   8. Referral teaser
+ *   9. Closing CTA
+ */
+// Reta flagship/featured treatment disabled for now.  Flip to true
+// to bring back the homepage "Featured compound" lead band.  Gate
+// retained (JSX not deleted) so re-enabling is a one-line change.
+const RETA_FEATURE_ENABLED = false;
+
+export function HomePage({ products }: { products: Product[] }) {
+  const featured = products[0];
+  const railRef = useRef<HTMLDivElement | null>(null);
+  const [progress, setProgress] = useState({ width: 33, left: 0 });
+
+  useEffect(() => {
+    const el = railRef.current;
+    if (!el) return;
+    const update = () => {
+      const max = el.scrollWidth - el.clientWidth;
+      const pct = max > 0 ? el.scrollLeft / max : 0;
+      const windowPct = el.clientWidth / el.scrollWidth;
+      const fillPct = Math.max(windowPct * 100, 18);
+      setProgress({ width: fillPct, left: pct * (100 - fillPct) });
+    };
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      el.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  function railStep(dir: 1 | -1) {
+    const el = railRef.current;
+    if (!el) return;
+    const tile = el.querySelector(".v3-tile") as HTMLElement | null;
+    const step = tile ? tile.getBoundingClientRect().width + 24 : el.clientWidth;
+    el.scrollBy({ left: step * dir, behavior: "smooth" });
+  }
+
+  return (
+    <div className="v3-shop">
+      {/* ───── Swiss-Chems-style hero — dark, left copy + amber CTA,
+              right vial cluster.  Reta excluded from the cluster
+              (de-featured); generic catalogue imagery only. ───── */}
+      <section className="v3sc-hero" aria-label="Research-grade peptides">
+        <div className="v3-container v3sc-hero-grid">
+          <div className="v3sc-hero-info">
+            <p className="v3sc-hero-eyebrow">Research-grade peptides</p>
+            <h1 className="v3sc-hero-headline">The standard for research peptides.</h1>
+            <p className="v3sc-hero-deck">
+              Lab-verified peptides for in vitro research. Tracked US shipping.
+            </p>
+            <div className="v3sc-hero-cta-row">
+              <a href="/shop" className="v3-pill v3-pill-primary">
+                Shop the catalog <span className="arrow">→</span>
+              </a>
+            </div>
+          </div>
+          <div className="v3sc-hero-cluster" aria-hidden="true">
+            {["tirz", "sema", "cagri", "bpc-157"].map((slug, i) => (
+              <span key={slug} className={`v3sc-cluster-vial v${i + 1}`}>
+                <Image
+                  src={`/images/products/source/purepep-vial-${slug}-v1.0-cutout.png`}
+                  alt=""
+                  fill
+                  sizes="40vw"
+                  className="v3sc-cluster-img"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                />
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───── Featured compound (lead section) ───── */}
+      {/* Hidden for now — gated on RETA_FEATURE_ENABLED (false). */}
+      {RETA_FEATURE_ENABLED && featured && (
+        <section className="v3home-featured-band">
+          <div className="v3-container">
+            <div className="v3home-featured-grid">
+              <div>
+                <p className="v3-section-eyebrow">
+                  Featured · 01 / {padded2(products.length)}
+                </p>
+                <h2 className="v3home-featured-headline">
+                  {featured.name}. The current frontier for metabolic research.
+                </h2>
+                <p className="v3home-featured-body">
+                  Triple GLP-1 / GIP / glucagon agonist, 39-amino-acid peptide. Supplied as lyophilized powder in a
+                  stoppered glass vial. Available in 1, 3, and 5-vial configurations, each shipped with a lot-matched
+                  Certificate of Analysis.
+                </p>
+                <div className="v3home-featured-ctas">
+                  <a href={`/shop/${featured.slug}`} className="v3-pill v3-pill-primary">
+                    View {featured.name} <span className="arrow">→</span>
+                  </a>
+                  <a href="/shop" className="v3-pill v3-pill-ghost">
+                    Compare configurations
+                  </a>
+                </div>
+              </div>
+              <div className="v3home-label-crop" aria-label={`${featured.compound} label close-up`}>
+                <LabelCropSvg
+                  compound={featured.compound}
+                  dose={featured.dose}
+                  lot={featured.lot}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ───── Catalog ───── */}
+      {/* v3home-catalog scopes the desktop carousel override (the
+          shared .v3-rail-* grid stays a grid on /shop). */}
+      <section className="v3-section v3home-catalog">
+        <div className="v3-container">
+          <div className="v3-section-head-row">
+            <div>
+              <p className="v3-section-eyebrow">Catalog</p>
+              <h2 className="v3-section-headline">
+                {plural(products.length, "compound")}.
+                <br />
+                One standard.
+              </h2>
+            </div>
+            <a href="/shop" className="v3-pill v3-pill-primary v3-pill-sm">
+              See all {plural(products.length, "peptide")} <span className="arrow">→</span>
+            </a>
+          </div>
+
+          <div
+            style={{
+              marginTop: 28,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 20,
+              flexWrap: "wrap",
+            }}
+          >
+            <span
+              className="v3-rail-hint"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+                color: "var(--v3-ink-60)",
+              }}
+            >
+              ← Scroll horizontally · {String(products.length).padStart(2, "0")} products
+            </span>
+            <div style={{ display: "inline-flex", gap: 8 }}>
+              <button
+                type="button"
+                className="v3-arrow-btn is-sm"
+                aria-label="Scroll rail left"
+                onClick={() => railStep(-1)}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m15 6-6 6 6 6" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className="v3-arrow-btn is-sm"
+                aria-label="Scroll rail right"
+                onClick={() => railStep(1)}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 6 6 6-6 6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div className="v3-rail-viewport" ref={railRef}>
+            <div className="v3-rail-track">
+              {products.map((p) => (
+                <ProductTile key={p.slug} product={p} />
+              ))}
+            </div>
+          </div>
+          <div className="v3-rail-progress-track">
+            <div
+              className="v3-rail-progress-fill"
+              style={{ width: `${progress.width}%`, left: `${progress.left}%` }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ───── Proven & Tested ───── */}
+      <section className="v3-section">
+        <div className="v3-container">
+          <p className="v3-section-eyebrow">The standard</p>
+          <h2 className="v3-section-headline">Specifications we publish.</h2>
+          <p className="v3-section-sub">
+            Analytical specifications verified per lot. No marketing math, no rounded promises — just the numbers from
+            the instruments.
+          </p>
+
+          <div className="v3-stat-grid">
+            <div className="v3-stat-card">
+              <div className="v3-stat-num">≥99.5%</div>
+              <div className="v3-stat-label">HPLC Verified</div>
+              <div className="v3-stat-source">
+                Reverse-phase C18 HPLC, in-house QC. Independent third-party confirmation per lot.
+              </div>
+            </div>
+            <div className="v3-stat-card">
+              <div className="v3-stat-num">≤0.5 Da</div>
+              <div className="v3-stat-label">MS Deviation</div>
+              <div className="v3-stat-source">
+                ESI high-resolution mass spectrometry. Molecular identity confirmed per lot, reported in COA.
+              </div>
+            </div>
+            <div className="v3-stat-card">
+              <div className="v3-stat-num">&lt;1.0 EU/mg</div>
+              <div className="v3-stat-label">Endotoxin Tested</div>
+              <div className="v3-stat-source">
+                Limulus Amebocyte Lysate (LAL) assay per lot. Results included in downloadable Certificate of Analysis.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ───── Testimonials — temporarily hidden ───── */}
+      {/* <TestimonialsSection /> */}
+
+      {/* stacks/bundles section hidden */}
+
+      {/* ───── From order to lab timeline ───── */}
+      <section className="v3-section" style={{ paddingTop: 0 }}>
+        <div className="v3-container">
+          <p className="v3-section-eyebrow">Logistics</p>
+          <h2 className="v3-section-headline">From order to lab.</h2>
+          <p className="v3-section-sub">
+            What happens after Add to cart. No surprises, no cold-chain anxiety.
+          </p>
+
+          <div className="v3pdp-timeline-wrap">
+            <div className="v3pdp-timeline">
+              {[
+                ["Order confirmed", "Research eligibility verified. Your lot is allocated and reserved within 1 hour."],
+                ["COA released + dispatched", "Lot-specific Certificate of Analysis issued. Ships same or next business day."],
+                ["Delivered", "Lyophilized powder, stable at room temperature in transit. No cold-chain anxiety."],
+                ["Research-ready", "Reconstitute with bacteriostatic water. Stable 30+ days refrigerated post-reconstitution."],
+              ].map(([title, body], i) => (
+                <div key={title} className="v3pdp-tl-node">
+                  <div className="v3pdp-tl-circle">{i + 1}</div>
+                  <div className="v3pdp-tl-card">
+                    <h3 className="v3pdp-tl-title">{title}</h3>
+                    <p className="v3pdp-tl-body">{body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* docs-band + referral-teaser hidden */}
+
+      {/* ───── Closing CTA ───── */}
+      <section className="v3-closing">
+        <div className="v3-container">
+          <p className="v3-closing-eyebrow">Ready when you are</p>
+          <h2 className="v3-closing-headline">Open the catalog.</h2>
+          <a href="/shop" className="v3-pill v3-pill-primary">
+            Browse {plural(products.length, "peptide")} <span className="arrow">→</span>
+          </a>
+          <div className="v3-closing-stamp">
+            For research use only · Not for human consumption · Sales final
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function ProductTile({ product }: { product: Product }) {
+  const stockClass =
+    product.stock === "low" ? "is-low" : product.stock === "out" ? "is-wait" : "";
+  const stockLabel =
+    product.stock === "out" ? "Waitlist" : product.stock === "low" ? "Low stock" : "In stock";
+  const showDot = product.stock !== "out";
+  const { addItem, openCart } = useCartStore();
+  const isOut = product.stock === "out";
+
+  function handleAdd(e: React.MouseEvent) {
+    // Tile wraps a PDP link; block its navigation when the button is clicked.
+    e.preventDefault();
+    e.stopPropagation();
+    if (isOut) return;
+    addItem({
+      slug: product.slug,
+      compound: product.compound,
+      name: product.name,
+      dose: product.dose,
+      price: product.price,
+      priceLabel: `$${product.price.toFixed(2)}`,
+      wcId: product.wcId,
+    });
+    trackAddToCart(product, product.dose, 1, product.price, product.wcId);
+    openCart();
+  }
+
+  return (
+    <a href={`/shop/${product.slug}`} className="v3-tile">
+      <div className="v3-tile-photo">
+        <Image
+          src={product.imageUrl ?? `/images/products/source/purepep-vial-${product.slug}-v1.0.jpg`}
+          alt={`${product.compound} vial`}
+          fill
+          sizes="(max-width:600px) 50vw, 25vw"
+          className="v3-product-hero-img"
+          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+        />
+      </div>
+      <div className="v3-tile-content">
+        <div className="v3-meta-row">
+          <span className="v3-sku-line">
+            <span className="sku">{product.compound}</span>
+            <span className="sep">·</span>
+            <span className="generic">{product.name}</span>
+          </span>
+          <span className={clsx("v3-stock", stockClass)}>
+            {showDot && <span className="dot" />}
+            {stockLabel}
+          </span>
+        </div>
+        <h3 className="v3-tile-name">{product.name}</h3>
+        <p className="v3-tile-sub">{product.description.split(/\.\s+/)[0]}.</p>
+        <div className="v3-action-row">
+          <div>
+            <div className="v3-tile-price">${Math.round(product.price)}</div>
+            <div className="v3-price-from">From · 1 vial</div>
+          </div>
+          <button
+            type="button"
+            className="v3-view-pill"
+            onClick={handleAdd}
+            disabled={isOut}
+            aria-label={isOut ? "Out of stock" : `Add ${product.name} to cart`}
+          >
+            {isOut ? "Out" : "Add"}
+            <span className="arrow">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m9 6 6 6-6 6" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </a>
+  );
+}

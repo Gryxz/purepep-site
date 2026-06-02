@@ -1,0 +1,61 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 250" role="img" aria-label="RETA 10 mg vial label">
+  <defs>
+    
+  </defs>
+
+  
+  <rect class="ground" width="600" height="250" rx="2"></rect>
+  <rect class="hairline" x="8" y="8" width="584" height="234" rx="2"></rect>
+
+  
+  <g transform="translate(24, 24)">
+    
+    <rect width="28" height="28" rx="3" fill="#1F1F1F"></rect>
+    <text x="14" y="14" text-anchor="middle" dominant-baseline="central" class="display" font-size="22" fill="#F5EBD8">P</text>
+    <circle cx="22" cy="22" r="1.5" fill="#C75D3A"></circle>
+    
+    <text x="40" y="20" class="display ink" font-size="20">PurePep</text>
+    
+    <text x="552" y="18" class="eyebrow ink-mute" font-size="9" text-anchor="end">For research use only</text>
+  </g>
+
+  
+  <line class="hair-thin" x1="24" y1="68" x2="576" y2="68"></line>
+
+  
+  <g transform="translate(24, 92)">
+    <text class="eyebrow ink-mute" font-size="10">Product code</text>
+    <text x="0" y="58" class="display ink" font-size="68">RETA</text>
+    
+    <text x="0" y="86" class="sans ink-mute" font-size="14" font-style="italic">Retatrutide · lyophilized</text>
+  </g>
+
+  
+  <g transform="translate(360, 92)">
+    <text class="eyebrow ink-mute" font-size="10">Net mass</text>
+    <text x="0" y="32" class="display ink" font-size="36">10 mg</text>
+
+    <text x="0" y="60" class="eyebrow ink-mute" font-size="10">Reconstitution volume</text>
+    <text x="0" y="78" class="sans ink" font-size="14">Add 2.0 mL bacteriostatic water</text>
+
+    
+    <g transform="translate(0, 100)">
+      <text class="eyebrow ink-mute" font-size="9">Lot</text>
+      <text x="0" y="18" class="mono ink" font-size="12">RT-2604-A11</text>
+      <text x="120" y="0" class="eyebrow ink-mute" font-size="9">Expiry</text>
+      <text x="120" y="18" class="mono ink" font-size="12">2027-04</text>
+    </g>
+  </g>
+
+  
+  <line class="hair-thin" x1="24" y1="208" x2="576" y2="208"></line>
+
+  
+  <g transform="translate(24, 226)">
+    
+    <circle cx="4" cy="-3" r="3" class="copper"></circle>
+    <text x="14" y="0" class="sans ink" font-size="9.5">Not for human consumption · 21+ qualified researchers only · Store at 2–8 °C, protect from light</text>
+    <text x="552" y="0" class="mono ink-mute" font-size="9" text-anchor="end">purepep.shop</text>
+  </g>
+</svg>

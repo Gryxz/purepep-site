@@ -143,6 +143,8 @@ export function CartDrawer() {
           >
             Proceed to checkout
           </Link>
+
+          {/* referral micro-prompt hidden */}
         </div>
       </aside>
     </>

@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PurePep · Cart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bone:#FAF7F0; --ink:#1F1F1F; --loden:#3D4232;
+  --s1:#F1EDE3; --s2:#F5F1EA; --s3:#EFEAE0; --s4:#E9E3D7;
+  --rule:#E5DFD2; --ink-mute:#6B6B66;
+  --emerald:#2F6B4A; --alert:#A24A2A;
+  --fd:'Inter',system-ui,sans-serif;
+  --fm:'IBM Plex Mono',monospace;
+  --r2:1rem; --r3:1.5rem; --rf:9999px;
+  --free-ship:200;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  background:#0d0d0d;font-family:var(--fd);
+  -webkit-font-smoothing:antialiased;color:var(--ink);min-height:100vh;
+}
+button{font-family:var(--fd);cursor:pointer;border:none;background:none;color:inherit}
+a{text-decoration:none;color:inherit}
+
+/* ── STAGE ── */
+.stage{
+  display:flex;justify-content:center;align-items:flex-start;
+  padding:44px 24px 80px;min-height:100vh;
+}
+.device{
+  width:393px;min-height:852px;height:852px;
+  background:var(--bone);border-radius:50px;overflow:hidden;
+  position:relative;flex-shrink:0;
+  box-shadow:0 0 0 1px #2a2a2a,0 0 0 9px #111,0 40px 80px rgba(0,0,0,.65);
+}
+.scroll{
+  position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;background:var(--bone);
+  padding-bottom:80px;
+}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ── HEADER ── */
+.hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;background:var(--bone);
+  border-bottom:1px solid var(--rule);
+  position:sticky;top:0;z-index:40;
+}
+.hdr-logo{display:flex;align-items:center;gap:10px;position:absolute;left:50%;transform:translateX(-50%)}
+.mono{
+  width:32px;height:32px;background:var(--ink);color:var(--bone);
+  border-radius:8px;display:grid;place-items:center;
+  font-weight:900;font-size:15px;flex-shrink:0;
+}
+.mono.sm{width:24px;height:24px;font-size:11px;border-radius:6px}
+.wm{font-weight:900;font-size:18px;letter-spacing:-.02em}
+.back-btn{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--ink-mute);padding:8px 0;
+  transition:color .12s;
+}
+.back-btn:hover{color:var(--ink)}
+.back-btn svg{flex-shrink:0}
+
+/* ── PAGE TITLE ── */
+.page-title{
+  padding:24px 20px 20px;
+  border-bottom:1px solid var(--rule);
+}
+.page-title h1{
+  font-weight:900;font-size:28px;letter-spacing:-.025em;
+  display:flex;align-items:baseline;gap:10px;
+}
+.page-title .item-count{
+  font-family:var(--fm);font-size:13px;font-weight:400;
+  color:var(--ink-mute);letter-spacing:.06em;
+}
+
+/* ── FREE SHIP BAR ── */
+.ship-bar{
+  padding:16px 20px;
+  background:linear-gradient(135deg,#2a1f00 0%,#1e1600 60%,#231900 100%);
+  border-bottom:1px solid rgba(180,130,0,.2);
+  position:relative;overflow:hidden;
+}
+.ship-bar::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 100% at 30% 50%,rgba(210,160,0,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.ship-bar-label{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:10px;position:relative;z-index:1;
+}
+.ship-bar-text{font-size:13px;color:rgba(250,230,180,.75);font-weight:500}
+.ship-bar-text strong{color:#FFD97A;font-weight:700}
+.ship-bar-text.unlocked{color:#FFD97A;font-weight:700}
+.ship-pct{font-family:var(--fm);font-size:11px;color:rgba(210,160,0,.8);letter-spacing:.06em;font-weight:500}
+.ship-track{
+  height:7px;background:rgba(0,0,0,.35);border-radius:var(--rf);
+  overflow:visible;position:relative;z-index:1;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.4);
+}
+.ship-fill{
+  height:100%;
+  background:linear-gradient(90deg,#8a6200 0%,#c49000 25%,#FFD97A 50%,#D4A017 75%,#c49000 100%);
+  background-size:200% 100%;
+  border-radius:var(--rf);
+  transition:width .45s cubic-bezier(.4,0,.2,1);
+  position:relative;
+  box-shadow:0 0 8px rgba(210,160,0,.4),0 0 2px rgba(255,220,100,.6);
+  animation:amber-shimmer 3s ease-in-out infinite;
+  overflow:hidden;
+}
+.ship-fill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 20%,rgba(255,240,180,.55) 45%,rgba(255,255,220,.7) 50%,rgba(255,240,180,.55) 55%,transparent 80%);
+  background-size:200% 100%;
+  animation:glint-sweep 3s ease-in-out infinite;
+  border-radius:inherit;
+}
+@keyframes amber-shimmer{0%,100%{background-position:100% 0}50%{background-position:0% 0}}
+@keyframes glint-sweep{
+  0%{background-position:-100% 0;opacity:0}20%{opacity:1}
+  60%{background-position:200% 0;opacity:0}100%{background-position:200% 0;opacity:0}
+}
+.ship-milestone{
+  position:absolute;top:50%;right:0;transform:translate(50%,-50%);
+  width:13px;height:13px;border-radius:var(--rf);
+  background:radial-gradient(circle at 35% 35%,#FFE08A,#C49000);
+  border:2px solid rgba(0,0,0,.3);
+  box-shadow:0 0 6px rgba(210,160,0,.6),0 0 0 1px rgba(210,160,0,.3);z-index:2;
+}
+
+/* ── ITEMS SECTION ── */
+.items-section{padding:0}
+
+.item{
+  display:flex;gap:14px;padding:18px 20px;
+  border-bottom:1px solid var(--rule);
+  position:relative;
+  transition:opacity .18s,transform .18s,max-height .22s,padding .22s;
+  overflow:hidden;max-height:200px;
+}
+.item.gone{
+  opacity:0;transform:translateX(20px);
+  max-height:0;padding-top:0;padding-bottom:0;
+}
+
+/* Item image */
+.item-img{
+  width:80px;height:80px;flex-shrink:0;
+  background:linear-gradient(160deg,var(--s1) 0%,var(--s3) 100%);
+  border-radius:14px;border:1px solid var(--rule);
+  display:flex;align-items:flex-end;justify-content:center;overflow:hidden;
+}
+.item-vial{
+  display:flex;align-items:flex-end;gap:3px;
+  height:85%;padding-bottom:4px;position:relative;z-index:1;
+}
+.item-vial-label{
+  width:30px;background:var(--bone);border:1px solid var(--rule);
+  border-radius:2px;padding:4px 2px;
+  display:flex;flex-direction:column;align-items:center;gap:2px;align-self:center;
+}
+.vlm{width:10px;height:10px;background:var(--ink);color:var(--bone);border-radius:2px;display:grid;place-items:center;font-size:5px;font-weight:900}
+.vln{font-size:5.5px;font-weight:900;color:var(--ink);text-align:center;line-height:1}
+.vlmass{font-size:4.5px;background:var(--ink);color:var(--bone);padding:1px 2px;border-radius:1px;font-family:var(--fm)}
+.item-vial-body{
+  width:22px;height:54px;align-self:flex-end;
+  background:linear-gradient(180deg,#d8d4c7 0%,#c4c0b3 30%,#e8e4d7 60%,#d8d4c7 100%);
+  border:1px solid rgba(31,31,31,.15);border-radius:2px 2px 4px 4px;position:relative;
+}
+.item-vial-body::before{content:'';position:absolute;top:-7px;left:2px;right:2px;height:9px;background:linear-gradient(180deg,#5a5e50,#3d4232);border-radius:2px 2px 1px 1px}
+.item-vial-body::after{content:'';position:absolute;left:2px;right:2px;bottom:2px;height:18px;background:rgba(250,247,240,.9);border-radius:1px}
+
+/* Item body */
+.item-body{flex:1;min-width:0}
+.item-top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px}
+.item-name{font-weight:700;font-size:15px;letter-spacing:-.01em;padding-right:8px}
+.item-remove{
+  width:26px;height:26px;border-radius:var(--rf);
+  background:var(--s1);display:grid;place-items:center;
+  color:var(--ink-mute);font-size:15px;line-height:1;
+  border:1px solid var(--rule);flex-shrink:0;
+  transition:background .12s,color .12s;
+}
+.item-remove:hover{background:var(--s3);color:var(--ink)}
+.item-meta{font-family:var(--fm);font-size:10px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+
+/* Stock chip */
+.item-stock{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:var(--fm);font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;padding:3px 8px;border-radius:var(--rf);
+  margin-bottom:10px;width:fit-content;
+}
+.item-stock.low{background:rgba(162,74,42,.1);color:var(--alert)}
+.item-stock.low .sdot{
+  width:4px;height:4px;border-radius:var(--rf);background:var(--alert);flex-shrink:0;
+  animation:sdot-pulse 2s ease-in-out infinite;
+}
+@keyframes sdot-pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+.item-bottom-row{display:flex;align-items:center;justify-content:space-between}
+.item-unit{font-family:var(--fm);font-size:10px;color:var(--ink-mute);letter-spacing:.04em}
+
+/* Stepper */
+.item-stepper{
+  display:flex;align-items:center;
+  background:var(--bone);border:1px solid var(--rule);
+  border-radius:var(--rf);overflow:hidden;
+}
+.item-stepper button{
+  width:32px;height:32px;display:grid;place-items:center;
+  font-size:16px;color:var(--ink);transition:background .1s;
+}
+.item-stepper button:active{background:var(--s2)}
+.item-stepper .sv{
+  font-family:var(--fm);font-size:13px;font-weight:500;
+  min-width:24px;text-align:center;border-left:1px solid var(--rule);border-right:1px solid var(--rule);
+  height:32px;display:flex;align-items:center;justify-content:center;
+}
+.item-total{font-weight:700;font-size:15px;letter-spacing:-.01em}
+
+/* ── ORDER SUMMARY ── */
+.summary-section{
+  margin:0 16px 0;padding:20px;
+  background:var(--s1);border:1px solid var(--rule);
+  border-radius:var(--r3);
+}
+.summary-h{font-weight:900;font-size:18px;letter-spacing:-.02em;margin-bottom:18px}
+.sum-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:14px;padding:10px 0;border-top:1px solid var(--rule);
+}
+.sum-row:first-of-type{border-top:none;padding-top:0}
+.sum-k{color:var(--ink-mute)}
+.sum-v{font-weight:500}
+.sum-row.total{
+  padding-top:14px;margin-top:4px;border-top:2px solid var(--rule);
+}
+.sum-row.total .sum-k{font-weight:700;font-size:16px;color:var(--ink)}
+.sum-row.total .sum-v{font-weight:900;font-size:20px;letter-spacing:-.02em}
+.sum-note{font-family:var(--fm);font-size:10px;color:var(--ink-mute);letter-spacing:.06em;margin-top:10px;line-height:1.5}
+
+/* Line items inside summary */
+.sum-lines{margin-bottom:4px}
+.sum-line{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:8px 0;border-top:1px solid var(--rule);font-size:13.5px;
+}
+.sum-line:first-child{border-top:none;padding-top:0}
+.sum-line-info{display:flex;flex-direction:column;gap:2px;min-width:0;padding-right:12px}
+.sum-line-name{font-weight:600;color:var(--ink);letter-spacing:-.01em}
+.sum-line-meta{font-family:var(--fm);font-size:10px;color:var(--ink-mute);letter-spacing:.08em;text-transform:uppercase}
+.sum-line-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0}
+.sum-line-price{font-weight:700;font-size:14px;letter-spacing:-.01em;white-space:nowrap}
+.sum-line-unit{font-family:var(--fm);font-size:10px;color:var(--ink-mute);white-space:nowrap}
+.sum-divider{height:1px;background:var(--rule);margin:12px 0}
+.sum-shipping-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:13.5px;padding:8px 0;
+}
+.sum-shipping-k{color:var(--ink-mute)}
+.sum-shipping-v{font-weight:500}
+
+/* ── PROMO ── */
+.promo-section{padding:16px 20px;border-bottom:1px solid var(--rule)}
+.promo-toggle{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--ink-mute);cursor:pointer;transition:color .12s;
+}
+.promo-toggle:hover{color:var(--ink)}
+.promo-toggle svg{transition:transform .2s}
+.promo-toggle.open svg{transform:rotate(90deg)}
+.promo-field{
+  display:flex;gap:8px;margin-top:12px;
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .22s,opacity .2s;
+}
+.promo-field.open{max-height:60px;opacity:1}
+.promo-input{
+  flex:1;padding:12px 14px;background:var(--bone);
+  border:1px solid var(--rule);border-radius:var(--r2);
+  font-size:13px;color:var(--ink);outline:none;font-family:var(--fd);
+}
+.promo-input:focus{border-color:var(--ink)}
+.promo-apply{
+  padding:12px 16px;background:var(--ink);color:var(--bone);
+  border-radius:var(--r2);font-weight:600;font-size:12px;letter-spacing:.06em;
+  white-space:nowrap;
+}
+
+/* ── UPSELL ── */
+.upsell-section{
+  padding:20px;border-bottom:1px solid var(--rule);
+  background:var(--s1);
+}
+.upsell-eyebrow{
+  font-family:var(--fm);font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-mute);margin-bottom:12px;font-weight:500;
+}
+.upsell-card{
+  background:var(--bone);border:1px solid var(--rule);border-radius:var(--r2);
+  padding:14px;display:flex;gap:14px;align-items:center;
+}
+.upsell-img{
+  width:56px;height:56px;flex-shrink:0;
+  background:linear-gradient(160deg,var(--s2) 0%,var(--s3) 100%);
+  border-radius:10px;border:1px solid var(--rule);
+  display:flex;align-items:flex-end;justify-content:center;overflow:hidden;
+}
+.upsell-vial-mini{display:flex;align-items:flex-end;gap:2px;height:85%;padding-bottom:3px}
+.uvl{width:22px;background:var(--bone);border:1px solid var(--rule);border-radius:2px;padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;align-self:center}
+.uvlm{width:9px;height:9px;background:var(--ink);color:var(--bone);border-radius:2px;display:grid;place-items:center;font-size:5px;font-weight:900}
+.uvln{font-size:5px;font-weight:900;color:var(--ink);line-height:1;text-align:center}
+.uvb{width:16px;height:38px;align-self:flex-end;background:linear-gradient(180deg,#d8d4c7,#c4c0b3 30%,#e8e4d7 60%,#d8d4c7 100%);border:1px solid rgba(31,31,31,.15);border-radius:1px 1px 3px 3px;position:relative}
+.uvb::before{content:'';position:absolute;top:-5px;left:1px;right:1px;height:7px;background:linear-gradient(180deg,#5a5e50,#3d4232);border-radius:1px}
+.uvb::after{content:'';position:absolute;left:1px;right:1px;bottom:1px;height:12px;background:rgba(250,247,240,.9)}
+.upsell-info{flex:1;min-width:0}
+.upsell-name{font-weight:700;font-size:14px;letter-spacing:-.01em;margin-bottom:2px}
+.upsell-meta{font-family:var(--fm);font-size:10px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:.08em}
+.upsell-price{font-family:var(--fm);font-size:13px;font-weight:500;margin-top:3px}
+.upsell-add{
+  flex-shrink:0;padding:11px 18px;
+  background:linear-gradient(160deg,#C8890A 0%,#9A6500 50%,#B87800 100%);
+  color:#fff;
+  border-radius:var(--rf);font-weight:700;font-size:11px;
+  letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;
+  border:1px solid rgba(255,210,80,.18);
+  border-top-color:rgba(255,230,140,.55);border-bottom-color:rgba(100,60,0,.3);
+  box-shadow:0 3px 14px rgba(160,95,0,.45),0 1px 3px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,235,160,.35);
+  position:relative;overflow:hidden;transition:filter .2s,transform .15s;
+}
+.upsell-add::before{
+  content:'';position:absolute;top:-40%;left:-60%;width:40%;height:180%;
+  background:linear-gradient(105deg,transparent,rgba(255,245,200,.5) 40%,rgba(255,255,240,.75) 50%,rgba(255,245,200,.5) 60%,transparent);
+  transform:skewX(-15deg);animation:glint-pass 4s ease-in-out infinite;pointer-events:none;
+}
+@keyframes glint-pass{0%{left:-60%;opacity:0}8%{opacity:1}35%{left:140%;opacity:0}100%{left:140%;opacity:0}}
+.upsell-add:hover{filter:brightness(1.1)}
+.upsell-add:active{transform:scale(.97)}
+
+/* ── CTAs ── */
+.ctas-section{padding:16px 20px 8px}
+.cta-checkout{
+  width:100%;padding:18px 24px;
+  background:linear-gradient(160deg,#4a5238 0%,#3D4232 55%,#333827 100%);
+  color:var(--bone);border-radius:var(--rf);
+  font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  position:relative;overflow:hidden;margin-bottom:10px;
+  border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(0,0,0,.25);
+  box-shadow:0 4px 16px rgba(45,50,35,.5),0 1px 3px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.08);
+  transition:filter .2s,transform .15s;
+}
+.cta-checkout::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:40%;
+  background:linear-gradient(to bottom,rgba(255,255,255,.06),transparent);pointer-events:none;
+}
+.cta-checkout:hover{filter:brightness(1.12)}
+.cta-checkout:active{transform:scale(.99)}
+.cta-continue{
+  width:100%;padding:14px 24px;background:transparent;color:var(--ink);
+  border-radius:var(--rf);font-weight:600;font-size:13px;
+  border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;
+  transition:background .12s;
+}
+.cta-continue:hover{background:var(--s1)}
+
+/* ── TRUST FOOTER ── */
+.trust-footer{
+  padding:20px 20px 28px;
+  display:flex;justify-content:center;gap:20px;flex-wrap:wrap;
+}
+.tf-item{
+  display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;
+}
+.tf-icon{
+  width:36px;height:36px;background:var(--s1);border-radius:10px;
+  display:grid;place-items:center;border:1px solid var(--rule);color:var(--ink-mute);
+}
+.tf-label{font-family:var(--fm);font-size:9px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:.1em;line-height:1.35}
+
+/* ── BOTTOM TAB BAR ── */
+.tab-bar{
+  position:absolute;bottom:0;left:0;right:0;z-index:60;
+  background:rgba(250,247,240,.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--rule);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  padding:8px 0 12px;
+}
+.tab-btn{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 0;color:var(--ink-mute);font-size:10px;font-weight:500;position:relative;
+}
+.tab-btn.active{color:var(--ink)}
+.tab-btn.active::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:24px;height:2px;background:var(--loden);border-radius:0 0 2px 2px;
+}
+.tab-btn svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="device">
+<div class="scroll">
+
+  <!-- Header — back top-left, logo centered (locked convention) -->
+  <header class="hdr">
+    <button class="back-btn" onclick="history.back()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </button>
+    <div class="hdr-logo">
+      <div class="mono">P</div>
+      <span class="wm">PurePep</span>
+    </div>
+  </header>
+
+  <!-- Page title -->
+  <div class="page-title">
+    <h1>Your cart <span class="item-count" id="title-count">· 1 item</span></h1>
+  </div>
+
+  <!-- Free shipping bar -->
+  <div class="ship-bar" id="ship-bar">
+    <div class="ship-bar-label">
+      <span class="ship-bar-text" id="ship-text">Add <strong id="ship-remaining">$11.00</strong> more for free shipping</span>
+      <span class="ship-pct" id="ship-pct">94%</span>
+    </div>
+    <div class="ship-track">
+      <div class="ship-fill" id="ship-fill" style="width:94%">
+        <div class="ship-milestone"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Items -->
+  <div class="items-section" id="items-container"></div>
+
+  <!-- Promo -->
+  <div class="promo-section">
+    <button class="promo-toggle" id="promo-toggle" onclick="togglePromo()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      Have a promo code?
+    </button>
+    <div class="promo-field" id="promo-field">
+      <input class="promo-input" placeholder="Enter code" type="text"/>
+      <button class="promo-apply">Apply</button>
+    </div>
+  </div>
+
+  <!-- Order summary -->
+  <div style="padding:20px 16px 16px">
+    <div class="summary-section">
+      <div class="summary-h">Order summary</div>
+
+      <!-- Per-item lines — rendered by JS -->
+      <div class="sum-lines" id="sum-lines"></div>
+
+      <div class="sum-divider"></div>
+
+      <!-- Shipping -->
+      <div class="sum-shipping-row">
+        <span class="sum-shipping-k">Shipping</span>
+        <span class="sum-shipping-v" id="sum-shipping" style="color:var(--ink-mute)">Calculated at checkout</span>
+      </div>
+
+      <!-- Total -->
+      <div class="sum-row total">
+        <span class="sum-k">Total</span>
+        <span class="sum-v" id="sum-total">$189.00</span>
+      </div>
+      <div class="sum-note">Taxes calculated at checkout · All sales final · Research use only</div>
+    </div>
+  </div>
+
+  <!-- Upsell -->
+  <div class="upsell-section" id="upsell-section">
+    <div class="upsell-eyebrow">Often paired with</div>
+    <div class="upsell-card">
+      <div class="upsell-img">
+        <div class="upsell-vial-mini">
+          <div class="uvl"><div class="uvlm">P</div><div class="uvln">BPC</div></div>
+          <div class="uvb"></div>
+        </div>
+      </div>
+      <div class="upsell-info">
+        <div class="upsell-name">BPC-157</div>
+        <div class="upsell-meta">5 MG · LYOPHILIZED</div>
+        <div class="upsell-price">$69.00</div>
+      </div>
+      <button class="upsell-add" onclick="addUpsell()">+ Add</button>
+    </div>
+  </div>
+
+  <!-- CTAs -->
+  <div class="ctas-section">
+    <button class="cta-checkout">
+      Proceed to checkout
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+    <button class="cta-continue" onclick="history.back()">Continue shopping</button>
+  </div>
+
+  <!-- Trust row -->
+  <div class="trust-footer">
+    <div class="tf-item">
+      <div class="tf-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="tf-label">Secure<br>checkout</div>
+    </div>
+    <div class="tf-item">
+      <div class="tf-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+      <div class="tf-label">COA<br>included</div>
+    </div>
+    <div class="tf-item">
+      <div class="tf-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+      <div class="tf-label">2-3 day<br>shipping</div>
+    </div>
+    <div class="tf-item">
+      <div class="tf-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div class="tf-label">Research<br>use only</div>
+    </div>
+  </div>
+
+</div><!-- /scroll -->
+
+<!-- Bottom tab bar -->
+<div class="tab-bar">
+  <a href="#" class="tab-btn"><svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+  <a href="#" class="tab-btn"><svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Shop</a>
+  <a href="#" class="tab-btn active"><svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart</a>
+  <a href="#" class="tab-btn"><svg fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account</a>
+</div>
+
+</div><!-- /device -->
+</div><!-- /stage -->
+
+<script>
+const FREE_SHIP = 200;
+const PRODUCTS = {
+  reta:  { code:'RETA',  name:'Retatrutide', mass:'10 MG', price:189, stock:'in'  },
+  sema:  { code:'SEMA',  name:'Semaglutide', mass:'10 MG', price:149, stock:'in'  },
+  tirz:  { code:'TIRZ',  name:'Tirzepatide', mass:'10 MG', price:199, stock:'low' },
+  bpc:   { code:'BPC',   name:'BPC-157',     mass:'5 MG',  price:69,  stock:'low' },
+  tb500: { code:'TB500', name:'TB-500',       mass:'5 MG',  price:89,  stock:'in'  },
+};
+
+let cartItems = [
+  {id:1, product:PRODUCTS.reta, qty:1},
+];
+let nextId = 2;
+
+/* ── RENDER ── */
+function renderItems() {
+  const container = document.getElementById('items-container');
+  container.innerHTML = '';
+  cartItems.forEach(item => {
+    const { code, name, mass, price, stock } = item.product;
+    const linePrice = (price * item.qty).toFixed(2);
+    const stockChip = stock === 'low'
+      ? `<div class="item-stock low"><span class="sdot"></span>Low stock</div>`
+      : '';
+    const el = document.createElement('div');
+    el.className = 'item';
+    el.id = 'item-' + item.id;
+    el.innerHTML = `
+      <div class="item-img">
+        <div class="item-vial">
+          <div class="item-vial-label">
+            <div class="vlm">P</div>
+            <div class="vln">${code.substring(0,4)}</div>
+            <div class="vlmass">${mass.split(' ')[0]}mg</div>
+          </div>
+          <div class="item-vial-body"></div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="item-top-row">
+          <div class="item-name">${name}</div>
+          <button class="item-remove" onclick="removeItem(${item.id})">×</button>
+        </div>
+        <div class="item-meta">${mass} · LYOPHILIZED</div>
+        ${stockChip}
+        <div class="item-bottom-row">
+          <div class="item-stepper">
+            <button onclick="changeQty(${item.id},-1)" id="minus-${item.id}">−</button>
+            <span class="sv" id="sv-${item.id}">${item.qty}</span>
+            <button onclick="changeQty(${item.id},1)">+</button>
+          </div>
+          <div class="item-total" id="total-${item.id}">$${linePrice}</div>
+        </div>
+      </div>
+    `;
+    container.appendChild(el);
+  });
+  updateSummary();
+  updateShipBar();
+  updateUpsell();
+}
+
+function updateSummary() {
+  const count = cartItems.reduce((a,i) => a+i.qty, 0);
+  const sub = cartItems.reduce((a,i) => a+i.product.price*i.qty, 0);
+
+  // Page title count
+  document.getElementById('title-count').textContent = `· ${count} item${count!==1?'s':''}`;
+
+  // Per-item lines
+  const linesEl = document.getElementById('sum-lines');
+  linesEl.innerHTML = cartItems.map(item => {
+    const linePrice = (item.product.price * item.qty).toFixed(2);
+    const unitStr = item.qty > 1 ? `${item.qty} × $${item.product.price.toFixed(2)}` : `$${item.product.price.toFixed(2)}/vial`;
+    return `
+      <div class="sum-line">
+        <div class="sum-line-info">
+          <span class="sum-line-name">${item.product.name}</span>
+          <span class="sum-line-meta">${item.product.mass} · Lyophilized</span>
+        </div>
+        <div class="sum-line-right">
+          <span class="sum-line-price">$${linePrice}</span>
+          <span class="sum-line-unit">${unitStr}</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Total
+  document.getElementById('sum-total').textContent = '$'+sub.toFixed(2);
+
+  // Shipping
+  const sl = document.getElementById('sum-shipping');
+  if(sub >= FREE_SHIP) {
+    sl.textContent = 'Free';
+    sl.style.color = 'var(--emerald)';
+    sl.style.fontWeight = '600';
+  } else {
+    sl.textContent = 'Calculated at checkout';
+    sl.style.color = 'var(--ink-mute)';
+    sl.style.fontWeight = '400';
+  }
+}
+
+function updateShipBar() {
+  const sub = cartItems.reduce((a,i) => a+i.product.price*i.qty, 0);
+  const pct = Math.min(100, (sub/FREE_SHIP)*100);
+  const rem = Math.max(0, FREE_SHIP - sub);
+  document.getElementById('ship-fill').style.width = pct + '%';
+  document.getElementById('ship-pct').textContent = sub >= FREE_SHIP ? '✓' : Math.round(pct)+'%';
+  const textEl = document.getElementById('ship-text');
+  if(sub >= FREE_SHIP) {
+    textEl.innerHTML = '🎉 You\'ve unlocked <strong>free shipping!</strong>';
+    textEl.className = 'ship-bar-text unlocked';
+  } else {
+    textEl.innerHTML = `Add <strong>$${rem.toFixed(2)}</strong> more for free shipping`;
+    textEl.className = 'ship-bar-text';
+  }
+}
+
+function updateUpsell() {
+  const hasBpc = cartItems.find(i => i.product.code === 'BPC');
+  document.getElementById('upsell-section').style.display = hasBpc ? 'none' : 'block';
+}
+
+/* ── ACTIONS ── */
+function changeQty(id, delta) {
+  const item = cartItems.find(i => i.id===id);
+  if(!item) return;
+  if(delta===-1 && item.qty===1) {
+    const btn = document.getElementById('minus-'+id);
+    const el = document.getElementById('item-'+id);
+    if(btn && !btn.dataset.confirming) {
+      btn.dataset.confirming = '1';
+      btn.textContent = '×';
+      btn.style.cssText = 'color:var(--alert);font-size:14px;font-weight:700';
+      if(el) { el.style.outline='1.5px solid rgba(162,74,42,.3)'; el.style.borderRadius='12px'; }
+      btn._t = setTimeout(() => {
+        if(btn){ btn.textContent='−'; btn.style.cssText=''; delete btn.dataset.confirming; }
+        if(el) el.style.outline='';
+      }, 2000);
+      return;
+    }
+    clearTimeout(btn?._t);
+    removeItem(id); return;
+  }
+  item.qty = Math.max(1, item.qty+delta);
+  const sv = document.getElementById('sv-'+id);
+  if(sv) sv.textContent = item.qty;
+  const t = document.getElementById('total-'+id);
+  if(t) t.textContent = '$'+(item.product.price*item.qty).toFixed(2);
+  updateSummary(); updateShipBar();
+}
+
+function removeItem(id) {
+  const el = document.getElementById('item-'+id);
+  if(el) {
+    el.classList.add('gone');
+    setTimeout(() => {
+      cartItems = cartItems.filter(i => i.id!==id);
+      renderItems();
+    }, 220);
+  }
+}
+
+function addUpsell() {
+  cartItems.push({id:nextId++, product:PRODUCTS.bpc, qty:1});
+  renderItems();
+}
+
+function togglePromo() {
+  const f = document.getElementById('promo-field');
+  const t = document.getElementById('promo-toggle');
+  f.classList.toggle('open');
+  t.classList.toggle('open');
+}
+
+/* ── INIT ── */
+renderItems();
+</script>
+</body>
+</html>
