@@ -45,10 +45,7 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
   // variantMap is populated when the upstream WC product is type:variable;
   // variantPrices is the static fallback so the UI still updates per
   // dose before WC variations are configured.
-  const basePrice =
-    variantEntry?.price ??
-    product.variantPrices?.[variant] ??
-    product.price;
+  const basePrice = variantEntry?.price ?? product.variantPrices?.[variant] ?? product.price;
   const unitPrice = basePrice * (1 - tier.discount);
   const effectiveWcId = variantEntry?.wcId ?? product.wcId;
   const orderTotal = unitPrice * tier.qty;
@@ -90,16 +87,46 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
       {/* Trust strip — auto-loop marquee */}
       <div className="mob-trust-bar" data-mob-section="dark">
         <div className="mob-trust-track">
-          <div className="mob-trust-item"><span className="dot" />99.5%+ Purity</div>
-          <div className="mob-trust-item"><span className="dot" />Third-Party Tested</div>
-          <div className="mob-trust-item"><span className="dot" />2-3 Day Shipping</div>
-          <div className="mob-trust-item"><span className="dot" />Secure Checkout</div>
-          <div className="mob-trust-item"><span className="dot" />US Warehouse</div>
-          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />99.5%+ Purity</div>
-          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Third-Party Tested</div>
-          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />2-3 Day Shipping</div>
-          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />Secure Checkout</div>
-          <div className="mob-trust-item" aria-hidden="true"><span className="dot" />US Warehouse</div>
+          <div className="mob-trust-item">
+            <span className="dot" />
+            99.5%+ Purity
+          </div>
+          <div className="mob-trust-item">
+            <span className="dot" />
+            Third-Party Tested
+          </div>
+          <div className="mob-trust-item">
+            <span className="dot" />
+            2-3 Day Shipping
+          </div>
+          <div className="mob-trust-item">
+            <span className="dot" />
+            Secure Checkout
+          </div>
+          <div className="mob-trust-item">
+            <span className="dot" />
+            US Warehouse
+          </div>
+          <div className="mob-trust-item" aria-hidden="true">
+            <span className="dot" />
+            99.5%+ Purity
+          </div>
+          <div className="mob-trust-item" aria-hidden="true">
+            <span className="dot" />
+            Third-Party Tested
+          </div>
+          <div className="mob-trust-item" aria-hidden="true">
+            <span className="dot" />
+            2-3 Day Shipping
+          </div>
+          <div className="mob-trust-item" aria-hidden="true">
+            <span className="dot" />
+            Secure Checkout
+          </div>
+          <div className="mob-trust-item" aria-hidden="true">
+            <span className="dot" />
+            US Warehouse
+          </div>
         </div>
       </div>
 
@@ -121,7 +148,9 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
           priority
           sizes="100vw"
           className="mob-pdp-hero-img"
-          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = "none";
+          }}
         />
       </div>
 
@@ -145,7 +174,10 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
             Sale · Save ${Math.round(product.regularPrice - product.price)}
           </span>
         )}
-        <div className="mob-pdp-price-row" style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+        <div
+          className="mob-pdp-price-row"
+          style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}
+        >
           <span className="mob-pdp-price-big">{formatPrice(orderTotal)}</span>
           {product.regularPrice && product.regularPrice > product.price && (
             <span className="mob-pdp-price-strike">
@@ -154,7 +186,8 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
           )}
         </div>
         <span className="mob-pdp-price-sub">
-          {variant} vial · {isOut ? "out of stock" : product.stock === "low" ? "low stock" : "in stock"}
+          {variant} vial ·{" "}
+          {isOut ? "out of stock" : product.stock === "low" ? "low stock" : "in stock"}
         </span>
       </div>
 
@@ -176,8 +209,8 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
             </li>
           </ul>
           <p className="mob-pdp-stack-note">
-            Each peptide ships in its own sealed lyophilized vial.
-            Reconstitute and store separately per protocol.
+            Each peptide ships in its own sealed lyophilized vial. Reconstitute and store separately
+            per protocol.
           </p>
         </div>
       )}
@@ -199,7 +232,9 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
             >
               {t.badge && <span className="mob-pdp-tier-badge">{t.badge}</span>}
               <span className="mob-pdp-tier-qty">{t.label}</span>
-              <span className={`mob-pdp-tier-save${t.discount > 0 ? " is-discount" : ""}`}>{t.save}</span>
+              <span className={`mob-pdp-tier-save${t.discount > 0 ? " is-discount" : ""}`}>
+                {t.save}
+              </span>
             </button>
           ))}
         </div>
@@ -215,7 +250,9 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
             aria-label="Dose"
           >
             {product.variants.map((v) => (
-              <option key={v} value={v}>{v}</option>
+              <option key={v} value={v}>
+                {v}
+              </option>
             ))}
           </select>
         </div>
@@ -238,13 +275,30 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
 
         <div className="mob-trust-micro">
           <div className="mob-trust-line">
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              viewBox="0 0 24 24"
+            >
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
-            <span>Damaged or lost in transit? <strong>We replace it.</strong> No questions asked.</span>
+            <span>
+              Damaged or incomplete order? <strong>Notify us within 7 days.</strong> Photos
+              required.
+            </span>
           </div>
           <div className="mob-trust-line">
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              viewBox="0 0 24 24"
+            >
               <path d="M9 11l3 3L22 4" />
               <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
             </svg>
@@ -257,9 +311,13 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
 
       {/* Content sections */}
       <section className="mob-pdp-section">
-        <h2>{product.name} — {variant}</h2>
+        <h2>
+          {product.name} — {variant}
+        </h2>
         <p style={{ fontWeight: 600, color: "var(--m-ink)", fontSize: 15 }}>
-          For In Vitro Research Use Only<br />Not for Human or Veterinary Application
+          For In Vitro Research Use Only
+          <br />
+          Not for Human or Veterinary Application
         </p>
         <h3>Product Overview</h3>
         <p>{product.description}</p>
@@ -268,18 +326,30 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
       <section className="mob-pdp-section">
         <h2>Specifications</h2>
         <ul className="mob-spec-list">
-          <li><strong>Quantity:</strong> {variant}</li>
-          <li><strong>Form:</strong> Lyophilized powder</li>
-          <li><strong>CAS:</strong> {product.cas}</li>
-          <li><strong>Purity:</strong> {product.purity}</li>
-          <li><strong>Storage:</strong> {product.storage}</li>
-
+          <li>
+            <strong>Quantity:</strong> {variant}
+          </li>
+          <li>
+            <strong>Form:</strong> Lyophilized powder
+          </li>
+          <li>
+            <strong>CAS:</strong> {product.cas}
+          </li>
+          <li>
+            <strong>Purity:</strong> {product.purity}
+          </li>
+          <li>
+            <strong>Storage:</strong> {product.storage}
+          </li>
         </ul>
       </section>
 
       <section className="mob-pdp-section">
         <h2>Intended Use</h2>
-        <p>This compound is intended <strong>strictly for in vitro laboratory research</strong> by qualified professionals. It is <strong>not</strong> approved for:</p>
+        <p>
+          This compound is intended <strong>strictly for in vitro laboratory research</strong> by
+          qualified professionals. It is <strong>not</strong> approved for:
+        </p>
         <ul className="mob-disc-list">
           <li>Human use</li>
           <li>Veterinary use</li>
@@ -290,18 +360,34 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
       <section className="mob-pdp-section">
         <h2>Regulatory Disclaimer</h2>
         <ul className="mob-disc-list">
-          <li>This compound has <strong>not been evaluated by the U.S. Food and Drug Administration (FDA)</strong>.</li>
-          <li>It is <strong>not intended to diagnose, treat, cure, or prevent any disease</strong>.</li>
-          <li>All handling and use must comply with applicable <strong>institutional, local, state, and federal regulations</strong>.</li>
+          <li>
+            This compound has{" "}
+            <strong>not been evaluated by the U.S. Food and Drug Administration (FDA)</strong>.
+          </li>
+          <li>
+            It is <strong>not intended to diagnose, treat, cure, or prevent any disease</strong>.
+          </li>
+          <li>
+            All handling and use must comply with applicable{" "}
+            <strong>institutional, local, state, and federal regulations</strong>.
+          </li>
         </ul>
       </section>
 
       <section className="mob-pdp-section">
         <h2>Terms of Sale</h2>
-        <p>By purchasing from <strong>PurePep</strong>, the buyer confirms that they are a <strong>qualified researcher, laboratory, or institution</strong> and acknowledge that the product is for research use only.</p>
+        <p>
+          By purchasing from <strong>PurePep</strong>, the buyer confirms that they are a{" "}
+          <strong>qualified researcher, laboratory, or institution</strong> and acknowledge that the
+          product is for research use only.
+        </p>
         <ul className="mob-disc-list">
-          <li><strong>All sales are final.</strong></li>
-          <li>The purchaser assumes full responsibility for compliant handling, storage, and use.</li>
+          <li>
+            <strong>Returns require approval within 7 business days of delivery.</strong>
+          </li>
+          <li>
+            The purchaser assumes full responsibility for compliant handling, storage, and use.
+          </li>
           <li>Resale for human consumption is strictly prohibited.</li>
         </ul>
       </section>
@@ -318,11 +404,15 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
                 fill
                 sizes="60px"
                 className="mob-paired-thumb-img"
-                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
               />
             </div>
             <div className="mob-paired-info">
-              <div className="mob-paired-name">{related[0].name} ({related[0].dose})</div>
+              <div className="mob-paired-name">
+                {related[0].name} ({related[0].dose})
+              </div>
               <div className="mob-paired-price">{formatPrice(related[0].price)}</div>
               <span className="mob-paired-add">View product →</span>
             </div>
@@ -336,8 +426,20 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
           <div className="mob-more-eyebrow">More from the catalog</div>
           <h2 className="mob-more-h2">Related products</h2>
           <div className="mob-more-carousel-wrap">
-            <button type="button" className="mob-carousel-arrow is-prev" aria-label="Previous" onClick={() => carouselStep(-1)}>
-              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <button
+              type="button"
+              className="mob-carousel-arrow is-prev"
+              aria-label="Previous"
+              onClick={() => carouselStep(-1)}
+            >
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
@@ -356,7 +458,9 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
                       fill
                       sizes="40vw"
                       className="mob-more-hero-img"
-                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = "none";
+                      }}
                     />
                   </div>
                   <div className="mob-more-body">
@@ -386,7 +490,14 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
                         disabled={p.stock === "out"}
                         aria-label={p.stock === "out" ? "Out of stock" : `Add ${p.name} to cart`}
                       >
-                        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <svg
+                          width="14"
+                          height="14"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
                           <line x1="5" y1="12" x2="19" y2="12" />
                           <polyline points="12 5 19 12 12 19" />
                         </svg>
@@ -396,8 +507,20 @@ export function MobilePDP({ product, related }: { product: Product; related: Pro
                 </a>
               ))}
             </div>
-            <button type="button" className="mob-carousel-arrow is-next" aria-label="Next" onClick={() => carouselStep(1)}>
-              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <button
+              type="button"
+              className="mob-carousel-arrow is-next"
+              aria-label="Next"
+              onClick={() => carouselStep(1)}
+            >
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
                 <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>

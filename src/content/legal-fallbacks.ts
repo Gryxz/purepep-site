@@ -42,10 +42,16 @@ export const LEGAL_FALLBACKS: Record<string, PolicyFallback> = {
     title: "Refund Policy",
     contentHtml: `
       <p><strong>${compliance.noRefunds}</strong></p>
-      <p>${ENTITY.brand} peptides are research materials sold strictly for in vitro laboratory research. Once an order leaves our facility the product is considered consumed for research purposes and is not eligible for return or refund.</p>
+      <p>${ENTITY.brand} peptides are research materials sold strictly for in vitro laboratory research. To request a return, contact ${SUPPORT_LINKS} within 7 business days of the carrier delivery date and quote your order number.</p>
 
-      <h2>Damaged or lost shipments</h2>
-      <p>If a package arrives damaged or never arrives at the address on file, we will replace the order at no charge. Contact ${SUPPORT_LINKS} within 14 days of the expected delivery date and quote your order number.</p>
+      <h2>Return condition</h2>
+      <p>Returned research items must be unopened and in a sealable condition. Opened, tampered, partially used, or otherwise unsealable items are not eligible for return or refund.</p>
+
+      <h2>Return shipping and restocking fees</h2>
+      <p>You are responsible for return shipping costs. A 15% restocking fee per product will be deducted from your refund.</p>
+
+      <h2>Damaged or missing items</h2>
+      <p>If your order arrives damaged or incomplete, notify us through ${SUPPORT_LINKS} within 7 days of delivery. Include photographic evidence of the package with a clear tracking number and photos of all items received.</p>
 
       <h2>Order cancellation</h2>
       <p>Orders may be cancelled before they ship — typically within one hour of placement. Once a shipment label has been generated and the package has left our facility, the order is final.</p>
@@ -83,7 +89,7 @@ export const LEGAL_FALLBACKS: Record<string, PolicyFallback> = {
       <p>${ENTITY.brand}'s liability for any product is limited to the purchase price of that product. We are not liable for incidental, consequential, or punitive damages arising from product use, misuse, or storage outside published parameters.</p>
 
       <h2>Returns and refunds</h2>
-      <p>All sales are final. ${ENTITY.brand} does not accept returns or issue refunds except for packages lost in transit or arriving physically damaged — see our full <a href="/refund-policy">Refund Policy</a> for the claims process.</p>
+      <p>Returns must be requested within 7 business days of the delivery date. Returned research items must be unopened and in a sealable condition. Return shipping costs are your responsibility, and a 15% restocking fee per product will be deducted from your refund. See our full <a href="/refund-policy">Refund Policy</a> for the claims process.</p>
 
       <h2>Governing law</h2>
       <p>These terms are governed by the laws of Japan. Any dispute shall be resolved in the courts of Japan.</p>
@@ -166,8 +172,8 @@ export const LEGAL_FALLBACKS: Record<string, PolicyFallback> = {
       <h2>International orders</h2>
       <p>${ENTITY.brand} does not currently ship outside the United States.</p>
 
-      <h2>Damaged or lost in transit</h2>
-      <p>If a package arrives damaged or never arrives at the address on file, we will replace the order at no charge — see our <a href="/refund-policy">Refund Policy</a> for details.</p>
+      <h2>Damaged or missing items</h2>
+      <p>If your order arrives damaged or incomplete, notify us within 7 days with photographic evidence of the package, a clear tracking number, and the items received — see our <a href="/refund-policy">Refund Policy</a> for details.</p>
 
       <h2>Storage on receipt</h2>
       <p>Store lyophilized peptides at 2–8 °C, protected from light, until reconstitution. Reconstituted product is stable 30+ days refrigerated.</p>
@@ -231,7 +237,7 @@ export const LEGAL_FALLBACKS: Record<string, PolicyFallback> = {
       <p>Yes. Every order ships with a lot-specific Certificate of Analysis (COA) documenting HPLC purity, mass confirmation, and lot identifier. The COA is downloadable from the product page and is also included with the shipment. All ${ENTITY.brand} peptides are assayed at ≥99.0% purity by HPLC (≥99.5% for incretin-class compounds) on every manufactured lot.</p>
 
       <h2>What is your refund and return policy?</h2>
-      <p>${compliance.noRefunds} If a package arrives damaged or is confirmed lost in transit, ${ENTITY.brand} will replace the order at no charge — contact us within 14 days of the expected delivery date and quote your order number. Orders may be cancelled before a shipping label is generated, typically within one hour of placement. See the full <a href="/refund-policy">Refund Policy</a> for details.</p>
+      <p>${compliance.noRefunds} Returned research items must be unopened and in a sealable condition. You are responsible for return shipping costs, and a 15% restocking fee per product will be deducted from your refund. If an order arrives damaged or incomplete, notify us within 7 days with photographic evidence of the package, a clear tracking number, and the items received. See the full <a href="/refund-policy">Refund Policy</a> for details.</p>
 
       <h2>How should peptides be stored?</h2>
       <p>Lyophilized (freeze-dried) peptides are stable at room temperature during transit. On receipt, store vials at 2–8 °C, protected from light, until reconstitution. Once reconstituted in bacteriostatic water, the solution should be refrigerated and used within 30 days. Do not freeze reconstituted product.</p>

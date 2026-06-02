@@ -899,8 +899,9 @@ export function MobileCheckout({ sdkReady }: { sdkReady: boolean | "failed" }) {
         shown on your statement as PUREPEP.SHOP.
       </div>
       <div className="mob-chk-refund-note">
-        All sales are final. No refunds, returns, or exchanges except where a package is lost in
-        transit or arrives damaged — see our <a href="/refund-policy">Refund Policy</a>.
+        Returns must be requested within 7 business days of delivery. Items must be unopened and
+        sealable; return shipping and a 15% per-product restocking fee apply — see our{" "}
+        <a href="/refund-policy">Refund Policy</a>.
       </div>
       <div className="mob-chk-dispute-note">
         Questions about a charge? Contact us before disputing with your bank — most issues are

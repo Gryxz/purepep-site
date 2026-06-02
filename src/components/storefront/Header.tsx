@@ -8,7 +8,11 @@ import { clsx } from "@/lib/clsx";
 import { ACCOUNT_HREF } from "@/content/nav";
 
 function UtilityStrip() {
-  const items = ["For research use only", "21+ qualified researchers", "All sales final"];
+  const items = [
+    "For research use only",
+    "21+ qualified researchers",
+    "7-business-day return window",
+  ];
   return (
     <div className="border-b border-ink bg-bone">
       {/* Desktop: all three items */}
@@ -139,7 +143,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
             </button>
 
             <div className="pointer-events-auto flex items-center gap-2 md:gap-3">
-{/* researcher-access icon hidden */}
+              {/* researcher-access icon hidden */}
               <button
                 type="button"
                 onClick={openCart}
@@ -232,7 +236,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
                 <Icon name="cart" size={16} />
                 Cart · {String(count).padStart(2, "0")}
               </button>
-{/* researcher-access button hidden */}
+              {/* researcher-access button hidden */}
             </div>
           </div>
         </div>

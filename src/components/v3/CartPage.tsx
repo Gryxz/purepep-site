@@ -24,7 +24,14 @@ import { TrustBar } from "./TrustBar";
 
 const FREE_SHIP_THRESHOLD = 200;
 
-const UPSELL: { slug: string; compound: string; name: string; dose: string; meta: string; price: number } = {
+const UPSELL: {
+  slug: string;
+  compound: string;
+  name: string;
+  dose: string;
+  meta: string;
+  price: number;
+} = {
   slug: "bpc-157",
   compound: "BPC",
   name: "BPC-157",
@@ -37,10 +44,7 @@ export function CartPage({ products }: { products: Product[] }) {
   const { items, updateQty, removeItem, addItem, subtotal, totalItems } = useCartStore();
 
   // Find the WC-mirrored upsell product if available so addItem can sync to WC
-  const upsellProduct = useMemo(
-    () => products.find((p) => p.slug === UPSELL.slug),
-    [products],
-  );
+  const upsellProduct = useMemo(() => products.find((p) => p.slug === UPSELL.slug), [products]);
 
   const sub = subtotal();
   const count = totalItems();
@@ -99,7 +103,9 @@ export function CartPage({ products }: { products: Product[] }) {
       <main className="v3cart">
         {/* Page title */}
         <div className="v3cart-title">
-          <Link href="/shop" className="v3cart-back">← Shop</Link>
+          <Link href="/shop" className="v3cart-back">
+            ← Shop
+          </Link>
           <h1>
             Your cart{" "}
             <span className="v3cart-title-count">
@@ -123,7 +129,9 @@ export function CartPage({ products }: { products: Product[] }) {
               <div className="v3cart-shipbar-row">
                 <span className={clsx("v3cart-shipbar-text", freeShipUnlocked && "is-unlocked")}>
                   {freeShipUnlocked ? (
-                    <>You&rsquo;ve unlocked <strong>free shipping</strong></>
+                    <>
+                      You&rsquo;ve unlocked <strong>free shipping</strong>
+                    </>
                   ) : (
                     <>
                       Add <strong>${remaining.toFixed(2)}</strong> more for free shipping
@@ -202,13 +210,26 @@ export function CartPage({ products }: { products: Product[] }) {
                 onClick={() => setPromoOpen((o) => !o)}
                 aria-expanded={promoOpen}
               >
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="14"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <polyline points="9 18 15 12 9 6" />
                 </svg>
                 Have a promo code?
               </button>
               <div className={clsx("v3cart-promo-field", promoOpen && "is-open")}>
-                <input className="v3cart-promo-input" placeholder="Enter code" type="text" aria-label="Promo code" />
+                <input
+                  className="v3cart-promo-input"
+                  placeholder="Enter code"
+                  type="text"
+                  aria-label="Promo code"
+                />
                 <button type="button" className="v3cart-promo-apply">
                   Apply
                 </button>
@@ -230,7 +251,9 @@ export function CartPage({ products }: { products: Product[] }) {
                       <div key={item.slug + item.dose} className="v3cart-summary-line">
                         <div className="v3cart-summary-line-info">
                           <span className="v3cart-summary-line-name">{item.name}</span>
-                          <span className="v3cart-summary-line-meta">{item.dose} · Lyophilized</span>
+                          <span className="v3cart-summary-line-meta">
+                            {item.dose} · Lyophilized
+                          </span>
                         </div>
                         <div className="v3cart-summary-line-right">
                           <span className="v3cart-summary-line-price">${lineTotal.toFixed(2)}</span>
@@ -243,9 +266,7 @@ export function CartPage({ products }: { products: Product[] }) {
                 <div className="v3cart-summary-divider" />
                 <div className="v3cart-summary-shiprow">
                   <span className="v3cart-summary-k">Shipping</span>
-                  <span
-                    className={clsx("v3cart-summary-v", freeShipUnlocked && "is-free")}
-                  >
+                  <span className={clsx("v3cart-summary-v", freeShipUnlocked && "is-free")}>
                     {freeShipUnlocked ? "Free" : "Calculated at checkout"}
                   </span>
                 </div>
@@ -254,7 +275,7 @@ export function CartPage({ products }: { products: Product[] }) {
                   <span className="v3cart-summary-total">${sub.toFixed(2)}</span>
                 </div>
                 <div className="v3cart-summary-note">
-                  Taxes calculated at checkout · All sales final · Research use only
+                  Taxes calculated at checkout · Returns per policy · Research use only
                 </div>
               </div>
             </div>
@@ -288,7 +309,15 @@ export function CartPage({ products }: { products: Product[] }) {
             <div className="v3cart-ctas">
               <Link href="/checkout" className="v3cart-cta-primary">
                 Proceed to checkout
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="14"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
@@ -311,7 +340,15 @@ export function CartPage({ products }: { products: Product[] }) {
               </>
             }
           >
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
           </TrustItem>
@@ -324,7 +361,15 @@ export function CartPage({ products }: { products: Product[] }) {
               </>
             }
           >
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
               <path d="M9 11l3 3L22 4" />
               <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
             </svg>
@@ -338,7 +383,15 @@ export function CartPage({ products }: { products: Product[] }) {
               </>
             }
           >
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
               <rect x="1" y="3" width="15" height="13" rx="1" />
               <path d="M16 8h4l3 3v5h-7V8z" />
               <circle cx="5.5" cy="18.5" r="2.5" />
@@ -354,7 +407,15 @@ export function CartPage({ products }: { products: Product[] }) {
               </>
             }
           >
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24" aria-hidden="true">
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
               <polyline points="9 22 9 12 15 12 15 22" />
             </svg>

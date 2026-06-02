@@ -6,11 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
 import { getProduct } from "@/data/products.static";
 import { MobileVial } from "./MobileVial";
-import {
-  FREE_SHIP_THRESHOLD,
-  CART_EMPTY_TITLE,
-  CART_EMPTY_SUB,
-} from "@/content/cart";
+import { FREE_SHIP_THRESHOLD, CART_EMPTY_TITLE, CART_EMPTY_SUB } from "@/content/cart";
 
 const UPSELL_SLUG = "bpc-157";
 
@@ -75,7 +71,10 @@ export function MobileCartPage() {
           back button is page-scoped. */}
       <div className="mob-cart-page-title">
         <h1>
-          Your cart <span className="item-count">· {count} item{count !== 1 ? "s" : ""}</span>
+          Your cart{" "}
+          <span className="item-count">
+            · {count} item{count !== 1 ? "s" : ""}
+          </span>
         </h1>
       </div>
 
@@ -85,9 +84,13 @@ export function MobileCartPage() {
           <div className="mob-ship-bar-label">
             <span className={`mob-ship-bar-text${unlocked ? " is-unlocked" : ""}`}>
               {unlocked ? (
-                <>You&apos;ve unlocked <strong>free shipping!</strong></>
+                <>
+                  You&apos;ve unlocked <strong>free shipping!</strong>
+                </>
               ) : (
-                <>Add <strong>${remaining.toFixed(2)}</strong> more for free shipping</>
+                <>
+                  Add <strong>${remaining.toFixed(2)}</strong> more for free shipping
+                </>
               )}
             </span>
             <span className="mob-ship-pct">{unlocked ? "✓" : `${Math.round(pct)}%`}</span>
@@ -104,7 +107,15 @@ export function MobileCartPage() {
       {items.length === 0 ? (
         <div className="mob-cart-empty">
           <div className="mob-cart-empty-icon">
-            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" style={{ color: "var(--m-ink-mute)" }}>
+            <svg
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              viewBox="0 0 24 24"
+              style={{ color: "var(--m-ink-mute)" }}
+            >
               <circle cx="9" cy="21" r="1" />
               <circle cx="20" cy="21" r="1" />
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
@@ -112,7 +123,9 @@ export function MobileCartPage() {
           </div>
           <div className="mob-cart-empty-h">{CART_EMPTY_TITLE}</div>
           <div className="mob-cart-empty-p">{CART_EMPTY_SUB}</div>
-          <a href="/shop" className="mob-cta-view" style={{ marginTop: 12, maxWidth: 280 }}>Browse catalog →</a>
+          <a href="/shop" className="mob-cta-view" style={{ marginTop: 12, maxWidth: 280 }}>
+            Browse catalog →
+          </a>
         </div>
       ) : (
         <>
@@ -138,9 +151,21 @@ export function MobileCartPage() {
                     <div className="mob-item-total">${(item.price * item.qty).toFixed(2)}</div>
                   </div>
                   <div className="mob-item-stepper">
-                    <button type="button" aria-label="Decrease quantity" onClick={() => updateQty(item.slug, item.qty - 1)}>−</button>
+                    <button
+                      type="button"
+                      aria-label="Decrease quantity"
+                      onClick={() => updateQty(item.slug, item.qty - 1)}
+                    >
+                      −
+                    </button>
                     <span className="sv">{item.qty}</span>
-                    <button type="button" aria-label="Increase quantity" onClick={() => updateQty(item.slug, item.qty + 1)}>+</button>
+                    <button
+                      type="button"
+                      aria-label="Increase quantity"
+                      onClick={() => updateQty(item.slug, item.qty + 1)}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
                 <button
@@ -162,14 +187,23 @@ export function MobileCartPage() {
               className={`mob-promo-toggle${promoOpen ? " is-open" : ""}`}
               onClick={() => setPromoOpen((o) => !o)}
             >
-              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <svg
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
                 <polyline points="9 18 15 12 9 6" />
               </svg>
               Have a promo code?
             </button>
             <div className={`mob-promo-field${promoOpen ? " is-open" : ""}`}>
               <input className="mob-promo-input" placeholder="Enter code" type="text" />
-              <button type="button" className="mob-promo-apply">Apply</button>
+              <button type="button" className="mob-promo-apply">
+                Apply
+              </button>
             </div>
           </div>
 
@@ -180,9 +214,10 @@ export function MobileCartPage() {
               <div className="mob-sum-lines">
                 {items.map((item) => {
                   const linePrice = (item.price * item.qty).toFixed(2);
-                  const unitStr = item.qty > 1
-                    ? `${item.qty} × $${item.price.toFixed(2)}`
-                    : `$${item.price.toFixed(2)}/vial`;
+                  const unitStr =
+                    item.qty > 1
+                      ? `${item.qty} × $${item.price.toFixed(2)}`
+                      : `$${item.price.toFixed(2)}/vial`;
                   return (
                     <div key={`${item.slug}-${item.dose}`} className="mob-sum-line">
                       <div className="mob-sum-line-info">
@@ -205,7 +240,9 @@ export function MobileCartPage() {
                   {unlocked && <span className="mob-order-ship-note"> · Free shipping</span>}
                 </span>
               </div>
-              <div className="mob-sum-note">Taxes calculated at checkout · All sales final · Research use only</div>
+              <div className="mob-sum-note">
+                Taxes calculated at checkout · Returns per policy · Research use only
+              </div>
             </div>
           </div>
 
@@ -215,14 +252,22 @@ export function MobileCartPage() {
               <div className="mob-upsell-eyebrow">Often paired with</div>
               <div className="mob-upsell-card">
                 <div className="mob-upsell-img">
-                  <MobileVial size="xs" compound={upsellProduct.compound} mass={upsellProduct.dose} />
+                  <MobileVial
+                    size="xs"
+                    compound={upsellProduct.compound}
+                    mass={upsellProduct.dose}
+                  />
                 </div>
                 <div className="mob-upsell-info">
                   <div className="mob-upsell-name">{upsellProduct.name}</div>
                   <div className="mob-upsell-meta">{upsellProduct.dose} · LYOPHILIZED</div>
                   <div className="mob-upsell-price">${upsellProduct.price.toFixed(2)}</div>
                 </div>
-                <button type="button" className="mob-cta-amber-base mob-upsell-add" onClick={handleAddUpsell}>
+                <button
+                  type="button"
+                  className="mob-cta-amber-base mob-upsell-add"
+                  onClick={handleAddUpsell}
+                >
                   + Add
                 </button>
               </div>
@@ -233,7 +278,14 @@ export function MobileCartPage() {
           <div className="mob-ctas-section">
             <a href="/checkout" className="mob-cta-amber-base mob-cta-checkout">
               Continue to checkout
-              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+              <svg
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
+              >
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
               </svg>
@@ -247,40 +299,84 @@ export function MobileCartPage() {
           <div className="mob-trust-footer">
             <div className="mob-tf-item">
               <div className="mob-tf-icon">
-                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+                <svg
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
               </div>
-              <div className="mob-tf-label">Secure<br />checkout</div>
+              <div className="mob-tf-label">
+                Secure
+                <br />
+                checkout
+              </div>
             </div>
             <div className="mob-tf-item">
               <div className="mob-tf-icon">
-                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+                <svg
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M9 11l3 3L22 4" />
                   <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
                 </svg>
               </div>
-              <div className="mob-tf-label">COA<br />included</div>
+              <div className="mob-tf-label">
+                COA
+                <br />
+                included
+              </div>
             </div>
             <div className="mob-tf-item">
               <div className="mob-tf-icon">
-                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+                <svg
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  viewBox="0 0 24 24"
+                >
                   <rect x="1" y="3" width="15" height="13" rx="1" />
                   <path d="M16 8h4l3 3v5h-7V8z" />
                   <circle cx="5.5" cy="18.5" r="2.5" />
                   <circle cx="18.5" cy="18.5" r="2.5" />
                 </svg>
               </div>
-              <div className="mob-tf-label">2-3 day<br />shipping</div>
+              <div className="mob-tf-label">
+                2-3 day
+                <br />
+                shipping
+              </div>
             </div>
             <div className="mob-tf-item">
               <div className="mob-tf-icon">
-                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" viewBox="0 0 24 24">
+                <svg
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                   <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
               </div>
-              <div className="mob-tf-label">Research<br />use only</div>
+              <div className="mob-tf-label">
+                Research
+                <br />
+                use only
+              </div>
             </div>
           </div>
         </>

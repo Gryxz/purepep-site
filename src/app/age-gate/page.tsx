@@ -36,7 +36,9 @@ export default function AgeGatePage() {
 
         {/* eyebrow */}
         <div className="mb-4 text-center">
-          <Eyebrow className="justify-center">Restricted access · 21+ qualified researchers</Eyebrow>
+          <Eyebrow className="justify-center">
+            Restricted access · 21+ qualified researchers
+          </Eyebrow>
         </div>
 
         {/* heading */}
@@ -63,7 +65,8 @@ export default function AgeGatePage() {
           </Checkbox>
           <div className="mt-3">
             <Checkbox id="researcher" checked={researcher} onChange={setResearcher}>
-              I am a qualified scientific researcher and will use these products for research purposes only
+              I am a qualified scientific researcher and will use these products for research
+              purposes only
             </Checkbox>
           </div>
         </div>
@@ -91,8 +94,7 @@ export default function AgeGatePage() {
         {/* disclaimer */}
         <div className="text-center font-mono text-[10px] font-medium uppercase leading-[1.8] tracking-[0.16em] text-ink-muted">
           For research use only · Not for human consumption
-          <br />
-          © 2026 PurePep · All sales final
+          <br />© 2026 PurePep · Returns per policy
         </div>
       </div>
     </main>

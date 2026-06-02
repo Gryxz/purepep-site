@@ -314,7 +314,9 @@ export function CheckoutPage({ sdkReady }: { sdkReady: boolean | "failed" }) {
         <div className="v3chk-layout">
           {/* LEFT column — form sections */}
           <div className="v3chk-col-main">
-            <Link href="/cart" className="v3chk-back">← Back to cart</Link>
+            <Link href="/cart" className="v3chk-back">
+              ← Back to cart
+            </Link>
             <h1 className="v3chk-h1">Checkout</h1>
             <div className="v3chk-sections">
               {/* 01 Contact */}
@@ -786,8 +788,9 @@ export function CheckoutPage({ sdkReady }: { sdkReady: boolean | "failed" }) {
               statement as PUREPEP.SHOP.
             </div>
             <div className="v3chk-refund-note">
-              All sales are final. No refunds, returns, or exchanges except where a package is lost
-              in transit or arrives damaged — see our <a href="/refund-policy">Refund Policy</a>.
+              Returns must be requested within 7 business days of delivery. Items must be unopened
+              and sealable; return shipping and a 15% per-product restocking fee apply — see our{" "}
+              <a href="/refund-policy">Refund Policy</a>.
             </div>
             <div className="v3chk-dispute-note">
               Questions about a charge? Contact us before disputing with your bank — most issues are

@@ -8,11 +8,7 @@ import type { Product } from "@/data/products";
 import { RetaVialMini } from "@/components/v3/RetaVialMini";
 import { TrustBar } from "@/components/v3/TrustBar";
 import { BackButton } from "@/components/ui/BackButton";
-import {
-  FREE_SHIP_THRESHOLD,
-  CART_EMPTY_TITLE,
-  CART_EMPTY_SUB,
-} from "@/content/cart";
+import { FREE_SHIP_THRESHOLD, CART_EMPTY_TITLE, CART_EMPTY_SUB } from "@/content/cart";
 
 /**
  * v3 Apple Swiss Cart page (desktop two-column).
@@ -41,10 +37,7 @@ const UPSELL: {
 export function CartPage({ products }: { products: Product[] }) {
   const { items, updateQty, removeItem, addItem, subtotal, totalItems } = useCartStore();
 
-  const upsellProduct = useMemo(
-    () => products.find((p) => p.slug === UPSELL.slug),
-    [products],
-  );
+  const upsellProduct = useMemo(() => products.find((p) => p.slug === UPSELL.slug), [products]);
 
   const sub = subtotal();
   const count = totalItems();
@@ -243,7 +236,9 @@ export function CartPage({ products }: { products: Product[] }) {
                 {/* Free-ship bar inside summary */}
                 <div className="v3cart-shipbar">
                   <div className="v3cart-shipbar-row">
-                    <span className={clsx("v3cart-shipbar-text", freeShipUnlocked && "is-unlocked")}>
+                    <span
+                      className={clsx("v3cart-shipbar-text", freeShipUnlocked && "is-unlocked")}
+                    >
                       {freeShipUnlocked ? (
                         <>Free shipping unlocked</>
                       ) : (
@@ -278,9 +273,7 @@ export function CartPage({ products }: { products: Product[] }) {
                             {item.dose} · {unitStr}
                           </span>
                         </div>
-                        <span className="v3cart-summary-line-price">
-                          ${lineTotal.toFixed(2)}
-                        </span>
+                        <span className="v3cart-summary-line-price">${lineTotal.toFixed(2)}</span>
                       </div>
                     );
                   })}
@@ -365,7 +358,7 @@ export function CartPage({ products }: { products: Product[] }) {
                 </div>
 
                 <div className="v3cart-summary-note">
-                  Taxes calculated at checkout · All sales final · Research use only
+                  Taxes calculated at checkout · Returns per policy · Research use only
                 </div>
 
                 {/* Trust strip inside summary */}

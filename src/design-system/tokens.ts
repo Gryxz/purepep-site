@@ -19,7 +19,8 @@ export const palette = {
 export const compliance = {
   researchUseOnly: "For research use only. Not for human consumption.",
   qualified21: "Sales restricted to qualified researchers, 21 and over.",
-  noRefunds: "All sales final. No refunds, no exchanges, no returns.",
+  noRefunds:
+    "Returns accepted only for unopened research items requested within 7 business days of delivery.",
 } as const;
 
 export type Compliance = typeof compliance;
